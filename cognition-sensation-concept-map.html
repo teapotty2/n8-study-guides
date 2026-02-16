@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognition-Sensation - Interactive Concept Map</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 500;
+            position: relative;
+        }
+
+        .header-left { text-align: left; }
+        .header h1 { font-size: 1.25rem; }
+        .header p { color: #94a3b8; font-size: 0.8rem; }
+
+        .header-controls { display: flex; align-items: center; gap: 0.75rem; }
+
+        .search-box { position: relative; }
+
+        .search-box input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            padding: 0.4rem 0.75rem 0.4rem 2rem;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus { border-color: #22d3ee; }
+        .search-box input::placeholder { color: #64748b; }
+
+        .search-box::before {
+            content: '\1F50D';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-results.visible { display: block; }
+
+        .search-result-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .search-result-item:hover { background: rgba(34, 211, 238, 0.15); }
+        .search-result-item .sr-title { color: #22d3ee; }
+        .search-result-item .sr-type { color: #64748b; font-size: 0.75rem; }
+
+        .zoom-controls { display: flex; gap: 4px; }
+
+        .zoom-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .zoom-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .map-container.grabbing { cursor: grabbing; }
+
+        .map-inner {
+            position: absolute;
+            width: 2200px;
+            height: 1300px;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .connections {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .conn-line {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+
+        .conn-line.dashed { stroke-dasharray: 8, 4; }
+
+        .conn-line.active {
+            stroke: #22d3ee;
+            stroke-width: 3;
+            stroke-dasharray: none;
+            filter: drop-shadow(0 0 6px rgba(34,211,238,0.5));
+        }
+
+        .conn-line.dimmed { stroke: #1e293b; stroke-width: 1; }
+
+        .conn-label {
+            fill: #64748b;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: fill 0.3s;
+        }
+
+        .conn-label.active { fill: #22d3ee; }
+        .conn-label.dimmed { fill: transparent; }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            text-align: center;
+            min-width: 130px;
+            max-width: 180px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .node:hover { transform: scale(1.08); z-index: 100; }
+        .node.active { transform: scale(1.12); z-index: 100; box-shadow: 0 0 30px rgba(34,211,238,0.4); }
+        .node.connected { transform: scale(1.05); z-index: 90; box-shadow: 0 0 20px rgba(34,211,238,0.2); }
+        .node.dimmed { opacity: 0.25; transform: scale(0.95); }
+        .node.search-match { box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); z-index: 110; }
+
+        .node h3 { font-size: 0.9rem; margin-bottom: 0.15rem; line-height: 1.2; }
+        .node p { font-size: 0.7rem; opacity: 0.8; line-height: 1.3; }
+
+        /* Node types - Domain specific for neuro */
+        .node.central { background: linear-gradient(135deg, #7c3aed, #a855f7); border: 3px solid #c4b5fd; min-width: 180px; }
+        .node.anatomy { background: linear-gradient(135deg, #2563eb, #3b82f6); border: 2px solid #93c5fd; }
+        .node.assessment { background: linear-gradient(135deg, #0891b2, #06b6d4); border: 2px solid #67e8f9; }
+        .node.vascular { background: linear-gradient(135deg, #dc2626, #ef4444); border: 2px solid #fca5a5; }
+        .node.trauma { background: linear-gradient(135deg, #4b5563, #6b7280); border: 2px solid #9ca3af; }
+        .node.infection { background: linear-gradient(135deg, #be185d, #ec4899); border: 2px solid #f9a8d4; }
+        .node.autoimmune { background: linear-gradient(135deg, #7c2d12, #c2410c); border: 2px solid #fb923c; }
+        .node.seizure { background: linear-gradient(135deg, #b45309, #d97706); border: 2px solid #fbbf24; }
+        .node.intervention { background: linear-gradient(135deg, #059669, #10b981); border: 2px solid #6ee7b7; }
+        .node.complication { background: linear-gradient(135deg, #78350f, #92400e); border: 2px solid #d97706; }
+        .node.cranial { background: linear-gradient(135deg, #4338ca, #6366f1); border: 2px solid #a5b4fc; }
+
+        /* Info panel */
+        .info-panel {
+            position: fixed;
+            right: -400px;
+            top: 52px;
+            width: 380px;
+            background: rgba(15, 23, 42, 0.97);
+            border-left: 2px solid #475569;
+            padding: 1.5rem;
+            z-index: 1000;
+            height: calc(100vh - 52px);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+        }
+
+        .info-panel.visible { right: 0; }
+
+        .info-panel .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none; border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .info-panel .close-btn:hover { color: white; }
+        .info-panel h2 { color: #22d3ee; margin-bottom: 1rem; padding-right: 2rem; font-size: 1.2rem; }
+        .info-panel h3 { color: #f59e0b; margin: 1rem 0 0.5rem 0; font-size: 0.9rem; }
+        .info-panel p { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; }
+        .info-panel ul { margin-left: 1.25rem; color: #e2e8f0; }
+        .info-panel li { margin-bottom: 0.4rem; font-size: 0.88rem; line-height: 1.4; }
+
+        .info-panel .exam-trap {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid #ef4444;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .clinical-pearl {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 4px solid #22d3ee;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .connection-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #475569;
+        }
+
+        .info-panel .connection-list span {
+            display: inline-block;
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .info-panel .connection-list span:hover { background: #22d3ee; color: #0f172a; }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            left: 12px; bottom: 12px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            z-index: 500;
+            border: 1px solid #334155;
+        }
+
+        .legend h4 { margin-bottom: 0.4rem; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1rem; }
+
+        .legend-item { display: flex; align-items: center; font-size: 0.7rem; color: #94a3b8; }
+
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; flex-shrink: 0; }
+
+        .minimap {
+            position: fixed;
+            right: 12px; bottom: 12px;
+            width: 180px; height: 110px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            z-index: 500;
+            overflow: hidden;
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid #22d3ee;
+            border-radius: 2px;
+            background: rgba(34, 211, 238, 0.08);
+            pointer-events: none;
+        }
+
+        .minimap-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; }
+
+        .kb-hint {
+            position: fixed;
+            left: 12px; top: 64px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            z-index: 500;
+            border: 1px solid #334155;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .kb-hint kbd {
+            background: #334155;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            color: #94a3b8;
+            font-family: inherit;
+        }
+
+        .info-panel::-webkit-scrollbar { width: 6px; }
+        .info-panel::-webkit-scrollbar-track { background: transparent; }
+        .info-panel::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1>Cognition-Sensation - Concept Map</h1>
+            <p>Click nodes to explore | Drag to pan | Scroll to zoom</p>
+        </div>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search concepts..." autocomplete="off"/>
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">&minus;</button>
+                <button class="zoom-btn" onclick="resetView()" title="Reset view">&#8634;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-container" id="map-container">
+        <div class="map-inner" id="map-inner">
+            <svg class="connections" id="connections-svg"></svg>
+        </div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+        <button class="close-btn" onclick="closePanel()">&times;</button>
+        <h2 id="panel-title"></h2>
+        <div id="panel-content"></div>
+    </div>
+
+    <div class="legend">
+        <h4>Node Types</h4>
+        <div style="display:flex;gap:1rem;margin-bottom:0.4rem;font-size:0.7rem;color:#94a3b8;">
+            <span><span style="display:inline-block;width:20px;height:2px;background:#334155;vertical-align:middle;margin-right:4px;"></span>Direct</span>
+            <span><span style="display:inline-block;width:20px;height:0;border-top:2px dashed #334155;vertical-align:middle;margin-right:4px;"></span>Cross-link</span>
+        </div>
+        <div class="legend-grid">
+            <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div>Central</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>Neuroanatomy</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div>Assessment</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Vascular/Stroke</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6b7280;"></div>Trauma</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ec4899;"></div>Infection</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#c2410c;"></div>Autoimmune</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d97706;"></div>Seizure</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Intervention</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div>Cranial Nerve</div>
+        </div>
+    </div>
+
+    <div class="kb-hint">
+        <kbd>Esc</kbd> close panel &nbsp; <kbd>/</kbd> search &nbsp; <kbd>R</kbd> reset view
+    </div>
+
+    <div class="minimap" id="minimap">
+        <div class="minimap-viewport" id="minimap-vp"></div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const nodes = {
+        // TIER 1 — Central hub
+        central: {
+            label: 'COGNITION &\nSENSATION', sub: 'Neurologic Function',
+            type: 'central', x: 950, y: 50
+        },
+
+        // TIER 2 — Core branches (6 major categories)
+        neuroanatomy: {
+            label: 'Neuroanatomy\nFoundations', sub: 'Brain, meninges, CSF',
+            type: 'anatomy', x: 150, y: 230
+        },
+        neuro_assessment: {
+            label: 'Neurologic\nAssessment', sub: 'LOC, GCS, cranial nerves',
+            type: 'assessment', x: 450, y: 230
+        },
+        icp: {
+            label: 'Increased ICP', sub: 'Monro-Kellie, CPP',
+            type: 'complication', x: 750, y: 230
+        },
+        stroke: {
+            label: 'Cerebrovascular\nDisorders', sub: 'Ischemic & hemorrhagic',
+            type: 'vascular', x: 1050, y: 230
+        },
+        tbi: {
+            label: 'Traumatic Brain\nInjury', sub: 'Primary & secondary injury',
+            type: 'trauma', x: 1350, y: 230
+        },
+        sci: {
+            label: 'Spinal Cord\nInjury', sub: 'Paralysis, shock syndromes',
+            type: 'trauma', x: 1650, y: 230
+        },
+
+        // TIER 3 — Disease/condition hubs
+        loc_states: {
+            label: 'Altered LOC\nStates', sub: 'Coma to locked-in',
+            type: 'assessment', x: 150, y: 440
+        },
+        gcs: {
+            label: 'Glasgow Coma\nScale', sub: 'Eye, verbal, motor',
+            type: 'assessment', x: 400, y: 440
+        },
+        seizures: {
+            label: 'Seizures', sub: 'Focal & generalized',
+            type: 'seizure', x: 650, y: 440
+        },
+        ischemic_stroke: {
+            label: 'Ischemic\nStroke', sub: '87% of strokes',
+            type: 'vascular', x: 900, y: 440
+        },
+        hemorrhagic_stroke: {
+            label: 'Hemorrhagic\nStroke', sub: 'SAH, ICH',
+            type: 'vascular', x: 1150, y: 440
+        },
+        meningitis: {
+            label: 'Meningitis', sub: 'Bacterial & viral',
+            type: 'infection', x: 1400, y: 440
+        },
+        autoimmune: {
+            label: 'Autoimmune\nDisorders', sub: 'MS, MG, GBS',
+            type: 'autoimmune', x: 1700, y: 440
+        },
+
+        // TIER 4 — Specific subtypes/conditions
+        brain_lobes: {
+            label: 'Brain Lobes', sub: 'Frontal, parietal, temporal, occipital',
+            type: 'anatomy', x: 80, y: 650
+        },
+        meninges: {
+            label: 'Meninges', sub: 'Dura, arachnoid, pia',
+            type: 'anatomy', x: 280, y: 650
+        },
+        status_epilepticus: {
+            label: 'Status\nEpilepticus', sub: 'Seizure >5 min',
+            type: 'seizure', x: 530, y: 650
+        },
+        tpa: {
+            label: 't-PA\nThrombolysis', sub: 'Door-to-needle <45 min',
+            type: 'intervention', x: 780, y: 650
+        },
+        tia: {
+            label: 'TIA', sub: 'Warning stroke',
+            type: 'vascular', x: 980, y: 650
+        },
+        vasospasm: {
+            label: 'Vasospasm', sub: '4-14 days post SAH',
+            type: 'complication', x: 1180, y: 650
+        },
+        epidural: {
+            label: 'Epidural\nHematoma', sub: 'Lucid interval',
+            type: 'trauma', x: 1380, y: 650
+        },
+        subdural: {
+            label: 'Subdural\nHematoma', sub: 'Acute & chronic',
+            type: 'trauma', x: 1580, y: 650
+        },
+        ms: {
+            label: 'Multiple\nSclerosis', sub: 'Demyelination',
+            type: 'autoimmune', x: 1780, y: 650
+        },
+
+        // TIER 5 — Complications, treatments, syndromes
+        herniation: {
+            label: 'Brain\nHerniation', sub: 'Cushing triad',
+            type: 'complication', x: 80, y: 860
+        },
+        posturing: {
+            label: 'Posturing', sub: 'Decorticate vs decerebrate',
+            type: 'assessment', x: 280, y: 860
+        },
+        aphasia: {
+            label: 'Aphasia', sub: "Broca's vs Wernicke's",
+            type: 'assessment', x: 530, y: 860
+        },
+        penumbra: {
+            label: 'Penumbra', sub: 'Salvageable tissue',
+            type: 'vascular', x: 780, y: 860
+        },
+        spinal_shock: {
+            label: 'Spinal Shock', sub: 'Areflexia below lesion',
+            type: 'trauma', x: 1030, y: 860
+        },
+        neurogenic_shock: {
+            label: 'Neurogenic\nShock', sub: 'Warm skin, bradycardia',
+            type: 'trauma', x: 1230, y: 860
+        },
+        autonomic_dysreflexia: {
+            label: 'Autonomic\nDysreflexia', sub: 'Emergency >T6',
+            type: 'complication', x: 1430, y: 860
+        },
+        myasthenia: {
+            label: 'Myasthenia\nGravis', sub: 'ACh receptor antibodies',
+            type: 'autoimmune', x: 1630, y: 860
+        },
+        gbs: {
+            label: 'Guillain-Barr\u00e9', sub: 'Ascending paralysis',
+            type: 'autoimmune', x: 1880, y: 860
+        },
+
+        // TIER 6 — Protocols, bundles, specific interventions
+        icp_management: {
+            label: 'ICP\nManagement', sub: 'HOB 30\u00b0, avoid Valsalva',
+            type: 'intervention', x: 180, y: 1060
+        },
+        craniotomy: {
+            label: 'Intracranial\nSurgery', sub: 'Craniotomy, burr holes',
+            type: 'intervention', x: 450, y: 1060
+        },
+        aneurysm_precautions: {
+            label: 'Aneurysm\nPrecautions', sub: 'Strict bed rest, quiet',
+            type: 'intervention', x: 750, y: 1060
+        },
+        trigeminal: {
+            label: 'Trigeminal\nNeuralgia', sub: 'CN V pain',
+            type: 'cranial', x: 1050, y: 1060
+        },
+        bells_palsy: {
+            label: "Bell's Palsy", sub: 'CN VII paralysis',
+            type: 'cranial', x: 1300, y: 1060
+        },
+        myasthenic_crisis: {
+            label: 'Myasthenic vs\nCholinergic Crisis', sub: 'Under vs overmedication',
+            type: 'complication', x: 1600, y: 1060
+        }
+    };
+
+    // Edges: [from, to, label, dashed?]
+    const edges = [
+        // Central hub connections
+        ['central', 'neuroanatomy', '', false],
+        ['central', 'neuro_assessment', '', false],
+        ['central', 'icp', '', false],
+        ['central', 'stroke', '', false],
+        ['central', 'tbi', '', false],
+        ['central', 'sci', '', false],
+
+        // Tier 2 → Tier 3
+        ['neuroanatomy', 'brain_lobes', 'includes', false],
+        ['neuroanatomy', 'meninges', 'includes', false],
+        ['neuro_assessment', 'loc_states', 'evaluates', false],
+        ['neuro_assessment', 'gcs', 'uses', false],
+        ['icp', 'seizures', 'can cause', false],
+        ['stroke', 'ischemic_stroke', 'type', false],
+        ['stroke', 'hemorrhagic_stroke', 'type', false],
+        ['tbi', 'epidural', 'causes', false],
+        ['tbi', 'subdural', 'causes', false],
+        ['central', 'autoimmune', '', false],
+
+        // Disease clusters
+        ['seizures', 'status_epilepticus', 'refractory', false],
+        ['ischemic_stroke', 'tpa', 'treated with', false],
+        ['ischemic_stroke', 'tia', 'preceded by', false],
+        ['ischemic_stroke', 'penumbra', 'salvage window', false],
+        ['hemorrhagic_stroke', 'vasospasm', '4-14 days', false],
+        ['hemorrhagic_stroke', 'aneurysm_precautions', 'requires', false],
+
+        // Trauma chains
+        ['icp', 'herniation', 'leads to', false],
+        ['herniation', 'posturing', 'manifests as', false],
+        ['icp', 'icp_management', 'treated with', false],
+        ['tbi', 'craniotomy', 'may require', false],
+
+        // SCI chains
+        ['sci', 'spinal_shock', 'causes', false],
+        ['sci', 'neurogenic_shock', 'causes', false],
+        ['spinal_shock', 'autonomic_dysreflexia', 'after resolution', false],
+
+        // Autoimmune cluster
+        ['autoimmune', 'ms', 'includes', false],
+        ['autoimmune', 'myasthenia', 'includes', false],
+        ['autoimmune', 'gbs', 'includes', false],
+        ['myasthenia', 'myasthenic_crisis', 'complication', false],
+
+        // Assessment connections
+        ['gcs', 'posturing', 'motor component', false],
+        ['loc_states', 'gcs', 'quantifies', false],
+        ['brain_lobes', 'aphasia', 'damage causes', false],
+
+        // Meningitis connections
+        ['central', 'meningitis', '', false],
+        ['meningitis', 'icp', 'increases', false],
+
+        // Cranial nerve disorders
+        ['central', 'trigeminal', '', false],
+        ['central', 'bells_palsy', '', false],
+
+        // Cross-links (dashed)
+        ['icp', 'stroke', 'can cause', true],
+        ['icp', 'tbi', 'complicates', true],
+        ['hemorrhagic_stroke', 'icp', 'increases', true],
+        ['seizures', 'stroke', 'post-stroke', true],
+        ['gbs', 'spinal_shock', 'similar presentation', true],
+        ['tpa', 'penumbra', 'saves', true],
+        ['meningitis', 'seizures', 'can trigger', true],
+        ['craniotomy', 'icp', 'relieves', true],
+        ['autonomic_dysreflexia', 'neurogenic_shock', 'contrast', true],
+        ['epidural', 'subdural', 'location differs', true],
+        ['ms', 'myasthenia', 'both autoimmune', true],
+        ['status_epilepticus', 'icp', 'can increase', true]
+    ];
+
+    // ===== NODE DETAIL CONTENT =====
+    const nodeInfo = {
+        central: {
+            title: 'Cognition & Sensation',
+            content: `
+                <h3>Central Concept</h3>
+                <p>The neurologic system controls cognition, sensation, movement, and autonomic functions. Assessment of this system is critical because <strong>level of consciousness (LOC) is the most sensitive indicator of neurologic status</strong>.</p>
+                <h3>Key Themes</h3>
+                <ul>
+                    <li><strong>LOC first</strong> \u2014 always the most important assessment finding</li>
+                    <li><strong>Time is brain</strong> \u2014 rapid intervention preserves function</li>
+                    <li><strong>ICP management</strong> \u2014 core to most neuro conditions</li>
+                    <li><strong>Airway priority</strong> \u2014 altered LOC = aspiration risk</li>
+                    <li><strong>Secondary injury prevention</strong> \u2014 edema peaks 24-36 hours</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "The brain cannot store oxygen or glucose\u2014it requires constant perfusion. Cerebral blood flow is 15% of cardiac output (~750 mL/min). Any interruption causes rapid neuronal death."
+                </div>
+            `
+        },
+        neuroanatomy: {
+            title: 'Neuroanatomy Foundations',
+            content: `
+                <h3>Brain Structures</h3>
+                <ul>
+                    <li><strong>Cerebrum</strong> \u2014 4 lobes (frontal, parietal, temporal, occipital)</li>
+                    <li><strong>Brain stem</strong> \u2014 midbrain, pons, medulla oblongata</li>
+                    <li><strong>Cerebellum</strong> \u2014 coordination, balance, proprioception</li>
+                </ul>
+                <h3>Cerebral Circulation</h3>
+                <ul>
+                    <li>Brain receives <strong>15% of cardiac output</strong> (~750 mL/min)</li>
+                    <li>Circle of Willis provides collateral circulation</li>
+                    <li>Cerebral vessels have <strong>2 layers (not 3)</strong> \u2192 more prone to rupture</li>
+                    <li>Cerebral veins have <strong>no valves</strong> \u2192 depend on gravity</li>
+                </ul>
+                <h3>Blood-Brain Barrier</h3>
+                <p>Protective barrier altered by: trauma, cerebral edema, hypoxemia. Many medications cannot cross.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Circle of Willis bifurcations = frequent aneurysm sites. The 2-layer vessel walls make cerebral vessels more prone to rupture than systemic vessels.
+                </div>
+            `
+        },
+        brain_lobes: {
+            title: 'Brain Lobes & Functions',
+            content: `
+                <h3>Frontal Lobe (Largest)</h3>
+                <ul>
+                    <li>Concentration, abstract thinking, memory</li>
+                    <li>Motor function, judgment, personality, affect</li>
+                    <li><strong>Broca's area (left)</strong> \u2192 expressive speech</li>
+                </ul>
+                <h3>Parietal Lobe</h3>
+                <ul>
+                    <li>Sensory analysis</li>
+                    <li>Right/left orientation</li>
+                </ul>
+                <h3>Temporal Lobe</h3>
+                <ul>
+                    <li>Auditory processing, memory of sound</li>
+                    <li><strong>Wernicke's area (left posterior)</strong> \u2192 language comprehension</li>
+                </ul>
+                <h3>Occipital Lobe</h3>
+                <ul>
+                    <li>Visual interpretation and memory</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Broca's = Broken speech (can understand but can't express). Wernicke's = Wordy but nonsense (can't understand, speech is disconnected words)."
+                </div>
+            `
+        },
+        meninges: {
+            title: 'Meninges & CSF',
+            content: `
+                <h3>Layers (Outer to Inner)</h3>
+                <ol>
+                    <li><strong>Dura mater</strong> \u2014 tough, thick, inelastic; epidural space above, subdural below</li>
+                    <li><strong>Arachnoid</strong> \u2014 thin, spider web-like; CSF in subarachnoid space</li>
+                    <li><strong>Pia mater</strong> \u2014 innermost, hugs brain surface</li>
+                </ol>
+                <h3>CSF Facts</h3>
+                <ul>
+                    <li>Produced in <strong>choroid plexus</strong> of ventricles</li>
+                    <li>Production: ~500 mL/day</li>
+                    <li>Volume: 125-150 mL</li>
+                    <li>Normal: clear, colorless, specific gravity 1.007</li>
+                </ul>
+                <h3>Hydrocephalus</h3>
+                <ul>
+                    <li><strong>Obstructive</strong> \u2192 blockage in ventricular system</li>
+                    <li><strong>Communicating</strong> \u2192 blood/bacteria obstruct arachnoid villi</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Herniation = brain tissue compressed against or displaced through dural folds. The rigid dura creates compartments\u2014increased pressure forces tissue through these openings.
+                </div>
+            `
+        },
+        neuro_assessment: {
+            title: 'Neurologic Assessment',
+            content: `
+                <h3>Assessment Components</h3>
+                <ul>
+                    <li><strong>Consciousness/cognition</strong> \u2014 mental status, orientation, language</li>
+                    <li><strong>Cranial nerves</strong> \u2014 12 pairs, test each systematically</li>
+                    <li><strong>Motor system</strong> \u2014 muscle size, tone, strength, coordination</li>
+                    <li><strong>Sensory system</strong> \u2014 tactile, pain, temperature, proprioception</li>
+                    <li><strong>Reflexes</strong> \u2014 DTRs, superficial, pathologic (Babinski)</li>
+                </ul>
+                <h3>Key Symptoms to Assess</h3>
+                <ul>
+                    <li>Pain, seizures, dizziness, vertigo</li>
+                    <li>Visual disturbances, weakness</li>
+                    <li>Abnormal sensations, confusion</li>
+                </ul>
+                <h3>Babinski Reflex</h3>
+                <p>Present at birth, disappears by 9-10 months. <strong>Positive in adults = CNS disease</strong> affecting corticospinal tract.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "LOC is the MOST IMPORTANT indicator of patient condition. Always assess LOC first\u2014it's more sensitive than vital signs for detecting neurologic deterioration."
+                </div>
+            `
+        },
+        loc_states: {
+            title: 'Altered Level of Consciousness',
+            content: `
+                <h3>Key Concept</h3>
+                <p>LOC is a <strong>continuum from alertness to coma</strong>. Altered LOC is a result of pathology, not the disorder itself.</p>
+                <h3>States of Consciousness</h3>
+                <ul>
+                    <li><strong>Coma</strong> \u2014 unconscious, unarousable unresponsiveness</li>
+                    <li><strong>Akinetic mutism</strong> \u2014 unresponsive, no movement/sound, may open eyes</li>
+                    <li><strong>Persistent vegetative state</strong> \u2014 no cognitive function, has sleep-wake cycles</li>
+                    <li><strong>Locked-in syndrome</strong> \u2014 can't move except eyes; <strong>pons lesion</strong></li>
+                </ul>
+                <h3>Key Interventions</h3>
+                <ul>
+                    <li><strong>Airway</strong> \u2014 HOB 30\u00b0, lateral position, frequent suctioning</li>
+                    <li><strong>Tissue integrity</strong> \u2014 turning q2h, passive ROM, eye care</li>
+                    <li><strong>Thermoregulation</strong> \u2014 for fever: minimal bedding, acetaminophen</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Locked-in syndrome = patient is AWARE but cannot move or speak (except eye movements). It's caused by a pons lesion. Don't confuse with coma or vegetative state.
+                </div>
+            `
+        },
+        gcs: {
+            title: 'Glasgow Coma Scale',
+            content: `
+                <h3>Components (Total: 3-15)</h3>
+                <h4>Eye Opening (1-4)</h4>
+                <ul>
+                    <li>4 = Spontaneous</li>
+                    <li>3 = To verbal stimuli</li>
+                    <li>2 = To pain</li>
+                    <li>1 = No response</li>
+                </ul>
+                <h4>Verbal Response (1-5)</h4>
+                <ul>
+                    <li>5 = Oriented</li>
+                    <li>4 = Confused conversation</li>
+                    <li>3 = Inappropriate words</li>
+                    <li>2 = Incomprehensible sounds</li>
+                    <li>1 = No response</li>
+                </ul>
+                <h4>Motor Response (1-6)</h4>
+                <ul>
+                    <li>6 = Obeys commands</li>
+                    <li>5 = Purposeful movement to pain</li>
+                    <li>4 = Withdraws from pain</li>
+                    <li>3 = Decorticate (flexion)</li>
+                    <li>2 = Decerebrate (extension)</li>
+                    <li>1 = No response</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> GCS \u22648 = severe head injury, likely needs intubation. Motor response is the most reliable component in intubated patients. Always document best response.
+                </div>
+            `
+        },
+        posturing: {
+            title: 'Posturing',
+            content: `
+                <h3>Severity (Worst to Least)</h3>
+                <ol>
+                    <li><strong>Flaccid</strong> \u2014 no response, most severe</li>
+                    <li><strong>Decerebrate</strong> \u2014 extension, arms/legs extended and rigid</li>
+                    <li><strong>Decorticate</strong> \u2014 flexion, arms flexed to chest, legs extended</li>
+                </ol>
+                <h3>Memory Aid</h3>
+                <p><strong>DecortiCATE</strong> = arms flexed toward CORE (flexion)</p>
+                <p><strong>DecereBRATE</strong> = arms extended, BRacing (extension)</p>
+                <h3>Clinical Significance</h3>
+                <ul>
+                    <li>Decerebrate indicates <strong>brainstem damage</strong> (worse prognosis)</li>
+                    <li>Decorticate indicates <strong>cortical damage</strong></li>
+                    <li>Either indicates severe neurologic compromise</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Posturing is an ominous sign. Decorticate (flexion) = 'COR' for core\u2014arms flex toward the body. Decerebrate (extension) = everything extends. Both indicate severe brain injury."
+                </div>
+            `
+        },
+        icp: {
+            title: 'Increased Intracranial Pressure',
+            content: `
+                <h3>Monro-Kellie Hypothesis</h3>
+                <p>Skull = closed space with fixed volume. Three components: <strong>brain tissue (80%), blood (10%), CSF (10%)</strong>. Increase in one \u2192 must decrease another OR pressure rises.</p>
+                <h3>Normal Values</h3>
+                <ul>
+                    <li>ICP: <strong>0-10 mmHg</strong></li>
+                    <li>CPP: <strong>70-100 mmHg</strong></li>
+                    <li><strong>CPP = MAP - ICP</strong></li>
+                    <li>CPP <50 \u2192 irreversible neurologic damage</li>
+                </ul>
+                <h3>CO\u2082 Role in Autoregulation</h3>
+                <ul>
+                    <li>\u2193 CO\u2082 \u2192 vasoconstriction \u2192 \u2193 ICP</li>
+                    <li>\u2191 CO\u2082 \u2192 vasodilation \u2192 \u2191 ICP</li>
+                </ul>
+                <h3>Warning Signs</h3>
+                <p><strong>Cushing triad</strong>: \u2191 BP + \u2193 HR + irregular respirations = late sign of herniation</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> If ICP = MAP, cerebral circulation STOPS. Maintain CPP 70-80 mmHg. Cushing triad is a LATE sign\u2014don't wait for it. Early signs: headache, decreased LOC, pupil changes.
+                </div>
+            `
+        },
+        herniation: {
+            title: 'Brain Herniation',
+            content: `
+                <h3>Definition</h3>
+                <p>Brain tissue compressed against or displaced through rigid dural structures due to increased ICP.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Uncal</strong> \u2014 temporal lobe through tentorium; CN III compression \u2192 ipsilateral dilated pupil</li>
+                    <li><strong>Central (transtentorial)</strong> \u2014 downward displacement</li>
+                    <li><strong>Tonsillar</strong> \u2014 cerebellar tonsils through foramen magnum; compresses medulla \u2192 respiratory arrest</li>
+                </ul>
+                <h3>Signs</h3>
+                <ul>
+                    <li><strong>Cushing triad</strong> (late): \u2191 systolic BP, \u2193 HR, irregular respirations</li>
+                    <li>Pupil changes (fixed, dilated, unequal)</li>
+                    <li>Posturing, loss of reflexes</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Dilated pupil on operative side post-craniotomy = intracranial hematoma compressing CN III. This is an emergency\u2014notify surgeon immediately.
+                </div>
+            `
+        },
+        icp_management: {
+            title: 'ICP Management',
+            content: `
+                <h3>Positioning</h3>
+                <ul>
+                    <li>HOB <strong>30-45 degrees</strong></li>
+                    <li>Head in <strong>neutral position</strong> (no extreme rotation)</li>
+                    <li>Avoid hip flexion >90\u00b0</li>
+                </ul>
+                <h3>Avoid ICP Increases</h3>
+                <ul>
+                    <li>No Valsalva maneuver (straining, coughing)</li>
+                    <li>Stool softeners to prevent straining</li>
+                    <li>Avoid abdominal distention</li>
+                    <li>Maintain calm, quiet environment</li>
+                </ul>
+                <h3>Medical Management</h3>
+                <ul>
+                    <li><strong>Mannitol</strong> \u2014 osmotic diuretic, draws fluid from brain</li>
+                    <li><strong>Hypertonic saline (3%)</strong> \u2014 alternative to mannitol</li>
+                    <li><strong>Hyperventilation</strong> \u2014 short-term; \u2193 CO\u2082 \u2192 vasoconstriction</li>
+                    <li>Sedation, seizure prophylaxis</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Cerebral edema peaks at 24-36 hours post-injury. During this window, ICP monitoring and management are most critical. Slight hypoxia or hypercapnia affects cerebral perfusion."
+                </div>
+            `
+        },
+        seizures: {
+            title: 'Seizures',
+            content: `
+                <h3>Definition</h3>
+                <p>Abnormal episodes of motor, sensory, autonomic, or psychic activity from sudden, uncontrolled electrical discharge of cerebral neurons.</p>
+                <h3>Classification</h3>
+                <ul>
+                    <li><strong>Focal</strong> \u2014 originates in one hemisphere</li>
+                    <li><strong>Generalized</strong> \u2014 engages bilaterally (tonic-clonic, absence)</li>
+                    <li><strong>Provoked</strong> \u2014 from acute reversible cause (metabolic, fever)</li>
+                </ul>
+                <h3>Causes</h3>
+                <ul>
+                    <li>Cerebrovascular disease, hypoxemia, fever (childhood)</li>
+                    <li>Head injury, hypertension, CNS infections</li>
+                    <li>Drug/alcohol withdrawal, metabolic disturbances</li>
+                </ul>
+                <h3>Nursing During Seizure</h3>
+                <ul>
+                    <li>Protect from injury, don't restrain</li>
+                    <li>Turn to side, maintain airway</li>
+                    <li>Time the seizure</li>
+                    <li>Document: type of movement, duration, postictal state</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Don't put anything in the patient's mouth during a seizure. Turn to side for airway. Post-seizure: check blood glucose, assess for rhabdomyolysis if prolonged.
+                </div>
+            `
+        },
+        status_epilepticus: {
+            title: 'Status Epilepticus',
+            content: `
+                <h3>Definition</h3>
+                <p><strong>EMERGENCY:</strong> Prolonged seizure activity \u22655 minutes OR serial seizures without recovery between.</p>
+                <h3>Consequences</h3>
+                <ul>
+                    <li>Permanent brain damage from anoxic episodes</li>
+                    <li>Rhabdomyolysis \u2192 AKI</li>
+                    <li>Respiratory failure</li>
+                </ul>
+                <h3>Causes</h3>
+                <ul>
+                    <li>Fever, infection</li>
+                    <li><strong>Stopping anticonvulsants abruptly</strong></li>
+                    <li>Metabolic disturbances</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>Stop seizure ASAP: <strong>Lorazepam 2mg IV</strong> (may repeat x1 after 2 min)</li>
+                    <li>Establish advanced airway</li>
+                    <li>IV anticonvulsants (phenytoin, fosphenytoin)</li>
+                    <li>Check glucose, electrolytes</li>
+                    <li>Continuous cardiac/respiratory monitoring</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Status epilepticus = seizure \u22655 minutes = EMERGENCY. Lorazepam IV is first-line. Never stop anticonvulsants abruptly\u2014this can precipitate status epilepticus.
+                </div>
+            `
+        },
+        stroke: {
+            title: 'Cerebrovascular Disorders',
+            content: `
+                <h3>Overview</h3>
+                <p>"Brain attack"\u2014sudden loss of function from disrupted blood supply. Fifth leading cause of death; leading cause of serious long-term disability.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Ischemic (87%)</strong> \u2014 obstruction (thrombus or embolism)</li>
+                    <li><strong>Hemorrhagic (13%)</strong> \u2014 bleeding into brain tissue</li>
+                </ul>
+                <h3>BEFAST Assessment</h3>
+                <ul>
+                    <li><strong>B</strong>alance problems</li>
+                    <li><strong>E</strong>yes (visual changes)</li>
+                    <li><strong>F</strong>ace drooping</li>
+                    <li><strong>A</strong>rm weakness</li>
+                    <li><strong>S</strong>peech difficulty</li>
+                    <li><strong>T</strong>ime to call 911</li>
+                </ul>
+                <h3>Risk Factors</h3>
+                <p><strong>Hypertension is the PRIMARY modifiable risk factor.</strong> Others: a-fib, diabetes, smoking, obesity, high cholesterol.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Time is brain. Loss of 1.9 million neurons per minute without treatment. The brain ages 3.6 years per hour during an untreated stroke."
+                </div>
+            `
+        },
+        ischemic_stroke: {
+            title: 'Ischemic Stroke',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Obstruction \u2192 disturbed blood flow \u2192 brain tissue infarction. Aerobic \u2192 anaerobic metabolism \u2192 lactic acid \u2192 \u2193 pH \u2192 cell death.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li>Large artery thrombosis (atherosclerotic plaques)</li>
+                    <li>Small penetrating artery thrombosis</li>
+                    <li>Cardiogenic embolism (a-fib, valve disease)</li>
+                </ul>
+                <h3>Key Terms</h3>
+                <ul>
+                    <li><strong>Hemiplegia</strong> \u2014 paralysis one side</li>
+                    <li><strong>Hemiparesis</strong> \u2014 weakness one side</li>
+                    <li><strong>Dysarthria</strong> \u2014 impaired speech from muscle paralysis</li>
+                    <li><strong>Hemianopsia</strong> \u2014 blindness in half of visual field</li>
+                </ul>
+                <h3>Upper Motor Neuron Lesion</h3>
+                <p>Damage on one side \u2192 dysfunction on <strong>opposite side</strong> (decussation).</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Right-sided stroke = LEFT-sided symptoms (and vice versa) because motor tracts cross (decussate). Initial head CT to rule out hemorrhage BEFORE t-PA.
+                </div>
+            `
+        },
+        tia: {
+            title: 'Transient Ischemic Attack',
+            content: `
+                <h3>Definition</h3>
+                <p>Temporary neurologic deficit from temporary blood flow impairment. Resolves within 24 hours (most <1 hour).</p>
+                <h3>Significance</h3>
+                <ul>
+                    <li><strong>"Warning of impending stroke"</strong></li>
+                    <li>3-15% of strokes preceded by TIA</li>
+                    <li>Requires diagnostic workup</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>Complete stroke workup (CT, MRI, carotid studies, echo)</li>
+                    <li>Identify and treat risk factors</li>
+                    <li>Antiplatelet therapy</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "TIA is a stroke that got better. It's a warning shot. The highest risk of stroke is in the first 48 hours after TIA\u2014urgent workup is essential."
+                </div>
+            `
+        },
+        tpa: {
+            title: 't-PA Thrombolytic Therapy',
+            content: `
+                <h3>Mechanism</h3>
+                <p>Binds fibrin, converts plasminogen to plasmin \u2192 fibrinolysis of clot.</p>
+                <h3>Timing</h3>
+                <ul>
+                    <li><strong>Door-to-needle goal: 45 minutes</strong></li>
+                    <li>IV t-PA within 3 hours (may extend to 4.5 hours with exclusions)</li>
+                    <li>Head CT within 20 minutes of arrival</li>
+                </ul>
+                <h3>Dosing</h3>
+                <ul>
+                    <li>0.9 mg/kg (max 90 mg)</li>
+                    <li>10% as bolus over 1 minute</li>
+                    <li>Remainder over 1 hour</li>
+                </ul>
+                <h3>Exclusion Criteria (4.5-hour window)</h3>
+                <ul>
+                    <li>Age >80 years</li>
+                    <li>NIHSS >25 (severe stroke)</li>
+                    <li>History of DM AND prior stroke</li>
+                    <li>Taking oral anticoagulant</li>
+                </ul>
+                <h3>Major Risk: BLEEDING</h3>
+                <ul>
+                    <li>Insert all invasive lines BEFORE administration</li>
+                    <li>No anticoagulants for 24 hours</li>
+                    <li>Monitor q15min x2h, q30min x6h, q1h x16h</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> t-PA contraindicated if too late (revascularization of necrotic tissue \u2192 hemorrhage). BP must be <185/105 for t-PA. Permissive hypertension may be allowed to perfuse the penumbra.
+                </div>
+            `
+        },
+        penumbra: {
+            title: 'Ischemic Penumbra',
+            content: `
+                <h3>Definition</h3>
+                <p>Area of brain tissue surrounding the infarct core that is <strong>ischemic but potentially salvageable</strong> with timely intervention.</p>
+                <h3>Significance</h3>
+                <ul>
+                    <li>Central concept in stroke treatment</li>
+                    <li>Target of thrombolytic therapy</li>
+                    <li>Blood flow <25 mL/100g/min but not yet infarcted</li>
+                </ul>
+                <h3>Time Window</h3>
+                <p>The penumbra progressively converts to infarction over time. This is why <strong>"time is brain"</strong>\u2014early reperfusion saves penumbral tissue.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "The penumbra is the 'tissue at risk'\u2014brain cells that are stunned but not dead. Every minute counts because the penumbra shrinks as the infarct core expands."
+                </div>
+            `
+        },
+        hemorrhagic_stroke: {
+            title: 'Hemorrhagic Stroke',
+            content: `
+                <h3>Causes</h3>
+                <ul>
+                    <li>Bleeding into brain tissue, ventricles, or subarachnoid space</li>
+                    <li>Spontaneous rupture of small vessels (primarily HTN)</li>
+                    <li>Ruptured aneurysm \u2192 subarachnoid hemorrhage</li>
+                    <li>AVMs, anticoagulants, amyloid angiopathy</li>
+                </ul>
+                <h3>Pathophysiology</h3>
+                <ul>
+                    <li>Blood exposure disrupts brain metabolism</li>
+                    <li>ICP increases from blood in subarachnoid space</li>
+                    <li>Compression and secondary ischemia</li>
+                </ul>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li><strong>"Worst headache of my life"</strong></li>
+                    <li>Early sudden changes in LOC</li>
+                    <li>Nausea/vomiting, seizures</li>
+                    <li>Nuchal rigidity (SAH)</li>
+                </ul>
+                <h3>Mortality: Up to 50%</h3>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> "Worst headache of my life" = think subarachnoid hemorrhage until proven otherwise. Head CT shows blood. NO t-PA for hemorrhagic stroke\u2014that would worsen bleeding.
+                </div>
+            `
+        },
+        vasospasm: {
+            title: 'Cerebral Vasospasm',
+            content: `
+                <h3>Definition</h3>
+                <p>Narrowing of arterial lumen \u2192 reduces blood flow \u2192 can cause secondary stroke.</p>
+                <h3>Timing</h3>
+                <p><strong>Common 4-14 days post subarachnoid hemorrhage</strong> (peak 7-8 days when clot lyses).</p>
+                <h3>Treatment</h3>
+                <ul>
+                    <li><strong>Nimodipine</strong> \u2014 calcium channel blocker; dilates cerebral arteries</li>
+                    <li><strong>Triple H Therapy</strong>: Hypervolemia, Hypertension, Hemodilution</li>
+                </ul>
+                <h3>Monitoring</h3>
+                <ul>
+                    <li>Transcranial Doppler for velocity changes</li>
+                    <li>Neurologic checks for new deficits</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Vasospasm is the leading cause of morbidity after SAH. Nimodipine is given prophylactically for 21 days to prevent it. Monitor for any change in neuro status days 4-14."
+                </div>
+            `
+        },
+        aphasia: {
+            title: 'Aphasia',
+            content: `
+                <h3>Expressive Aphasia (Broca's)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Left inferior frontal gyrus</li>
+                    <li>Can understand but <strong>cannot speak/write</strong></li>
+                    <li>Speech is halting, effortful, telegraphic</li>
+                    <li>Often frustrated because cognition is intact</li>
+                </ul>
+                <h3>Receptive Aphasia (Wernicke's)</h3>
+                <ul>
+                    <li><strong>Location:</strong> Left posterior temporal gyrus</li>
+                    <li>Cannot understand spoken/written language</li>
+                    <li>Speech is fluent but <strong>nonsensical</strong> (word salad)</li>
+                    <li>Often unaware of deficit</li>
+                </ul>
+                <h3>Global Aphasia</h3>
+                <p>Both expressive and receptive components impaired. Results from large stroke affecting both areas.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Broca's = "Broken" speech (can understand, can't express). Wernicke's = "Wordy" but wrong (can't understand, speaks nonsense). Both are in the LEFT hemisphere in most people.
+                </div>
+            `
+        },
+        aneurysm_precautions: {
+            title: 'Aneurysm Precautions',
+            content: `
+                <h3>Goal: Prevent Rebleeding</h3>
+                <p>Until aneurysm is secured (clipped or coiled), strict precautions to prevent ICP spikes and BP surges.</p>
+                <h3>Interventions</h3>
+                <ul>
+                    <li><strong>Absolute bed rest</strong> with HOB 30\u00b0</li>
+                    <li>Non-stimulating environment (dim lights, quiet)</li>
+                    <li>No reading, TV, radio (reduce stimulation)</li>
+                    <li>Restricted visitors</li>
+                    <li>Avoid Valsalva maneuver</li>
+                    <li>No neck flexion or rotation</li>
+                    <li>Stool softeners, mild laxatives</li>
+                </ul>
+                <h3>Monitoring</h3>
+                <ul>
+                    <li>Frequent neuro checks</li>
+                    <li>Watch for signs of rebleeding or vasospasm</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Rebleeding risk is highest in first 24 hours after SAH. Until the aneurysm is secured, any activity that could spike BP or ICP could cause catastrophic rebleeding."
+                </div>
+            `
+        },
+        tbi: {
+            title: 'Traumatic Brain Injury',
+            content: `
+                <h3>Epidemiology</h3>
+                <ul>
+                    <li>2.9 million head injuries/year in US</li>
+                    <li>Most common cause: <strong>falls</strong></li>
+                    <li>Most common cause of death from trauma</li>
+                    <li>High-risk groups: 0-4 years, 15-19 years, 65+ years</li>
+                </ul>
+                <h3>Types of Injury</h3>
+                <ul>
+                    <li><strong>Primary</strong> \u2014 direct contact during initial injury</li>
+                    <li><strong>Secondary</strong> \u2014 evolves over hours/days (edema, ischemia)</li>
+                </ul>
+                <h3>Brain Injury Types</h3>
+                <ul>
+                    <li><strong>Concussion (mild TBI)</strong> \u2014 temporary loss of consciousness</li>
+                    <li><strong>Contusion</strong> \u2014 more severe, surface hemorrhage</li>
+                    <li><strong>Diffuse axonal injury</strong> \u2014 widespread damage, immediate coma</li>
+                </ul>
+                <h3>Management Principles</h3>
+                <ul>
+                    <li><strong>Assume C-spine injury until ruled out</strong></li>
+                    <li>Preserve brain homeostasis</li>
+                    <li>Prevent secondary injury (edema peaks 24-36h)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Repeated concussions \u2192 chronic traumatic encephalopathy (CTE). Prevention is the best approach. Always immobilize C-spine at the scene of trauma.
+                </div>
+            `
+        },
+        epidural: {
+            title: 'Epidural Hematoma',
+            content: `
+                <h3>Definition</h3>
+                <p>Blood between <strong>skull and dura mater</strong>. Usually from torn middle meningeal artery.</p>
+                <h3>Classic Presentation</h3>
+                <ol>
+                    <li>Brief loss of consciousness</li>
+                    <li><strong>LUCID INTERVAL</strong> (patient wakes up, seems OK)</li>
+                    <li>Sudden decline as hematoma expands</li>
+                </ol>
+                <h3>Emergency Management</h3>
+                <ul>
+                    <li>Reduce ICP</li>
+                    <li>Remove clot (burr holes or craniotomy)</li>
+                    <li>Stop bleeding source</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> "Lucid interval" = epidural hematoma. Patient seems to improve then rapidly deteriorates. This is a SURGICAL EMERGENCY. Arterial bleed = rapid expansion.
+                </div>
+            `
+        },
+        subdural: {
+            title: 'Subdural Hematoma',
+            content: `
+                <h3>Definition</h3>
+                <p>Blood between <strong>dura and brain</strong>. Usually from torn bridging veins (venous).</p>
+                <h3>Acute Subdural</h3>
+                <ul>
+                    <li>Symptoms develop <strong>24-48 hours</strong></li>
+                    <li>Often after fall</li>
+                    <li>LOC, pupillary changes, hemiparesis</li>
+                    <li>Requires immediate craniotomy</li>
+                </ul>
+                <h3>Chronic Subdural</h3>
+                <ul>
+                    <li>Develops over <strong>weeks to months</strong></li>
+                    <li>Causative injury may be minor and forgotten</li>
+                    <li>Fluctuating symptoms, confusion</li>
+                    <li>May be mistaken for stroke or dementia</li>
+                </ul>
+                <h3>Risk Factors</h3>
+                <p>Older adults more prone (brain atrophy from normal aging creates more space for blood to accumulate).</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Chronic subdural in elderly may present like dementia or stroke. Think subdural if elderly patient has: minor/forgotten fall + progressive confusion + fluctuating symptoms.
+                </div>
+            `
+        },
+        craniotomy: {
+            title: 'Intracranial Surgery',
+            content: `
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Craniotomy</strong> \u2014 opening skull (remove tumor, evacuate clot)</li>
+                    <li><strong>Craniectomy</strong> \u2014 remove portion of skull</li>
+                    <li><strong>Cranioplasty</strong> \u2014 repair cranial defect with plate</li>
+                    <li><strong>Burr holes</strong> \u2014 circular openings for diagnosis or drainage</li>
+                </ul>
+                <h3>Postoperative Care</h3>
+                <ul>
+                    <li>Detect and reduce cerebral edema (peaks 24-36h)</li>
+                    <li>Monitor ICP and neurologic status</li>
+                    <li>HOB per surgeon (flat or 30\u00b0)</li>
+                    <li>Avoid extreme head rotation</li>
+                </ul>
+                <h3>Warning Signs</h3>
+                <ul>
+                    <li><strong>\u2191 BP + \u2193 HR + respiratory failure</strong> = ICP</li>
+                    <li>Dilated pupil on operative side = hematoma</li>
+                    <li>Patient doesn't wake up or deteriorates = clot</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Change blood-stained dressings promptly\u2014they're a medium for bacterial growth. Monitor for CSF leak (clear drainage from nose or incision). Post-op VS and neuro checks q15-60 min."
+                </div>
+            `
+        },
+        sci: {
+            title: 'Spinal Cord Injury',
+            content: `
+                <h3>Epidemiology</h3>
+                <ul>
+                    <li>294,000 persons in US live with SCI disability</li>
+                    <li>Causes: MVAs, falls, violence (GSW), sports</li>
+                    <li>Males: 78% of SCIs</li>
+                    <li>Most frequent levels: <strong>C5-C7, T12, L1</strong></li>
+                </ul>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Complete lesion</strong> \u2014 no sensory/motor function below level</li>
+                    <li><strong>Incomplete lesion</strong> \u2014 some function preserved</li>
+                    <li><strong>Paraplegia</strong> \u2014 paralysis of lower body</li>
+                    <li><strong>Tetraplegia (quadriplegia)</strong> \u2014 paralysis of all four extremities</li>
+                </ul>
+                <h3>Emergency Management</h3>
+                <ul>
+                    <li><strong>Stabilize cervical spine at scene</strong></li>
+                    <li>Improper handling can cause further damage</li>
+                    <li>One person stabilizes head and neck</li>
+                    <li>Keep on transfer board in extended position</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Primary prevention is KEY. Always assume C-spine injury in trauma until ruled out. The level of injury determines the extent of disability\u2014higher = worse.
+                </div>
+            `
+        },
+        spinal_shock: {
+            title: 'Spinal Shock',
+            content: `
+                <h3>Definition</h3>
+                <p>Sudden depression of reflex activity below injury level (<strong>areflexia</strong>).</p>
+                <h3>Manifestations</h3>
+                <ul>
+                    <li>Muscular flaccidity</li>
+                    <li>Lack of sensation and reflexes</li>
+                    <li>Decreased BP and HR</li>
+                    <li>Bowel distension, paralytic ileus</li>
+                </ul>
+                <h3>Timeline</h3>
+                <ul>
+                    <li>Paralytic ileus: 2-3 days post SCI, resolves 3-7 days</li>
+                    <li>Maintain MAP \u226585 mmHg during hyperacute phase</li>
+                </ul>
+                <h3>Resolution</h3>
+                <p>When spinal shock resolves, reflexes return. This is when <strong>autonomic dysreflexia</strong> becomes a risk (for lesions >T6).</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Spinal shock is NOT the same as neurogenic shock. Spinal shock = loss of reflexes. Neurogenic shock = loss of sympathetic tone (cardiovascular effects)."
+                </div>
+            `
+        },
+        neurogenic_shock: {
+            title: 'Neurogenic Shock',
+            content: `
+                <h3>Definition</h3>
+                <p>Loss of autonomic nervous system function below lesion due to loss of sympathetic tone.</p>
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Decreased BP, HR, cardiac output</li>
+                    <li>Venous pooling from peripheral vasodilation</li>
+                    <li><strong>WARM skin</strong> (vasodilated)</li>
+                    <li><strong>Hypotension with BRADYCARDIA</strong></li>
+                </ul>
+                <h3>Contrast with Other Shock</h3>
+                <p>Other types of shock: tachycardia, cool/clammy skin. Neurogenic shock is different because sympathetic response is lost.</p>
+                <h3>Management</h3>
+                <ul>
+                    <li>Volume resuscitation cautiously</li>
+                    <li>Vasopressors if needed</li>
+                    <li>Atropine for severe bradycardia</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Neurogenic shock = hypotension + BRADYCARDIA + warm skin. This is the opposite of hypovolemic shock (tachycardia, cool skin). The sympathetic system can't respond.
+                </div>
+            `
+        },
+        autonomic_dysreflexia: {
+            title: 'Autonomic Dysreflexia',
+            content: `
+                <h3>Definition</h3>
+                <p><strong>ACUTE EMERGENCY!</strong> Exaggerated autonomic response in patients with SCI <strong>above T6</strong>. Occurs after spinal shock resolves.</p>
+                <h3>Symptoms</h3>
+                <ul>
+                    <li><strong>Severe pounding headache</strong></li>
+                    <li><strong>Sudden increase in BP</strong> (can reach 300 systolic)</li>
+                    <li>Profuse diaphoresis above lesion</li>
+                    <li>Flushing above lesion, pallor below</li>
+                    <li>Nausea, nasal congestion</li>
+                    <li>Bradycardia</li>
+                </ul>
+                <h3>Triggers (Most Common)</h3>
+                <ul>
+                    <li><strong>Distended bladder (#1 cause)</strong></li>
+                    <li>Constipation/fecal impaction</li>
+                    <li>Skin stimulation (pressure ulcer, tight clothing)</li>
+                </ul>
+                <h3>Nursing Interventions</h3>
+                <ol>
+                    <li><strong>Sit patient UP</strong> (lowers BP)</li>
+                    <li>Empty bladder with catheter</li>
+                    <li>Check rectum for fecal mass</li>
+                    <li>Remove any skin irritants</li>
+                    <li>Antihypertensive (hydralazine IV) if BP doesn't drop</li>
+                </ol>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Autonomic dysreflexia = emergency. First action: SIT UP (uses gravity to lower BP). Then find and remove the trigger (usually distended bladder). Can cause stroke if untreated.
+                </div>
+            `
+        },
+        meningitis: {
+            title: 'Meningitis',
+            content: `
+                <h3>Definition</h3>
+                <p>Inflammation of membranes and fluid space surrounding brain and spinal cord.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Septic (bacterial)</strong> \u2014 S. pneumoniae, N. meningitidis</li>
+                    <li><strong>Aseptic (viral)</strong> \u2014 more common in summer/early fall</li>
+                </ul>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li>Headache, fever, changes in LOC</li>
+                    <li><strong>Nuchal rigidity (stiff neck)</strong></li>
+                    <li><strong>Positive Kernig sign</strong></li>
+                    <li><strong>Positive Brudzinski sign</strong></li>
+                    <li>Photophobia, petechiae, rash</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>High-dose IV antibiotics (Penicillin G + ceftriaxone)</li>
+                    <li>Dexamethasone</li>
+                    <li>Close contacts: chemoprophylaxis within 24 hours</li>
+                </ul>
+                <h3>Prevention</h3>
+                <p>Meningococcal vaccine at 11-12 years; booster at 16; college students and military.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Nuchal rigidity + fever + altered mental status = meningitis until proven otherwise. Kernig: can't extend knee when hip flexed. Brudzinski: flexing neck causes hip/knee flexion.
+                </div>
+            `
+        },
+        autoimmune: {
+            title: 'Autoimmune Neurologic Disorders',
+            content: `
+                <h3>Common Features</h3>
+                <ul>
+                    <li>Immune system attacks nervous system components</li>
+                    <li>Often relapsing-remitting pattern</li>
+                    <li>No cure, focus on symptom management and slowing progression</li>
+                </ul>
+                <h3>Key Disorders</h3>
+                <ul>
+                    <li><strong>Multiple Sclerosis</strong> \u2014 CNS demyelination</li>
+                    <li><strong>Myasthenia Gravis</strong> \u2014 neuromuscular junction antibodies</li>
+                    <li><strong>Guillain-Barr\u00e9</strong> \u2014 peripheral nerve demyelination</li>
+                </ul>
+                <h3>Respiratory Monitoring</h3>
+                <p>All three can cause respiratory failure\u2014this is the major concern in myasthenia and GBS.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "In autoimmune neuro disorders, respiratory failure is the #1 killer. Monitor vital capacity, negative inspiratory force, and ability to cough effectively."
+                </div>
+            `
+        },
+        ms: {
+            title: 'Multiple Sclerosis',
+            content: `
+                <h3>Definition</h3>
+                <p>Progressive immune-related <strong>demyelination of CNS</strong>. Frequently relapsing-remitting with exacerbations.</p>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li>Fatigue, weakness, numbness</li>
+                    <li>Difficulty with coordination, loss of balance</li>
+                    <li>Visual disturbances, pain</li>
+                    <li><strong>Spasticity (90%, often in lower extremities)</strong></li>
+                </ul>
+                <h3>Epidemiology</h3>
+                <ul>
+                    <li>Peak onset: 25-50 years</li>
+                    <li>Women more commonly affected</li>
+                    <li>7-14 year shorter life expectancy</li>
+                </ul>
+                <h3>Diagnosis</h3>
+                <p>Multiple plaques in CNS seen on <strong>MRI</strong>.</p>
+                <h3>Management</h3>
+                <ul>
+                    <li>Disease-modifying: interferon beta, glatiramer acetate</li>
+                    <li>Spasticity: baclofen, dantrolene</li>
+                    <li>Exercise (avoid extreme fatigue)</li>
+                    <li>Maintain <strong>temperate environment</strong> (heat worsens symptoms)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Heat worsens MS symptoms. Advise patients to use air conditioning, avoid hot baths/showers, and stay cool during exercise. There is no cure\u2014goal is to delay progression.
+                </div>
+            `
+        },
+        myasthenia: {
+            title: 'Myasthenia Gravis',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Autoimmune disorder: antibodies attack <strong>acetylcholine receptors</strong> at neuromuscular junction \u2192 impaired nerve-to-muscle transmission.</p>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li>Initially ocular: <strong>diplopia, ptosis</strong></li>
+                    <li>Facial muscle weakness</li>
+                    <li>Difficulty swallowing (dysphagia), voice changes</li>
+                    <li>Generalized weakness that worsens with activity</li>
+                </ul>
+                <h3>Diagnosis</h3>
+                <ul>
+                    <li><strong>Tensilon test</strong>: IV edrophonium \u2192 immediate improvement</li>
+                    <li><strong>Ice test</strong>: ice on eyes \u2192 ptosis improves</li>
+                    <li>Blood tests for ACh receptor antibodies</li>
+                </ul>
+                <h3>Treatment</h3>
+                <ul>
+                    <li><strong>Mestinon (pyridostigmine)</strong> \u2014 first-line; inhibits ACh breakdown</li>
+                    <li>Immunosuppressants, IVIG, plasmapheresis</li>
+                    <li>Thymectomy (especially if <60 years)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Have atropine available during Tensilon test (can cause bradycardia, bronchospasm). Symptoms worsen with activity, improve with rest. Avoid sedatives\u2014they can precipitate respiratory failure.
+                </div>
+            `
+        },
+        myasthenic_crisis: {
+            title: 'Myasthenic vs Cholinergic Crisis',
+            content: `
+                <h3>Myasthenic Crisis</h3>
+                <ul>
+                    <li>Disease exacerbation or precipitating event</li>
+                    <li>Most common trigger: <strong>respiratory infection</strong></li>
+                    <li>Severe generalized weakness</li>
+                    <li>Can develop respiratory failure</li>
+                    <li><strong>Needs more medication</strong></li>
+                </ul>
+                <h3>Cholinergic Crisis</h3>
+                <ul>
+                    <li><strong>Overmedication</strong> with cholinesterase inhibitors</li>
+                    <li>Same severe weakness presentation</li>
+                    <li>Additional: excessive secretions, diarrhea, bradycardia</li>
+                    <li><strong>Needs less medication</strong></li>
+                </ul>
+                <h3>Management of Either Crisis</h3>
+                <ul>
+                    <li>Ensure adequate ventilation (may need intubation)</li>
+                    <li>ABGs, electrolytes, I&O</li>
+                    <li>NG feeding if cannot swallow</li>
+                    <li><strong>Avoid sedatives and tranquilizers</strong></li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Both crises look similar (weakness, respiratory distress). Look for cholinergic signs (SLUDGE: Salivation, Lacrimation, Urination, Defecation, GI distress, Emesis) to differentiate. Tensilon test can help distinguish.
+                </div>
+            `
+        },
+        gbs: {
+            title: 'Guillain-Barr\u00e9 Syndrome',
+            content: `
+                <h3>Definition</h3>
+                <p>Autoimmune disorder with <strong>acute attack of peripheral nerve myelin</strong>. Can rapidly progress to respiratory failure.</p>
+                <h3>Precipitating Events (60-70%)</h3>
+                <ul>
+                    <li>Viral infection 1-3 weeks before symptoms</li>
+                    <li>CMV, Epstein-Barr, Mycoplasma, H. influenzae, HIV</li>
+                </ul>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li>Weakness, paralysis, paresthesia</li>
+                    <li><strong>Starts in lower extremities, ascends upward</strong></li>
+                    <li>Pain, diminished reflexes</li>
+                    <li>Autonomic dysfunction (tachy/bradycardia, BP changes)</li>
+                </ul>
+                <h3>Course</h3>
+                <ul>
+                    <li>Peak severity within 2-4 weeks</li>
+                    <li><strong>Most patients recover completely</strong></li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li><strong>Elective intubation before autonomic dysfunction</strong></li>
+                    <li>ICU with continuous monitoring</li>
+                    <li>Plasmapheresis or IVIG</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> GBS = ascending paralysis (starts in feet, moves up). Monitor vital capacity and negative inspiratory force. Intubate EARLY\u2014don't wait for respiratory failure. Most patients recover with treatment.
+                </div>
+            `
+        },
+        trigeminal: {
+            title: 'Trigeminal Neuralgia',
+            content: `
+                <h3>Definition</h3>
+                <p>Condition of <strong>5th cranial nerve</strong> characterized by paroxysms of excruciating facial pain.</p>
+                <h3>Triggers</h3>
+                <ul>
+                    <li>Washing face, brushing teeth, eating</li>
+                    <li>Draft of air, any stimulation</li>
+                </ul>
+                <h3>Impact</h3>
+                <p>Patients may avoid eating, neglect hygiene, isolate to prevent attacks.</p>
+                <h3>Medical Management</h3>
+                <ul>
+                    <li><strong>Carbamazepine (Tegretol)</strong> \u2014 first-line</li>
+                    <li>Gabapentin, phenytoin, baclofen</li>
+                    <li>Surgical: microvascular decompression</li>
+                </ul>
+                <h3>Nursing Care</h3>
+                <ul>
+                    <li>Gentle face washing, oral care</li>
+                    <li>Soft food, chew on unaffected side</li>
+                    <li>Avoid hot/cold food</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "The pain is described as 'lightning bolt' or 'electric shock' to the face. Patients live in fear of triggers. The pain can be so severe that suicide risk increases."
+                </div>
+            `
+        },
+        bells_palsy: {
+            title: "Bell's Palsy",
+            content: `
+                <h3>Definition</h3>
+                <p>Facial paralysis caused by unilateral inflammation of <strong>7th cranial nerve</strong>.</p>
+                <h3>Manifestations</h3>
+                <ul>
+                    <li>Unilateral facial muscle weakness/paralysis</li>
+                    <li>Facial distortion, drooping</li>
+                    <li>Increased lacrimation</li>
+                    <li>Difficulty with speech and eating</li>
+                    <li>Cannot close eye on affected side</li>
+                </ul>
+                <h3>Prognosis</h3>
+                <p><strong>Most recover completely in 3-5 weeks</strong>; rarely recurs.</p>
+                <h3>Treatment</h3>
+                <ul>
+                    <li>Corticosteroids within 72 hours</li>
+                    <li>Analgesics</li>
+                </ul>
+                <h3>Nursing Care</h3>
+                <ul>
+                    <li><strong>Eye protection</strong>: cover at night, eye ointment, sunglasses</li>
+                    <li>Facial exercises and massage</li>
+                    <li>Reassure patient: this is NOT a stroke</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Bell's palsy affects only the face (CN VII). If patient has arm/leg weakness, it's NOT Bell's palsy\u2014think stroke. Protect the eye (can't blink = corneal damage).
+                </div>
+            `
+        }
+    };
+
+    // ===== RENDERING =====
+    const mapInner = document.getElementById('map-inner');
+    const svg = document.getElementById('connections-svg');
+
+    // Build adjacency list
+    const adjacency = {};
+    for (const id in nodes) adjacency[id] = new Set();
+    edges.forEach(([a, b]) => {
+        adjacency[a].add(b);
+        adjacency[b].add(a);
+    });
+
+    // Render nodes
+    for (const [id, data] of Object.entries(nodes)) {
+        const el = document.createElement('div');
+        el.className = `node ${data.type}`;
+        el.id = `node-${id}`;
+        el.style.left = data.x + 'px';
+        el.style.top = data.y + 'px';
+        const lines = data.label.split('\n');
+        el.innerHTML = lines.map(l => `<h3>${l}</h3>`).join('') + `<p>${data.sub}</p>`;
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activateNode(id);
+        });
+        mapInner.appendChild(el);
+    }
+
+    // Render edges
+    function getNodeCenter(id) {
+        const el = document.getElementById('node-' + id);
+        if (!el) return { x: nodes[id].x, y: nodes[id].y };
+        return {
+            x: el.offsetLeft + el.offsetWidth / 2,
+            y: el.offsetTop + el.offsetHeight / 2
+        };
+    }
+
+    function renderEdges() {
+        svg.innerHTML = '';
+        svg.setAttribute('viewBox', '0 0 2200 1300');
+        edges.forEach(([a, b, label, dashed]) => {
+            const pa = getNodeCenter(a);
+            const pb = getNodeCenter(b);
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', pa.x);
+            line.setAttribute('y1', pa.y);
+            line.setAttribute('x2', pb.x);
+            line.setAttribute('y2', pb.y);
+            line.classList.add('conn-line');
+            line.dataset.from = a;
+            line.dataset.to = b;
+            if (dashed) line.classList.add('dashed');
+            svg.appendChild(line);
+
+            if (label) {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', (pa.x + pb.x) / 2);
+                text.setAttribute('y', (pa.y + pb.y) / 2 - 6);
+                text.classList.add('conn-label');
+                text.dataset.from = a;
+                text.dataset.to = b;
+                text.textContent = label;
+                svg.appendChild(text);
+            }
+        });
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(renderEdges);
+    });
+
+    // ===== INTERACTION =====
+    let activeNodeId = null;
+
+    function activateNode(id) {
+        activeNodeId = id;
+        const info = nodeInfo[id];
+        if (!info) return;
+
+        document.getElementById('panel-title').textContent = info.title;
+        const connLinks = Array.from(adjacency[id]).map(cid => {
+            const n = nodes[cid];
+            const displayName = n ? n.label.replace('\n', ' ') : cid;
+            return `<span onclick="activateNode('${cid}')">${displayName}</span>`;
+        }).join('');
+        document.getElementById('panel-content').innerHTML = info.content +
+            `<div class="connection-list"><h3>Connected To:</h3>${connLinks}</div>`;
+        document.getElementById('info-panel').classList.add('visible');
+
+        const connected = adjacency[id];
+        document.querySelectorAll('.node').forEach(el => {
+            const nid = el.id.replace('node-', '');
+            el.classList.remove('active', 'connected', 'dimmed');
+            if (nid === id) el.classList.add('active');
+            else if (connected.has(nid)) el.classList.add('connected');
+            else el.classList.add('dimmed');
+        });
+
+        document.querySelectorAll('.conn-line').forEach(l => {
+            l.classList.remove('active', 'dimmed');
+            if (l.dataset.from === id || l.dataset.to === id) l.classList.add('active');
+            else l.classList.add('dimmed');
+        });
+        document.querySelectorAll('.conn-label').forEach(t => {
+            t.classList.remove('active', 'dimmed');
+            if (t.dataset.from === id || t.dataset.to === id) t.classList.add('active');
+            else t.classList.add('dimmed');
+        });
+    }
+
+    function closePanel() {
+        document.getElementById('info-panel').classList.remove('visible');
+        activeNodeId = null;
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('active', 'connected', 'dimmed'));
+        document.querySelectorAll('.conn-line').forEach(l => l.classList.remove('active', 'dimmed'));
+        document.querySelectorAll('.conn-label').forEach(t => t.classList.remove('active', 'dimmed'));
+    }
+
+    // ===== PAN & ZOOM =====
+    const container = document.getElementById('map-container');
+    const inner = document.getElementById('map-inner');
+    let scale = 0.6;
+    let panX = -100;
+    let panY = 0;
+    let isPanning = false;
+    let startX, startY;
+
+    function applyTransform() {
+        inner.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        updateMinimap();
+    }
+
+    container.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.node') || e.target.closest('.info-panel')) return;
+        isPanning = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+        container.classList.add('grabbing');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+        isPanning = false;
+        container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.05 : 0.05;
+        const newScale = Math.min(1.5, Math.max(0.3, scale + delta));
+        const rect = container.getBoundingClientRect();
+        const cx = e.clientX - rect.left;
+        const cy = e.clientY - rect.top;
+        panX = cx - (cx - panX) * (newScale / scale);
+        panY = cy - (cy - panY) * (newScale / scale);
+        scale = newScale;
+        applyTransform();
+    }, { passive: false });
+
+    function zoomIn() { scale = Math.min(1.5, scale + 0.1); applyTransform(); }
+    function zoomOut() { scale = Math.max(0.3, scale - 0.1); applyTransform(); }
+    function resetView() { scale = 0.6; panX = -100; panY = 0; applyTransform(); closePanel(); }
+
+    applyTransform();
+
+    // ===== MINIMAP =====
+    const minimap = document.getElementById('minimap');
+    const minimapVP = document.getElementById('minimap-vp');
+    const mmW = 180, mmH = 110, mapW = 2200, mapH = 1300;
+
+    function renderMinimapDots() {
+        const colors = {
+            central: '#a855f7', anatomy: '#3b82f6', assessment: '#06b6d4',
+            vascular: '#ef4444', trauma: '#6b7280', infection: '#ec4899',
+            autoimmune: '#c2410c', seizure: '#d97706', intervention: '#10b981',
+            complication: '#92400e', cranial: '#6366f1'
+        };
+        for (const [id, data] of Object.entries(nodes)) {
+            const dot = document.createElement('div');
+            dot.className = 'minimap-dot';
+            dot.style.background = colors[data.type] || '#fff';
+            dot.style.left = (data.x / mapW * mmW) + 'px';
+            dot.style.top = (data.y / mapH * mmH) + 'px';
+            minimap.appendChild(dot);
+        }
+    }
+
+    function updateMinimap() {
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        const vpLeft = (-panX / scale) / mapW * mmW;
+        const vpTop = (-panY / scale) / mapH * mmH;
+        const vpW = (cw / scale) / mapW * mmW;
+        const vpH = (ch / scale) / mapH * mmH;
+        minimapVP.style.left = Math.max(0, vpLeft) + 'px';
+        minimapVP.style.top = Math.max(0, vpTop) + 'px';
+        minimapVP.style.width = Math.min(mmW, vpW) + 'px';
+        minimapVP.style.height = Math.min(mmH, vpH) + 'px';
+    }
+
+    renderMinimapDots();
+
+    // ===== SEARCH =====
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        if (q.length < 2) {
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+            return;
+        }
+        const matches = [];
+        for (const [id, data] of Object.entries(nodes)) {
+            const text = (data.label + ' ' + data.sub).toLowerCase();
+            const rawInfo = nodeInfo[id] ? (nodeInfo[id].title + ' ' + nodeInfo[id].content) : '';
+            const infoText = rawInfo.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').toLowerCase();
+            if (text.includes(q) || infoText.includes(q)) {
+                matches.push({ id, label: data.label.replace('\n', ' '), type: data.type });
+            }
+        }
+        if (matches.length === 0) {
+            searchResults.innerHTML = '<div class="search-result-item"><span style="color:#64748b">No matches</span></div>';
+        } else {
+            searchResults.innerHTML = matches.map(m =>
+                `<div class="search-result-item" onclick="goToNode('${m.id}')">
+                    <span class="sr-title">${m.label}</span>
+                    <span class="sr-type">${m.type}</span>
+                </div>`
+            ).join('');
+        }
+        searchResults.classList.add('visible');
+
+        document.querySelectorAll('.node').forEach(el => {
+            el.classList.remove('search-match');
+            const nid = el.id.replace('node-', '');
+            if (matches.some(m => m.id === nid)) el.classList.add('search-match');
+        });
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            searchInput.blur();
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+        } else if (e.key === 'Enter') {
+            const first = searchResults.querySelector('.search-result-item');
+            if (first) first.click();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-box')) {
+            searchResults.classList.remove('visible');
+        }
+    });
+
+    function clearSearchHighlight() {
+        document.querySelectorAll('.node').forEach(el => el.classList.remove('search-match'));
+    }
+
+    function goToNode(id) {
+        searchResults.classList.remove('visible');
+        searchInput.value = '';
+        clearSearchHighlight();
+
+        const el = document.getElementById('node-' + id);
+        if (!el) return;
+        const cx = el.offsetLeft + el.offsetWidth / 2;
+        const cy = el.offsetTop + el.offsetHeight / 2;
+        panX = container.clientWidth / 2 - cx * scale;
+        panY = container.clientHeight / 2 - cy * scale;
+        applyTransform();
+        activateNode(id);
+    }
+
+    // ===== KEYBOARD SHORTCUTS =====
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.key === 'Escape') closePanel();
+        if (e.key === '/' || (e.key === 'f' && (e.ctrlKey || e.metaKey))) {
+            e.preventDefault();
+            searchInput.focus();
+        }
+        if (e.key === 'r' || e.key === 'R') resetView();
+    });
+
+    container.addEventListener('click', (e) => {
+        if (!e.target.closest('.node')) closePanel();
+    });
+    </script>
+</body>
+</html>

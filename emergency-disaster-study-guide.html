@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency &amp; Disaster Nursing — Learning Guide</title>
+<style>
+:root {
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --teal: #0d9488;
+    --teal-bg: #f0fdfa;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --purple: #7c3aed;
+    --purple-bg: #faf5ff;
+    --gray: #64748b;
+    --gray-bg: #f8fafc;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; line-height:1.7; color:#1e293b; background:#fff; }
+.sidebar { position:fixed; top:0; left:0; width:260px; height:100vh; background:#0f172a; color:#e2e8f0; overflow-y:auto; padding:1.5rem 0; z-index:100; }
+.nav-title { font-size:1.1rem; font-weight:700; padding:0 1.2rem 1rem; border-bottom:1px solid #334155; margin-bottom:1rem; color:#fff; }
+.nav-group { margin-bottom:0.5rem; }
+.nav-label { font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#94a3b8; padding:0.5rem 1.2rem 0.2rem; }
+.nav-link { display:block; padding:0.25rem 1.2rem; color:#cbd5e1; text-decoration:none; font-size:0.82rem; border-left:3px solid transparent; transition:all 0.2s; }
+.nav-link:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.nav-link.active { color:#60a5fa; border-left-color:#60a5fa; background:rgba(96,165,250,0.1); }
+.content { margin-left:260px; max-width:900px; padding:2rem 3rem 4rem; }
+.section-title { font-size:1.5rem; font-weight:700; color:var(--blue); border-bottom:3px solid var(--blue); padding-bottom:0.5rem; margin:2.5rem 0 1.2rem; scroll-margin-top:1rem; }
+.section-title.clinical { color:var(--teal); border-bottom-color:var(--teal); }
+.section-title.danger { color:var(--red); border-bottom-color:var(--red); }
+.section-title.purple { color:var(--purple); border-bottom-color:var(--purple); }
+.section-title.amber { color:var(--amber); border-bottom-color:var(--amber); }
+.section-title.green { color:var(--green); border-bottom-color:var(--green); }
+.callout { border-left:4px solid; border-radius:0 8px 8px 0; padding:1rem 1.2rem; margin:1.2rem 0; }
+.callout.key-insight { border-color:var(--blue); background:var(--blue-bg); }
+.callout.warning { border-color:var(--red); background:var(--red-bg); }
+.callout.exam-tip { border-color:var(--amber); background:var(--amber-bg); }
+.callout.clinical-pearl { border-color:var(--teal); background:var(--teal-bg); }
+.callout.mistake { border-color:#ea580c; background:linear-gradient(135deg, #fff7ed, #ffedd5); }
+.callout.quick-ref { border-color:var(--green); background:var(--green-bg); }
+.flow-chain { display:flex; align-items:center; flex-wrap:wrap; gap:0.3rem; padding:1rem; background:var(--blue-bg); border-radius:8px; margin:1rem 0; font-weight:600; }
+.flow-chain span { padding:0.4rem 0.8rem; background:#fff; border-radius:6px; border:1px solid #bfdbfe; font-size:0.9rem; }
+.flow-chain .arrow { background:none; border:none; color:var(--blue); font-size:1.2rem; }
+.patho-chain { background:var(--red-bg); border-radius:8px; padding:1.2rem; margin:1rem 0; }
+.patho-step { background:#fff; border:1px solid #fecaca; border-radius:6px; padding:0.8rem 1rem; margin:0.3rem 0; }
+.patho-title { font-weight:700; color:var(--red); font-size:0.95rem; }
+.patho-detail { font-size:0.88rem; color:#64748b; margin-top:0.2rem; }
+.patho-arrow { text-align:center; color:var(--red); font-size:1.3rem; font-weight:700; padding:0.1rem; }
+.v-chain { display:flex; flex-direction:column; align-items:center; padding:1rem; background:var(--gray-bg); border-radius:8px; margin:1rem 0; }
+.v-step { background:#fff; border:1px solid #e2e8f0; padding:0.5rem 1.5rem; border-radius:6px; font-weight:600; font-size:0.9rem; text-align:center; }
+.v-arrow { color:var(--gray); font-size:1.2rem; padding:0.1rem; }
+.step-ladder { margin:1rem 0; }
+.step { display:flex; align-items:flex-start; gap:0.8rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9; font-size:0.95rem; }
+.step-num { display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; background:var(--blue); color:#fff; border-radius:50%; font-weight:700; font-size:0.85rem; flex-shrink:0; }
+.compare-row { display:flex; gap:1rem; margin:1rem 0; }
+.compare-item { flex:1; padding:1rem; border-radius:8px; text-align:center; }
+.compare-good { background:#f0fdf4; border:1px solid #bbf7d0; }
+.compare-bad { background:#fef2f2; border:1px solid #fecaca; }
+.compare-label { font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.3rem; }
+.compare-value { font-size:0.95rem; }
+.dual-panel { display:flex; gap:1rem; margin:1rem 0; }
+.panel { flex:1; background:var(--gray-bg); border-radius:8px; padding:1rem; }
+.panel-title { font-weight:700; color:var(--blue); margin-bottom:0.5rem; text-align:center; font-size:0.95rem; }
+.ascii { font-family:'Courier New',monospace; font-size:0.82rem; white-space:pre; line-height:1.4; }
+.diagram-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin:1rem 0; }
+.grid-item { background:var(--gray-bg); border-radius:8px; padding:1rem; }
+.grid-title { font-weight:700; color:var(--blue); margin-bottom:0.4rem; font-size:0.9rem; }
+.grid-content { font-size:0.88rem; }
+table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.9rem; }
+th, td { padding:0.6rem 0.8rem; border:1px solid #e2e8f0; text-align:left; }
+th { font-weight:700; color:#fff; }
+.blue-header { background:var(--blue); }
+.green-header { background:var(--green); }
+.red-header { background:var(--red); }
+.amber-header { background:var(--amber); }
+.teal-header { background:var(--teal); }
+.purple-header { background:var(--purple); }
+td strong { color:#1e293b; }
+details.pause-think { margin:1.2rem 0; border:2px solid var(--purple); border-radius:8px; overflow:hidden; }
+details.pause-think summary { padding:0.8rem 1rem; background:var(--purple-bg); font-weight:700; color:var(--purple); cursor:pointer; font-size:0.95rem; }
+details.pause-think summary:hover { background:#ede9fe; }
+.think-content { padding:1rem; background:#fff; font-size:0.93rem; }
+p { margin:0.7rem 0; }
+ul, ol { margin:0.5rem 0 0.5rem 1.5rem; }
+li { margin:0.3rem 0; }
+h3 { font-size:1.15rem; color:#334155; margin:1.5rem 0 0.6rem; }
+h4 { font-size:1rem; color:#475569; margin:1.2rem 0 0.5rem; }
+strong { color:#0f172a; }
+@media (max-width:900px) {
+    .sidebar { width:220px; }
+    .content { margin-left:220px; padding:1.5rem; }
+}
+@media (max-width:700px) {
+    .sidebar { display:none; }
+    .content { margin-left:0; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+<div class="nav-title">Emergency &amp; Disaster Nursing</div>
+
+<div class="nav-group">
+<div class="nav-label">Foundations</div>
+<a href="#overview" class="nav-link">Overview &amp; Legal</a>
+<a href="#triage" class="nav-link">Triage Systems</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Assessment</div>
+<a href="#primary-survey" class="nav-link">Primary Survey (ABCDE)</a>
+<a href="#secondary-survey" class="nav-link">Secondary Survey</a>
+<a href="#airway" class="nav-link">Airway Management</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Trauma &amp; Injuries</div>
+<a href="#hemorrhage" class="nav-link">Hemorrhage</a>
+<a href="#wounds" class="nav-link">Wounds &amp; Forensics</a>
+<a href="#multiple-trauma" class="nav-link">Multiple Trauma</a>
+<a href="#abdominal" class="nav-link">Abdominal Injuries</a>
+<a href="#crush" class="nav-link">Crush Injuries</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Environmental</div>
+<a href="#heat-stroke" class="nav-link">Heat Stroke</a>
+<a href="#frostbite" class="nav-link">Frostbite</a>
+<a href="#hypothermia" class="nav-link">Hypothermia</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Toxicology</div>
+<a href="#poisoning" class="nav-link">Poisoning</a>
+<a href="#carbon-monoxide" class="nav-link">Carbon Monoxide</a>
+<a href="#substance-abuse" class="nav-link">Substance Abuse</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Psychosocial</div>
+<a href="#sexual-assault" class="nav-link">Sexual Assault</a>
+<a href="#trafficking" class="nav-link">Human Trafficking</a>
+<a href="#suicide" class="nav-link">Suicidal Patients</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Disaster Preparedness</div>
+<a href="#eop" class="nav-link">Emergency Operations</a>
+<a href="#disaster-triage" class="nav-link">Disaster Triage</a>
+<a href="#ppe" class="nav-link">PPE Levels</a>
+<a href="#bio-weapons" class="nav-link">Biological Weapons</a>
+<a href="#chem-weapons" class="nav-link">Chemical Weapons</a>
+<a href="#radiation" class="nav-link">Radiation Exposure</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Review</div>
+<a href="#nclex" class="nav-link">NCLEX Takeaways</a>
+</div>
+</nav>
+
+<main class="content">
+
+<!-- ===== OVERVIEW ===== -->
+<h2 class="section-title" id="overview">Overview &amp; Legal Foundations</h2>
+
+<p>Emergency nursing requires specialized training in crisis assessment, prioritization, and continuous monitoring. The ED functions as a temporary point on the continuum of care where patients are rapidly assessed, treated, and referred for ongoing care.</p>
+
+<div class="callout key-insight">
+<strong>Key Insight:</strong> An emergency is whatever the patient or the family considers it to be. The ED is used for both urgent and nonurgent problems.
+</div>
+
+<h3>EMTALA (Emergency Medical Treatment and Active Labor Act)</h3>
+<ul>
+<li>All providers must <strong>screen patients</strong> if they present with an emergency or are in labor</li>
+<li>Patient must be <strong>stable before transfer</strong> to another facility</li>
+<li>Must obtain patient consent for transfer, acceptance by receiving facility, and send documentation</li>
+</ul>
+
+<h3>Safety &amp; Sentinel Events</h3>
+<div class="callout warning">
+<strong>Warning:</strong> The most common sentinel events in the ED are <strong>delays to care</strong> and <strong>medication errors</strong>. Safety is always the FIRST priority.
+</div>
+
+<h3>Occupational Health Risks</h3>
+<p>ED nurses are at increased risk for communicable disease exposure. Must adhere to <strong>standard precautions</strong> and <strong>transmission-based precautions</strong> for patients with potentially infectious conditions.</p>
+
+<h3>Family-Centered Care</h3>
+<ul>
+<li>Allow family to stay with patient when possible to alleviate anxiety</li>
+<li>Treat unconscious patients as if conscious (touch, call by name, explain procedures)</li>
+<li>Do NOT give sedation to grieving family members (masks/delays grieving process)</li>
+<li>Encourage family to view the body if they wish; cover disfigured areas first</li>
+</ul>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why shouldn't you sedate grieving family members?</summary>
+<div class="think-content">
+<p>Sedation can mask or delay the grieving process, which is necessary to achieve emotional equilibrium and prevent prolonged depression. The family needs to experience and process their grief to heal.</p>
+</div>
+</details>
+
+<!-- ===== TRIAGE ===== -->
+<h2 class="section-title amber" id="triage">Triage Systems</h2>
+
+<p>Triage (from French <em>trier</em>, "to sort") sorts patients by severity of health problems and immediacy of treatment needs.</p>
+
+<h3>Emergency Severity Index (ESI) &mdash; 5 Levels</h3>
+<table>
+<thead>
+<tr><th class="amber-header">Level</th><th class="amber-header">Category</th><th class="amber-header">Reassessment</th><th class="amber-header">Description</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>Resuscitation</td><td>Continuous</td><td>Life-threatening, requires immediate intervention</td></tr>
+<tr><td><strong>2</strong></td><td>Emergent</td><td>Every 15 min</td><td>High risk; confused, lethargic, disoriented; severe pain</td></tr>
+<tr><td><strong>3</strong></td><td>Urgent</td><td>Every 30 min</td><td>Serious but not immediately life-threatening</td></tr>
+<tr><td><strong>4</strong></td><td>Less Urgent</td><td>Every 60 min</td><td>Requires 1 resource; not urgent</td></tr>
+<tr><td><strong>5</strong></td><td>Nonurgent</td><td>Every 120 min</td><td>Requires no resources; minor complaint</td></tr>
+</tbody>
+</table>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Know the critical difference: <strong>ED triage</strong> = most critically ill get most resources, regardless of outcome. <strong>Disaster triage</strong> = greatest good for the greatest number, based on survival likelihood and resource consumption. This is a common test question!
+</div>
+
+<h3>Triage Data Collection</h3>
+<p>The triage nurse collects baseline data including: full vital signs with pain assessment, history of current event, past medical history, neurologic assessment, weight, allergies (especially <strong>latex</strong> and medications), intimate partner violence screening, last tetanus immunization, last menstrual period, and last meal eaten.</p>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why is "last meal eaten" asked during triage?</summary>
+<div class="think-content">
+<p>This information is critical if general anesthesia may be needed (risk of aspiration) or if the patient is unconscious. A full stomach increases the risk of vomiting and aspiration during intubation or surgery.</p>
+</div>
+</details>
+
+<!-- ===== PRIMARY SURVEY ===== -->
+<h2 class="section-title danger" id="primary-survey">Primary Survey (ABCDE)</h2>
+
+<p>The primary survey focuses on <strong>stabilizing life-threatening conditions</strong>. It follows the ABCDE mnemonic:</p>
+
+<div class="step-ladder">
+<div class="step"><span class="step-num">A</span><strong>Airway</strong> &mdash; Establish a patent airway. Protect the cervical spine in all trauma patients.</div>
+<div class="step"><span class="step-num">B</span><strong>Breathing</strong> &mdash; Provide adequate ventilation. Assess bilateral breath sounds. In trauma: C-spine protection + chest injury assessment immediately after airway.</div>
+<div class="step"><span class="step-num">C</span><strong>Circulation</strong> &mdash; Evaluate and restore cardiac output. Control hemorrhage, prevent/treat shock, restore effective circulation. Prevent hypothermia. Check peripheral pulses.</div>
+<div class="step"><span class="step-num">D</span><strong>Disability</strong> &mdash; Assess neurologic status using Glasgow Coma Scale (GCS) and AVPU mnemonic.</div>
+<div class="step"><span class="step-num">E</span><strong>Exposure</strong> &mdash; Undress the patient to identify all wounds and injuries (may require cutting clothing).</div>
+</div>
+
+<h3>AVPU Mnemonic (Quick Neuro Assessment)</h3>
+<div class="flow-chain">
+<span><strong>A</strong> &mdash; Alert?</span>
+<span class="arrow">&rarr;</span>
+<span><strong>V</strong> &mdash; Responds to Verbal?</span>
+<span class="arrow">&rarr;</span>
+<span><strong>P</strong> &mdash; Responds to Pain?</span>
+<span class="arrow">&rarr;</span>
+<span><strong>U</strong> &mdash; Unresponsive?</span>
+</div>
+
+<div class="callout clinical-pearl">
+<strong>Clinical Pearl:</strong> A tension pneumothorax can mimic hypovolemia. Always complete the <strong>ventilatory assessment before hemorrhage assessment</strong> in the primary survey.
+</div>
+
+<!-- ===== SECONDARY SURVEY ===== -->
+<h2 class="section-title" id="secondary-survey">Secondary Survey</h2>
+
+<p>After the primary survey stabilizes life-threatening conditions, the secondary survey provides a comprehensive head-to-toe assessment:</p>
+
+<div class="diagram-grid">
+<div class="grid-item"><div class="grid-title">Head-to-Toe Assessment</div><div class="grid-content">Reassess airway, breathing, VS; complete physical exam</div></div>
+<div class="grid-item"><div class="grid-title">Health History</div><div class="grid-content">History of current event and past medical/surgical history</div></div>
+<div class="grid-item"><div class="grid-title">Diagnostics &amp; Labs</div><div class="grid-content">Blood work, imaging, toxicology screens</div></div>
+<div class="grid-item"><div class="grid-title">Monitoring Devices</div><div class="grid-content">ECG, arterial lines, urinary catheters</div></div>
+<div class="grid-item"><div class="grid-title">Fracture Management</div><div class="grid-content">Splinting; reassess pulses and neurovascular status</div></div>
+<div class="grid-item"><div class="grid-title">Wound Care</div><div class="grid-content">Cleaning, closure, dressing; other condition-based interventions</div></div>
+</div>
+
+<!-- ===== AIRWAY ===== -->
+<h2 class="section-title danger" id="airway">Airway Management</h2>
+
+<h3>Foreign Body Obstruction</h3>
+
+<div class="compare-row">
+<div class="compare-item compare-bad">
+<div class="compare-label">Complete Obstruction</div>
+<div class="compare-value">Cannot speak, breathe, or cough. Universal distress signal (clutching neck). Immediate intervention needed.</div>
+</div>
+<div class="compare-item compare-good">
+<div class="compare-label">Partial Obstruction</div>
+<div class="compare-value">Can cough and breathe spontaneously. Encourage forceful coughing. Monitor closely.</div>
+</div>
+</div>
+
+<div class="callout warning">
+<strong>Warning:</strong> A weak cough + high-pitched noise on inhalation = treat as <strong>complete obstruction</strong>. Cyanosis and loss of consciousness are <strong>late signs</strong> &mdash; act before these develop!
+</div>
+
+<h3>Airway Devices (Escalation Ladder)</h3>
+
+<div class="v-chain">
+<div class="v-step"><strong>Head-tilt/Chin-lift</strong> or <strong>Jaw Thrust</strong> (protect C-spine)</div>
+<div class="v-arrow">&darr;</div>
+<div class="v-step"><strong>OPA</strong> (Oropharyngeal Airway) &mdash; unconscious; measure lip to ear; prevents tongue obstruction</div>
+<div class="v-arrow">&darr;</div>
+<div class="v-step"><strong>NPA</strong> (Nasopharyngeal Airway) &mdash; through nares; do NOT use with facial trauma/basal skull fracture</div>
+<div class="v-arrow">&darr;</div>
+<div class="v-step"><strong>ETT</strong> (Endotracheal Tube) &mdash; for patients needing more ventilatory support</div>
+<div class="v-arrow">&darr;</div>
+<div class="v-step"><strong>King Tube / LMA</strong> &mdash; field use by EMTs; functions like ETT</div>
+<div class="v-arrow">&darr;</div>
+<div class="v-step"><strong>Cricothyroidotomy</strong> &mdash; emergency ONLY when ETT not possible; replaced with formal trach when stable</div>
+</div>
+
+<div class="callout key-insight">
+<strong>Key Insight:</strong> Cricothyroidotomy is reserved for emergencies when ETT is contraindicated: maxillofacial trauma, C-spine injuries, laryngospasm, laryngeal edema, hemorrhage into neck tissue, or obstruction of the larynx.
+</div>
+
+<h4>OPA Insertion Technique</h4>
+<ol>
+<li>Measure from lip to ear</li>
+<li>Extend head (only if C-spine uninjured)</li>
+<li>Open mouth and insert with tip facing up toward roof of mouth</li>
+<li>Rotate 180&deg; so tip points down toward pharynx</li>
+<li>Ensure tongue is not pushed into airway</li>
+</ol>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why is a nasopharyngeal airway contraindicated with basal skull fracture?</summary>
+<div class="think-content">
+<p>With a basal skull fracture, the bones at the base of the skull are disrupted. The NPA could enter the <strong>brain cavity</strong> instead of the pharynx, causing devastating neurological injury. Always use an oropharyngeal airway instead in suspected facial trauma or basal skull fracture.</p>
+</div>
+</details>
+
+<!-- ===== HEMORRHAGE ===== -->
+<h2 class="section-title danger" id="hemorrhage">Hemorrhage</h2>
+
+<h3>Assessment</h3>
+<div class="flow-chain">
+<span>Cool, moist skin</span>
+<span class="arrow">&rarr;</span>
+<span>&uarr; HR</span>
+<span class="arrow">&rarr;</span>
+<span>&darr; BP</span>
+<span class="arrow">&rarr;</span>
+<span>&darr; Urine output</span>
+<span class="arrow">&rarr;</span>
+<span>Delayed cap refill</span>
+<span class="arrow">&rarr;</span>
+<span>SHOCK</span>
+</div>
+
+<div class="callout clinical-pearl">
+<strong>Clinical Pearl:</strong> Internal hemorrhage can hide in the <strong>retroperitoneum, pelvis, chest, and thighs</strong> &mdash; producing shock without external evidence of bleeding. A patient with &uarr;HR, &darr;BP, thirst, cool/moist skin, and NO visible bleeding should be evaluated for internal hemorrhage.
+</div>
+
+<h3>Management</h3>
+
+<h4>Fluid Replacement</h4>
+<ul>
+<li><strong>Two large-bore IVs</strong> (preferably in uninjured extremity)</li>
+<li>Fluids: LR, NS, albumin</li>
+<li>Blood products: PRBCs for massive hemorrhage, + platelets, cryo, FFP</li>
+</ul>
+
+<div class="callout warning">
+<strong>Warning:</strong> Large-volume blood transfusion should use a <strong>warmer</strong> when possible. Refrigerated blood has a core cooling effect that can lead to <strong>cardiac arrest and coagulopathy</strong>.
+</div>
+
+<h4>External Bleeding Control</h4>
+<div class="step-ladder">
+<div class="step"><span class="step-num">1</span>Rapid assessment &mdash; apply <strong>firm, direct pressure</strong></div>
+<div class="step"><span class="step-num">2</span>Pressure dressing + elevate injured part</div>
+<div class="step"><span class="step-num">3</span><strong>Tourniquet</strong> if bleeding cannot be stopped with pressure (apply proximal to wound)</div>
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Tourniquet management: Tag patient with <strong>"T"</strong> on forehead noting location and time. <strong>Document time of application and removal.</strong> Keep tourniquet on until patient is in OR.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: A patient has tachycardia, falling BP, and cool skin but no visible bleeding. What should you suspect and what nursing actions are priority?</summary>
+<div class="think-content">
+<p>Suspect <strong>internal hemorrhage</strong>. Priority actions: maintain supine position, establish two large-bore IVs, administer PRBCs/plasma/platelets at rapid rate, monitor continuously, prepare for possible surgery or ICU transfer. Do NOT wait for external signs &mdash; internal bleeding in the retroperitoneum, pelvis, chest, or thighs can be massive.</p>
+</div>
+</details>
+
+<!-- ===== WOUNDS & FORENSICS ===== -->
+<h2 class="section-title" id="wounds">Wounds &amp; Forensic Evidence</h2>
+
+<h3>Wound Types</h3>
+<table>
+<thead><tr><th class="blue-header">Type</th><th class="blue-header">Definition</th></tr></thead>
+<tbody>
+<tr><td><strong>Abrasion</strong></td><td>Denuded skin</td></tr>
+<tr><td><strong>Avulsion</strong></td><td>Tearing away of tissue from supporting structures</td></tr>
+<tr><td><strong>Cut</strong></td><td>Incision with well-defined edges, longer than deep</td></tr>
+<tr><td><strong>Laceration</strong></td><td>Skin tear with irregular edges and vein bridging</td></tr>
+<tr><td><strong>Stab</strong></td><td>Incision with well-defined edges, deeper than long</td></tr>
+<tr><td><strong>Hematoma</strong></td><td>Tumorlike mass of blood trapped under skin</td></tr>
+<tr><td><strong>Patterned</strong></td><td>Wound representing outline of object causing it</td></tr>
+</tbody>
+</table>
+
+<h3>Wound Care</h3>
+<ul>
+<li>Clean with <strong>normal saline</strong></li>
+<li>Betadine (povidone-iodine): initial cleansing ONLY; do NOT allow deep into wound (injures healthy tissue)</li>
+<li><strong>Tetanus prophylaxis</strong>: give if last booster &gt;5 years ago or unknown</li>
+</ul>
+
+<h3>Forensic Evidence Collection</h3>
+<div class="callout key-insight">
+<strong>Key Insight:</strong> In suspected criminal activity: Do NOT cut through tears, holes, blood stains, or dirt on clothing. Each item &rarr; individual <strong>paper bag</strong> (NOT plastic &mdash; retains moisture &rarr; mold destroys evidence). Wet clothing must be hung to dry. Evidence CANNOT be left unattended. Maintain formal <strong>chain of custody</strong>.
+</div>
+
+<!-- ===== MULTIPLE TRAUMA ===== -->
+<h2 class="section-title danger" id="multiple-trauma">Multiple Trauma</h2>
+
+<p><strong>Definition:</strong> Single catastrophic event causing life-threatening injuries to &ge;2 distinct organs or organ systems.</p>
+
+<h3>The Deadly Triad</h3>
+<div class="flow-chain">
+<span style="background:#fef2f2;border-color:#fecaca;">Hypothermia</span>
+<span class="arrow">+</span>
+<span style="background:#fef2f2;border-color:#fecaca;">Acidosis</span>
+<span class="arrow">+</span>
+<span style="background:#fef2f2;border-color:#fecaca;">Coagulopathy</span>
+<span class="arrow">=</span>
+<span style="background:#fef2f2;border-color:#dc2626;color:#dc2626;">Deadly Triad</span>
+</div>
+
+<h3>Priority Management</h3>
+<div class="step-ladder">
+<div class="step"><span class="step-num">1</span>Establish airway and ventilation</div>
+<div class="step"><span class="step-num">2</span>Control hemorrhage</div>
+<div class="step"><span class="step-num">3</span>Prevent and treat hypovolemic shock</div>
+<div class="step"><span class="step-num">4</span>Assess for head and neck injuries</div>
+<div class="step"><span class="step-num">5</span>Evaluate other injuries &mdash; expose and reassess head, neck, chest; assess abdomen, back, extremities</div>
+<div class="step"><span class="step-num">6</span>Splint fractures &rarr; reassess pulses and neurovascular status</div>
+<div class="step"><span class="step-num">7</span>More thorough ongoing examination; diagnostic studies</div>
+</div>
+
+<div class="callout mistake">
+<strong>Common Mistake:</strong> Focusing on the most visually dramatic injury. The least significant-appearing injury may be the most lethal. A pelvic fracture (not visible) can cause massive hemorrhage, while an obvious arm amputation may have already stopped bleeding via vasoconstriction.
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Always <strong>assume cervical spine injury</strong> in trauma patients until ruled out. Remove backboard early to prevent skin breakdown. Preferred IV crystalloid is <strong>LR</strong> (NS can worsen metabolic acidosis).
+</div>
+
+<!-- ===== ABDOMINAL INJURIES ===== -->
+<h2 class="section-title" id="abdominal">Intra-Abdominal Injuries</h2>
+
+<div class="dual-panel">
+<div class="panel">
+<div class="panel-title">Penetrating Trauma</div>
+<ul><li>GSW, stab wounds</li><li>Usually require surgery</li><li>High incidence of hollow organ injury (small bowel)</li><li>Liver = most frequently injured solid organ</li></ul>
+</div>
+<div class="panel">
+<div class="panel-title">Blunt Trauma</div>
+<ul><li>MVC, falls, blows, explosions</li><li>Harder to detect</li><li>Delayed complications more common</li><li>Associated with chest, head, extremity injuries</li></ul>
+</div>
+</div>
+
+<h3>Assessment Findings</h3>
+<ul>
+<li>Absent bowel sounds = possible intraperitoneal involvement</li>
+<li>Progressive distention, guarding, tenderness, rigidity, rebound tenderness</li>
+<li><strong>Referred pain:</strong> Left shoulder = spleen bleeding; Right shoulder = liver laceration</li>
+<li>Diagnostics: <strong>FAST ultrasound</strong>, CT, diagnostic peritoneal lavage (DPL)</li>
+</ul>
+
+<h3>Key Management</h3>
+<ul>
+<li>If viscera protruding &rarr; cover with <strong>sterile, moist saline dressings</strong></li>
+<li>Hold oral fluids (anticipate surgery)</li>
+<li>NG tube to aspirate stomach contents</li>
+<li>Tetanus and antibiotic prophylaxis</li>
+</ul>
+
+<!-- ===== CRUSH INJURIES ===== -->
+<h2 class="section-title" id="crush">Crush Injuries &amp; Rhabdomyolysis</h2>
+
+<p>Crush injuries occur when a patient is caught between opposing forces (run over, trapped under, crushed between objects).</p>
+
+<h3>Rhabdomyolysis</h3>
+<div class="patho-chain">
+<div class="patho-step"><div class="patho-title">Muscle Crushing / Ischemia</div><div class="patho-detail">Severe muscular damage from compression</div></div>
+<div class="patho-arrow">&darr;</div>
+<div class="patho-step"><div class="patho-title">Myoglobin Release</div><div class="patho-detail">Myoglobin released from ischemic skeletal muscle into bloodstream</div></div>
+<div class="patho-arrow">&darr;</div>
+<div class="patho-step"><div class="patho-title">Acute Tubular Necrosis (ATN)</div><div class="patho-detail">Myoglobin clogs renal tubules &rarr; acute kidney injury</div></div>
+</div>
+
+<div class="callout quick-ref">
+<strong>Quick Reference &mdash; Rhabdomyolysis Triad:</strong>
+<ol>
+<li><strong>Myalgias</strong> (muscle cramps)</li>
+<li><strong>Generalized muscle weakness</strong></li>
+<li><strong>Darkened urine</strong></li>
+</ol>
+<p>CK &gt;6000 IU/L = diagnostic. Also caused by: major burns, heat stroke, illicit drug abuse.</p>
+</div>
+
+<p><strong>Serum lactic acid &lt;2.5 mmol/L</strong> = indication of successful resuscitation. Monitor for compartment syndrome &rarr; <strong>fasciotomy</strong> if neurovascular function compromised.</p>
+
+<!-- ===== HEAT STROKE ===== -->
+<h2 class="section-title danger" id="heat-stroke">Heat Stroke</h2>
+
+<p>Heat stroke is an <strong>acute medical emergency</strong> caused by failure of the heat-regulating mechanisms. It is the inability to maintain cardiac output in the face of high body temperatures.</p>
+
+<div class="dual-panel">
+<div class="panel">
+<div class="panel-title">Nonexertional</div>
+<p>Prolonged exposure to environmental temp &gt;39.2&deg;C (102.5&deg;F). Common during extended heat waves with high humidity.</p>
+</div>
+<div class="panel">
+<div class="panel-title">Exertional</div>
+<p>Strenuous activity in hot environment. Occurs in healthy individuals during sports/work. Hyperthermia from inadequate heat loss.</p>
+</div>
+</div>
+
+<h3>Manifestations</h3>
+<div class="flow-chain">
+<span>CNS dysfunction</span>
+<span class="arrow">&rarr;</span>
+<span>Temp &ge;40.6&deg;C (105&deg;F)</span>
+<span class="arrow">&rarr;</span>
+<span>Hot, dry skin</span>
+<span class="arrow">&rarr;</span>
+<span>Anhidrosis</span>
+<span class="arrow">&rarr;</span>
+<span>Tachypnea + Hypotension + Tachycardia</span>
+</div>
+
+<h3>Management</h3>
+<div class="callout warning">
+<strong>Warning:</strong> Reduce body temperature to <strong>39&deg;C (102&deg;F) within 1 hour</strong>. Mortality is directly related to duration of hyperthermia. <strong>Stop cooling at 38&deg;C (100.4&deg;F)</strong> to prevent iatrogenic hypothermia.
+</div>
+
+<h4>Cooling Methods</h4>
+<ul>
+<li>Cool sheets, towels, or sponging with cool water</li>
+<li>Ice to neck, groin, chest, and axillae</li>
+<li>Cooling blankets</li>
+<li><strong>Cold water bath immersion</strong> (optimal method)</li>
+</ul>
+
+<h4>Additional Interventions</h4>
+<ul>
+<li>100% oxygen (hypermetabolic state)</li>
+<li>IV NS or LR (give carefully &mdash; myocardial injury risk from high temp)</li>
+<li>Core temp monitoring: rectal, bladder, or esophageal thermistor</li>
+<li>Meds: anticonvulsants (seizures), benzodiazepines (diazepam), potassium, sodium bicarbonate, chlorpromazine (shivering)</li>
+<li>Monitor for: DIC, ATN from rhabdomyolysis, permanent liver/cardiac/CNS damage</li>
+</ul>
+
+<div class="callout clinical-pearl">
+<strong>Clinical Pearl &mdash; Older Adults:</strong> Circulatory systems cannot compensate for heat stress. Less subcutaneous tissue, decreased thirst (often from fear of incontinence) &rarr; inadequate hydration. <strong>Fans alone are NOT adequate</strong>; direct patients to air-conditioned locations.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why do you stop cooling at 38&deg;C rather than normal body temp?</summary>
+<div class="think-content">
+<p>The body continues to cool even after active cooling measures stop. If you cool to 37&deg;C, the patient's temperature will continue dropping below normal, causing <strong>iatrogenic hypothermia</strong>. Hyperthermia may also <strong>recur spontaneously within 3-4 hours</strong>, so continuous monitoring is essential.</p>
+</div>
+</details>
+
+<!-- ===== FROSTBITE ===== -->
+<h2 class="section-title clinical" id="frostbite">Frostbite</h2>
+
+<p>Frostbite is trauma from exposure to freezing temperatures causing <strong>freezing of intracellular and intercellular fluid</strong>, resulting in cellular and vascular damage.</p>
+
+<h3>Manifestations</h3>
+<p>Hard, cold, insensitive to touch. May appear white or mottled blue-white. May turn red and painful as rewarmed. Extent of injury is not always initially known.</p>
+
+<h3>Management</h3>
+<ul>
+<li><strong>Controlled rapid rewarming:</strong> 37&deg;-40&deg;C (98.6&deg;-104&deg;F) circulating bath for 30-40 min intervals</li>
+<li>Analgesics for pain (rewarming is very painful)</li>
+<li>Do <strong>NOT</strong> massage or handle the affected area</li>
+<li>If feet involved, do <strong>NOT</strong> walk</li>
+<li>After rewarming: elevate, sterile gauze between digits, bulky dressing</li>
+<li><strong>Hemorrhagic blebs:</strong> Leave intact. <strong>Nonhemorrhagic blisters:</strong> D&eacute;bride</li>
+<li>Monitor for hyperkalemia (release of K+ from damaged cells) and hypovolemia</li>
+<li>Discharge: avoid tobacco, alcohol, caffeine (vasoconstrictive effects)</li>
+</ul>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> <strong>Hemorrhagic blebs = leave intact</strong> (disruption causes further tissue damage). <strong>Nonhemorrhagic blisters = d&eacute;bride</strong>. Monitor for <strong>hyperkalemia</strong> (K+ released from damaged cells) and <strong>hypovolemia</strong>. Do NOT rub or massage frostbitten tissue &mdash; ice crystals can cause further cellular damage.
+</div>
+
+<!-- ===== HYPOTHERMIA ===== -->
+<h2 class="section-title clinical" id="hypothermia">Hypothermia</h2>
+
+<p>Core temperature <strong>&le;35&deg;C (95&deg;F)</strong>. Leads to physiologic changes in all organ systems.</p>
+
+<div class="callout key-insight">
+<strong>Key Insight:</strong> Hypothermia takes precedence over frostbite treatment. Alcohol increases susceptibility by causing systemic vasodilation. High-risk groups: older adults, infants, concurrent illness, homeless, trauma victims.
+</div>
+
+<h3>Assessment Findings</h3>
+<p>Progressive deterioration: apathy &rarr; poor judgment &rarr; ataxia &rarr; drowsiness &rarr; pulmonary edema &rarr; coagulopathy &rarr; coma. Shivering suppressed at &lt;32.2&deg;C (90&deg;F). Cardiac arrhythmias may occur. Peripheral pulses may be undetectable.</p>
+
+<h3>Rewarming Methods</h3>
+<table>
+<thead><tr><th class="teal-header">Method</th><th class="teal-header">Severity</th><th class="teal-header">Temp Range</th><th class="teal-header">Techniques</th></tr></thead>
+<tbody>
+<tr><td><strong>Active core (internal)</strong></td><td>Moderate-severe</td><td>&lt;28&deg;-32.2&deg;C</td><td>Cardiopulmonary bypass, warm fluid admin, warm humidified O<sub>2</sub>, warm peritoneal lavage</td></tr>
+<tr><td><strong>Passive/active external</strong></td><td>Mild</td><td>32.2&deg;-35&deg;C</td><td>Warm blankets, over-bed heaters, forced-air warming blankets</td></tr>
+</tbody>
+</table>
+
+<div class="callout warning">
+<strong>Warning &mdash; Core Temperature Afterdrop:</strong> Cold blood returning from extremities has <strong>high lactic acid levels</strong>. When it returns to the core, it causes a further drop in core temperature and can trigger <strong>cardiac arrhythmias and electrolyte disturbances</strong>. Monitor for V-fib as temp rises from 31&deg;-32&deg;C.
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Defibrillation is <strong>ineffective at &lt;31&deg;C (88&deg;F)</strong> &mdash; the patient must be rewarmed first. A hypothermic patient who appears dead should not be pronounced until they are warm and dead.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why is defibrillation ineffective in severe hypothermia?</summary>
+<div class="think-content">
+<p>At temperatures below 31&deg;C, the myocardium is too cold to respond to electrical defibrillation. The cold-induced myocardial irritability makes the heart resistant to electrical conversion. The patient must first be rewarmed to at least 31&deg;C before defibrillation can be effective. Even moving or touching a severely hypothermic patient can trigger spontaneous ventricular fibrillation.</p>
+</div>
+</details>
+
+<!-- ===== POISONING ===== -->
+<h2 class="section-title purple" id="poisoning">Poisoning</h2>
+
+<h3>Treatment Goals</h3>
+<div class="step-ladder">
+<div class="step"><span class="step-num">1</span>Remove or inactivate the poison before absorption</div>
+<div class="step"><span class="step-num">2</span>Supportive care for vital organ function</div>
+<div class="step"><span class="step-num">3</span>Administer specific antidote</div>
+<div class="step"><span class="step-num">4</span>Hasten elimination of absorbed poison</div>
+</div>
+
+<h3>Ingested Poisons &mdash; Removal Methods</h3>
+<table>
+<thead><tr><th class="purple-header">Method</th><th class="purple-header">Details</th><th class="purple-header">Limitations</th></tr></thead>
+<tbody>
+<tr><td><strong>Activated charcoal</strong></td><td>Orally or NGT; dilute as slurry</td><td>Does NOT absorb: corrosives, heavy metals, hydrocarbons, iron, lithium</td></tr>
+<tr><td><strong>Gastric lavage</strong></td><td>Within 1 hour of ingestion</td><td>For sustained-release or massive amounts only</td></tr>
+<tr><td><strong>Specific antidote</strong></td><td>As early as possible</td><td>Must identify the toxin</td></tr>
+<tr><td><strong>Hemoperfusion</strong></td><td>Blood processed through charcoal/resin cartridge</td><td>For severe cases</td></tr>
+</tbody>
+</table>
+
+<div class="callout warning">
+<strong>Warning:</strong> <strong>NEVER induce vomiting</strong> after ingestion of corrosive substances (acids/alkalis) or petroleum distillates. Ipecac is NOT recommended due to aspiration risk. Corrosive poisons &rarr; give water or milk for dilution (unless airway edema or evidence of perforation).
+</div>
+
+<h3>Food Poisoning</h3>
+<p><strong>Botulism and fish poisoning</strong> can cause <strong>respiratory paralysis and death</strong>. Key assessment: severe vomiting &rarr; alkalosis; severe diarrhea &rarr; acidosis. Note that diarrhea is usually <strong>absent</strong> with botulism.</p>
+
+<!-- ===== CARBON MONOXIDE ===== -->
+<h2 class="section-title danger" id="carbon-monoxide">Carbon Monoxide Poisoning</h2>
+
+<div class="patho-chain">
+<div class="patho-step"><div class="patho-title">CO Inhalation</div><div class="patho-detail">Carbon monoxide enters lungs</div></div>
+<div class="patho-arrow">&darr;</div>
+<div class="patho-step"><div class="patho-title">Binds to Hemoglobin (200x more readily than O<sub>2</sub>)</div><div class="patho-detail">Forms carboxyhemoglobin &mdash; CANNOT transport oxygen</div></div>
+<div class="patho-arrow">&darr;</div>
+<div class="patho-step"><div class="patho-title">Tissue Hypoxia</div><div class="patho-detail">CNS symptoms predominate: headache, weakness, dizziness, confusion &rarr; coma</div></div>
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Two critical facts: (1) <strong>Skin color is NOT a reliable sign</strong> of CO poisoning. (2) <strong>Pulse oximetry is NOT valid</strong> &mdash; it reads carboxyhemoglobin as oxygen-saturated hemoglobin, giving a falsely high reading. The patient may appear intoxicated from cerebral hypoxia.
+</div>
+
+<h3>Management</h3>
+<ul>
+<li>Move to fresh air immediately</li>
+<li>CPR as necessary</li>
+<li><strong>100% oxygen</strong> (or hyperbaric oxygen) until carboxyhemoglobin &lt;5%</li>
+<li>Keep quiet, prevent chilling</li>
+<li>Do NOT allow smoking or alcohol</li>
+<li>Monitor for permanent brain damage: psychoses, spastic paralysis, ataxia, visual disturbances</li>
+<li>If intentional &rarr; psychiatric consultation</li>
+</ul>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why does pulse oximetry give falsely normal readings in CO poisoning?</summary>
+<div class="think-content">
+<p>Pulse oximetry measures hemoglobin saturation but <strong>cannot distinguish between oxyhemoglobin and carboxyhemoglobin</strong>. Since CO is bound to the hemoglobin molecule, the device detects the hemoglobin as "saturated" and reports a normal or high SpO<sub>2</sub>, even though the hemoglobin is carrying CO instead of oxygen. You must use <strong>co-oximetry</strong> (arterial blood gas) to measure carboxyhemoglobin levels directly.</p>
+</div>
+</details>
+
+<!-- ===== SUBSTANCE ABUSE ===== -->
+<h2 class="section-title purple" id="substance-abuse">Substance Abuse</h2>
+
+<h3>Acetaminophen &mdash; #1 Overdosed Drug</h3>
+<p>Toxic level: &ge;140 mg/kg body weight.</p>
+
+<table>
+<thead><tr><th class="red-header">Stage</th><th class="red-header">Timing</th><th class="red-header">Manifestations</th></tr></thead>
+<tbody>
+<tr><td><strong>I</strong></td><td>Within 24h</td><td>GI upset, diaphoresis, possible metabolic acidosis and coma if severe</td></tr>
+<tr><td><strong>II</strong></td><td>24-48h</td><td>Monitor liver function and coagulation studies</td></tr>
+<tr><td><strong>III</strong></td><td>After 48h</td><td>Hepatic encephalopathy, jaundice, vomiting, RUQ pain, coagulopathy, hypoglycemia, AKI</td></tr>
+</tbody>
+</table>
+
+<div class="callout quick-ref">
+<strong>Quick Reference:</strong> Antidote = <strong>N-acetylcysteine (NAC)</strong>. Replenishes liver enzymes. 18 doses every 4 hours. <strong>Charcoal absorbs NAC &mdash; do NOT administer together.</strong> Repeat NAC dose if patient vomits.
+</div>
+
+<h3>Opioid Overdose</h3>
+<div class="flow-chain">
+<span>Pinpoint pupils</span>
+<span class="arrow">&rarr;</span>
+<span>&darr; BP</span>
+<span class="arrow">&rarr;</span>
+<span>Respiratory depression/arrest</span>
+<span class="arrow">&rarr;</span>
+<span>Pulmonary edema</span>
+<span class="arrow">&rarr;</span>
+<span>Stupor &rarr; Coma</span>
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Antidote = <strong>Naloxone (Narcan)</strong> IV/IM. Critical: Duration of naloxone is <strong>shorter than heroin</strong> &rarr; repeated doses may be needed. <strong>Do NOT leave the patient unattended</strong> &mdash; they can lapse back into coma rapidly.
+</div>
+
+<h3>Cocaine Overdose</h3>
+<p>Cocaine is a potent <strong>CNS stimulant</strong>. Overdose can be life-threatening.</p>
+<div class="flow-chain">
+<span>&uarr; HR</span>
+<span class="arrow">&rarr;</span>
+<span>&uarr; BP</span>
+<span class="arrow">&rarr;</span>
+<span>Hyperpyrexia</span>
+<span class="arrow">&rarr;</span>
+<span>Seizures</span>
+<span class="arrow">&rarr;</span>
+<span>Ventricular arrhythmias</span>
+</div>
+<p><strong>Management:</strong> Airway support, seizure control (benzodiazepines), cardiac monitoring, treat hyperthermia. If ingested: activated charcoal; body packers may need whole bowel irrigation.</p>
+
+<h3>Alcohol Withdrawal / Delirium Tremens</h3>
+<ul>
+<li>DTs usually start <strong>48-96 hours</strong> after last drink</li>
+<li><strong>Life-threatening</strong> if untreated</li>
+<li>Symptoms: anxiety, fear, tremor, agitation, insomnia, visual/tactile/auditory hallucinations</li>
+<li>Autonomic overactivity: tachycardia, dilated pupils, hyperthermia, profuse perspiration</li>
+<li>Treatment: <strong>benzodiazepines</strong>; CIWA protocol for assessment</li>
+<li>Monitor VS every 30 minutes with DTs</li>
+</ul>
+
+<div class="callout mistake">
+<strong>Common Mistake:</strong> Assuming a patient is "just drunk." Always rule out <strong>head injury, hypoglycemia</strong> (mimics intoxication), and other medical conditions before attributing behavior to intoxication.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why are benzodiazepines the drug of choice for alcohol withdrawal?</summary>
+<div class="think-content">
+<p>Alcohol and benzodiazepines both act on <strong>GABA receptors</strong> in the brain. During chronic alcohol use, the brain adapts to constant GABA stimulation. When alcohol is suddenly removed, the brain is left in a hyperexcitable state. Benzodiazepines substitute for alcohol's GABA effect, preventing seizures, reducing agitation, and allowing the brain to gradually readjust. They also have anticonvulsant properties that protect against withdrawal seizures.</p>
+</div>
+</details>
+
+<!-- ===== SEXUAL ASSAULT ===== -->
+<h2 class="section-title purple" id="sexual-assault">Sexual Assault</h2>
+
+<h3>Management Goals</h3>
+<ul>
+<li>Provide support and reduce emotional trauma</li>
+<li>Gather evidence for legal proceedings; provide privacy</li>
+<li><strong>Never leave patient alone</strong></li>
+<li>Use nonjudgmental approach</li>
+</ul>
+
+<h3>Physical Examination &amp; Evidence</h3>
+<ul>
+<li>External evidence of trauma (bruises, contusions, lacerations)</li>
+<li>Dried semen stains (crusted, flaking areas)</li>
+<li>Broken fingernails; body tissue and foreign materials under nails</li>
+<li>Oral examination with saliva specimen</li>
+<li>Pelvic/rectal exams; perineum examined with <strong>Wood lamp</strong> (fluorescent = possible semen)</li>
+<li>Use <strong>water-moistened vaginal speculum</strong> (lubricant interferes with forensic testing)</li>
+</ul>
+
+<div class="callout key-insight">
+<strong>Key Insight:</strong> Each clothing item &rarr; <strong>paper bag</strong> (NOT plastic). Chain of custody maintained. If drug-facilitated assault suspected, <strong>urine drug test must be completed within 96 hours</strong>. STI prophylaxis and emergency contraception (within 12-24h, no later than 72h) should be offered.
+</div>
+
+<!-- ===== TRAFFICKING ===== -->
+<h2 class="section-title purple" id="trafficking">Human Trafficking</h2>
+
+<p>"Use of force, fraud, or coercion for the purpose of subjection into involuntary servitude." ED may be the <strong>only access point</strong> for healthcare.</p>
+
+<h3>Red Flags</h3>
+<div class="diagram-grid">
+<div class="grid-item"><div class="grid-title">Presentation</div><div class="grid-content">Injury, accompanied by older boyfriend/travel partner; history of chronic runaway, homelessness, self-mutilation</div></div>
+<div class="grid-item"><div class="grid-title">Behaviors</div><div class="grid-content">Cowering, frightened, agitated, deferring to accompanying person</div></div>
+<div class="grid-item"><div class="grid-title">Common Complaints</div><div class="grid-content">Injuries, poor healing, abd pain, dizziness, headaches, rashes, sores</div></div>
+<div class="grid-item"><div class="grid-title">Psychological</div><div class="grid-content">Addiction, panic attacks, impulse control issues, hostility, suicidal ideation</div></div>
+</div>
+
+<h3>Nursing Interventions</h3>
+<ul>
+<li>Offer opportunity for patient to <strong>speak alone</strong>, without companion</li>
+<li>Targeted questions: "Are you in control of your own money?" "Are you able to come and go as you please?" "Who is accompanying you?"</li>
+<li>Patient may decline assistance</li>
+<li>Resource: <strong>National Human Trafficking Hotline</strong></li>
+</ul>
+
+<!-- ===== SUICIDE ===== -->
+<h2 class="section-title" id="suicide">Suicidal Patients</h2>
+
+<p>Attempted suicide stems from depression and can be viewed as a cry for help. <strong>Males</strong> are at greater risk for completed suicide; <strong>females</strong> attempt more often.</p>
+
+<h3>Risk Factors</h3>
+<ul>
+<li>Older adults, young adults, those under great stress</li>
+<li>Unemployed, divorced, widowed, living alone</li>
+<li>Previous suicide attempt or family history of suicide</li>
+<li>Psychiatric illness</li>
+<li>Communication of suicidal intent, specific plan, and means to carry out plan</li>
+</ul>
+
+<div class="callout warning">
+<strong>Warning:</strong> <strong>Do NOT leave the patient alone.</strong> Crisis management focuses on treating injuries, determining suicidal potential, identifying areas of depression/conflict, evaluating support systems, and determining need for hospitalization or psychiatric referral.
+</div>
+
+<!-- ===== EOP ===== -->
+<h2 class="section-title green" id="eop">Emergency Operations Plan (EOP)</h2>
+
+<p>Health care facilities are required by The Joint Commission to create an EOP and <strong>practice it twice yearly</strong>. The main goal is <strong>protection of the community</strong>.</p>
+
+<h3>Essential Components</h3>
+<div class="diagram-grid">
+<div class="grid-item"><div class="grid-title">Activation Response</div><div class="grid-content">Defines where, how, and when the response is initiated</div></div>
+<div class="grid-item"><div class="grid-title">Communication Plan</div><div class="grid-content">Internal and external; critical for all parties including prehospital</div></div>
+<div class="grid-item"><div class="grid-title">Patient Care Plan</div><div class="grid-content">Organized care into and out of facility, including transfers</div></div>
+<div class="grid-item"><div class="grid-title">Security Plans</div><div class="grid-content">Coordinated with facility and community agencies</div></div>
+<div class="grid-item"><div class="grid-title">External Resources</div><div class="grid-content">Local, state, and federal resource identification and activation</div></div>
+<div class="grid-item"><div class="grid-title">People Management</div><div class="grid-content">Strategies for patients, public, media, and personnel</div></div>
+</div>
+
+<div class="callout clinical-pearl">
+<strong>Clinical Pearl:</strong> During a disaster, nurses may be asked to perform duties outside their area of expertise (intubation, chest tube insertion, suturing). Nurses must strive to <strong>maximize patient safety</strong> and be aware of state regulations related to nursing practice.
+</div>
+
+<!-- ===== DISASTER TRIAGE ===== -->
+<h2 class="section-title danger" id="disaster-triage">Disaster Triage (NATO System)</h2>
+
+<table>
+<thead><tr><th class="red-header">Category</th><th class="red-header">Color</th><th class="red-header">Description</th><th class="red-header">Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>Immediate</strong></td><td style="background:#dc2626;color:#fff;font-weight:700;">RED</td><td>Life-threatening but survivable with minimal intervention. Can progress to expectant if delayed.</td><td>Sucking chest wound, airway obstruction, shock, hemothorax, tension pneumothorax, burns 15-40% TBSA, open fractures of long bones</td></tr>
+<tr><td><strong>Delayed</strong></td><td style="background:#eab308;color:#000;font-weight:700;">YELLOW</td><td>Significant injuries; can wait hours without threat to life/limb.</td><td>Stable abd wounds, soft tissue injuries, maxillofacial wounds without airway compromise, fractures requiring open reduction</td></tr>
+<tr><td><strong>Minimal</strong></td><td style="background:#22c55e;color:#fff;font-weight:700;">GREEN</td><td>Minor injuries; treatment can be delayed hours to days.</td><td>Upper extremity fractures, minor burns, sprains, small lacerations, behavioral disturbances</td></tr>
+<tr><td><strong>Expectant</strong></td><td style="background:#1e293b;color:#fff;font-weight:700;">BLACK</td><td>Extensive injuries; survival unlikely even with definitive care. Comfort measures only.</td><td>Penetrating head wounds unresponsive, high spinal cord injuries, burns &gt;60% TBSA, no pulse/BP, fixed dilated pupils</td></tr>
+</tbody>
+</table>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> In a <strong>disaster</strong>, a patient with extensive injuries and poor survival chances is tagged <strong>BLACK (expectant)</strong> &mdash; they receive comfort measures only. This same patient in a <strong>normal ED</strong> would receive all available resources. This conceptual shift is heavily tested.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: A disaster occurs. Patient A has a tension pneumothorax (treatable). Patient B has penetrating head wounds and is unresponsive. Resources are scarce. Who gets priority?</summary>
+<div class="think-content">
+<p><strong>Patient A gets priority (RED)</strong>. A tension pneumothorax is life-threatening but survivable with minimal intervention (needle decompression). Patient B has extensive injuries with unlikely survival (BLACK/expectant) &mdash; in a disaster, scarce resources are directed to those most likely to survive. Patient B receives comfort measures.</p>
+</div>
+</details>
+
+<!-- ===== PPE ===== -->
+<h2 class="section-title" id="ppe">Personal Protective Equipment (PPE)</h2>
+
+<table>
+<thead><tr><th class="blue-header">Level</th><th class="blue-header">Protection</th><th class="blue-header">Components</th><th class="blue-header">Setting</th></tr></thead>
+<tbody>
+<tr><td><strong>A</strong></td><td>Highest respiratory, skin, eye, mucous membrane</td><td>SCBA + vapor-tight chemical-resistant suit, gloves, boots</td><td>Hazmat scene</td></tr>
+<tr><td><strong>B</strong></td><td>Highest respiratory, lesser skin/eye</td><td>SCBA + chemical-resistant suit (NOT vapor-tight)</td><td>Hazmat scene</td></tr>
+<tr><td><strong>C</strong></td><td>Air-purified respirator</td><td>APR + coverall with splash hood, chemical-resistant gloves/boots</td><td><strong>Hospitals</strong></td></tr>
+<tr><td><strong>D</strong></td><td>Typical work uniform</td><td>Standard work attire</td><td><strong>Hospitals</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout key-insight">
+<strong>Key Insight:</strong> Chemical and biologic agents are generally <strong>colorless and odorless</strong>. <strong>Don PPE BEFORE contact</strong> with contaminated patient. Hospital staff typically use Level C or D.
+</div>
+
+<!-- ===== BIO WEAPONS ===== -->
+<h2 class="section-title danger" id="bio-weapons">Biological Weapons</h2>
+
+<h3>Categories</h3>
+<table>
+<thead><tr><th class="red-header">Category</th><th class="red-header">Mortality</th><th class="red-header">Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>A</strong></td><td>High mortality</td><td>Anthrax, botulism, tularemia, viral hemorrhagic fevers (Ebola, dengue), smallpox, plague</td></tr>
+<tr><td><strong>B</strong></td><td>Low mortality, moderate morbidity</td><td>Brucellosis, Q fever, food poisoning (Staph, Vibrio), typhus, viral encephalitis</td></tr>
+<tr><td><strong>C</strong></td><td>Low mortality, low morbidity</td><td>Hantavirus</td></tr>
+</tbody>
+</table>
+
+<h3>Anthrax &mdash; Most Likely Weaponized Agent</h3>
+<p>Gram-positive, encapsulated rod. Odorless, invisible, travels great distances. Incubation: 1-6 days.</p>
+
+<div class="diagram-grid">
+<div class="grid-item" style="border-left:3px solid var(--green);">
+<div class="grid-title">Skin (Most Common)</div>
+<div class="grid-content">Edema, pruritus, macule/papule &rarr; ulceration with vesicles &rarr; painless eschar (falls off in 1-2 weeks)</div>
+</div>
+<div class="grid-item" style="border-left:3px solid var(--amber);">
+<div class="grid-title">Ingestion</div>
+<div class="grid-content">Fever, N/V, abd pain, bloody diarrhea, possible ascites and sepsis. Targets terminal ileum and cecum.</div>
+</div>
+<div class="grid-item" style="border-left:3px solid var(--red);">
+<div class="grid-title">Inhalation (Most Deadly)</div>
+<div class="grid-content">Flu-like symptoms &rarr; brief recovery &rarr; severe respiratory distress, stridor, hypoxia, cyanosis, shock &rarr; death in 24-36h. <strong>Mortality approaches 100%</strong>.</div>
+</div>
+</div>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Hallmark of inhaled anthrax = <strong>hemorrhagic mediastinitis on chest X-ray</strong>. Inhaled anthrax can incubate up to 60 days. Treatment: penicillin (sensitive); mass exposure prophylaxis = oral <strong>ciprofloxacin or doxycycline &times; 60 days</strong>. Uses <strong>standard precautions only</strong> (does NOT spread person to person). After death, <strong>cremation is necessary</strong> (spores survive decades).
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why doesn't inhaled anthrax respond to antibiotics once the second stage begins?</summary>
+<div class="think-content">
+<p>During the second stage, the bacteria have already released massive amounts of <strong>toxin</strong>. While antibiotics can kill the bacteria, they cannot neutralize the toxins already circulating. The toxins cause hemorrhage, edema, and necrosis that continue to damage tissues even after the bacteria are eliminated. This is why early recognition and treatment during the initial flu-like phase is critical.</p>
+</div>
+</details>
+
+<!-- ===== CHEM WEAPONS ===== -->
+<h2 class="section-title danger" id="chem-weapons">Chemical Weapons</h2>
+
+<p>Effects are more apparent and occur more quickly than biologic weapons. Most chemicals are <strong>heavier than air</strong> (except hydrogen cyanide) &mdash; stand up to reduce exposure.</p>
+
+<table>
+<thead><tr><th class="red-header">Agent Type</th><th class="red-header">Example</th><th class="red-header">Action</th><th class="red-header">Key S/S</th><th class="red-header">Treatment</th></tr></thead>
+<tbody>
+<tr><td><strong>Nerve</strong></td><td>Sarin</td><td>Inhibits acetylcholinesterase</td><td>&uarr; Secretions (SLUDGE), bronchospasm, diarrhea</td><td>Soap/water; <strong>Atropine + Pralidoxime</strong>; benzodiazepines</td></tr>
+<tr><td><strong>Blood</strong></td><td>Cyanide</td><td>Inhibits aerobic metabolism</td><td>Tachypnea, tachycardia, coma, seizures, <strong>bright red skin</strong></td><td>Sodium nitrite, sodium thiosulfate, amyl nitrate, <strong>hydroxocobalamin</strong></td></tr>
+<tr><td><strong>Vesicant</strong></td><td>Sulfur mustard, lewisite</td><td>Blistering</td><td>Burns with vesicles, conjunctivitis, nasal irritation</td><td>Soap/water; blot dry (don't rub)</td></tr>
+<tr><td><strong>Pulmonary</strong></td><td>Phosgene, chlorine</td><td>Separates alveoli from capillary bed</td><td>Pulmonary edema, bronchospasm, chest tightness</td><td>Fresh air; airway management; ventilatory support</td></tr>
+</tbody>
+</table>
+
+<div class="callout quick-ref">
+<strong>Quick Reference &mdash; SLUDGE Mnemonic (Nerve Agent Effects):</strong>
+<strong>S</strong>alivation, <strong>L</strong>acrimation, <strong>U</strong>rination, <strong>D</strong>iarrhea, <strong>G</strong>I motility, <strong>E</strong>mesis.
+Treatment: <strong>Atropine</strong> (blocks muscarinic effects) + <strong>Pralidoxime</strong> (reactivates acetylcholinesterase).
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why does cyanide poisoning cause bright red skin?</summary>
+<div class="think-content">
+<p>Cyanide blocks the mitochondrial enzyme cytochrome oxidase, preventing cells from using oxygen. The oxygen remains in the blood because cells <strong>cannot extract it</strong>. The venous blood remains oxygenated (bright red) because the oxygen is never consumed at the cellular level. This gives the skin a characteristic bright red or cherry-red appearance.</p>
+</div>
+</details>
+
+<!-- ===== RADIATION ===== -->
+<h2 class="section-title danger" id="radiation">Radiation Exposure</h2>
+
+<h3>Types of Radiation-Induced Injury</h3>
+<div class="diagram-grid">
+<div class="grid-item" style="border-left:3px solid var(--green);">
+<div class="grid-title">External Irradiation</div>
+<div class="grid-content">All/part of body exposed. Patient is NOT radioactive. Decontamination NOT necessary. Not a medical emergency.</div>
+</div>
+<div class="grid-item" style="border-left:3px solid var(--amber);">
+<div class="grid-title">Contamination</div>
+<div class="grid-content">Exposure to radioactive gases/liquids/solids (external or internal). Requires <strong>immediate management</strong> to prevent incorporation.</div>
+</div>
+<div class="grid-item" style="border-left:3px solid var(--red);">
+<div class="grid-title">Incorporation</div>
+<div class="grid-content">Uptake of radioactive material into cells, tissues, organs. Target organs: kidneys, bones, liver, <strong>thyroid</strong>. Sequelae can occur days to years later.</div>
+</div>
+</div>
+
+<h3>Exposure Factors</h3>
+<div class="flow-chain">
+<span><strong>Time</strong> &mdash; Minimize</span>
+<span class="arrow">+</span>
+<span><strong>Distance</strong> &mdash; Maximize</span>
+<span class="arrow">+</span>
+<span><strong>Shielding</strong> &mdash; Use barriers</span>
+</div>
+
+<h3>Acute Radiation Syndrome</h3>
+<table>
+<thead><tr><th class="red-header">Phase</th><th class="red-header">Timing</th><th class="red-header">S/S</th></tr></thead>
+<tbody>
+<tr><td><strong>Prodromal</strong></td><td>48-72h post-exposure</td><td>N/V, loss of appetite, diarrhea, fatigue; high-dose: fever, respiratory distress</td></tr>
+<tr><td><strong>Latent</strong></td><td>After prodromal; up to 3 weeks</td><td>Symptom-free. &darr; Lymphocytes, leukocytes, thrombocytes, RBCs</td></tr>
+<tr><td><strong>Manifest illness</strong></td><td>After latent phase</td><td>Infection, fluid/electrolyte imbalance, bleeding, diarrhea, shock, altered LOC</td></tr>
+<tr><td><strong>Recovery or Death</strong></td><td>After manifest illness</td><td>Weeks-months for recovery; &uarr; ICP = sign of impending death</td></tr>
+</tbody>
+</table>
+
+<h3>Decontamination</h3>
+<ul>
+<li>Triage <strong>outside</strong> hospital (prevent facility contamination)</li>
+<li>Cover floors; seal air ducts and vents; strict isolation</li>
+<li>Waste: double-bagged, labeled "radiation waste"</li>
+<li>Staff PPE: water-resistant gowns, <strong>two pairs of gloves</strong>, caps, goggles, masks, booties</li>
+<li><strong>Dosimetry devices</strong> for all staff members</li>
+<li>Decontaminate patients with <strong>soap and water</strong>; resurvey after each wash</li>
+<li>Protect clean areas from contaminated runoff during showering</li>
+<li>Irrigate wounds &rarr; cover with water-resistant dressing before total body decontam</li>
+<li><strong>Thyroid protection:</strong> Potassium iodide (KI) before or promptly after radioactive iodine intake</li>
+</ul>
+
+<div class="callout exam-tip">
+<strong>NCLEX Alert:</strong> Know the three exposure factors: <strong>time, distance, shielding</strong>. External irradiation does NOT make the patient radioactive &mdash; no special isolation needed. Contamination DOES require decontamination. <strong>KI protects the thyroid</strong> specifically from radioactive iodine.
+</div>
+
+<details class="pause-think">
+<summary>Pause &amp; Think: Why is the latent phase of acute radiation syndrome dangerous even though the patient feels fine?</summary>
+<div class="think-content">
+<p>During the latent phase, the bone marrow is being destroyed even though the patient appears well. Lymphocytes, leukocytes, thrombocytes, and RBCs are progressively declining. The patient is becoming <strong>profoundly immunocompromised</strong> and at risk for hemorrhage. When the manifest illness phase hits, they have no defenses against infection and no ability to clot &mdash; making this phase extremely dangerous. The deceptive "feeling fine" period can delay recognition of the severity of exposure.</p>
+</div>
+</details>
+
+<!-- ===== NCLEX TAKEAWAYS ===== -->
+<h2 class="section-title amber" id="nclex">NCLEX Takeaways</h2>
+
+<div class="callout exam-tip">
+<strong>1. ED vs. Disaster Triage:</strong> In ED, sickest patient gets most resources. In disaster, do greatest good for greatest number. RED = immediate/survivable, BLACK = expectant/comfort only.
+</div>
+
+<div class="callout exam-tip">
+<strong>2. Primary Survey = ABCDE:</strong> Always airway first. Assume C-spine injury in ALL trauma. AVPU for quick neuro check. Ventilatory assessment before hemorrhage assessment (tension pneumo mimics hypovolemia).
+</div>
+
+<div class="callout exam-tip">
+<strong>3. Tourniquet:</strong> Document time applied. Do NOT remove until OR. Tag patient with "T" on forehead.
+</div>
+
+<div class="callout exam-tip">
+<strong>4. Carbon Monoxide:</strong> Pulse oximetry is NOT valid. Skin color NOT reliable. Treat with 100% O<sub>2</sub> or hyperbaric until carboxyhemoglobin &lt;5%.
+</div>
+
+<div class="callout exam-tip">
+<strong>5. Never Induce Vomiting:</strong> With corrosives (acids/alkalis) or petroleum distillates. Ipecac NOT recommended.
+</div>
+
+<div class="callout exam-tip">
+<strong>6. Acetaminophen:</strong> #1 overdosed drug. Antidote = NAC. Do NOT give with activated charcoal (charcoal absorbs NAC). Watch for hepatic failure in Stage III.
+</div>
+
+<div class="callout exam-tip">
+<strong>7. Naloxone (Narcan):</strong> Shorter duration than heroin &rarr; repeat doses. Never leave patient alone &mdash; rapid relapse to coma.
+</div>
+
+<div class="callout exam-tip">
+<strong>8. Delirium Tremens:</strong> 48-96h after last drink. Life-threatening. Treat with benzodiazepines. Monitor VS q30min.
+</div>
+
+<div class="callout exam-tip">
+<strong>9. Heat Stroke:</strong> Cool to 39&deg;C within 1 hour. Stop at 38&deg;C to prevent iatrogenic hypothermia. Cold water bath = optimal.
+</div>
+
+<div class="callout exam-tip">
+<strong>10. Hypothermia:</strong> Rewarm before defibrillation (ineffective &lt;31&deg;C). Watch for core temp afterdrop with peripheral rewarming. Cold blood returning = arrhythmia risk.
+</div>
+
+<div class="callout exam-tip">
+<strong>11. Rhabdomyolysis:</strong> Myalgias + muscle weakness + dark urine. CK &gt;6000 = diagnostic. Watch for ATN/AKI.
+</div>
+
+<div class="callout exam-tip">
+<strong>12. Anthrax:</strong> Inhaled is most deadly. Hallmark = hemorrhagic mediastinitis on CXR. Standard precautions only. Prophylaxis = cipro or doxy &times; 60 days.
+</div>
+
+<div class="callout exam-tip">
+<strong>13. Nerve Agent (Sarin):</strong> SLUDGE symptoms. Treatment = atropine + pralidoxime + benzodiazepines.
+</div>
+
+<div class="callout exam-tip">
+<strong>14. Radiation:</strong> Time + distance + shielding. KI protects thyroid. Decontaminate with soap and water. External irradiation &ne; contamination.
+</div>
+
+<div class="callout exam-tip">
+<strong>15. Sexual Assault:</strong> Paper bags (not plastic). Water-moistened speculum. Chain of custody. Never leave alone. STI prophylaxis + emergency contraception.
+</div>
+
+<div class="callout exam-tip">
+<strong>16. Forensic Evidence:</strong> Paper bags, not plastic. Do not cut through existing tears/holes in clothing. Chain of custody is essential.
+</div>
+
+<div class="callout exam-tip">
+<strong>17. PPE Levels:</strong> A = highest (SCBA + vapor-tight suit). C &amp; D = hospital levels. Don PPE BEFORE patient contact.
+</div>
+
+</main>
+
+<script>
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+
+const sections = document.querySelectorAll('.section-title');
+const navLinks = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 120) {
+            current = section.getAttribute('id');
+        }
+    });
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

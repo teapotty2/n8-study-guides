@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosage Calculation Drill — N8 Nursing Study</title>
+
+    <script src="../../study-data.js"></script>
+
+    <style>
+        :root {
+            --cardiac: #E74C3C;
+            --fluid: #3498DB;
+            --oxy: #27AE60;
+            --neuro: #8E44AD;
+            --emergency: #E67E22;
+
+            --bg-light: #F0F2F5;
+            --bg-dark: #121218;
+            --card-light: #FFFFFF;
+            --card-dark: #1e1e2a;
+            --text-light: #2C3E50;
+            --text-dark: #ECF0F1;
+            --border-light: #DDD;
+            --border-dark: #444;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --border: var(--border-dark);
+            --shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="light"] {
+            --bg: var(--bg-light);
+            --card: var(--card-light);
+            --text: var(--text-light);
+            --border: var(--border-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--cardiac);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--fluid);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-success {
+            background-color: var(--oxy);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--emergency);
+            color: white;
+        }
+
+        .btn-back {
+            background-color: transparent;
+            color: var(--cardiac);
+            border: 1px solid var(--cardiac);
+        }
+
+        .btn-back:hover {
+            background-color: var(--cardiac);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-card:hover {
+            border-color: var(--cardiac);
+            box-shadow: var(--shadow);
+        }
+
+        .mode-card.active {
+            border-color: var(--cardiac);
+            background: linear-gradient(135deg, var(--card), rgba(231, 76, 60, 0.05));
+        }
+
+        .mode-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--cardiac);
+        }
+
+        .mode-card p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-left: 4px solid var(--cardiac);
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cardiac);
+        }
+
+        .stat-subtext {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        .quiz-timer {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--emergency);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-timer.warning {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .problem-container {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .problem-counter {
+            font-size: 13px;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+
+        .problem-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: rgba(231, 76, 60, 0.15);
+            color: var(--cardiac);
+        }
+
+        .problem-scenario {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(52, 152, 219, 0.05));
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--cardiac);
+        }
+
+        .problem-scenario p {
+            margin-bottom: 8px;
+        }
+
+        .problem-scenario strong {
+            color: var(--cardiac);
+        }
+
+        .problem-order {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            border-left: 3px solid var(--emergency);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--cardiac);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .answer-unit {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.1);
+            border-left-color: var(--oxy);
+            color: var(--oxy);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.1);
+            border-left-color: var(--cardiac);
+            color: var(--cardiac);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .solution-steps {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .solution-step {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .solution-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .solution-step-label {
+            font-weight: 600;
+            color: var(--cardiac);
+        }
+
+        .common-mistake {
+            background: rgba(230, 126, 34, 0.1);
+            border-left: 3px solid var(--emergency);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .common-mistake-title {
+            font-weight: 600;
+            color: var(--emergency);
+            margin-bottom: 5px;
+        }
+
+        .results-container {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--cardiac);
+            margin-bottom: 10px;
+        }
+
+        .results-label {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pass-indicator {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .pass-indicator.pass {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--oxy);
+            border: 2px solid var(--oxy);
+        }
+
+        .pass-indicator.fail {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--cardiac);
+            border: 2px solid var(--cardiac);
+        }
+
+        .results-detail {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--cardiac);
+            color: white;
+            border-color: var(--cardiac);
+        }
+
+        .accuracy-chart {
+            margin-top: 20px;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .chart-label {
+            width: 150px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            flex: 1;
+            height: 24px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cardiac), var(--emergency));
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--cardiac);
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .mode-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .problem-header {
+                flex-direction: column;
+            }
+
+            .results-score {
+                font-size: 36px;
+            }
+
+            .chart-label {
+                width: 100px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Dosage Calculation Drill</h1>
+            <div class="header-buttons">
+                <a href="#" class="btn btn-back" onclick="event.preventDefault(); try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {} window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');">← Back to Hub</a>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="appContainer"></div>
+    </div>
+
+    <script>
+        // Initialize theme
+        function initTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const savedTheme = localStorage.getItem('n8hub_darkmode');
+            const theme = savedTheme !== null ? (savedTheme === 'true' ? 'dark' : 'light') : (prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        initTheme();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', initTheme);
+
+        // ============================================================================
+        // DOSAGE CALCULATION PROBLEMS DATABASE
+        // ============================================================================
+
+        const problems = [
+            // IV DRIP RATE (mL/hr)
+            {
+                id: 1,
+                category: "IV Drip Rate",
+                categoryClass: "drip",
+                scenario: "Patient Maria Chen, 58yo, admitted with pneumonia. Physician ordered normal saline to maintain hydration.",
+                order: "Order: NS 1000 mL over 8 hours",
+                question: "Calculate the infusion rate in mL/hr.",
+                correctAnswer: 125,
+                unit: "mL/hr",
+                solution: [
+                    "Formula: mL/hr = Total Volume (mL) ÷ Time (hours)",
+                    "mL/hr = 1000 mL ÷ 8 hours",
+                    "mL/hr = 125 mL/hr"
+                ],
+                commonMistake: "Common mistake: Confusing mL/hr with gtt/min. This is a drip rate, not a drop rate. Also, students sometimes use minutes instead of hours in the formula.",
+                allowsDecimal: false
+            },
+            {
+                id: 2,
+                category: "IV Drip Rate",
+                categoryClass: "drip",
+                scenario: "Mr. James Rodriguez, 72yo post-op from hip replacement. Nurse needs to infuse maintenance fluids.",
+                order: "Order: D5W 500 mL over 2 hours",
+                question: "What is the infusion rate in mL/hr?",
+                correctAnswer: 250,
+                unit: "mL/hr",
+                solution: [
+                    "Formula: mL/hr = Total Volume (mL) ÷ Time (hours)",
+                    "mL/hr = 500 mL ÷ 2 hours",
+                    "mL/hr = 250 mL/hr"
+                ],
+                commonMistake: "Common mistake: Using incorrect time conversion. Remember: convert minutes to hours (divide by 60) or use hours directly from the order.",
+                allowsDecimal: false
+            },
+            {
+                id: 3,
+                category: "IV Drip Rate",
+                categoryClass: "drip",
+                scenario: "Mrs. Patricia Williams, 64yo, receiving blood transfusion post-hemorrhage. Must run slowly.",
+                order: "Order: PRBC 250 mL over 4 hours",
+                question: "Calculate mL/hr for the blood transfusion.",
+                correctAnswer: 62.5,
+                unit: "mL/hr",
+                solution: [
+                    "Formula: mL/hr = Total Volume (mL) ÷ Time (hours)",
+                    "mL/hr = 250 mL ÷ 4 hours",
+                    "mL/hr = 62.5 mL/hr"
+                ],
+                commonMistake: "Common mistake: Rounding too early. Blood products may allow decimal rates on modern pumps. Keep full precision (62.5 or round to 63 depending on pump capability).",
+                allowsDecimal: true
+            },
+
+            // IV DROP RATE (gtt/min)
+            {
+                id: 4,
+                category: "IV Drop Rate",
+                categoryClass: "drops",
+                scenario: "Mr. Tom Anderson, 55yo, in the ED. Nurse is hanging an IV without an electronic pump using gravity infusion.",
+                order: "Order: LR 500 mL over 4 hours. Available: microdrip tubing (drop factor 60 gtt/mL)",
+                question: "Calculate the drop rate in gtt/min.",
+                correctAnswer: 125,
+                unit: "gtt/min",
+                solution: [
+                    "Formula: gtt/min = (Total Volume × Drop Factor) ÷ Time (minutes)",
+                    "First, convert hours to minutes: 4 hours = 240 minutes",
+                    "gtt/min = (500 mL × 60 gtt/mL) ÷ 240 minutes",
+                    "gtt/min = 30,000 ÷ 240",
+                    "gtt/min = 125 gtt/min"
+                ],
+                commonMistake: "Common mistake: Forgetting to convert hours to minutes. Also, confusing drop factor with mL/hr. Microdrip = 60 gtt/mL, macrodrip = 10, 15, or 20 gtt/mL.",
+                allowsDecimal: false
+            },
+            {
+                id: 5,
+                category: "IV Drop Rate",
+                categoryClass: "drops",
+                scenario: "Mrs. Sarah Martinez, 70yo, receiving IV fluids on a general med-surg unit. Nurse uses standard tubing.",
+                order: "Order: NS 1000 mL over 8 hours. Available: macrodrip tubing (drop factor 15 gtt/mL)",
+                question: "Calculate the drop rate in gtt/min.",
+                correctAnswer: 31,
+                unit: "gtt/min",
+                solution: [
+                    "Formula: gtt/min = (Total Volume × Drop Factor) ÷ Time (minutes)",
+                    "Convert hours to minutes: 8 hours = 480 minutes",
+                    "gtt/min = (1000 mL × 15 gtt/mL) ÷ 480 minutes",
+                    "gtt/min = 15,000 ÷ 480",
+                    "gtt/min = 31.25, round to 31 gtt/min"
+                ],
+                commonMistake: "Common mistake: Using drop factor incorrectly or forgetting to include it. Always identify drop factor first. 15 gtt/mL is standard macrodrip.",
+                allowsDecimal: false
+            },
+            {
+                id: 6,
+                category: "IV Drop Rate",
+                categoryClass: "drops",
+                scenario: "Mr. Kenneth Lee, 82yo, in ICU receiving a critical infusion via gravity (no pump available).",
+                order: "Order: D5W 250 mL over 1 hour. Available: macrodrip (drop factor 20 gtt/mL)",
+                question: "What is the drop rate in gtt/min?",
+                correctAnswer: 83,
+                unit: "gtt/min",
+                solution: [
+                    "Formula: gtt/min = (Total Volume × Drop Factor) ÷ Time (minutes)",
+                    "Convert: 1 hour = 60 minutes",
+                    "gtt/min = (250 mL × 20 gtt/mL) ÷ 60 minutes",
+                    "gtt/min = 5000 ÷ 60",
+                    "gtt/min = 83.33, round to 83 gtt/min"
+                ],
+                commonMistake: "Common mistake: Not rounding appropriately or using the wrong drop factor. Drop factors: 10, 15, 20 (macrodrip), 60 (microdrip).",
+                allowsDecimal: false
+            },
+
+            // WEIGHT-BASED DOSING
+            {
+                id: 7,
+                category: "Weight-Based Dosing",
+                categoryClass: "weight",
+                scenario: "Baby Marcus, 4-month-old, presenting with severe infection. Pediatrician orders antibiotic based on weight.",
+                order: "Patient weight: 6.5 kg. Order: Cephalexin 25 mg/kg q6h",
+                question: "Calculate the dose per dose.",
+                correctAnswer: 162.5,
+                unit: "mg",
+                solution: [
+                    "Formula: Dose = Weight (kg) × Dose per kg",
+                    "Dose = 6.5 kg × 25 mg/kg",
+                    "Dose = 162.5 mg per dose"
+                ],
+                commonMistake: "Common mistake: Confusing kg with lbs. Always convert to kg first (1 kg = 2.2 lbs). Also, remember q6h means dose 4 times daily, but calculate single dose, not daily total.",
+                allowsDecimal: true
+            },
+            {
+                id: 8,
+                category: "Weight-Based Dosing",
+                categoryClass: "weight",
+                scenario: "Mrs. Angela Davis, 176 lbs, admitted for hypertension. Cardiologist orders ACE inhibitor based on weight.",
+                order: "Patient weight: 176 lbs. Order: Lisinopril 2 mg/kg once daily",
+                question: "Calculate the daily dose in mg. (Convert lbs to kg first: divide by 2.2)",
+                correctAnswer: 160,
+                unit: "mg",
+                solution: [
+                    "Step 1: Convert lbs to kg: 176 lbs ÷ 2.2 = 80 kg",
+                    "Step 2: Calculate dose: 80 kg × 2 mg/kg = 160 mg",
+                    "Daily dose = 160 mg once daily"
+                ],
+                commonMistake: "Common mistake: Forgetting to convert pounds to kilograms. Always convert first using 1 kg = 2.2 lbs (divide lbs by 2.2). Using the wrong weight unit will lead to massive dosing errors.",
+                allowsDecimal: false
+            },
+            {
+                id: 9,
+                category: "Weight-Based Dosing",
+                categoryClass: "weight",
+                scenario: "Mr. David Johnson, 88 kg, 45yo, post-op day 1. Surgeon orders pain medication dosed by weight.",
+                order: "Patient weight: 88 kg. Order: Morphine 0.1 mg/kg IV q4h",
+                question: "What is each dose of morphine?",
+                correctAnswer: 8.8,
+                unit: "mg",
+                solution: [
+                    "Formula: Dose = Weight (kg) × Dose per kg",
+                    "Dose = 88 kg × 0.1 mg/kg",
+                    "Dose = 8.8 mg per dose"
+                ],
+                commonMistake: "Common mistake: Rounding too early or forgetting decimal precision with opioids. These are potent drugs—precision matters. Also, remember q4h = 6 doses daily, but we calculate single dose here.",
+                allowsDecimal: true
+            },
+
+            // SAFE DOSE RANGE
+            {
+                id: 10,
+                category: "Safe Dose Range",
+                categoryClass: "safe-dose",
+                scenario: "Ms. Jennifer Lopez, 70 kg, 38yo, with pneumonia. Pharmacist needs to verify ordered dose is within safe range.",
+                order: "Safe range: 10-20 mg/kg/day divided into 3 doses. Patient weight: 70 kg. Ordered: 600 mg q8h (every 8 hours)",
+                question: "Is the ordered dose of 600 mg q8h safe? (Calculate daily total first: 600 × 3 = 1800 mg/day)",
+                correctAnswer: "no",
+                answerType: "boolean",
+                unit: "",
+                solution: [
+                    "Step 1: Calculate safe dose range per day:",
+                    "  Low: 70 kg × 10 mg/kg = 700 mg/day",
+                    "  High: 70 kg × 20 mg/kg = 1400 mg/day",
+                    "  Safe range: 700-1400 mg/day",
+                    "Step 2: Calculate ordered daily total:",
+                    "  600 mg × 3 doses (q8h) = 1800 mg/day",
+                    "Step 3: Compare:",
+                    "  1800 mg > 1400 mg (safe maximum)",
+                    "Answer: NO, this dose is UNSAFE—exceeds maximum by 400 mg/day"
+                ],
+                commonMistake: "Common mistake: Students calculated the dose is safe. Actually, 1800 > 1400, so it EXCEEDS the safe maximum. Always compare carefully. q8h = 3 doses/day, q6h = 4 doses/day.",
+                allowsDecimal: false
+            },
+            {
+                id: 11,
+                category: "Safe Dose Range",
+                categoryClass: "safe-dose",
+                scenario: "Mr. Robert Chang, 85 kg, 56yo, with serious infection. Need to verify antibiotic dosing.",
+                order: "Safe range: 5-10 mg/kg q12h. Patient weight: 85 kg. Ordered: 400 mg q12h (twice daily)",
+                question: "Is 400 mg q12h safe for this patient?",
+                correctAnswer: "no",
+                answerType: "boolean",
+                unit: "",
+                solution: [
+                    "Step 1: Calculate safe dose per dose (q12h means twice daily):",
+                    "  Per dose low: 85 kg × 5 mg/kg = 425 mg minimum",
+                    "  Per dose high: 85 kg × 10 mg/kg = 850 mg maximum",
+                    "  Safe per dose: 425-850 mg",
+                    "Step 2: Compare ordered dose:",
+                    "  Ordered: 400 mg per dose",
+                    "Step 3: Conclusion:",
+                    "  400 mg < 425 mg (safe minimum)",
+                    "Answer: NO, this dose is UNSAFE—too low, patient may not receive therapeutic benefit"
+                ],
+                commonMistake: "Common mistake: Thinking lower doses are always safer. Too-low doses may be ineffective, and this ordered dose falls below the safe minimum. Always verify against both minimum AND maximum.",
+                allowsDecimal: false
+            },
+
+            // HEPARIN DOSING
+            {
+                id: 12,
+                category: "Heparin Dosing",
+                categoryClass: "heparin",
+                scenario: "Mr. Victor Hernandez, 68yo, post-MI. Cardiologist orders IV heparin infusion for anticoagulation.",
+                order: "Order: Heparin 1200 units/hr IV. Available: Heparin 25,000 units in 500 mL NS",
+                question: "Calculate the infusion rate in mL/hr.",
+                correctAnswer: 24,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Determine concentration:",
+                    "  25,000 units in 500 mL = 50 units/mL",
+                    "Step 2: Calculate mL/hr:",
+                    "  mL/hr = Ordered units/hr ÷ units/mL",
+                    "  mL/hr = 1200 units/hr ÷ 50 units/mL",
+                    "  mL/hr = 24 mL/hr"
+                ],
+                commonMistake: "Common mistake: Forgetting to calculate concentration first. Must know how many units per mL available. Also, heparin dosing is critical—any calculation error can cause serious bleeding or clotting.",
+                allowsDecimal: false
+            },
+            {
+                id: 13,
+                category: "Heparin Dosing",
+                categoryClass: "heparin",
+                scenario: "Mrs. Eleanor Washington, 72yo, with DVT. Anticoagulation order is written and pharmacist double-checks.",
+                order: "Order: Heparin 1500 units/hr. Available: Heparin 40,000 units in 1000 mL D5W",
+                question: "What is the mL/hr infusion rate?",
+                correctAnswer: 37.5,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Calculate concentration:",
+                    "  40,000 units ÷ 1000 mL = 40 units/mL",
+                    "Step 2: Calculate mL/hr:",
+                    "  mL/hr = 1500 units/hr ÷ 40 units/mL",
+                    "  mL/hr = 37.5 mL/hr"
+                ],
+                commonMistake: "Common mistake: Confusing units/mL with mL/hr. ALWAYS calculate concentration first (units ÷ mL), then use that to find mL/hr.",
+                allowsDecimal: true
+            },
+
+            // INSULIN DRIP
+            {
+                id: 14,
+                category: "Insulin Drip",
+                categoryClass: "insulin",
+                scenario: "Mrs. Gloria Santos, 64yo, with DKA in ICU. Endocrinologist orders insulin infusion to lower glucose.",
+                order: "Order: Regular insulin 4 units/hr IV. Available: 100 units regular insulin in 100 mL NS",
+                question: "Calculate the mL/hr infusion rate.",
+                correctAnswer: 4,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Calculate concentration:",
+                    "  100 units in 100 mL = 1 unit/mL",
+                    "Step 2: Calculate mL/hr:",
+                    "  mL/hr = Ordered units/hr ÷ units/mL",
+                    "  mL/hr = 4 units/hr ÷ 1 unit/mL",
+                    "  mL/hr = 4 mL/hr"
+                ],
+                commonMistake: "Common mistake: Forgetting the 1:1 ratio when concentration is 1 unit/mL. With 100 units in 100 mL, the mL/hr will equal the units/hr numerically.",
+                allowsDecimal: false
+            },
+            {
+                id: 15,
+                category: "Insulin Drip",
+                categoryClass: "insulin",
+                scenario: "Mr. Franklin Pierce, 58yo, ICU post-op. Glucose trending high; insulin drip adjusted.",
+                order: "Order: Regular insulin 10 units/hr. Available: 100 units insulin in 250 mL NS",
+                question: "What is the mL/hr rate?",
+                correctAnswer: 25,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Calculate concentration:",
+                    "  100 units in 250 mL = 0.4 units/mL",
+                    "Step 2: Calculate mL/hr:",
+                    "  mL/hr = 10 units/hr ÷ 0.4 units/mL",
+                    "  mL/hr = 25 mL/hr"
+                ],
+                commonMistake: "Common mistake: Not simplifying the concentration correctly. 100 ÷ 250 = 0.4. Then divide the ordered units by this decimal.",
+                allowsDecimal: false
+            },
+
+            // MCG/KG/MIN CALCULATIONS
+            {
+                id: 16,
+                category: "mcg/kg/min Dosing",
+                categoryClass: "critical",
+                scenario: "Mr. Harold Freeman, 80 kg, 65yo, in cardiogenic shock. Cardiologist orders vasopressor support.",
+                order: "Order: Dopamine 5 mcg/kg/min. Patient weight: 80 kg. Available: Dopamine 400 mg in 250 mL D5W",
+                question: "Calculate the mL/hr infusion rate.",
+                correctAnswer: 15,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Calculate mcg/min needed:",
+                    "  5 mcg/kg/min × 80 kg = 400 mcg/min",
+                    "Step 2: Convert mcg/min to mcg/hr:",
+                    "  400 mcg/min × 60 min/hr = 24,000 mcg/hr",
+                    "Step 3: Convert mg to mcg (concentration):",
+                    "  400 mg = 400,000 mcg in 250 mL",
+                    "  Concentration = 400,000 mcg ÷ 250 mL = 1600 mcg/mL",
+                    "Step 4: Calculate mL/hr:",
+                    "  mL/hr = 24,000 mcg/hr ÷ 1600 mcg/mL = 15 mL/hr"
+                ],
+                commonMistake: "Common mistake: Not converting mcg/min to mcg/hr, or confusing mg and mcg. Remember: 1 mg = 1000 mcg. This is a multi-step calculation—work carefully through each step.",
+                allowsDecimal: false
+            },
+            {
+                id: 17,
+                category: "mcg/kg/min Dosing",
+                categoryClass: "critical",
+                scenario: "Ms. Karen Butler, 72 kg, septic shock ICU patient. Intensivist orders epinephrine infusion.",
+                order: "Order: Epinephrine 0.05 mcg/kg/min. Weight: 72 kg. Available: Epinephrine 1 mg in 250 mL NS",
+                question: "Calculate mL/hr.",
+                correctAnswer: 54,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: Calculate mcg/min:",
+                    "  0.05 mcg/kg/min × 72 kg = 3.6 mcg/min",
+                    "Step 2: Convert to mcg/hr:",
+                    "  3.6 mcg/min × 60 min = 216 mcg/hr",
+                    "Step 3: Calculate concentration (convert mg to mcg):",
+                    "  1 mg = 1000 mcg in 250 mL = 4 mcg/mL",
+                    "Step 4: Calculate mL/hr:",
+                    "  mL/hr = 216 mcg/hr ÷ 4 mcg/mL = 54 mL/hr"
+                ],
+                commonMistake: "Common mistake: Students may drop a zero or miscalculate the unit conversion from mcg to mL. Always verify: 1000 mcg ÷ 250 mL = 4 mcg/mL, then 216 ÷ 4 = 54 mL/hr exactly.",
+                allowsDecimal: false
+            },
+            {
+                id: 18,
+                category: "mcg/kg/min Dosing",
+                categoryClass: "critical",
+                scenario: "Mr. Isaac Chen, 95 kg, trauma ICU. Surgeon orders norepinephrine for hypotension.",
+                order: "Order: Norepinephrine 0.1 mcg/kg/min. Weight: 95 kg. Available: Norepinephrine 8 mg in 250 mL D5W",
+                question: "What is the mL/hr rate?",
+                correctAnswer: 17.8,
+                unit: "mL/hr",
+                solution: [
+                    "Step 1: mcg/min = 0.1 × 95 = 9.5 mcg/min",
+                    "Step 2: mcg/hr = 9.5 × 60 = 570 mcg/hr",
+                    "Step 3: Concentration = 8 mg (8000 mcg) in 250 mL = 32 mcg/mL",
+                    "Step 4: mL/hr = 570 ÷ 32 = 17.8125, round to 17.8 mL/hr"
+                ],
+                commonMistake: "Common mistake: Rounding during intermediate steps or accidentally inserting an extra zero. Keep full precision until final answer. Also, double-check your mg-to-mcg conversion: 8 mg = 8000 mcg.",
+                allowsDecimal: true
+            },
+
+            // UNIT CONVERSIONS
+            {
+                id: 19,
+                category: "Unit Conversions",
+                categoryClass: "conversion",
+                scenario: "Nurse is reviewing a medication label for clarity and needs to convert between measurement units.",
+                order: "Convert: 0.5 g (grams) to mg (milligrams)",
+                question: "How many mg equals 0.5 g?",
+                correctAnswer: 500,
+                unit: "mg",
+                solution: [
+                    "Conversion: 1 g = 1000 mg",
+                    "0.5 g × 1000 mg/g = 500 mg"
+                ],
+                commonMistake: "Common mistake: Confusing the direction of conversion. g → mg multiply by 1000. mg → g divide by 1000. Remember: going to a smaller unit (g to mg), multiply.",
+                allowsDecimal: false
+            },
+            {
+                id: 20,
+                category: "Unit Conversions",
+                categoryClass: "conversion",
+                scenario: "Pediatric nurse converting patient weight from pounds (from transport) to kilograms for medication dosing.",
+                order: "Convert: 154 lbs (pounds) to kg (kilograms)",
+                question: "How many kg equals 154 lbs?",
+                correctAnswer: 70,
+                unit: "kg",
+                solution: [
+                    "Conversion: 1 kg = 2.2 lbs",
+                    "kg = lbs ÷ 2.2",
+                    "kg = 154 ÷ 2.2 = 70 kg"
+                ],
+                commonMistake: "Common mistake: Multiplying instead of dividing. To convert lbs to kg, DIVIDE by 2.2. To convert kg to lbs, MULTIPLY by 2.2.",
+                allowsDecimal: false
+            },
+            {
+                id: 21,
+                category: "Unit Conversions",
+                categoryClass: "conversion",
+                scenario: "Pharmacist checking a medication order written with mcg (micrograms).",
+                order: "Convert: 250 mcg (micrograms) to mg (milligrams)",
+                question: "How many mg equals 250 mcg?",
+                correctAnswer: 0.25,
+                unit: "mg",
+                solution: [
+                    "Conversion: 1 mg = 1000 mcg",
+                    "mg = mcg ÷ 1000",
+                    "mg = 250 ÷ 1000 = 0.25 mg"
+                ],
+                commonMistake: "Common mistake: Multiplying by 1000 instead of dividing. mcg → mg divide by 1000. mg → mcg multiply by 1000.",
+                allowsDecimal: true
+            },
+            {
+                id: 22,
+                category: "Unit Conversions",
+                categoryClass: "conversion",
+                scenario: "IV nurse checking a large volume order written in liters.",
+                order: "Convert: 2.5 L (liters) to mL (milliliters)",
+                question: "How many mL equals 2.5 L?",
+                correctAnswer: 2500,
+                unit: "mL",
+                solution: [
+                    "Conversion: 1 L = 1000 mL",
+                    "mL = L × 1000",
+                    "mL = 2.5 × 1000 = 2500 mL"
+                ],
+                commonMistake: "Common mistake: Dividing instead of multiplying. L → mL multiply by 1000. mL → L divide by 1000.",
+                allowsDecimal: false
+            },
+
+            // CONCENTRATION CALCULATIONS
+            {
+                id: 23,
+                category: "Concentration",
+                categoryClass: "concentration",
+                scenario: "Pharmacist preparing a medication solution and needs to verify the strength/concentration.",
+                order: "Solution contains: 2 g (drug) in 500 mL (fluid). What is the mg/mL concentration?",
+                question: "Calculate the concentration in mg/mL.",
+                correctAnswer: 4,
+                unit: "mg/mL",
+                solution: [
+                    "Step 1: Convert grams to mg:",
+                    "  2 g = 2000 mg",
+                    "Step 2: Calculate concentration:",
+                    "  mg/mL = Total mg ÷ Total mL",
+                    "  mg/mL = 2000 mg ÷ 500 mL = 4 mg/mL"
+                ],
+                commonMistake: "Common mistake: Forgetting to convert g to mg first. Always ensure units match before dividing. The answer is 4 mg/mL, not 0.004.",
+                allowsDecimal: false
+            },
+            {
+                id: 24,
+                category: "Concentration",
+                categoryClass: "concentration",
+                scenario: "Critical care nurse checking concentration of a high-risk IV infusion.",
+                order: "Solution: 500 mg in 250 mL. What is the mcg/mL?",
+                question: "Calculate concentration in mcg/mL.",
+                correctAnswer: 2000,
+                unit: "mcg/mL",
+                solution: [
+                    "Step 1: Convert mg to mcg:",
+                    "  500 mg = 500,000 mcg",
+                    "Step 2: Calculate concentration:",
+                    "  mcg/mL = 500,000 mcg ÷ 250 mL = 2000 mcg/mL"
+                ],
+                commonMistake: "Common mistake: Forgetting to convert mg to mcg (1 mg = 1000 mcg). Students may calculate 500/250 = 2, forgetting the unit conversion.",
+                allowsDecimal: false
+            },
+
+            // PARKLAND FORMULA
+            {
+                id: 25,
+                category: "Parkland Formula",
+                categoryClass: "burns",
+                scenario: "Mr. William Turner, 75 kg, admitted to burn center with 40% TBSA burns. Team uses Parkland formula for fluid resuscitation.",
+                order: "Parkland Formula: 4 mL × %TBSA × Weight (kg). Calculate fluid for first 24 hours. Patient: 40% TBSA, 75 kg",
+                question: "What is the total 24-hour fluid volume in mL?",
+                correctAnswer: 12000,
+                unit: "mL",
+                solution: [
+                    "Parkland Formula: Total 24-hr fluid = 4 mL/kg/%TBSA × weight (kg) × %TBSA",
+                    "Calculation: 4 × 75 × 40 = 12,000 mL (or 12 L) for 24 hours",
+                    "Infusion plan: Give HALF (6000 mL) in first 8 hours, second half over next 16 hours"
+                ],
+                commonMistake: "Common mistake: Forgetting the 8-hour/16-hour split. Parkland gives HALF the total in the first 8 hours (much faster rate), then remainder over next 16 hours. Also, ensure weight is in kg, not lbs.",
+                allowsDecimal: false
+            },
+            {
+                id: 26,
+                category: "Parkland Formula",
+                categoryClass: "burns",
+                scenario: "Mrs. Lucy Diaz, 55 kg, admitted with 30% TBSA burns from house fire. Burn specialist orders fluid resuscitation.",
+                order: "Parkland Formula: 4 mL/kg/%TBSA × weight × %TBSA. Patient: 30% TBSA, 55 kg. What is first 8-hour volume?",
+                question: "Calculate the volume to infuse in the FIRST 8 HOURS.",
+                correctAnswer: 3300,
+                unit: "mL",
+                solution: [
+                    "Step 1: Calculate 24-hour total:",
+                    "  4 × 55 × 30 = 6600 mL total",
+                    "Step 2: First 8-hour volume (HALF of total):",
+                    "  6600 ÷ 2 = 3300 mL in first 8 hours"
+                ],
+                commonMistake: "Common mistake: Forgetting to divide by 2. Parkland formula gives the 24-hour total, but infusion is split: HALF in first 8 hours, HALF in next 16 hours.",
+                allowsDecimal: false
+            },
+
+            // PEDIATRIC CALCULATIONS
+            {
+                id: 27,
+                category: "Pediatric Dosing",
+                categoryClass: "pediatric",
+                scenario: "Dr. Aisha Patel examining 3-year-old Evan, 15 kg, with ear infection. Prescribes antibiotic.",
+                order: "Order: Amoxicillin 20 mg/kg q8h. Weight: 15 kg",
+                question: "Calculate the dose per administration.",
+                correctAnswer: 300,
+                unit: "mg",
+                solution: [
+                    "Formula: Dose = Weight (kg) × Dose per kg",
+                    "Dose = 15 kg × 20 mg/kg = 300 mg per dose",
+                    "Note: q8h means give 4 times daily (300 mg × 4 = 1200 mg/day total)"
+                ],
+                commonMistake: "Common mistake: Calculating the total daily dose instead of per-dose amount. The order asks for dose per administration, not daily total. Also, pediatric patients may have max doses—verify.",
+                allowsDecimal: false
+            },
+            {
+                id: 28,
+                category: "Pediatric Dosing",
+                categoryClass: "pediatric",
+                scenario: "Baby Sophie, 2 years old, 12 kg, with fever and infection. Pediatrician orders acetaminophen for fever.",
+                order: "Order: Acetaminophen 15 mg/kg q4-6h PRN. Weight: 12 kg. Max 5 doses per 24 hours.",
+                question: "What is the dose per administration?",
+                correctAnswer: 180,
+                unit: "mg",
+                solution: [
+                    "Formula: Dose = Weight (kg) × Dose per kg",
+                    "Dose = 12 kg × 15 mg/kg = 180 mg per dose",
+                    "Max daily: 180 mg × 5 = 900 mg/day (appropriate for this age)"
+                ],
+                commonMistake: "Common mistake: Not considering the max dose per day for pediatric patients. Always verify a child's total daily dose doesn't exceed age/weight-specific limits.",
+                allowsDecimal: false
+            },
+
+            // TABLET/DOSE FORM CALCULATIONS
+            {
+                id: 29,
+                category: "Tablets from Dose",
+                categoryClass: "tablets",
+                scenario: "Nurse on med-surg unit needs to give ordered dose from available tablet strength.",
+                order: "Order: Metoprolol 50 mg PO. Available: Metoprolol 25 mg tablets",
+                question: "How many tablets should the nurse administer?",
+                correctAnswer: 2,
+                unit: "tablets",
+                solution: [
+                    "Formula: Number of tablets = Ordered dose ÷ Dose per tablet",
+                    "Tablets = 50 mg ÷ 25 mg/tablet = 2 tablets"
+                ],
+                commonMistake: "Common mistake: Simple arithmetic errors or not aligning units. Always verify ordered dose and available dose units match before dividing.",
+                allowsDecimal: false
+            },
+            {
+                id: 30,
+                category: "Tablets from Dose",
+                categoryClass: "tablets",
+                scenario: "ED nurse administering pain medication from available supply.",
+                order: "Order: Ibuprofen 600 mg PO. Available: Ibuprofen 200 mg tablets",
+                question: "How many tablets?",
+                correctAnswer: 3,
+                unit: "tablets",
+                solution: [
+                    "Formula: Tablets = Ordered dose ÷ Dose per tablet",
+                    "Tablets = 600 mg ÷ 200 mg = 3 tablets"
+                ],
+                commonMistake: "Common mistake: Dividing in the wrong direction. Remember: Ordered ÷ Available = number of tablets/doses to give.",
+                allowsDecimal: false
+            },
+            {
+                id: 31,
+                category: "Tablets from Dose",
+                categoryClass: "tablets",
+                scenario: "Home health nurse teaching patient about warfarin dosing.",
+                order: "Order: Warfarin 7.5 mg PO daily. Available: Warfarin 2.5 mg tablets",
+                question: "How many tablets per dose?",
+                correctAnswer: 3,
+                unit: "tablets",
+                solution: [
+                    "Tablets = Ordered dose ÷ Tablet strength",
+                    "Tablets = 7.5 mg ÷ 2.5 mg = 3 tablets"
+                ],
+                commonMistake: "Common mistake: Confusing 2.5 mg tablets with 2.5 tablets needed. Calculate how many 2.5 mg tablets fit into 7.5 mg.",
+                allowsDecimal: false
+            }
+        ];
+
+        // ============================================================================
+        // APPLICATION STATE & LOGIC
+        // ============================================================================
+
+        const state = {
+            mode: 'select', // select, practice, quiz, results
+            currentProblemIndex: 0,
+            userAnswers: [],
+            quizStartTime: null,
+            quizTimeRemaining: 1800, // 30 minutes in seconds
+            quizTimerInterval: null,
+            filteredProblems: problems,
+            activeFilter: 'all',
+            practiceScore: { correct: 0, total: 0 },
+            quizzes: []
+        };
+
+        // ============================================================================
+        // UTILITY FUNCTIONS
+        // ============================================================================
+
+        function getCategories() {
+            const cats = new Set(problems.map(p => p.category));
+            return Array.from(cats);
+        }
+
+        function filterProblems(category) {
+            if (category === 'all') {
+                state.filteredProblems = problems;
+            } else {
+                state.filteredProblems = problems.filter(p => p.category === category);
+            }
+            state.activeFilter = category;
+            state.currentProblemIndex = 0;
+            state.userAnswers = [];
+            state.practiceScore = { correct: 0, total: 0 };
+            render();
+        }
+
+        function checkAnswer(answer, problem) {
+            let isCorrect = false;
+
+            if (problem.answerType === 'boolean') {
+                isCorrect = answer.toLowerCase() === problem.correctAnswer.toLowerCase();
+            } else {
+                const userVal = parseFloat(answer);
+                const correctVal = parseFloat(problem.correctAnswer);
+                isCorrect = Math.abs(userVal - correctVal) < 0.01 || userVal === correctVal;
+            }
+
+            return isCorrect;
+        }
+
+        function formatAnswer(val) {
+            if (typeof val === 'number') {
+                return val % 1 === 0 ? val.toString() : val.toFixed(2);
+            }
+            return val.toString();
+        }
+
+        function recordStats(problem, isCorrect) {
+            if (typeof window.StudyData !== 'undefined' && window.StudyData.recordResult) {
+                window.StudyData.recordResult('dosage-calc', problem.categoryClass, isCorrect, 1);
+                window.StudyData.trackExposure(`dosage-calc:${problem.categoryClass}`, isCorrect);
+            }
+        }
+
+        // ============================================================================
+        // QUIZ FUNCTIONS
+        // ============================================================================
+
+        function startQuiz() {
+            state.mode = 'quiz';
+            state.currentProblemIndex = 0;
+            state.userAnswers = [];
+            state.filteredProblems = problems
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 10);
+            state.quizStartTime = Date.now();
+            state.quizTimeRemaining = 1800;
+
+            clearInterval(state.quizTimerInterval);
+            state.quizTimerInterval = setInterval(() => {
+                state.quizTimeRemaining--;
+                if (state.quizTimeRemaining <= 0) {
+                    submitQuiz();
+                }
+                render();
+            }, 1000);
+
+            render();
+        }
+
+        function submitQuiz() {
+            clearInterval(state.quizTimerInterval);
+
+            const correct = state.userAnswers.filter(a => a.isCorrect).length;
+            const total = state.userAnswers.length;
+            const percentage = Math.round((correct / total) * 100);
+            const isPassing = percentage >= 90;
+
+            state.quizzes.push({
+                score: percentage,
+                correct,
+                total,
+                isPassing,
+                timestamp: new Date().toLocaleDateString()
+            });
+
+            if (typeof window.StudyData !== 'undefined' && window.StudyData.recordDosageQuiz) {
+                window.StudyData.recordDosageQuiz(correct, total);
+            }
+
+            state.mode = 'results';
+            render();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ============================================================================
+        // RENDER FUNCTIONS
+        // ============================================================================
+
+        function renderModeSelector() {
+            return `
+                <div class="mode-selector">
+                    <div class="mode-card" onclick="startPractice()">
+                        <h3>📚 Practice Mode</h3>
+                        <p>Learn at your pace. Review solutions and hints. Perfect for studying.</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz()">
+                        <h3>🎯 Quiz Simulation</h3>
+                        <p>10 random questions, 30-min timer, no hints. MUST score ≥90% to pass course.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStats() {
+            const lastQuizzes = state.quizzes.slice(-5).reverse();
+            const passingQuizzes = state.quizzes.filter(q => q.isPassing).length;
+            const currentStreak = lastQuizzes.findIndex(q => !q.isPassing) === -1 ? lastQuizzes.length : 0;
+
+            const bestStreak = (() => {
+                let streak = 0;
+                let best = 0;
+                for (let q of state.quizzes) {
+                    if (q.isPassing) {
+                        streak++;
+                        best = Math.max(best, streak);
+                    } else {
+                        streak = 0;
+                    }
+                }
+                return best;
+            })();
+
+            return `
+                <div class="stats-panel">
+                    <div class="stat-card">
+                        <div class="stat-label">Passing Quizzes</div>
+                        <div class="stat-value">${passingQuizzes}</div>
+                        <div class="stat-subtext">of ${state.quizzes.length} attempts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current Streak</div>
+                        <div class="stat-value">${currentStreak}</div>
+                        <div class="stat-subtext">consecutive passes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Best Streak</div>
+                        <div class="stat-value">${bestStreak}</div>
+                        <div class="stat-subtext">all time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Last Quiz</div>
+                        <div class="stat-value">${state.quizzes.length > 0 ? state.quizzes[state.quizzes.length - 1].score + '%' : '—'}</div>
+                        <div class="stat-subtext">${state.quizzes.length > 0 ? state.quizzes[state.quizzes.length - 1].timestamp : 'None yet'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFilterButtons() {
+            const categories = getCategories();
+            const all = `<button class="filter-btn ${state.activeFilter === 'all' ? 'active' : ''}" onclick="filterProblems('all')">All Types</button>`;
+            const buttons = categories.map(cat =>
+                `<button class="filter-btn ${state.activeFilter === cat ? 'active' : ''}" onclick="filterProblems('${cat}')">${cat}</button>`
+            ).join('');
+            return `<div class="filter-container">${all}${buttons}</div>`;
+        }
+
+        function renderProblem(problem, isQuizMode) {
+            const answer = state.userAnswers[state.currentProblemIndex];
+            const userInput = answer ? answer.userAnswer : '';
+            const isAnswered = state.userAnswers[state.currentProblemIndex] ? true : false;
+
+            let feedbackHtml = '';
+            if (isAnswered) {
+                const isCorrect = answer.isCorrect;
+                feedbackHtml = `
+                    <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="feedback-title">
+                            ${isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                        </div>
+                        <div>Your answer: <strong>${userInput} ${problem.unit}</strong></div>
+                        <div>Correct answer: <strong>${formatAnswer(problem.correctAnswer)} ${problem.unit}</strong></div>
+                        ${!isCorrect ? `<div style="margin-top: 10px; opacity: 0.9;">The correct answer is <strong>${formatAnswer(problem.correctAnswer)}</strong>.</div>` : ''}
+                        <div class="solution-steps">
+                            <strong style="color: var(--cardiac); margin-bottom: 8px; display: block;">Step-by-Step Solution:</strong>
+                            ${problem.solution.map((step, i) =>
+                                `<div class="solution-step"><span class="solution-step-label">Step ${i + 1}:</span> ${step}</div>`
+                            ).join('')}
+                        </div>
+                        <div class="common-mistake">
+                            <div class="common-mistake-title">💡 Common Mistake</div>
+                            ${problem.commonMistake}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const hintBtn = !isQuizMode && !isAnswered ?
+                `<button class="btn btn-secondary" onclick="showHint()">💡 Hint</button>` : '';
+
+            const checkBtn = !isAnswered ?
+                `<button class="btn btn-primary" onclick="submitAnswer()">Check Answer</button>` :
+                `<button class="btn btn-success" onclick="nextProblem()">Next</button>`;
+
+            return `
+                <div class="problem-container">
+                    <div class="problem-header">
+                        <div class="problem-counter">
+                            Problem ${state.currentProblemIndex + 1} of ${state.filteredProblems.length}
+                        </div>
+                        <span class="problem-category">${problem.category}</span>
+                    </div>
+
+                    ${!isQuizMode ? `<div style="margin-bottom: 15px;">
+                        <div style="font-size: 13px; font-weight: 600; opacity: 0.7;">Score: ${state.practiceScore.correct}/${state.practiceScore.total}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${state.practiceScore.total > 0 ? (state.practiceScore.correct / state.practiceScore.total * 100) : 0}%"></div>
+                        </div>
+                    </div>` : ''}
+
+                    <div class="problem-scenario">
+                        ${problem.scenario.split('\n').map(p => `<p>${p}</p>`).join('')}
+                    </div>
+
+                    <div class="problem-order">
+                        ${problem.order}
+                    </div>
+
+                    <div style="background: var(--bg); padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                        <strong style="color: var(--cardiac);">${problem.question}</strong>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Your Answer:</label>
+                        <div class="input-wrapper">
+                            <input type="text"
+                                id="answerInput"
+                                value="${userInput}"
+                                placeholder="Enter your answer"
+                                ${isAnswered ? 'disabled' : ''}
+                                ${!isAnswered ? `onkeypress="if(event.key==='Enter') submitAnswer()"` : ''}
+                                autocomplete="off"
+                            >
+                            <div class="answer-unit">${problem.unit}</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        ${hintBtn}
+                        ${checkBtn}
+                    </div>
+
+                    ${feedbackHtml}
+                </div>
+            `;
+        }
+
+        function renderQuizTimer() {
+            const isWarning = state.quizTimeRemaining < 300;
+            return `
+                <div class="quiz-timer ${isWarning ? 'warning' : ''}">
+                    Time remaining: ${formatTime(state.quizTimeRemaining)}
+                </div>
+            `;
+        }
+
+        function renderResults() {
+            const correct = state.userAnswers.filter(a => a.isCorrect).length;
+            const total = state.userAnswers.length;
+            const percentage = Math.round((correct / total) * 100);
+            const isPassing = percentage >= 90;
+
+            const byCategory = {};
+            state.userAnswers.forEach((ans, idx) => {
+                const prob = state.filteredProblems[idx];
+                if (!byCategory[prob.category]) {
+                    byCategory[prob.category] = { correct: 0, total: 0 };
+                }
+                byCategory[prob.category].total++;
+                if (ans.isCorrect) byCategory[prob.category].correct++;
+            });
+
+            const missedCategories = Object.entries(byCategory)
+                .filter(([, stats]) => stats.correct < stats.total)
+                .map(([cat]) => cat);
+
+            return `
+                <div class="results-container">
+                    <h2 style="margin-bottom: 20px;">Quiz Results</h2>
+                    <div class="results-score">${percentage}%</div>
+                    <div class="results-label">Score: ${correct} of ${total} correct</div>
+
+                    <div class="pass-indicator ${isPassing ? 'pass' : 'fail'}">
+                        ${isPassing ? '✓ PASS' : '✗ FAIL'} – Need ≥90% to pass
+                    </div>
+
+                    <div class="results-detail">
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-weight: 600; color: var(--cardiac); margin-bottom: 10px;">Performance by Category:</div>
+                            ${Object.entries(byCategory).map(([cat, stats]) => {
+                                const catPercent = Math.round((stats.correct / stats.total) * 100);
+                                return `
+                                    <div class="result-item">
+                                        <div>${cat}</div>
+                                        <div><strong>${stats.correct}/${stats.total}</strong> (${catPercent}%)</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    ${!isPassing && missedCategories.length > 0 ? `
+                        <div style="background: rgba(230, 126, 34, 0.1); border-left: 3px solid var(--emergency); padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                            <div style="font-weight: 600; color: var(--emergency); margin-bottom: 8px;">Focus on these weak areas:</div>
+                            <div>${missedCategories.join(', ')}</div>
+                        </div>
+                    ` : ''}
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                        <button class="btn btn-primary" onclick="startQuiz()">Try Another Quiz</button>
+                        <button class="btn btn-secondary" onclick="state.mode = 'select'; render();">Back to Menu</button>
+                        ${missedCategories.length > 0 ? `<button class="btn btn-warning" onclick="filterProblems('${missedCategories[0]}'); state.mode = 'practice'; render();">Practice Weak Areas</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function render() {
+            const container = document.getElementById('appContainer');
+
+            if (state.mode === 'select') {
+                container.innerHTML = `
+                    ${renderModeSelector()}
+                    ${renderStats()}
+                    ${renderFilterButtons()}
+                `;
+            } else if (state.mode === 'practice') {
+                const problem = state.filteredProblems[state.currentProblemIndex];
+                container.innerHTML = `
+                    ${renderFilterButtons()}
+                    ${renderProblem(problem, false)}
+                `;
+                setTimeout(() => document.getElementById('answerInput')?.focus(), 100);
+            } else if (state.mode === 'quiz') {
+                const problem = state.filteredProblems[state.currentProblemIndex];
+                container.innerHTML = `
+                    ${renderQuizTimer()}
+                    ${renderProblem(problem, true)}
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-warning" onclick="submitQuiz()">Submit Quiz Now</button>
+                    </div>
+                `;
+                setTimeout(() => document.getElementById('answerInput')?.focus(), 100);
+            } else if (state.mode === 'results') {
+                container.innerHTML = renderResults();
+            }
+        }
+
+        function startPractice() {
+            state.mode = 'practice';
+            state.currentProblemIndex = 0;
+            state.userAnswers = [];
+            state.practiceScore = { correct: 0, total: 0 };
+            render();
+        }
+
+        function submitAnswer() {
+            const input = document.getElementById('answerInput');
+            const problem = state.filteredProblems[state.currentProblemIndex];
+            const isCorrect = checkAnswer(input.value, problem);
+
+            state.userAnswers[state.currentProblemIndex] = {
+                userAnswer: input.value,
+                isCorrect: isCorrect,
+                problemId: problem.id
+            };
+
+            if (state.mode === 'practice') {
+                state.practiceScore.total++;
+                if (isCorrect) state.practiceScore.correct++;
+                recordStats(problem, isCorrect);
+            }
+
+            render();
+        }
+
+        function nextProblem() {
+            if (state.currentProblemIndex < state.filteredProblems.length - 1) {
+                state.currentProblemIndex++;
+                render();
+            } else if (state.mode === 'practice') {
+                state.mode = 'select';
+                render();
+            }
+        }
+
+        function showHint() {
+            const problem = state.filteredProblems[state.currentProblemIndex];
+            let hint = '';
+
+            if (problem.category === 'IV Drip Rate') {
+                hint = 'Formula: mL/hr = Total Volume (mL) ÷ Time (hours)';
+            } else if (problem.category === 'IV Drop Rate') {
+                hint = 'Formula: gtt/min = (Volume × Drop Factor) ÷ Time (minutes)\nDon\'t forget to convert hours to minutes (×60)';
+            } else if (problem.category === 'Weight-Based Dosing') {
+                hint = 'Formula: Dose = Weight (kg) × Dose per kg\nIf weight in lbs, divide by 2.2 first';
+            } else if (problem.category === 'mcg/kg/min Dosing') {
+                hint = 'Multi-step:\n1. mcg/min = mcg/kg/min × weight (kg)\n2. mcg/hr = mcg/min × 60\n3. Find concentration (convert mg to mcg if needed)\n4. mL/hr = mcg/hr ÷ concentration (mcg/mL)';
+            } else if (problem.category === 'Heparin Dosing') {
+                hint = 'Step 1: Calculate concentration (units ÷ mL)\nStep 2: mL/hr = Ordered units/hr ÷ units/mL';
+            } else if (problem.category === 'Insulin Drip') {
+                hint = 'Find concentration first: units ÷ mL\nThen: mL/hr = Ordered units/hr ÷ units/mL';
+            } else if (problem.category === 'Safe Dose Range') {
+                hint = 'Calculate min and max total daily dose\nCompare ordered daily total to this range';
+            } else if (problem.category === 'Unit Conversions') {
+                hint = 'g↔mg: ×/÷ 1000\nmg↔mcg: ×/÷ 1000\nlbs↔kg: ÷/× 2.2\nL↔mL: ×/÷ 1000';
+            }
+
+            alert(hint);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initTheme();
+            render();
+        });
+    </script>
+</body>
+</html>

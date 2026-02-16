@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardiac Pharm Quick-Reference — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --surface-alt: #f0f2f5;
+  --surface-alt-hover: #e2e6ea;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+  --modal-overlay: rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --surface-alt: #262630;
+  --surface-alt-hover: #2f2f3a;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+  --modal-overlay: rgba(0,0,0,0.7);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, var(--text) 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+}
+
+[data-theme="dark"] .header {
+  background: linear-gradient(135deg, var(--surface) 0%, #2a3f4f 50%, #1a2a3f 100%);
+}
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+.mode-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.mode-btn.active {
+  background: var(--cardiac);
+  color: white;
+}
+
+.mode-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.9em;
+  box-shadow: var(--shadow);
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); border-color: var(--fluid); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+/* ─── CARDS GRID ─── */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.flip-card {
+  perspective: 1000px;
+  height: 380px;
+  cursor: pointer;
+  position: relative;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+}
+
+.flip-card-front {
+  background: var(--card);
+  border-left: 5px solid var(--cardiac);
+  z-index: 2;
+}
+
+.flip-card-back {
+  background: var(--card);
+  border-left: 5px solid var(--cardiac);
+  transform: rotateY(180deg);
+  overflow-y: auto;
+}
+
+.flip-card:hover .flip-card-front {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+.card-header {
+  margin-bottom: 12px;
+}
+
+.drug-name {
+  font-size: 1.25em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.drug-brand {
+  font-size: 0.85em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.card-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.class {
+  background: var(--fluid-bg);
+  color: var(--fluid);
+}
+
+.badge.alert-high {
+  background: var(--cardiac-bg);
+  color: var(--cardiac);
+}
+
+.badge.alert-warn {
+  background: var(--emergency-bg);
+  color: var(--emergency);
+}
+
+.badge.alert-routine {
+  background: var(--oxy-bg);
+  color: var(--oxy);
+}
+
+.back-content {
+  font-size: 0.9em;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.back-section {
+  margin-bottom: 6px;
+}
+
+.back-label {
+  font-weight: 700;
+  color: var(--cardiac);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.back-content strong {
+  color: var(--text);
+}
+
+.hold-criteria {
+  background: var(--cardiac-bg);
+  padding: 8px;
+  border-radius: 6px;
+  border-left: 3px solid var(--cardiac);
+  margin: 6px 0;
+  font-weight: 600;
+  color: var(--cardiac);
+}
+
+.combo-warning {
+  background: var(--emergency-bg);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border-left: 2px solid var(--emergency);
+  font-size: 0.8em;
+  color: var(--emergency);
+}
+
+/* ─── QUIZ MODE ─── */
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.quiz-container.active { display: block; }
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.quiz-header h2 { font-size: 1.6em; font-weight: 800; margin-bottom: 8px; }
+.quiz-progress {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--cardiac);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.scenario-box {
+  background: var(--surface);
+  border-left: 4px solid var(--fluid);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.scenario-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.scenario-patient {
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.scenario-drug {
+  background: var(--card);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid var(--cardiac);
+  margin-top: 12px;
+  font-weight: 700;
+  color: var(--cardiac);
+}
+
+.quiz-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.decision-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.1em;
+  transition: all 0.2s;
+  border: 2px solid;
+  max-width: 200px;
+}
+
+.give-btn {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.give-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(39,174,96,0.3); }
+
+[data-theme="dark"] .give-btn:hover:not(:disabled) { box-shadow: 0 6px 16px rgba(39,174,96,0.5); }
+
+.hold-btn {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.hold-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(231,76,60,0.3); }
+
+[data-theme="dark"] .hold-btn:hover:not(:disabled) { box-shadow: 0 6px 16px rgba(231,76,60,0.5); }
+
+.decision-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feedback {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: none;
+  border-left: 4px solid;
+}
+
+.feedback.show { display: block; }
+
+.feedback.correct {
+  border-left-color: var(--success);
+  background: rgba(39,174,96,0.1);
+}
+
+.feedback.incorrect {
+  border-left-color: var(--danger);
+  background: rgba(231,76,60,0.1);
+}
+
+.feedback-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback.correct .feedback-title { color: var(--success); }
+.feedback.incorrect .feedback-title { color: var(--danger); }
+
+.feedback-text {
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1em;
+  transition: all 0.2s;
+}
+
+.next-btn:hover { background: #c0392b; transform: translateY(-2px); }
+[data-theme="dark"] .next-btn:hover { background: #d84c41; }
+
+.next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── QUIZ STATS ─── */
+.quiz-stats {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.quiz-stats h3 {
+  font-size: 1.05em;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  background: var(--card);
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+  border-top: 3px solid var(--cardiac);
+}
+
+.stat-number {
+  font-size: 1.8em;
+  font-weight: 800;
+  color: var(--cardiac);
+}
+
+.stat-label {
+  font-size: 0.75em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+/* ─── COMBO MODAL ─── */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--modal-overlay);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+.modal-close {
+  background: var(--surface);
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close:hover { background: var(--surface-hover); }
+
+.combo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.combo-item {
+  background: var(--surface);
+  padding: 14px;
+  border-radius: 8px;
+  border-left: 3px solid var(--emergency);
+}
+
+.combo-drugs {
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  font-size: 0.95em;
+}
+
+.combo-risk {
+  font-size: 0.85em;
+  color: var(--emergency);
+  margin-bottom: 4px;
+}
+
+.combo-action {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .search-bar { width: 100%; }
+
+  .mode-toggle {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .flip-card {
+    height: 450px;
+  }
+
+  .quiz-container {
+    margin: 0;
+    padding: 20px;
+    border-radius: 0;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .decision-btn {
+    max-width: 100%;
+  }
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state p {
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Cardiac Pharm</h1>
+      <p class="subtitle">N8 Quick-Reference — Give or Hold? Interactive Study Tool</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="switchMode('browse')">Browse Cards</button>
+      <button class="mode-btn" onclick="switchMode('quiz')">Quiz Mode</button>
+    </div>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search drugs, class, or condition..." onkeyup="filterCards()">
+
+    <div class="filter-group">
+      <button class="filter-btn" onclick="toggleFilter('all')">All</button>
+      <button class="filter-btn" onclick="toggleFilter('beta-blocker')">Beta-Blockers</button>
+      <button class="filter-btn" onclick="toggleFilter('ccb')">CCB</button>
+      <button class="filter-btn" onclick="toggleFilter('ace-arb')">ACE/ARB</button>
+      <button class="filter-btn" onclick="toggleFilter('diuretic')">Diuretics</button>
+      <button class="filter-btn" onclick="toggleFilter('anticoag')">Anticoag</button>
+      <button class="filter-btn" onclick="toggleFilter('HIGH-ALERT')">HIGH-ALERT</button>
+    </div>
+
+    <button class="filter-btn" onclick="showCombos()" style="background: var(--emergency); color: white;">🚨 Dangerous Combos</button>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <!-- BROWSE MODE -->
+  <div id="browseMode" class="browse-mode">
+    <div class="cards-container" id="cardsContainer"></div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="quizMode" class="quiz-container">
+    <div class="quiz-header">
+      <h2>Give or Hold? Challenge</h2>
+      <p class="quiz-progress"><span id="quizCurrent">1</span> / <span id="quizTotal">1</span></p>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="quizProgressBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-stats">
+      <h3>Your Stats</h3>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-number" id="statCorrect">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statIncorrect">0</div>
+          <div class="stat-label">Incorrect</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statAccuracy">--</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario-box" id="scenarioBox"></div>
+
+    <div class="quiz-buttons">
+      <button class="decision-btn give-btn" onclick="makeDecision('give')">✓ GIVE</button>
+      <button class="decision-btn hold-btn" onclick="makeDecision('hold')">✕ HOLD</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+  </div>
+
+  <!-- COMBOS MODAL -->
+  <div class="modal" id="combosModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Dangerous Drug Combos</h2>
+        <button class="modal-close" onclick="hideCombos()">×</button>
+      </div>
+      <div class="combo-list" id="comboList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Cardiac Pharmacology Quick-Reference | N8 NCLEX-RN Intensive | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+
+// ─── INITIALIZATION ───
+const allDrugs = [
+  // BETA-BLOCKERS
+  {
+    id: 1,
+    name: 'Metoprolol',
+    brand: 'Lopressor / Toprol XL',
+    class: 'Beta-Blocker (β1 cardioselective)',
+    mechanism: 'Blocks β1 receptors → ↓HR, ↓contractility, ↓BP',
+    indication: 'HTN, HF, post-MI, arrhythmias',
+    nursing: 'Monitor HR (goal >60), BP, HR response to activity',
+    labs: 'None specific; baseline HR/BP',
+    hold: 'HR <60, SBP <90',
+    teaching: 'Do NOT stop abruptly (rebound tachycardia/MI). May mask hypoglycemia in diabetics. Take regularly.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'beta-blocker'
+  },
+  {
+    id: 2,
+    name: 'Atenolol',
+    brand: 'Tenormin',
+    class: 'Beta-Blocker (β1 cardioselective)',
+    mechanism: 'β1 blockade → ↓HR, ↓contractility, ↓BP',
+    indication: 'HTN, angina, post-MI, arrhythmias',
+    nursing: 'Monitor HR, BP, exercise tolerance',
+    labs: 'Baseline vitals',
+    hold: 'HR <60, SBP <90',
+    teaching: 'Slow pulse is expected. Take consistently. Report dizziness or severe fatigue.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'beta-blocker'
+  },
+  {
+    id: 3,
+    name: 'Carvedilol',
+    brand: 'Coreg',
+    class: 'Beta-Blocker (β1+β2+α non-selective)',
+    mechanism: 'Non-selective β + α blockade → ↓HR, ↓contractility, ↓BP, ↓afterload (α effect)',
+    indication: 'Heart failure, HTN, post-MI',
+    nursing: 'Monitor HR, orthostatic BP, dizziness. Take with food.',
+    labs: 'Baseline vitals, renal function',
+    hold: 'HR <60, SBP <90',
+    teaching: 'Take with food to improve absorption. May cause dizziness (α-blocking). Rise slowly from sitting/lying.',
+    combos: [
+      { drug1: 'Carvedilol', drug2: 'Diltiazem/Verapamil', risk: 'Severe bradycardia, heart block', action: 'Avoid combination; use alternative CCB or beta-blocker' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'beta-blocker'
+  },
+  {
+    id: 4,
+    name: 'Bisoprolol',
+    brand: 'Zebeta',
+    class: 'Beta-Blocker (β1 cardioselective)',
+    mechanism: 'β1 blockade → ↓HR, ↓contractility, ↓BP',
+    indication: 'HTN, HF, angina',
+    nursing: 'Monitor HR, BP',
+    labs: 'Baseline vitals',
+    hold: 'HR <60, SBP <90',
+    teaching: 'Take regularly. Do not stop abruptly.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'beta-blocker'
+  },
+
+  // CALCIUM CHANNEL BLOCKERS
+  {
+    id: 5,
+    name: 'Diltiazem',
+    brand: 'Cardizem',
+    class: 'Calcium Channel Blocker (non-dihydropyridine)',
+    mechanism: 'Blocks Ca2+ channels → ↓HR (AV node), ↓BP, mild negative inotropy',
+    indication: 'A-fib rate control, HTN, angina',
+    nursing: 'Monitor HR (goal >60), BP. Assess for edema.',
+    labs: 'Baseline vitals, renal function',
+    hold: 'HR <60, SBP <90',
+    teaching: 'AVOID GRAPEFRUIT JUICE (CYP3A4 inhibitor—↑levels). Take with or without food. Do not crush extended-release tabs.',
+    combos: [
+      { drug1: 'Diltiazem', drug2: 'Beta-blocker', risk: 'Severe bradycardia, AV block, asystole', action: 'Monitor closely; may need HR/BP reduction' },
+      { drug1: 'Diltiazem', drug2: 'Digoxin', risk: 'Increased digoxin levels → toxicity', action: 'Monitor digoxin level closely' }
+    ],
+    alertLevel: 'WARN',
+    category: 'ccb'
+  },
+  {
+    id: 6,
+    name: 'Verapamil',
+    brand: 'Calan',
+    class: 'Calcium Channel Blocker (non-dihydropyridine)',
+    mechanism: 'Blocks Ca2+ channels → ↓HR, ↓BP, ↓contractility (stronger than diltiazem)',
+    indication: 'SVT, A-fib rate control, HTN, angina',
+    nursing: 'Monitor HR, BP, contractility. Assess for HF exacerbation.',
+    labs: 'Baseline vitals, EF if HF',
+    hold: 'HR <60, SBP <90, HF (ejection fraction <40%)',
+    teaching: 'CONSTIPATION very common—use stool softener. Avoid grapefruit. Do not use in acute HF. Take consistently.',
+    combos: [
+      { drug1: 'Verapamil', drug2: 'Beta-blocker', risk: 'Severe bradycardia, AV block, cardiogenic shock', action: 'AVOID; use alternative agent' },
+      { drug1: 'Verapamil', drug2: 'Digoxin', risk: 'Increased digoxin levels → toxicity', action: 'Reduce digoxin dose, monitor level' }
+    ],
+    alertLevel: 'WARN',
+    category: 'ccb'
+  },
+  {
+    id: 7,
+    name: 'Amlodipine',
+    brand: 'Norvasc',
+    class: 'Calcium Channel Blocker (dihydropyridine)',
+    mechanism: 'Peripheral vasodilation (vessel > heart) → ↓BP, minimal HR/contractility effect',
+    indication: 'HTN, stable angina',
+    nursing: 'Monitor BP, ankle edema',
+    labs: 'Baseline BP',
+    hold: 'SBP <90',
+    teaching: 'Peripheral edema very common (reflex tachycardia, not HF). Safe in HF. Avoid grapefruit. Take consistently.',
+    combos: [],
+    alertLevel: 'ROUTINE',
+    category: 'ccb'
+  },
+
+  // ACE INHIBITORS
+  {
+    id: 8,
+    name: 'Lisinopril',
+    brand: 'Zestril / Prinivil',
+    class: 'ACE Inhibitor',
+    mechanism: 'Blocks ACE (Ang I → Ang II) → ↓BP, ↓afterload, ↓aldosterone, ↑K+',
+    indication: 'HTN, HF, post-MI, diabetic nephropathy',
+    nursing: 'Check BP baseline, K+ (renal), creatinine (renal). Monitor for cough.',
+    labs: 'K+, BUN/Cr baseline and 1-2 weeks after start. Recheck if renal disease or on diuretics.',
+    hold: 'SBP <90, K+ >5.0, Cr ↑>30% from baseline, history of angioedema',
+    teaching: 'Dry cough (10-20% pts)—if intolerable, switch to ARB. ANGIOEDEMA (face/tongue/throat) = EMERGENCY, go to ER immediately. Avoid K+ supplements, K+-sparing diuretics without monitoring. No NSAIDs.',
+    combos: [
+      { drug1: 'Lisinopril', drug2: 'Spironolactone', risk: 'Hyperkalemia (K+ >5.5)', action: 'Monitor K+ closely; check baseline, week 1, then monthly' },
+      { drug1: 'Lisinopril', drug2: 'Potassium supplements', risk: 'Hyperkalemia', action: 'Avoid K+ supplements unless K+ <3.5' }
+    ],
+    alertLevel: 'TERATOGENIC',
+    category: 'ace-arb'
+  },
+  {
+    id: 9,
+    name: 'Enalapril',
+    brand: 'Vasotec',
+    class: 'ACE Inhibitor',
+    mechanism: 'ACE blockade → ↓BP, ↓afterload, ↓aldosterone',
+    indication: 'HTN, HF, post-MI',
+    nursing: 'Monitor BP, K+, Cr. Can give IV for acute HF.',
+    labs: 'K+, BUN/Cr',
+    hold: 'SBP <90, K+ >5.0, Cr ↑>30%',
+    teaching: 'Dry cough. Angioedema risk. Avoid potassium. Available IV for acute settings.',
+    combos: [
+      { drug1: 'Enalapril', drug2: 'Spironolactone', risk: 'Hyperkalemia', action: 'Monitor K+' }
+    ],
+    alertLevel: 'TERATOGENIC',
+    category: 'ace-arb'
+  },
+
+  // ARBs
+  {
+    id: 10,
+    name: 'Losartan',
+    brand: 'Cozaar',
+    class: 'ARB (Angiotensin II Receptor Blocker)',
+    mechanism: 'Blocks AT1 receptors (Ang II effect) → ↓BP, ↓afterload, ↓aldosterone',
+    indication: 'HTN, HF, post-MI, diabetic nephropathy',
+    nursing: 'Monitor BP, K+, Cr (same as ACE)',
+    labs: 'K+, BUN/Cr baseline, 1-2 weeks, then periodically',
+    hold: 'SBP <90, K+ >5.0, Cr ↑>30%',
+    teaching: 'NO dry cough (advantage over ACE). Still causes angioedema (rare). No K+ supplements. Teratogenic.',
+    combos: [
+      { drug1: 'Losartan', drug2: 'Spironolactone', risk: 'Hyperkalemia', action: 'Monitor K+ closely' }
+    ],
+    alertLevel: 'TERATOGENIC',
+    category: 'ace-arb'
+  },
+  {
+    id: 11,
+    name: 'Valsartan',
+    brand: 'Diovan',
+    class: 'ARB',
+    mechanism: 'AT1 blockade → ↓BP, ↓afterload, ↓aldosterone',
+    indication: 'HTN, HF, post-MI',
+    nursing: 'Monitor BP, K+, Cr',
+    labs: 'K+, BUN/Cr',
+    hold: 'SBP <90, K+ >5.0, Cr ↑>30%',
+    teaching: 'No cough. Teratogenic. Avoid NSAIDs, K+ supplements.',
+    combos: [
+      { drug1: 'Valsartan', drug2: 'Spironolactone', risk: 'Hyperkalemia', action: 'Monitor K+' }
+    ],
+    alertLevel: 'TERATOGENIC',
+    category: 'ace-arb'
+  },
+
+  // ARNI
+  {
+    id: 12,
+    name: 'Sacubitril-Valsartan',
+    brand: 'Entresto',
+    class: 'ARNI (Neprilysin inhibitor + ARB)',
+    mechanism: 'Neprilysin inhibition (↑natriuretic peptides) + ARB (Ang II blockade) → ↓BP, ↓afterload, improves HF outcomes',
+    indication: 'HF with reduced ejection fraction (HFrEF), superior to ACE alone',
+    nursing: 'Monitor BP, K+, Cr. Requires washout from ACE/ARB.',
+    labs: 'K+, BUN/Cr baseline',
+    hold: 'SBP <90, K+ >5.0, CrCl <30',
+    teaching: 'MUST wait 36 hours after last ACE dose before starting (angioedema risk if overlapped). Never combine with ACE inhibitors. Do not abruptly stop.',
+    combos: [
+      { drug1: 'Sacubitril-Valsartan', drug2: 'ACE inhibitor', risk: 'Angioedema, severe hypotension', action: 'ABSOLUTE contraindication; 36-hour washout required' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'ace-arb'
+  },
+
+  // CARDIAC GLYCOSIDE
+  {
+    id: 13,
+    name: 'Digoxin',
+    brand: 'Lanoxin',
+    class: 'Cardiac Glycoside',
+    mechanism: 'Inhibits Na-K-ATPase → ↑[Ca2+] intracellular → ↑contractility (positive inotrope); also ↓AV conduction → ↓HR (negative chronotrope)',
+    indication: 'HF (↑contractility), A-fib (↓ventricular rate)',
+    nursing: 'CHECK PULSE BEFORE EACH DOSE (if HR <60 or irregular, hold & notify). Monitor for signs of toxicity.',
+    labs: 'Digoxin level (therapeutic 0.5-2.0 ng/mL, narrow range!). K+ (hypokalemia ↑toxicity risk massively). Mg2+, renal function.',
+    hold: 'HR <60, digoxin level >2.0, signs of toxicity, hyperkalemia',
+    teaching: 'NARROW THERAPEUTIC INDEX—toxic level close to therapeutic. Hypokalemia increases toxicity risk (↑binding to ATPase). Toxicity signs: N/V, visual changes (yellow-green halos), arrhythmias, bradycardia. Take consistently. Antidote: Digibind.',
+    combos: [
+      { drug1: 'Digoxin', drug2: 'Diuretics (especially loop)', risk: 'Hypokalemia → ↑digoxin toxicity', action: 'Monitor K+, consider K+-sparing agent' },
+      { drug1: 'Digoxin', drug2: 'Diltiazem/Verapamil', risk: 'Increased digoxin levels', action: 'May need digoxin dose reduction' }
+    ],
+    alertLevel: 'HIGH-ALERT (NARROW THERAPEUTIC INDEX)',
+    category: 'other'
+  },
+
+  // ANTIARRHYTHMICS
+  {
+    id: 14,
+    name: 'Amiodarone',
+    brand: 'Cordarone',
+    class: 'Antiarrhythmic (Class III)',
+    mechanism: 'K+ channel blocker (↑AP duration, ↑refractory period). Also has Class I, II, IV effects → potent antiarrhythmic',
+    indication: 'Life-threatening ventricular arrhythmias (VF/pulseless VT), refractory A-fib',
+    nursing: 'Monitor HR, QT interval (⚠ QT prolongation risk). Baseline eye exam, PFTs, LFTs, TSH.',
+    labs: 'Digoxin level (if on digoxin), amiodarone level (not routinely), TSH (baseline, then q6 mo—hypothyroid/hyperthyroid), LFTs, PFTs.',
+    hold: 'HR <60, QT prolongation (QTc >500ms), pulmonary symptoms, liver dysfunction',
+    teaching: 'Photosensitivity—use high-SPF sunscreen, protective clothing. Blue-gray skin discoloration (reversible). Corneal deposits (rare but check vision). Hypothyroidism/hyperthyroidism common. High pulmonary toxicity risk (IPF, PNA). Many drug interactions (CYP3A4, 2C9 inhibitor). Slow loading: 150mg IV over 10min for acute.',
+    combos: [
+      { drug1: 'Amiodarone', drug2: 'Warfarin', risk: 'Increased INR → bleeding risk', action: 'Monitor INR closely, may need warfarin dose reduction' },
+      { drug1: 'Amiodarone', drug2: 'QT-prolonging drugs (cisapride, dofetilide, sotalol)', risk: 'Torsades de pointes', action: 'Avoid combinations' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'antiarrhythmic'
+  },
+  {
+    id: 15,
+    name: 'Adenosine',
+    brand: 'Adenocard',
+    class: 'Antiarrhythmic (slows AV conduction)',
+    mechanism: 'Activates A1 receptors → slows AV nodal conduction, terminates SVT reentrant circuits',
+    indication: 'SVT (supraventricular tachycardia)—FIRST-LINE for stable SVT',
+    nursing: 'Rapid IV push via closest port to heart (usually antecubital), followed immediately by 20mL NS flush. Patient will feel brief chest tightness/"impending doom" + brief dyspnea—NORMAL, warn patient.',
+    labs: 'None specific; baseline vitals',
+    hold: 'Severe bronchospasm/asthma (relative), decompensated HF',
+    teaching: 'Causes brief asystole (5-10 sec)—patient will feel syncope. Works in <1 second. If first dose (6mg) doesn\'t work, give 12mg. Keep resuscitation equipment nearby. Methylxanthines (caffeine, theophylline) reduce effectiveness.',
+    combos: [
+      { drug1: 'Adenosine', drug2: 'Dipyridamole/Carbamazepine', risk: 'Enhanced adenosine effect, severe bradycardia', action: 'Use lower adenosine dose' }
+    ],
+    alertLevel: 'ROUTINE',
+    category: 'antiarrhythmic'
+  },
+  {
+    id: 16,
+    name: 'Atropine',
+    brand: 'Atropine',
+    class: 'Anticholinergic (antiarrhythmic in bradycardia)',
+    mechanism: 'Blocks vagal (parasympathetic) tone → ↑HR, ↓AV nodal conduction time',
+    indication: 'Symptomatic bradycardia (HR <60 + hypotension/altered mental status)',
+    nursing: 'Monitor HR, BP. Expect ↑HR, dry mouth, urinary retention. Give IV rapidly for bradycardia.',
+    labs: 'None specific',
+    hold: 'Glaucoma (contraindication)', teaching: 'Dose: 0.5-1mg IV q3-5min, max 3mg. Use in bradycardia-related shock. Side effects: tachycardia, dry mouth, blurred vision, urinary retention.',
+    combos: [],
+    alertLevel: 'ROUTINE',
+    category: 'antiarrhythmic'
+  },
+
+  // ANTICOAGULANTS
+  {
+    id: 17,
+    name: 'Heparin (unfractionated)',
+    brand: 'Heparin',
+    class: 'Anticoagulant (parenteral, indirect thrombin inhibitor)',
+    mechanism: 'Potentiates antithrombin → inhibits thrombin (II) and factor Xa → prevents clot formation',
+    indication: 'DVT/PE treatment, ACS, post-PCI, bridging to warfarin',
+    nursing: 'Weight-based dosing (80 u/kg bolus, then 18 u/kg/hr infusion). Monitor aPTT q6h until stable, then daily. Assess for bleeding, HIT (heparin-induced thrombocytopenia—platelets drop day 3-5).',
+    labs: 'aPTT (therapeutic 1.5-2.5× control, ~60-80 sec). Baseline platelets, repeat day 3 (HIT screening). Baseline Hgb/Hct.',
+    hold: 'Active bleeding, aPTT >100, platelets <100K (HIT suspicion), APTT >3× control',
+    teaching: 'Antidote: Protamine sulfate (1mg per 100u heparin, slow IV). Heparin levels affect aPTT nonlinearly—recheck q4-6h after dose change. HIT can occur even with "therapeutic" levels; watch for thrombosis + thrombocytopenia.',
+    combos: [
+      { drug1: 'Heparin', drug2: 'ASA + Clopidogrel', risk: 'Excessive bleeding', action: 'Acceptable combination but monitor closely' }
+    ],
+    alertLevel: 'HIGH-ALERT (weight-based)',
+    category: 'anticoag'
+  },
+  {
+    id: 18,
+    name: 'Enoxaparin',
+    brand: 'Lovenox',
+    class: 'Anticoagulant (LMWH, parenteral)',
+    mechanism: 'Low-molecular-weight heparin → more predictable Xa inhibition than thrombin inhibition',
+    indication: 'DVT prophylaxis (hospitalized/orthopedic), DVT/PE treatment, ACS',
+    nursing: 'SubQ injection q12h (prophylaxis) or q12h (treatment—weight-based). Inject in abdomen, rotate sides. Do NOT rub injection site.',
+    labs: 'Baseline platelets, CBC. Anti-Xa level if needed (therapeutic 0.5-1.0 IU/mL for treatment). Renal function (CrCl <30 needs dose adjustment).',
+    hold: 'CrCl <30 (contraindicated or dose-adjust), active bleeding, platelets <100K, spinal puncture/epidural (remove LMWH 24h before)',
+    teaching: 'Subq only—do NOT give IV. No monitoring needed in most pts (unlike UFH). Cannot be reversed easily—protamine only partially effective. Thromboprophylaxis: 30-40mg daily; treatment: 1mg/kg q12h.',
+    combos: [
+      { drug1: 'Enoxaparin', drug2: 'NSAIDs', risk: 'GI bleeding', action: 'Monitor for bleeding signs' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'anticoag'
+  },
+  {
+    id: 19,
+    name: 'Warfarin',
+    brand: 'Coumadin',
+    class: 'Anticoagulant (oral, vitamin K antagonist)',
+    mechanism: 'Inhibits vitamin K-dependent factors (II, VII, IX, X) → prevents clot formation, slow onset (2-7 days)',
+    indication: 'Long-term anticoag: A-fib (stroke prevention), mechanical heart valves, DVT/PE, hypercoagulable states',
+    nursing: 'Monitor INR (drawn q week × 2-3 weeks, then monthly if stable). Consistent vitamin K diet (don\'t eliminate, just keep constant—pt variation ↑INR swings).',
+    labs: 'PT/INR baseline and regularly. Therapeutic: INR 2.0-3.0 (most conditions), 2.5-3.5 (mechanical valves). Supratherapeutic: INR 3.1-4.0 (no bleeding, hold dose, recheck); INR >4.0 (give vitamin K 2.5-5mg PO).',
+    hold: 'INR >3.0 (hold, recheck q2-3 days); active bleeding; recent surgery',
+    teaching: 'MANY drug interactions (NSAIDs ↑INR, antibiotics ↑INR, barbiturates ↓INR). Antidote: Vitamin K (phytonadione) 2.5-5mg PO (slow effect 12-24h) or FFP for urgent reversal. Avoid alcohol. Report black/tarry stools, bruising, nosebleeds.',
+    combos: [
+      { drug1: 'Warfarin', drug2: 'NSAIDs', risk: 'Increased INR → bleeding risk', action: 'Avoid NSAIDs; use acetaminophen instead' },
+      { drug1: 'Warfarin', drug2: 'Amiodarone', risk: 'Increased INR → bleeding', action: 'Monitor INR, may need warfarin dose reduction' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'anticoag'
+  },
+
+  // ANTIPLATELETS
+  {
+    id: 20,
+    name: 'Aspirin',
+    brand: 'ASA (various OTC)',
+    class: 'Antiplatelet (COX inhibitor)',
+    mechanism: 'Irreversibly inhibits platelet COX → ↓thromboxane A2 → ↓platelet aggregation',
+    indication: 'Acute coronary syndrome (LOAD: chew 325mg ASAP), secondary prevention (81mg daily indefinitely)',
+    nursing: 'Chew tablet for faster onset in ACS. Monitor for GI upset, bleeding.',
+    labs: 'None specific',
+    hold: 'Active bleeding, aspirin allergy',
+    teaching: 'Take with food to reduce GI irritation. Onset 15-30 min (chewed). Report black/tarry stools, severe bruising. Daily aspirin doesn\'t require monitoring.',
+    combos: [
+      { drug1: 'Aspirin', drug2: 'Warfarin', risk: 'Increased bleeding risk', action: 'Use together cautiously; monitor for bleeding' }
+    ],
+    alertLevel: 'ROUTINE',
+    category: 'antiplatelet'
+  },
+  {
+    id: 21,
+    name: 'Clopidogrel',
+    brand: 'Plavix',
+    class: 'Antiplatelet (P2Y12 inhibitor)',
+    mechanism: 'Blocks P2Y12 purinergic receptor → ↓ADP-induced platelet aggregation',
+    indication: 'ACS (NSTEMI/STEMI with PCI), post-stent placement, stroke prevention',
+    nursing: 'Monitor for bleeding. Assess adherence (must take consistently post-stent, usually 12 months).',
+    labs: 'None specific; baseline CBC',
+    hold: 'Active bleeding, thrombotic thrombocytopenic purpura (TTP)',
+    teaching: 'AVOID PPIs (omeprazole, lansoprazole—inhibit CYP2C19, ↓clopidogrel activation). Report unusual bruising, bleeding from gums/nose. Do NOT stop abruptly post-stent (stent thrombosis risk).',
+    combos: [
+      { drug1: 'Clopidogrel', drug2: 'Omeprazole/Lansoprazole', risk: 'Reduced clopidogrel efficacy', action: 'Use alternative PPI (pantoprazole) or H2 blocker' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'antiplatelet'
+  },
+
+  // NITRATES
+  {
+    id: 22,
+    name: 'Nitroglycerin (NTG)',
+    brand: 'Nitrostat (SL), Nitro-Bid (patch), Nitrolingual (spray)',
+    class: 'Nitrate (vasodilator)',
+    mechanism: 'Donates NO → ↑cGMP → vascular smooth muscle relaxation → PRIMARILY venodilation (↓preload), some arterial dilation',
+    indication: 'Acute angina (SL for rapid relief), acute HF (IV for preload reduction), hypertensive emergency',
+    nursing: 'SL tablet: 1 tab q5min ×3, if no relief after 15min total → call 911. IV drip requires continuous monitoring (arterial line ideal). Patch: apply AM, remove PM (prevent tolerance).',
+    labs: 'None specific; monitor BP',
+    hold: 'SBP <90, HR <60 or >100, recent PDE5 inhibitor use (sildenafil/Viagra—SEVERE hypotension risk)',
+    teaching: 'Burning under tongue = drug potency. Store in dark glass vial, replace q6 months (NTG oxidizes). CRITICAL: NO sildenafil within 24-48h (NTG + sildenafil = life-threatening hypotension). Tolerance develops with continuous use—patch-free interval essential. Headache common.',
+    combos: [
+      { drug1: 'Nitroglycerin', drug2: 'Sildenafil (Viagra)', risk: 'Severe, life-threatening hypotension', action: 'ABSOLUTE CONTRAINDICATION; 24-48h washout' },
+      { drug1: 'Nitroglycerin', drug2: 'Tadalafil (Cialis)', risk: 'Severe hypotension', action: 'Avoid; 48h washout minimum' }
+    ],
+    alertLevel: 'HIGH-ALERT (PDE5 INTERACTION)',
+    category: 'other'
+  },
+
+  // VASOPRESSORS
+  {
+    id: 23,
+    name: 'Norepinephrine',
+    brand: 'Levophed',
+    class: 'Vasopressor (α1 + β1 agonist)',
+    mechanism: 'α1 (vasoconstriction, ↑SVR, ↑BP) + β1 (mild ↑HR, ↑contractility). Net: potent vasoconstrictor + inotrope',
+    indication: 'FIRST-LINE vasopressor for septic shock, cardiogenic shock, anaphylaxis',
+    nursing: 'CENTRAL LINE ONLY (extravasation → tissue necrosis). Continuous BP monitoring (arterial line). Titrate to MAP ≥65 mmHg. Monitor for tissue ischemia (extremities, GI).',
+    labs: 'Baseline lactate, repeat periodically (tissue perfusion marker). Baseline HR, BP.',
+    hold: 'Uncorrected hypovolemia (give fluids first)',
+    teaching: 'Antidote for extravasation: phentolamine (alpha blocker) infiltrated SubQ around extravasation site. Watch peripheral perfusion closely. Dose: 0.01-3 mcg/kg/min titrated to BP response.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT (extravasation risk)',
+    category: 'vasopressor'
+  },
+  {
+    id: 24,
+    name: 'Dopamine',
+    brand: 'Intropin',
+    class: 'Vasopressor (dose-dependent effects)',
+    mechanism: 'Low (renal dilation: dopaminergic), moderate (β1: ↑CO), high (α: vasoconstriction)',
+    indication: 'Shock when norepinephrine unavailable, bradycardia with hypotension',
+    nursing: 'Central line preferred (peripheral acceptable briefly). Monitor HR, BP, urine output, peripheral perfusion.',
+    labs: 'Baseline lactate, HR/BP',
+    hold: 'Pheochromocytoma (risk of hypertensive crisis)',
+    teaching: 'Dose-dependent effects: <5 mcg/kg/min (renal), 5-10 (cardiac), >10 (vascular). Can cause tachycardia. Extravasation = tissue necrosis; antidote = phentolamine.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'vasopressor'
+  },
+  {
+    id: 25,
+    name: 'Dobutamine',
+    brand: 'Dobutrex',
+    class: 'Inotrope (β1 agonist)',
+    mechanism: 'β1 agonist → ↑contractility, ↑cardiac output, ↑HR; ↓SVR (β2 effect) unlike dopamine',
+    indication: 'Cardiogenic shock, acute HF decompensation',
+    nursing: 'Monitor HR (tachycardia common), BP, CO, urine output. Can cause dysrhythmias.',
+    labs: 'Baseline HR/BP',
+    hold: 'Tachycardia >120, uncontrolled hypertension',
+    teaching: 'Increases myocardial O2 demand. Avoid in hypertrophic cardiomyopathy. Dose: 2.5-10 mcg/kg/min titrated.',
+    combos: [],
+    alertLevel: 'ROUTINE',
+    category: 'vasopressor'
+  },
+  {
+    id: 26,
+    name: 'Milrinone',
+    brand: 'Primacor',
+    class: 'Inodilator (phosphodiesterase-3 inhibitor)',
+    mechanism: 'PDE-3 inhibition → ↑cAMP → ↑contractility (inotropy) + vasodilation (lusitrope) = "inodilator"',
+    indication: 'Acute HF decompensation, low CO shock',
+    nursing: 'Monitor BP (often ↓), HR, CO, arrhythmias. May need concurrent vasopressor if hypotensive.',
+    labs: 'Baseline BP, HR',
+    hold: 'Hypotension (SBP <90 without vasopressor)',
+    teaching: 'Reduces preload/afterload. Tachycardia common. Used as bridge to transplant or recovery. Dose: 0.25-0.75 mcg/kg/min titrated.',
+    combos: [],
+    alertLevel: 'ROUTINE',
+    category: 'vasopressor'
+  },
+  {
+    id: 27,
+    name: 'Epinephrine',
+    brand: 'Adrenalin',
+    class: 'Sympathomimetic (α + β agonist)',
+    mechanism: 'α (vasoconstriction) + β1 (↑contractility, ↑HR) + β2 (bronchodilation) → potent vasopressor + inotrope',
+    indication: 'Cardiac arrest (1mg IV q3-5min), anaphylaxis (0.3-0.5mg IM), severe bradycardia refractory to atropine',
+    nursing: 'IV during cardiac arrest (central/peripheral). IM for anaphylaxis. Monitor HR, BP, rhythm. Can cause arrhythmias.',
+    labs: 'None during arrest',
+    hold: 'None during arrest/anaphylaxis',
+    teaching: 'Code dose: 1mg IV q3-5min. Push down central line if available (faster delivery). Anaphylaxis: 0.3mg IM, repeat q5-15min if needed. Causes tachycardia, hypertension, tremor.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'vasopressor'
+  },
+
+  // DIURETICS
+  {
+    id: 28,
+    name: 'Furosemide',
+    brand: 'Lasix',
+    class: 'Loop Diuretic',
+    mechanism: 'Inhibits Na-K-2Cl cotransporter in loop of Henle → ↓reabsorption → potent diuresis + natriuresis',
+    indication: 'HF, pulmonary edema, fluid overload, HTN, renal disease',
+    nursing: 'Monitor I&O, daily weight (↓ 1-2 lbs/day goal in HF). Monitor for orthostasis. Take in AM (avoid nocturia). Monitor vitals before dose.',
+    labs: 'Baseline K+, Na+, Mg2+, BUN/Cr. Recheck K+ weekly × 4 weeks, then monthly if on chronic dose. Baseline Hgb/Hct.',
+    hold: 'SBP <90, K+ <3.5, anuria, severe dehydration',
+    teaching: 'Ototoxicity risk with rapid IV push (especially high doses). Monitor for muscle cramps (K+ loss). Weigh daily, report sudden wt gain (↑2-3 lbs/day = fluid retention). Take K+ supplement or eat K+-rich foods (bananas, potatoes). May cause hyperglycemia, hyperuricemia (gout risk).',
+    combos: [
+      { drug1: 'Furosemide', drug2: 'Digoxin', risk: 'Hypokalemia → ↑digoxin toxicity risk', action: 'Give K+ supplement, consider K+-sparing agent' },
+      { drug1: 'Furosemide', drug2: 'NSAIDs', risk: 'Acute kidney injury, reduced diuretic effect', action: 'Avoid NSAIDs; use acetaminophen' }
+    ],
+    alertLevel: 'HIGH-ALERT',
+    category: 'diuretic'
+  },
+  {
+    id: 29,
+    name: 'Spironolactone',
+    brand: 'Aldactone',
+    class: 'K+-sparing Diuretic (aldosterone antagonist)',
+    mechanism: 'Blocks aldosterone in collecting duct → ↓Na+ reabsorption, ↑K+ retention',
+    indication: 'HF (↓mortality in HFrEF), ascites, HTN',
+    nursing: 'Monitor K+ (CRITICAL—hyperkalemia risk). Monitor for gynecomastia (blocks androgen), menstrual irregularities. BP monitoring.',
+    labs: 'Baseline K+ (must be <5.0), Cr, BUN. Recheck K+ at 3-7 days, 1 month, then periodically. Monitor Cr (GFR).',
+    hold: 'K+ >5.0, CrCl <30, acute kidney injury, baseline K+ >5.0',
+    teaching: 'DANGER COMBO with ACE/ARB (↑↑↑ K+ risk—monitor closely). Do NOT give with K+ supplements unless K+ <3.5. Gynecomastia/breast tenderness very common (may resolve or require dose ↓). Take with food. Can cause menstrual irregularities.',
+    combos: [
+      { drug1: 'Spironolactone', drug2: 'Lisinopril (or any ACE)', risk: 'Severe hyperkalemia', action: 'Monitor K+ at baseline, 3-7 days, 1 month, then q3-6mo' },
+      { drug1: 'Spironolactone', drug2: 'Losartan (or any ARB)', risk: 'Severe hyperkalemia', action: 'Monitor K+ closely' },
+      { drug1: 'Spironolactone', drug2: 'NSAIDs', risk: 'Hyperkalemia, AKI', action: 'Avoid NSAIDs' }
+    ],
+    alertLevel: 'WARN',
+    category: 'diuretic'
+  },
+  {
+    id: 30,
+    name: 'Hydrochlorothiazide (HCTZ)',
+    brand: 'HydroDiuril',
+    class: 'Thiazide Diuretic',
+    mechanism: 'Inhibits Na-Cl cotransporter in distal convoluted tubule → mild diuresis, significant vasodilation',
+    indication: 'HTN, mild HF, edema',
+    nursing: 'Monitor BP, K+, uric acid, glucose. Take in AM. Monitor for orthostasis.',
+    labs: 'Baseline K+, glucose, uric acid, Cr. Recheck K+ after 1-2 weeks.',
+    hold: 'SBP <90, K+ <3.5',
+    teaching: 'Less potent than loop diuretics. Can ↑glucose (contraindication in uncontrolled DM), ↑uric acid (gout risk), ↓K+ (take K+ supplement). Photosensitivity possible. Sexual dysfunction in males possible.',
+    combos: [
+      { drug1: 'HCTZ', drug2: 'Digoxin', risk: 'Hypokalemia → ↑digoxin toxicity', action: 'Monitor K+' }
+    ],
+    alertLevel: 'ROUTINE',
+    category: 'diuretic'
+  },
+  {
+    id: 31,
+    name: 'Metolazone',
+    brand: 'Zaroxolyn',
+    class: 'Thiazide-like Diuretic',
+    mechanism: 'Similar to HCTZ but more potent; often used synergistically with loop diuretics',
+    indication: 'Refractory HF edema (combined with furosemide for synergistic effect)',
+    nursing: 'Monitor K+, BP, I&O. Often given 30 min before furosemide to enhance diuresis in refractory cases.',
+    labs: 'K+, Na+, Cr',
+    hold: 'K+ <3.5, SBP <90, anuria',
+    teaching: 'Used specifically in refractory HF. Synergistic with loop diuretics. Can cause significant K+ loss.',
+    combos: [
+      { drug1: 'Metolazone', drug2: 'Furosemide', risk: 'Severe hypokalemia, electrolyte imbalance', action: 'Monitor K+, Cr, Na+ closely; supplement K+ as needed' }
+    ],
+    alertLevel: 'WARN',
+    category: 'diuretic'
+  },
+
+  // CODE MEDICATIONS
+  {
+    id: 32,
+    name: 'Code Epinephrine',
+    brand: 'Adrenalin (cardiac arrest)',
+    class: 'CODE DRUG',
+    mechanism: 'α + β agonist → potent vasoconstriction + inotropic support during cardiac arrest',
+    indication: 'Cardiac arrest: VF/pulseless VT (1st line), PEA, asystole',
+    nursing: 'Push hard & fast. 1mg IV q3-5min during CPR. Push down central line if available. During arrest: high-quality CPR, monitor rhythm.',
+    labs: 'None during code',
+    hold: 'None during arrest',
+    teaching: 'First drug in cardiac arrest. Dose: 1mg IV q3-5min. Part of ACLS algorithm.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'code'
+  },
+  {
+    id: 33,
+    name: 'Code Amiodarone',
+    brand: 'Cordarone (cardiac arrest)',
+    class: 'CODE DRUG',
+    mechanism: 'Class III antiarrhythmic → ↑refractory period, terminates lethal arrhythmias',
+    indication: 'VF/pulseless VT refractory to defibrillation + epinephrine',
+    nursing: 'Push rapidly IV during CPR. First dose: 300mg, second dose: 150mg if VF persists. Can mix in NS.',
+    labs: 'None during code',
+    hold: 'None during code',
+    teaching: 'Second antiarrhythmic in ACLS (after epinephrine). Dose: 300mg IV, then 150mg IV after 3-5 min if VF persists.',
+    combos: [],
+    alertLevel: 'HIGH-ALERT',
+    category: 'code'
+  }
+];
+
+let currentMode = 'browse';
+let currentQuizIndex = 0;
+let quizCorrect = 0;
+let quizIncorrect = 0;
+let activeFilters = new Set(['all']);
+let quizResults = {};
+
+// ─── QUIZ SCENARIOS ───
+const quizScenarios = [
+  {
+    patient: 'Patient on metoprolol for HTN. HR 58, SBP 88/55. About to give next dose.',
+    drug: 'Metoprolol',
+    answer: 'hold',
+    reasoning: 'HR <60 and SBP <90 = HOLD. Reassess vitals, notify provider.'
+  },
+  {
+    patient: 'A-fib patient on diltiazem, HR 72 (controlled), SBP 120/75. Stable, tolerating well.',
+    drug: 'Diltiazem',
+    answer: 'give',
+    reasoning: 'HR >60, SBP >90, no signs of toxicity. GIVE dose as prescribed.'
+  },
+  {
+    patient: 'HF patient on lisinopril. K+ = 5.2, SBP 105/68. Last Cr baseline.',
+    drug: 'Lisinopril',
+    answer: 'hold',
+    reasoning: 'K+ >5.0 = hyperkalemia risk. HOLD, notify provider, recheck K+.'
+  },
+  {
+    patient: 'Patient on carvedilol post-MI, HR 62, SBP 95/60, no symptoms.',
+    drug: 'Carvedilol',
+    answer: 'give',
+    reasoning: 'HR >60, SBP >90. Acceptable for beta-blocker. GIVE.'
+  },
+  {
+    patient: 'Chest pain patient. SL NTG × 2 doses (5 min apart), pain partially relieved. HR 72, BP 100/65.',
+    drug: 'Nitroglycerin (3rd dose)',
+    answer: 'hold',
+    reasoning: 'After 2 doses of NTG without relief, HOLD and call 911 immediately. Risk of MI, need evaluation.'
+  },
+  {
+    patient: 'A-fib with RVR on verapamil. Baseline HR 110 → now HR 65, SBP 112/70, denies CP/SOB.',
+    drug: 'Verapamil',
+    answer: 'give',
+    reasoning: 'Effective rate control, HR >60, SBP >90. Continue as prescribed.'
+  },
+  {
+    patient: 'HF patient on digoxin. HR 48 (irregular), N/V, visual disturbance (yellow halos). Digoxin level 2.5.',
+    drug: 'Digoxin',
+    answer: 'hold',
+    reasoning: 'Classic digoxin toxicity: bradycardia, N/V, visual changes, level >2.0. HOLD, notify provider, expect Digibind.'
+  },
+  {
+    patient: 'Post-MI patient on aspirin 81mg daily. No recent bleeding, SBP 130/80.',
+    drug: 'Aspirin',
+    answer: 'give',
+    reasoning: 'Secondary prevention post-MI. No bleeding contraindication. GIVE.'
+  },
+  {
+    patient: 'Patient in septic shock, SBP 70, on norepinephrine (central line). Lactate elevated. Dose being adjusted upward.',
+    drug: 'Norepinephrine',
+    answer: 'give',
+    reasoning: 'Central line confirmed, SBP <90 = indication for vasopressor. GIVE (titrate to MAP ≥65).'
+  },
+  {
+    patient: 'HF patient on furosemide 40mg daily. Recent weight: +3 lbs in 2 days, increased SOB, no edema changes.',
+    drug: 'Furosemide',
+    answer: 'give',
+    reasoning: 'Worsening fluid retention = indication for diuretic. GIVE, monitor output.'
+  },
+  {
+    patient: 'Patient on amiodarone for A-fib, photosensitivity rash (mild). QTc 480ms (baseline 420). No arrhythmias. SBP 130/75, HR 72.',
+    drug: 'Amiodarone',
+    answer: 'give',
+    reasoning: 'Mild QT prolongation within acceptable range, vitals stable, no active arrhythmia. Continue. Advise sunscreen for photosensitivity.'
+  },
+  {
+    patient: 'Patient on warfarin for A-fib. INR 3.8, no active bleeding, no signs of GI bleed. SBP 118/72.',
+    drug: 'Warfarin',
+    answer: 'hold',
+    reasoning: 'INR 3.1-4.0 (supratherapeutic) without bleeding = HOLD dose, recheck INR in 2-3 days. Vitamin K may be indicated.'
+  },
+  {
+    patient: 'Hypertensive patient on amlodipine 10mg daily. BP 135/88, HR 78, peripheral ankle edema (mild). Tolerating well.',
+    drug: 'Amlodipine',
+    answer: 'give',
+    reasoning: 'Peripheral edema is expected with dihydropyridine CCB (not HF-related). BP slightly elevated but stable. GIVE.'
+  },
+  {
+    patient: 'Patient with symptomatic bradycardia (HR 42), SBP 80/50, altered mental status. Atropine ordered.',
+    drug: 'Atropine',
+    answer: 'give',
+    reasoning: 'Symptomatic bradycardia = indication for atropine. GIVE IV, expect ↑HR.'
+  },
+  {
+    patient: 'ACS patient prescribed dual antiplatelet: aspirin 325mg chewed (done) + clopidogrel 600mg loading dose. HR 85, BP 128/75, no recent PPI use.',
+    drug: 'Clopidogrel loading dose',
+    answer: 'give',
+    reasoning: 'Dual antiplatelet indicated post-PCI for ACS. No PPI interaction. GIVE loading dose.'
+  },
+  {
+    patient: 'Patient on spironolactone + lisinopril for HFrEF. K+ = 5.4, monitored at baseline + 1 week + today (3 weeks). No symptoms.',
+    drug: 'Spironolactone',
+    answer: 'hold',
+    reasoning: 'K+ >5.0 even with ACE combo = hyperkalemia. HOLD both if K+ >5.5 or symptomatic. Notify provider, recheck K+ soon.'
+  }
+];
+
+// ─── INITIALIZE ───
+function init() {
+  applyTheme();
+  renderCards();
+
+  // Track exposure with StudyData if available
+  if (typeof StudyData !== 'undefined' && StudyData.trackExposure) {
+    StudyData.trackExposure({
+      activity: 'cardiac-pharm',
+      mode: 'browse',
+      timestamp: new Date().toISOString()
+    });
+  }
+}
+
+// ─── DARK MODE ───
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('n8hub_darkmode', newTheme);
+  document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// ─── MODE SWITCHING ───
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    if ((mode === 'browse' && btn.textContent.includes('Browse')) ||
+        (mode === 'quiz' && btn.textContent.includes('Quiz'))) {
+      btn.classList.add('active');
+    }
+  });
+
+  if (mode === 'browse') {
+    document.getElementById('browseMode').style.display = 'block';
+    document.getElementById('quizMode').classList.remove('active');
+    renderCards();
+  } else {
+    document.getElementById('browseMode').style.display = 'none';
+    document.getElementById('quizMode').classList.add('active');
+    initQuiz();
+  }
+}
+
+// ─── CARD RENDERING ───
+function renderCards() {
+  const container = document.getElementById('cardsContainer');
+  container.innerHTML = '';
+
+  const filtered = getFilteredDrugs();
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><p>No drugs match your filters. Try a different search.</p></div>';
+    return;
+  }
+
+  filtered.forEach(drug => {
+    const card = createDrugCard(drug);
+    container.appendChild(card);
+  });
+}
+
+function createDrugCard(drug) {
+  const card = document.createElement('div');
+  card.className = 'flip-card';
+  card.dataset.drugId = drug.id;
+
+  const alertColor = drug.alertLevel === 'HIGH-ALERT' ? '#E74C3C' :
+                     drug.alertLevel === 'HIGH-ALERT (NARROW THERAPEUTIC INDEX)' ? '#E74C3C' :
+                     drug.alertLevel === 'HIGH-ALERT (weight-based)' ? '#E74C3C' :
+                     drug.alertLevel === 'HIGH-ALERT (extravasation risk)' ? '#E74C3C' :
+                     drug.alertLevel === 'HIGH-ALERT (PDE5 INTERACTION)' ? '#E74C3C' :
+                     drug.alertLevel === 'TERATOGENIC' ? '#E67E22' :
+                     drug.alertLevel === 'WARN' ? '#E67E22' : '#27AE60';
+
+  card.innerHTML = `
+    <div class="flip-card-inner">
+      <div class="flip-card-front" style="border-left-color: ${alertColor};">
+        <div class="card-header">
+          <div class="drug-name">${drug.name}</div>
+          <div class="drug-brand">${drug.brand}</div>
+        </div>
+        <div class="card-badges">
+          <div class="badge class">${drug.class}</div>
+          <div class="badge ${drug.alertLevel === 'HIGH-ALERT' || drug.alertLevel.includes('HIGH-ALERT') ? 'alert-high' : drug.alertLevel === 'TERATOGENIC' || drug.alertLevel === 'WARN' ? 'alert-warn' : 'alert-routine'}">${drug.alertLevel}</div>
+        </div>
+        <p style="margin-top: 12px; font-size: 0.85em; color: var(--text-muted);">← Click to see clinical details</p>
+      </div>
+
+      <div class="flip-card-back" style="border-left-color: ${alertColor};">
+        <div class="back-content">
+          <div class="back-section">
+            <div class="back-label">Mechanism</div>
+            <div>${drug.mechanism}</div>
+          </div>
+
+          <div class="back-section">
+            <div class="back-label">Indication</div>
+            <div>${drug.indication}</div>
+          </div>
+
+          <div class="back-section">
+            <div class="back-label">Nursing Assessment</div>
+            <div>${drug.nursing}</div>
+          </div>
+
+          <div class="back-section">
+            <div class="back-label">Labs/Monitoring</div>
+            <div>${drug.labs}</div>
+          </div>
+
+          <div class="back-section">
+            <div class="back-label">HOLD IF:</div>
+            <div class="hold-criteria">${drug.hold}</div>
+          </div>
+
+          <div class="back-section">
+            <div class="back-label">Patient Teaching</div>
+            <div>${drug.teaching}</div>
+          </div>
+
+          ${drug.combos.length > 0 ? `<div class="back-section">
+            <div class="back-label">⚠️ Dangerous Combos</div>
+            ${drug.combos.map(c => `<div class="combo-warning">${c.drug1} + ${c.drug2}</div>`).join('')}
+          </div>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => {
+    card.classList.toggle('flipped');
+  });
+
+  return card;
+}
+
+// ─── FILTERING ───
+function getFilteredDrugs() {
+  let filtered = allDrugs;
+
+  // Search filter
+  const searchInput = document.getElementById('searchInput');
+  const searchTerm = (searchInput ? searchInput.value : '').toLowerCase();
+  if (searchTerm) {
+    filtered = filtered.filter(d =>
+      d.name.toLowerCase().includes(searchTerm) ||
+      d.brand.toLowerCase().includes(searchTerm) ||
+      d.class.toLowerCase().includes(searchTerm) ||
+      d.indication.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  // Category filters
+  if (!activeFilters.has('all')) {
+    filtered = filtered.filter(d => {
+      // Check if category matches
+      if (activeFilters.has(d.category)) return true;
+      // Check if alert level matches (for HIGH-ALERT filter)
+      if (activeFilters.has('HIGH-ALERT')) {
+        return d.alertLevel.includes('HIGH-ALERT');
+      }
+      return false;
+    });
+  }
+
+  return filtered;
+}
+
+function filterCards() {
+  if (currentMode === 'browse') {
+    renderCards();
+  }
+}
+
+function toggleFilter(filter) {
+  if (filter === 'all') {
+    activeFilters.clear();
+    activeFilters.add('all');
+  } else {
+    activeFilters.delete('all');
+    if (activeFilters.has(filter)) {
+      activeFilters.delete(filter);
+    } else {
+      activeFilters.add(filter);
+    }
+    if (activeFilters.size === 0) {
+      activeFilters.add('all');
+    }
+  }
+
+  // Update button states
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const filterText = btn.textContent.trim();
+    let btnFilter = filterText;
+
+    if (filterText === 'All') btnFilter = 'all';
+    else if (filterText === 'Beta-Blockers') btnFilter = 'beta-blocker';
+    else if (filterText === 'CCB') btnFilter = 'ccb';
+    else if (filterText === 'ACE/ARB') btnFilter = 'ace-arb';
+    else if (filterText === 'Diuretics') btnFilter = 'diuretic';
+    else if (filterText === 'Anticoag') btnFilter = 'anticoag';
+    else if (filterText.includes('HIGH-ALERT')) btnFilter = 'HIGH-ALERT';
+
+    if (activeFilters.has(btnFilter)) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  filterCards();
+}
+
+// ─── COMBOS MODAL ───
+function showCombos() {
+  const modal = document.getElementById('combosModal');
+  const comboList = document.getElementById('comboList');
+  comboList.innerHTML = '';
+
+  const allCombos = [];
+  allDrugs.forEach(drug => {
+    drug.combos.forEach(combo => {
+      allCombos.push({ ...combo, sourceDrug: drug.name });
+    });
+  });
+
+  if (allCombos.length === 0) {
+    comboList.innerHTML = '<p style="color: var(--text-muted);">No known dangerous combos documented.</p>';
+  } else {
+    allCombos.forEach(combo => {
+      const item = document.createElement('div');
+      item.className = 'combo-item';
+      item.innerHTML = `
+        <div class="combo-drugs">⚠️ ${combo.drug1} + ${combo.drug2}</div>
+        <div class="combo-risk">Risk: ${combo.risk}</div>
+        <div class="combo-action">Action: ${combo.action}</div>
+      `;
+      comboList.appendChild(item);
+    });
+  }
+
+  modal.classList.add('active');
+}
+
+function hideCombos() {
+  document.getElementById('combosModal').classList.remove('active');
+}
+
+// ─── QUIZ MODE ───
+function initQuiz() {
+  currentQuizIndex = 0;
+  quizCorrect = 0;
+  quizIncorrect = 0;
+  quizResults = {};
+
+  document.getElementById('quizTotal').textContent = quizScenarios.length;
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const scenario = quizScenarios[currentQuizIndex];
+  const scenarioBox = document.getElementById('scenarioBox');
+
+  scenarioBox.innerHTML = `
+    <div class="scenario-label">Clinical Scenario</div>
+    <div class="scenario-patient">${scenario.patient}</div>
+    <div class="scenario-drug">Drug Ordered: ${scenario.drug}</div>
+  `;
+
+  document.getElementById('quizCurrent').textContent = currentQuizIndex + 1;
+  document.getElementById('quizProgressBar').style.width = ((currentQuizIndex) / quizScenarios.length * 100) + '%';
+  document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+  document.getElementById('feedback').innerHTML = '';
+
+  document.querySelectorAll('.decision-btn').forEach(btn => btn.disabled = false);
+  document.getElementById('nextBtn').style.display = 'none';
+
+  updateStats();
+}
+
+function makeDecision(decision) {
+  const scenario = quizScenarios[currentQuizIndex];
+  const feedback = document.getElementById('feedback');
+  const isCorrect = decision === scenario.answer;
+
+  if (isCorrect) {
+    quizCorrect++;
+    feedback.classList.add('show', 'correct');
+    feedback.innerHTML = `
+      <div class="feedback-title">✓ Correct!</div>
+      <div class="feedback-text">${scenario.reasoning}</div>
+    `;
+  } else {
+    quizIncorrect++;
+    feedback.classList.add('show', 'incorrect');
+    feedback.innerHTML = `
+      <div class="feedback-title">✗ Incorrect</div>
+      <div class="feedback-text"><strong>Correct answer: ${scenario.answer.toUpperCase()}</strong><br>${scenario.reasoning}</div>
+    `;
+  }
+
+  quizResults[scenario.drug] = { correct: isCorrect, scenario: scenario };
+
+  // Track result with StudyData if available
+  if (typeof StudyData !== 'undefined' && StudyData.recordResult) {
+    StudyData.recordResult({
+      activity: 'cardiac-pharm-quiz',
+      question: scenario.drug,
+      userAnswer: decision,
+      correctAnswer: scenario.answer,
+      isCorrect: isCorrect,
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  document.querySelectorAll('.decision-btn').forEach(btn => btn.disabled = true);
+  document.getElementById('nextBtn').style.display = 'block';
+  updateStats();
+}
+
+function nextQuestion() {
+  currentQuizIndex++;
+  if (currentQuizIndex < quizScenarios.length) {
+    showQuestion();
+  } else {
+    showQuizSummary();
+  }
+}
+
+function showQuizSummary() {
+  const scenarioBox = document.getElementById('scenarioBox');
+  const accuracy = ((quizCorrect / quizScenarios.length) * 100).toFixed(0);
+
+  scenarioBox.innerHTML = `
+    <div style="text-align: center;">
+      <h3 style="font-size: 1.3em; margin-bottom: 12px;">Quiz Complete!</h3>
+      <div style="font-size: 1.1em; margin: 8px 0;"><strong>${quizCorrect}/${quizScenarios.length}</strong> Correct</div>
+      <div style="font-size: 1.8em; font-weight: 800; color: var(--cardiac); margin: 12px 0;">${accuracy}%</div>
+    </div>
+  `;
+
+  document.getElementById('quizProgressBar').style.width = '100%';
+  document.querySelectorAll('.decision-btn').forEach(btn => btn.style.display = 'none');
+  document.getElementById('nextBtn').textContent = 'Restart Quiz';
+  document.getElementById('nextBtn').onclick = () => {
+    currentMode = 'quiz';
+    initQuiz();
+    showQuestion();
+  };
+}
+
+function updateStats() {
+  const correctEl = document.getElementById('statCorrect');
+  const incorrectEl = document.getElementById('statIncorrect');
+  const accuracyEl = document.getElementById('statAccuracy');
+
+  if (correctEl) correctEl.textContent = quizCorrect;
+  if (incorrectEl) incorrectEl.textContent = quizIncorrect;
+
+  const total = quizCorrect + quizIncorrect;
+  const accuracy = total > 0 ? ((quizCorrect / total) * 100).toFixed(0) : '--';
+  if (accuracyEl) accuracyEl.textContent = total > 0 ? accuracy + '%' : '--';
+}
+
+// ─── BACK TO HUB ───
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+// ─── START ───
+init();
+
+</script>
+
+</body>
+</html>

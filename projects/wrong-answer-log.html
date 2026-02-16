@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrong Answer Autopsy Log — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --surface-alt: #f0f2f5;
+  --surface-alt-hover: #e2e6ea;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+  --header-grad-start: #1a1a2e;
+  --header-grad-mid: #16213e;
+  --header-grad-end: #0f3460;
+  --btn-hover-dark: #c0392b;
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --surface-alt: #262630;
+  --surface-alt-hover: #2f2f3a;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+  --header-grad-start: #0f1419;
+  --header-grad-mid: #131823;
+  --header-grad-end: #1a2534;
+  --btn-hover-dark: #8b2f2f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, var(--header-grad-start) 0%, var(--header-grad-mid) 50%, var(--header-grad-end) 100%);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+.mode-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.mode-btn.active {
+  background: var(--cardiac);
+  color: white;
+}
+
+.mode-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.9em;
+  box-shadow: var(--shadow);
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); border-color: var(--fluid); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+/* ─── FORM STYLES ─── */
+.form-container {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 0.95em;
+}
+
+.form-label .required {
+  color: var(--danger);
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95em;
+  transition: all 0.2s;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--cardiac);
+  background: var(--card);
+  box-shadow: 0 0 0 3px var(--cardiac-bg);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95em;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--btn-hover-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231,76,60,0.3);
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95em;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--surface-hover);
+}
+
+.btn-small {
+  padding: 8px 12px;
+  font-size: 0.8em;
+  border-radius: 6px;
+}
+
+/* ─── STATS GRID ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 20px;
+  border-left: 4px solid var(--cardiac);
+  box-shadow: var(--shadow);
+}
+
+.stat-number {
+  font-size: 2em;
+  font-weight: 800;
+  color: var(--cardiac);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ─── ENTRY LIST ─── */
+.entries-container {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.entry-card {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 20px;
+  border-left: 4px solid var(--cardiac);
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.entry-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.entry-date {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.entry-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.tag.concept-cardiac {
+  background: var(--cardiac-bg);
+  color: var(--cardiac);
+}
+
+.tag.concept-fluid {
+  background: var(--fluid-bg);
+  color: var(--fluid);
+}
+
+.tag.concept-oxy {
+  background: var(--oxy-bg);
+  color: var(--oxy);
+}
+
+.tag.concept-neuro {
+  background: var(--neuro-bg);
+  color: var(--neuro);
+}
+
+.tag.concept-emergency {
+  background: var(--emergency-bg);
+  color: var(--emergency);
+}
+
+.tag.source {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.entry-stem {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+  line-height: 1.5;
+  border-left: 3px solid var(--fluid);
+}
+
+.entry-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.answer-box {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid;
+}
+
+.answer-box.your-answer {
+  border-left-color: var(--warning);
+}
+
+.answer-box.correct-answer {
+  border-left-color: var(--success);
+}
+
+.answer-label {
+  font-weight: 600;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.answer-text {
+  font-size: 0.95em;
+}
+
+.entry-analysis {
+  background: var(--surface-alt);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.analysis-label {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.analysis-content {
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-small-action {
+  padding: 6px 12px;
+  font-size: 0.8em;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-small-action:hover {
+  background: var(--surface-hover);
+  border-color: var(--cardiac);
+}
+
+.btn-small-action.danger {
+  color: var(--danger);
+}
+
+.btn-small-action.danger:hover {
+  background: var(--cardiac-bg);
+}
+
+/* ─── DASHBOARD/ANALYTICS ─── */
+.chart-container {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.chart-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.chart-label {
+  min-width: 150px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.chart-bar-bg {
+  flex: 1;
+  height: 28px;
+  background: var(--surface);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cardiac), #c0392b);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.pattern-item {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--cardiac);
+}
+
+.pattern-rank {
+  font-weight: 800;
+  color: var(--cardiac);
+  margin-right: 8px;
+}
+
+.pattern-text {
+  font-size: 0.95em;
+}
+
+/* ─── SPACED REP ─── */
+.retest-queue {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.retest-item {
+  background: var(--surface);
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--fluid);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.retest-info {
+  flex: 1;
+}
+
+.retest-box-label {
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.retest-box-number {
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--fluid);
+  margin-bottom: 4px;
+}
+
+.retest-stem {
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.retest-actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* ─── MODAL ─── */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  width: 90%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.5em;
+  font-weight: 800;
+}
+
+.modal-close {
+  background: var(--surface);
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close:hover { background: var(--surface-hover); }
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  background: var(--card);
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.empty-state p {
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .search-bar { width: 100%; }
+
+  .mode-toggle {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .form-row, .form-row-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-answers {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .retest-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .retest-actions {
+    width: 100%;
+  }
+}
+
+@media print {
+  .controls, .form-container, .entry-actions, .retest-actions, .header-btn, .dark-mode-toggle {
+    display: none;
+  }
+
+  body { background: var(--card); }
+
+  .entry-card, .chart-container, .stat-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Wrong Answer Autopsy</h1>
+      <p class="subtitle">N8 Meta-Learning Tool — Understand Why, Not Just What</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="switchMode('log')">Log Entry</button>
+      <button class="mode-btn" onclick="switchMode('browse')">Browse Entries</button>
+      <button class="mode-btn" onclick="switchMode('dashboard')">Dashboard</button>
+      <button class="mode-btn" onclick="switchMode('retest')">Retest Queue</button>
+    </div>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search by concept, error type, or question..." onkeyup="filterEntries()">
+
+    <div class="filter-group">
+      <button class="filter-btn" onclick="toggleFilter('all', 'conceptArea')">All Concepts</button>
+      <button class="filter-btn" onclick="toggleFilter('cardiac', 'conceptArea')">Cardiac</button>
+      <button class="filter-btn" onclick="toggleFilter('fluid', 'conceptArea')">F&E</button>
+      <button class="filter-btn" onclick="toggleFilter('oxy', 'conceptArea')">Oxygenation</button>
+      <button class="filter-btn" onclick="toggleFilter('neuro', 'conceptArea')">Neuro</button>
+      <button class="filter-btn" onclick="toggleFilter('emergency', 'conceptArea')">Emergency</button>
+    </div>
+
+    <button class="filter-btn" onclick="showExportImport()" style="background: var(--fluid); color: white;">⬇ Export/Import</button>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <!-- LOG ENTRY MODE -->
+  <div id="logMode" class="mode-section">
+    <div class="form-container">
+      <h2 style="margin-bottom: 20px; font-size: 1.3em;">Log a Wrong Answer</h2>
+
+      <div class="form-section">
+        <label class="form-label">Question Stem <span class="required">*</span></label>
+        <textarea class="form-textarea" id="stemInput" placeholder="Paste or type the NCLEX question stem here..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-section">
+          <label class="form-label">Your Answer <span class="required">*</span></label>
+          <input type="text" class="form-input" id="yourAnswerInput" placeholder="What you selected (e.g., A, Option 2)">
+        </div>
+        <div class="form-section">
+          <label class="form-label">Correct Answer <span class="required">*</span></label>
+          <input type="text" class="form-input" id="correctAnswerInput" placeholder="What was correct">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Why Was Your Answer Tempting?</label>
+        <div style="margin-bottom: 8px;">
+          <select class="form-select" id="whyTempingCategory" onchange="showCustomWhy()">
+            <option value="">-- Select a reason --</option>
+            <option value="misread">Misread the stem (missed a key word)</option>
+            <option value="confused">Confused similar conditions</option>
+            <option value="medical">Picked medical intervention (not nursing)</option>
+            <option value="priority">Prioritization error</option>
+            <option value="first">Missed "FIRST" qualifier</option>
+            <option value="knowledge">Knowledge gap</option>
+            <option value="secondguess">Second-guessed myself</option>
+            <option value="format">Misunderstood question format</option>
+            <option value="other">Other reason</option>
+          </select>
+        </div>
+        <textarea class="form-textarea" id="whyTempingText" placeholder="Elaborate: what made it seem like the right answer?"></textarea>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Thinking Error Type <span class="required">*</span></label>
+        <select class="form-select" id="errorTypeInput">
+          <option value="">-- Select error type --</option>
+          <option value="misread">Misread the stem (missed a key word like "FIRST" or "PRIORITY")</option>
+          <option value="confused">Confused similar conditions (e.g., DKA vs HHS, left vs right HF)</option>
+          <option value="medical">Picked medical intervention (not nursing — classic NCLEX trap)</option>
+          <option value="priority">Prioritization error (right answer was there but not the FIRST thing)</option>
+          <option value="first">Missed "FIRST" qualifier</option>
+          <option value="knowledge">Knowledge gap (genuinely didn't know the content)</option>
+          <option value="secondguess">Second-guessed myself (changed from right to wrong)</option>
+          <option value="format">Misunderstood the question format (SATA, ordering, etc.)</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">Concept/Mechanism Missed <span class="required">*</span></label>
+        <input type="text" class="form-input" id="conceptInput" placeholder="e.g., 'ACE inhibitor mechanism', 'diabetic ketoacidosis pathophysiology'">
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">"What I'll Remember Next Time" <span class="required">*</span></label>
+        <textarea class="form-textarea" id="rememberInput" placeholder="In your own words: what's the key takeaway? What will you do differently on the next similar question?"></textarea>
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-section">
+          <label class="form-label">Concept Area <span class="required">*</span></label>
+          <select class="form-select" id="conceptAreaInput">
+            <option value="">-- Select area --</option>
+            <option value="cardiac">Cardiac</option>
+            <option value="fluid">Fluid & Electrolytes</option>
+            <option value="oxy">Oxygenation</option>
+            <option value="neuro">Neuro</option>
+            <option value="emergency">Emergency</option>
+          </select>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Source <span class="required">*</span></label>
+          <select class="form-select" id="sourceInput">
+            <option value="">-- Select source --</option>
+            <option value="prepu">Prep U</option>
+            <option value="testbank">Test Bank</option>
+            <option value="exam1">Exam 1</option>
+            <option value="exam2">Exam 2</option>
+            <option value="exam3">Exam 3</option>
+            <option value="quiz">Practice Quiz</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="dateInput">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveEntry()">Save Entry</button>
+        <button class="btn-secondary" onclick="clearForm()">Clear</button>
+      </div>
+    </div>
+
+    <div id="successMessage" class="empty-state hidden">
+      <p style="font-size: 1.1em; color: var(--success);">✓ Entry logged!</p>
+      <p style="font-size: 0.9em;">Keep analyzing. Every wrong answer is a learning opportunity.</p>
+    </div>
+  </div>
+
+  <!-- BROWSE MODE -->
+  <div id="browseMode" class="mode-section hidden">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="font-size: 1.3em;">Your Entries</h2>
+      <span style="font-size: 0.9em; color: var(--text-muted);" id="entryCount">0 entries</span>
+    </div>
+
+    <div id="entriesList" class="entries-container"></div>
+
+    <div id="noEntries" class="empty-state">
+      <p>No entries yet. Start by logging a wrong answer in the "Log Entry" tab.</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD MODE -->
+  <div id="dashboardMode" class="mode-section hidden">
+    <h2 style="font-size: 1.3em; margin-bottom: 20px;">Your Thinking Error Patterns</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalWrongAnswers">0</div>
+        <div class="stat-label">Total Wrong Answers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="mostCommonError">--</div>
+        <div class="stat-label">Most Common Error</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="retestsDue">0</div>
+        <div class="stat-label">Retests Due</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="masteredCount">0</div>
+        <div class="stat-label">Mastered (Box 3)</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Error Type Distribution</div>
+      <div id="errorChart"></div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Errors by Concept Area</div>
+      <div id="conceptChart"></div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Errors by Source</div>
+      <div id="sourceChart"></div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Top 3 Fixable Patterns</div>
+      <div id="topPatterns"></div>
+    </div>
+
+    <div id="noDashboard" class="empty-state">
+      <p>Log some wrong answers to see patterns emerge here.</p>
+    </div>
+  </div>
+
+  <!-- RETEST QUEUE -->
+  <div id="retestMode" class="mode-section hidden">
+    <h2 style="font-size: 1.3em; margin-bottom: 20px;">Spaced Repetition Retest Queue</h2>
+
+    <div class="retest-queue" id="retestQueue"></div>
+
+    <div id="noRetest" class="empty-state">
+      <p>No items due for retest yet. As you log wrong answers, they'll appear here for spaced rep review.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- EXPORT/IMPORT MODAL -->
+<div class="modal" id="exportImportModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Export / Import Data</h2>
+      <button class="modal-close" onclick="closeExportImport()">×</button>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label" style="margin-bottom: 12px;">Export All Entries as JSON</label>
+      <button class="btn-primary" onclick="exportData()">⬇ Download JSON</button>
+      <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 8px;">Save a backup of all your wrong answer entries.</p>
+    </div>
+
+    <div class="form-section" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+      <label class="form-label" style="margin-bottom: 12px;">Import Entries from JSON</label>
+      <input type="file" id="importFile" accept=".json" style="margin-bottom: 12px;">
+      <button class="btn-primary" onclick="importData()">⬆ Upload JSON</button>
+      <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 8px;">Restore entries from a previous backup. Existing entries will not be overwritten.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Wrong Answer Autopsy Log | N8 NCLEX-RN Intensive | Meta-learning Tool | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+
+// ─── DATA STRUCTURE ───
+let wrongAnswers = [];
+let currentMode = 'log';
+let activeFilters = { conceptArea: 'all' };
+
+// ─── INITIALIZATION ───
+function init() {
+  applyTheme();
+  loadData();
+  setDateToToday();
+  renderMode();
+}
+
+// ─── DARK MODE ───
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    // Switch to light mode
+    html.removeAttribute('data-theme');
+    localStorage.setItem('n8hub_darkmode', 'light');
+    document.getElementById('themeToggle').textContent = '🌙';
+  } else {
+    // Switch to dark mode
+    html.setAttribute('data-theme', 'dark');
+    localStorage.setItem('n8hub_darkmode', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+// ─── DATA MANAGEMENT ───
+function loadData() {
+  const saved = localStorage.getItem('n8_wrong_answers');
+  if (saved) {
+    try {
+      wrongAnswers = JSON.parse(saved);
+    } catch (e) {
+      wrongAnswers = [];
+    }
+  }
+}
+
+function saveData() {
+  localStorage.setItem('n8_wrong_answers', JSON.stringify(wrongAnswers));
+}
+
+function setDateToToday() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('dateInput').value = today;
+}
+
+// ─── FORM HANDLING ───
+function showCustomWhy() {
+  // Just show the custom textarea - it's already visible
+}
+
+function validateEntry() {
+  const stem = document.getElementById('stemInput').value.trim();
+  const yourAnswer = document.getElementById('yourAnswerInput').value.trim();
+  const correctAnswer = document.getElementById('correctAnswerInput').value.trim();
+  const errorType = document.getElementById('errorTypeInput').value;
+  const concept = document.getElementById('conceptInput').value.trim();
+  const remember = document.getElementById('rememberInput').value.trim();
+  const conceptArea = document.getElementById('conceptAreaInput').value;
+  const source = document.getElementById('sourceInput').value;
+
+  if (!stem || !yourAnswer || !correctAnswer || !errorType || !concept || !remember || !conceptArea || !source) {
+    alert('Please fill in all required fields.');
+    return false;
+  }
+  return true;
+}
+
+function saveEntry() {
+  if (!validateEntry()) return;
+
+  const entry = {
+    id: Date.now(),
+    stem: document.getElementById('stemInput').value.trim(),
+    yourAnswer: document.getElementById('yourAnswerInput').value.trim(),
+    correctAnswer: document.getElementById('correctAnswerInput').value.trim(),
+    whyTempting: {
+      category: document.getElementById('whyTempingCategory').value || 'other',
+      text: document.getElementById('whyTempingText').value.trim()
+    },
+    errorType: document.getElementById('errorTypeInput').value,
+    concept: document.getElementById('conceptInput').value.trim(),
+    remember: document.getElementById('rememberInput').value.trim(),
+    conceptArea: document.getElementById('conceptAreaInput').value,
+    source: document.getElementById('sourceInput').value,
+    date: document.getElementById('dateInput').value,
+    created: new Date().toISOString(),
+    leitnerBox: 1,
+    nextReviewDate: addDays(new Date(), 1).toISOString().split('T')[0]
+  };
+
+  wrongAnswers.push(entry);
+  saveData();
+
+  // Record to StudyData if available
+  if (typeof StudyData !== 'undefined' && StudyData.addWrongAnswer) {
+    StudyData.addWrongAnswer({
+      stem: entry.stem,
+      yourAnswer: entry.yourAnswer,
+      correctAnswer: entry.correctAnswer,
+      whyTempting: entry.whyTempting.text,
+      errorType: entry.errorType,
+      concept: entry.concept,
+      conceptArea: entry.conceptArea,
+      source: entry.source,
+      whatToRemember: entry.remember
+    });
+  }
+
+  // Show success, then clear
+  document.getElementById('successMessage').classList.remove('hidden');
+  setTimeout(() => {
+    clearForm();
+    document.getElementById('successMessage').classList.add('hidden');
+  }, 3000);
+}
+
+function clearForm() {
+  document.getElementById('stemInput').value = '';
+  document.getElementById('yourAnswerInput').value = '';
+  document.getElementById('correctAnswerInput').value = '';
+  document.getElementById('whyTempingCategory').value = '';
+  document.getElementById('whyTempingText').value = '';
+  document.getElementById('errorTypeInput').value = '';
+  document.getElementById('conceptInput').value = '';
+  document.getElementById('rememberInput').value = '';
+  document.getElementById('conceptAreaInput').value = '';
+  document.getElementById('sourceInput').value = '';
+  setDateToToday();
+}
+
+// ─── MODE SWITCHING ───
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+
+  // Find and activate the button that was clicked
+  const buttons = {
+    log: 0,
+    browse: 1,
+    dashboard: 2,
+    retest: 3
+  };
+  if (buttons[mode] !== undefined) {
+    document.querySelectorAll('.mode-btn')[buttons[mode]].classList.add('active');
+  }
+
+  document.querySelectorAll('.mode-section').forEach(section => {
+    section.classList.add('hidden');
+  });
+
+  if (mode === 'log') {
+    document.getElementById('logMode').classList.remove('hidden');
+  } else if (mode === 'browse') {
+    document.getElementById('browseMode').classList.remove('hidden');
+    renderBrowse();
+  } else if (mode === 'dashboard') {
+    document.getElementById('dashboardMode').classList.remove('hidden');
+    renderDashboard();
+  } else if (mode === 'retest') {
+    document.getElementById('retestMode').classList.remove('hidden');
+    renderRetest();
+  }
+}
+
+function renderMode() {
+  if (currentMode === 'browse') {
+    renderBrowse();
+  } else if (currentMode === 'dashboard') {
+    renderDashboard();
+  } else if (currentMode === 'retest') {
+    renderRetest();
+  }
+}
+
+// ─── BROWSE MODE ───
+function renderBrowse() {
+  const list = document.getElementById('entriesList');
+  const noEntries = document.getElementById('noEntries');
+  const countEl = document.getElementById('entryCount');
+
+  const filtered = getFilteredEntries();
+  countEl.textContent = filtered.length + ' ' + (filtered.length === 1 ? 'entry' : 'entries');
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    noEntries.classList.remove('hidden');
+    return;
+  }
+
+  noEntries.classList.add('hidden');
+  list.innerHTML = '';
+
+  filtered.forEach(entry => {
+    const card = createEntryCard(entry);
+    list.appendChild(card);
+  });
+}
+
+function createEntryCard(entry) {
+  const card = document.createElement('div');
+  card.className = 'entry-card';
+  card.dataset.entryId = entry.id;
+
+  const areaColor = entry.conceptArea === 'cardiac' ? 'concept-cardiac' :
+                    entry.conceptArea === 'fluid' ? 'concept-fluid' :
+                    entry.conceptArea === 'oxy' ? 'concept-oxy' :
+                    entry.conceptArea === 'neuro' ? 'concept-neuro' :
+                    entry.conceptArea === 'emergency' ? 'concept-emergency' : '';
+
+  const errorLabels = {
+    misread: 'Misread Stem',
+    confused: 'Confused Conditions',
+    medical: 'Medical vs Nursing',
+    priority: 'Prioritization',
+    first: 'Missed FIRST',
+    knowledge: 'Knowledge Gap',
+    secondguess: 'Second-Guessed',
+    format: 'Format Error'
+  };
+
+  const sourceLabels = {
+    prepu: 'Prep U',
+    testbank: 'Test Bank',
+    exam1: 'Exam 1',
+    exam2: 'Exam 2',
+    exam3: 'Exam 3',
+    quiz: 'Quiz',
+    other: 'Other'
+  };
+
+  const conceptLabels = {
+    cardiac: 'Cardiac',
+    fluid: 'F&E',
+    oxy: 'Oxygenation',
+    neuro: 'Neuro',
+    emergency: 'Emergency'
+  };
+
+  card.innerHTML = `
+    <div class="entry-header">
+      <div class="entry-date">${formatDate(entry.date)}</div>
+      <div class="entry-tags">
+        <span class="tag ${areaColor}">${conceptLabels[entry.conceptArea]}</span>
+        <span class="tag source">${sourceLabels[entry.source]}</span>
+      </div>
+    </div>
+
+    <div class="entry-stem">${entry.stem}</div>
+
+    <div class="entry-answers">
+      <div class="answer-box your-answer">
+        <div class="answer-label">Your Answer</div>
+        <div class="answer-text">${entry.yourAnswer}</div>
+      </div>
+      <div class="answer-box correct-answer">
+        <div class="answer-label">Correct Answer</div>
+        <div class="answer-text">${entry.correctAnswer}</div>
+      </div>
+    </div>
+
+    <div class="entry-analysis">
+      <div class="analysis-label">Thinking Error: ${errorLabels[entry.errorType]}</div>
+      <div class="analysis-content"><strong>Why tempting:</strong> ${entry.whyTempting.text || '(not specified)'}</div>
+      <div class="analysis-content" style="margin-top: 8px;"><strong>Concept missed:</strong> ${entry.concept}</div>
+      <div class="analysis-content" style="margin-top: 8px; background: var(--oxy-bg); padding: 8px; border-radius: 4px; color: var(--oxy);"><strong>Remember:</strong> ${entry.remember}</div>
+    </div>
+
+    <div class="entry-actions">
+      <button class="btn-small-action" onclick="markAsReview(${entry.id})">↻ Retest Now</button>
+      <button class="btn-small-action danger" onclick="deleteEntry(${entry.id})">Delete</button>
+    </div>
+  `;
+
+  return card;
+}
+
+function getFilteredEntries() {
+  let filtered = wrongAnswers;
+
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  if (searchTerm) {
+    filtered = filtered.filter(e =>
+      e.stem.toLowerCase().includes(searchTerm) ||
+      e.concept.toLowerCase().includes(searchTerm) ||
+      e.errorType.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  if (activeFilters.conceptArea !== 'all') {
+    filtered = filtered.filter(e => e.conceptArea === activeFilters.conceptArea);
+  }
+
+  return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+function filterEntries() {
+  if (currentMode === 'browse') {
+    renderBrowse();
+  }
+}
+
+function toggleFilter(filter, type) {
+  if (type === 'conceptArea') {
+    if (filter === 'all') {
+      activeFilters.conceptArea = 'all';
+    } else {
+      activeFilters.conceptArea = filter;
+    }
+  }
+
+  // Update button states
+  document.querySelectorAll('.filter-group .filter-btn').forEach(btn => {
+    const btnText = btn.textContent.trim();
+    let btnFilter = btnText === 'All Concepts' ? 'all' :
+                    btnText === 'Cardiac' ? 'cardiac' :
+                    btnText === 'F&E' ? 'fluid' :
+                    btnText === 'Oxygenation' ? 'oxy' :
+                    btnText === 'Neuro' ? 'neuro' :
+                    btnText === 'Emergency' ? 'emergency' : '';
+
+    if (activeFilters.conceptArea === btnFilter) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  filterEntries();
+}
+
+function deleteEntry(id) {
+  if (confirm('Delete this entry?')) {
+    wrongAnswers = wrongAnswers.filter(e => e.id !== id);
+    saveData();
+    renderBrowse();
+  }
+}
+
+// ─── DASHBOARD ───
+function renderDashboard() {
+  const noDashboard = document.getElementById('noDashboard');
+
+  if (wrongAnswers.length === 0) {
+    noDashboard.classList.remove('hidden');
+    return;
+  }
+
+  noDashboard.classList.add('hidden');
+
+  // Stats
+  document.getElementById('totalWrongAnswers').textContent = wrongAnswers.length;
+
+  const errorCounts = countBy(wrongAnswers, 'errorType');
+  const mostCommon = Object.entries(errorCounts).sort((a, b) => b[1] - a[1])[0];
+  const errorLabels = {
+    misread: 'Misread',
+    confused: 'Confused',
+    medical: 'Medical vs Nursing',
+    priority: 'Priority',
+    first: 'Missed FIRST',
+    knowledge: 'Knowledge Gap',
+    secondguess: 'Second-Guessed',
+    format: 'Format'
+  };
+  document.getElementById('mostCommonError').textContent = mostCommon ? errorLabels[mostCommon[0]] : '--';
+
+  const retestDue = wrongAnswers.filter(e => new Date(e.nextReviewDate) <= new Date()).length;
+  document.getElementById('retestsDue').textContent = retestDue;
+
+  const mastered = wrongAnswers.filter(e => e.leitnerBox >= 3).length;
+  document.getElementById('masteredCount').textContent = mastered;
+
+  // Charts
+  renderErrorChart(errorCounts);
+  renderConceptChart();
+  renderSourceChart();
+  renderTopPatterns();
+}
+
+function renderErrorChart(counts) {
+  const container = document.getElementById('errorChart');
+  container.innerHTML = '';
+
+  const errorLabels = {
+    misread: 'Misread Stem',
+    confused: 'Confused Conditions',
+    medical: 'Medical vs Nursing',
+    priority: 'Prioritization Error',
+    first: 'Missed FIRST Qualifier',
+    knowledge: 'Knowledge Gap',
+    secondguess: 'Second-Guessed Self',
+    format: 'Format Misunderstanding'
+  };
+
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+  sorted.forEach(([error, count]) => {
+    const percent = total > 0 ? ((count / total) * 100).toFixed(0) : 0;
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.innerHTML = `
+      <div class="chart-label">${errorLabels[error]}</div>
+      <div class="chart-bar-bg">
+        <div class="chart-bar-fill" style="width: ${percent}%;">${count}</div>
+      </div>
+    `;
+    container.appendChild(bar);
+  });
+}
+
+function renderConceptChart() {
+  const container = document.getElementById('conceptChart');
+  container.innerHTML = '';
+
+  const counts = countBy(wrongAnswers, 'conceptArea');
+  const labels = {
+    cardiac: 'Cardiac',
+    fluid: 'Fluid & Electrolytes',
+    oxy: 'Oxygenation',
+    neuro: 'Neuro',
+    emergency: 'Emergency'
+  };
+
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+  sorted.forEach(([concept, count]) => {
+    const percent = total > 0 ? ((count / total) * 100).toFixed(0) : 0;
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.innerHTML = `
+      <div class="chart-label">${labels[concept]}</div>
+      <div class="chart-bar-bg">
+        <div class="chart-bar-fill" style="width: ${percent}%;">${count}</div>
+      </div>
+    `;
+    container.appendChild(bar);
+  });
+}
+
+function renderSourceChart() {
+  const container = document.getElementById('sourceChart');
+  container.innerHTML = '';
+
+  const counts = countBy(wrongAnswers, 'source');
+  const labels = {
+    prepu: 'Prep U',
+    testbank: 'Test Bank',
+    exam1: 'Exam 1',
+    exam2: 'Exam 2',
+    exam3: 'Exam 3',
+    quiz: 'Quiz',
+    other: 'Other'
+  };
+
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+  sorted.forEach(([source, count]) => {
+    const percent = total > 0 ? ((count / total) * 100).toFixed(0) : 0;
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.innerHTML = `
+      <div class="chart-label">${labels[source]}</div>
+      <div class="chart-bar-bg">
+        <div class="chart-bar-fill" style="width: ${percent}%;">${count}</div>
+      </div>
+    `;
+    container.appendChild(bar);
+  });
+}
+
+function renderTopPatterns() {
+  const container = document.getElementById('topPatterns');
+  container.innerHTML = '';
+
+  const behavioralErrors = ['misread', 'confused', 'priority', 'first', 'secondguess', 'format'];
+  const counts = countBy(wrongAnswers.filter(e => behavioralErrors.includes(e.errorType)), 'errorType');
+  const errorLabels = {
+    misread: 'Misread Stem',
+    confused: 'Confused Conditions',
+    priority: 'Prioritization Error',
+    first: 'Missed FIRST',
+    secondguess: 'Second-Guessed',
+    format: 'Format Error'
+  };
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+  if (sorted.length === 0) {
+    container.innerHTML = '<p style="color: var(--text-muted);">Keep logging to identify patterns.</p>';
+    return;
+  }
+
+  sorted.forEach(([ error, count ], idx) => {
+    const item = document.createElement('div');
+    item.className = 'pattern-item';
+    item.innerHTML = `
+      <span class="pattern-rank">#${idx + 1}</span>
+      <span class="pattern-text"><strong>${errorLabels[error]}</strong> — ${count} times</span>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function countBy(arr, key) {
+  return arr.reduce((acc, item) => {
+    acc[item[key]] = (acc[item[key]] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+// ─── RETEST QUEUE ───
+function renderRetest() {
+  const queue = document.getElementById('retestQueue');
+  const noRetest = document.getElementById('noRetest');
+  const today = new Date();
+
+  const due = wrongAnswers.filter(e => new Date(e.nextReviewDate) <= today);
+
+  if (due.length === 0) {
+    queue.innerHTML = '';
+    noRetest.classList.remove('hidden');
+    return;
+  }
+
+  noRetest.classList.add('hidden');
+  queue.innerHTML = '';
+
+  due.forEach(entry => {
+    const boxLabel = {
+      1: 'Day 1: Initial Review',
+      2: 'Day 3: Concept Deep Dive',
+      3: 'Day 7+: Full Re-Test'
+    };
+
+    const item = document.createElement('div');
+    item.className = 'retest-item';
+    item.innerHTML = `
+      <div class="retest-info">
+        <div class="retest-box-label">${boxLabel[entry.leitnerBox]}</div>
+        <div class="retest-box-number">Box ${entry.leitnerBox}</div>
+        <div class="retest-stem">${entry.stem.substring(0, 150)}${entry.stem.length > 150 ? '...' : ''}</div>
+      </div>
+      <div class="retest-actions">
+        <button class="btn-small-action" onclick="markCorrect(${entry.id})">✓ Got It</button>
+        <button class="btn-small-action" onclick="markWrong(${entry.id})">✗ Missed</button>
+        <button class="btn-small-action" onclick="showRetestHint(${entry.id})">? Hint</button>
+      </div>
+    `;
+    queue.appendChild(item);
+  });
+}
+
+function markCorrect(id) {
+  const entry = wrongAnswers.find(e => e.id === id);
+  if (entry) {
+    entry.leitnerBox = Math.min(entry.leitnerBox + 1, 3);
+    const intervals = [null, 3, 7, 30]; // days
+    entry.nextReviewDate = addDays(new Date(), intervals[entry.leitnerBox]).toISOString().split('T')[0];
+    saveData();
+    if (typeof StudyData !== 'undefined' && StudyData.retestWrongAnswer) {
+      StudyData.retestWrongAnswer(id, true);
+    }
+    renderRetest();
+  }
+}
+
+function markWrong(id) {
+  const entry = wrongAnswers.find(e => e.id === id);
+  if (entry) {
+    entry.leitnerBox = 1;
+    entry.nextReviewDate = addDays(new Date(), 1).toISOString().split('T')[0];
+    saveData();
+    if (typeof StudyData !== 'undefined' && StudyData.retestWrongAnswer) {
+      StudyData.retestWrongAnswer(id, false);
+    }
+    renderRetest();
+  }
+}
+
+function showRetestHint(id) {
+  const entry = wrongAnswers.find(e => e.id === id);
+  if (entry) {
+    alert(`Concept: ${entry.concept}\n\nWhat to remember: ${entry.remember}`);
+  }
+}
+
+function markAsReview(id) {
+  const entry = wrongAnswers.find(e => e.id === id);
+  if (entry) {
+    entry.nextReviewDate = new Date().toISOString().split('T')[0];
+    saveData();
+    switchMode('retest');
+  }
+}
+
+// ─── EXPORT/IMPORT ───
+function showExportImport() {
+  document.getElementById('exportImportModal').classList.add('active');
+}
+
+function closeExportImport() {
+  document.getElementById('exportImportModal').classList.remove('active');
+}
+
+function exportData() {
+  const data = {
+    exportDate: new Date().toISOString(),
+    entries: wrongAnswers
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `wrong-answer-log-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData() {
+  const file = document.getElementById('importFile').files[0];
+  if (!file) {
+    alert('Please select a file.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.entries && Array.isArray(data.entries)) {
+        wrongAnswers = wrongAnswers.concat(data.entries);
+        // Remove duplicates by ID
+        wrongAnswers = Array.from(new Map(wrongAnswers.map(item => [item.id, item])).values());
+        saveData();
+        alert('Imported ' + data.entries.length + ' entries!');
+        closeExportImport();
+        document.getElementById('importFile').value = '';
+      }
+    } catch (err) {
+      alert('Error reading file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ─── UTILITIES ───
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+// ─── START ───
+init();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognition & Sensation: Complex Neurological Disorders</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #3182ce;
+            --pearl-bg: #ebf8ff;
+            --pearl-border: #3182ce;
+            --warning-bg: #fed7d7;
+            --warning-border: #c53030;
+            --memory-bg: #e9d8fd;
+            --memory-border: #805ad5;
+            --text: #1a202c;
+            --light-gray: #f7fafc;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary) 0%, #2d3748 100%);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 1rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 600;
+            border: none;
+            padding: 0;
+        }
+
+        .sidebar-header p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.75rem;
+            margin: 0.5rem 0 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .nav-link.active {
+            background: rgba(49, 130, 206, 0.2);
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .nav-number {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            text-align: center;
+            line-height: 22px;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            display: flex;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            width: 100%;
+            padding: 2rem 3rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            border-bottom: 4px solid var(--accent);
+            padding-bottom: 1rem;
+            font-size: 2.2rem;
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin-top: 3rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(90deg, var(--light-gray) 0%, transparent 100%);
+            border-left: 5px solid var(--accent);
+            font-size: 1.6rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        h4 {
+            color: var(--secondary);
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .source-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .slides {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+
+        .heavy {
+            background: #fbd38d;
+            color: #744210;
+            font-weight: bold;
+        }
+
+        .pearl {
+            background: var(--pearl-bg);
+            border-left: 4px solid var(--pearl-border);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .pearl::before {
+            content: "Clinical Pearl";
+            display: block;
+            font-weight: bold;
+            color: var(--pearl-border);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning {
+            background: var(--warning-bg);
+            border-left: 4px solid var(--warning-border);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning::before {
+            content: "Critical Safety";
+            display: block;
+            font-weight: bold;
+            color: var(--warning-border);
+            margin-bottom: 0.5rem;
+        }
+
+        .memory {
+            background: var(--memory-bg);
+            border-left: 4px solid var(--memory-border);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .memory::before {
+            content: "Remember";
+            display: block;
+            font-weight: bold;
+            color: var(--memory-border);
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: var(--secondary);
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        td {
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light-gray);
+        }
+
+        .formula-box {
+            background: #fffaf0;
+            border: 2px solid #dd6b20;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .formula-box .formula {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #c05621;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-card {
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .comparison-card h5 {
+            margin: 0 0 0.75rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid currentColor;
+        }
+
+        .left-card {
+            border-color: #48bb78;
+        }
+
+        .left-card h5 {
+            color: #276749;
+        }
+
+        .right-card {
+            border-color: #ed8936;
+        }
+
+        .right-card h5 {
+            color: #c05621;
+        }
+
+        .gcs-table th {
+            background: var(--primary);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 1.5rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--light-gray);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .nursing-priority {
+            background: linear-gradient(135deg, #faf5ff 0%, #e9d8fd 100%);
+            border: 2px solid #805ad5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .nursing-priority h4 {
+            color: #553c9a;
+            margin-top: 0;
+        }
+
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .flow-box {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .nclex-tip {
+            background: #f0fff4;
+            border: 2px dashed #48bb78;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .nclex-tip::before {
+            content: "NCLEX Focus";
+            display: block;
+            font-weight: bold;
+            color: #276749;
+            margin-bottom: 0.5rem;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            margin: 1rem 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            :root {
+                --sidebar-width: 220px;
+            }
+            .content-wrapper {
+                padding: 2rem;
+            }
+        }
+
+        /* 768px mobile handled below with hamburger menu */
+
+        /* Scrollbar styling for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0 0 6px 6px;
+            z-index: 2000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus-visible for keyboard navigation */
+        .nav-link:focus-visible {
+            outline: 2px solid #90cdf4;
+            outline-offset: -2px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Mobile hamburger menu */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 0.75rem;
+            left: 0.75rem;
+            z-index: 1100;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .sidebar {
+                position: fixed;
+                width: 280px;
+                height: 100vh;
+                max-height: 100vh;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.open {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .content-wrapper {
+                padding: 1rem;
+                padding-top: 3.5rem;
+            }
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            :root {
+                --sidebar-width: 0;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar, .hamburger, .sidebar-overlay, .skip-link {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+            }
+            .content-wrapper {
+                max-width: 100%;
+                padding: 0;
+            }
+            h2 {
+                page-break-before: always;
+                break-before: page;
+            }
+            h2:first-of-type {
+                page-break-before: avoid;
+                break-before: avoid;
+            }
+            .pearl, .warning, .memory, .nclex-tip, .nursing-priority, .formula-box {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            table {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+                color: #000;
+            }
+            .pearl, .warning, .memory, .nclex-tip {
+                border-left-width: 3px;
+            }
+            a { color: #000; text-decoration: none; }
+        }
+    </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<button class="hamburger" aria-label="Open navigation menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+</button>
+<div class="sidebar-overlay" aria-hidden="true"></div>
+
+<!-- Sidebar Navigation -->
+<nav class="sidebar" aria-label="Study guide sections">
+    <div class="sidebar-header">
+        <h3>Study Guide</h3>
+        <p>Complex Neuro Disorders</p>
+    </div>
+    <ul class="nav-list">
+        <li class="nav-item"><a href="#section-1" class="nav-link"><span class="nav-number">1</span>Neuroanatomy</a></li>
+        <li class="nav-item"><a href="#section-2" class="nav-link"><span class="nav-number">2</span>Neuro Assessment</a></li>
+        <li class="nav-item"><a href="#section-3" class="nav-link"><span class="nav-number">3</span>Diagnostic Tests</a></li>
+        <li class="nav-item"><a href="#section-4" class="nav-link"><span class="nav-number">4</span>Altered LOC</a></li>
+        <li class="nav-item"><a href="#section-5" class="nav-link"><span class="nav-number">5</span>Increased ICP</a></li>
+        <li class="nav-item"><a href="#section-6" class="nav-link"><span class="nav-number">6</span>Intracranial Surgery</a></li>
+        <li class="nav-item"><a href="#section-7" class="nav-link"><span class="nav-number">7</span>Seizures</a></li>
+        <li class="nav-item"><a href="#section-8" class="nav-link"><span class="nav-number">8</span>Headaches</a></li>
+        <li class="nav-item"><a href="#section-9" class="nav-link"><span class="nav-number">9</span>Stroke</a></li>
+        <li class="nav-item"><a href="#section-10" class="nav-link"><span class="nav-number">10</span>Head Injury / TBI</a></li>
+        <li class="nav-item"><a href="#section-11" class="nav-link"><span class="nav-number">11</span>Spinal Cord Injury</a></li>
+        <li class="nav-item"><a href="#section-12" class="nav-link"><span class="nav-number">12</span>Meningitis</a></li>
+        <li class="nav-item"><a href="#section-13" class="nav-link"><span class="nav-number">13</span>Autoimmune Disorders</a></li>
+        <li class="nav-item"><a href="#section-14" class="nav-link"><span class="nav-number">14</span>Cranial Nerve Disorders</a></li>
+        <li class="nav-item"><a href="#section-formulas" class="nav-link"><span class="nav-number">+</span>Key Formulas</a></li>
+    </ul>
+</nav>
+
+<!-- Main Content -->
+<main id="main" class="main-content">
+<div class="content-wrapper">
+
+<h1>Complex Neurological Disorders</h1>
+<p><em>Chapters 60-65: Assessment of Neurologic Function, Altered LOC & ICP, Cerebrovascular Disorders, Head & Spinal Cord Injury, Neurologic Infections & Autoimmune Disorders</em></p>
+
+<!-- SECTION 1: NEUROANATOMY FOUNDATIONS -->
+<h2 id="section-1">1. Neuroanatomy Foundations <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>Neurotransmitters: The Chemical Messengers</h3>
+
+<p>Neurotransmitters are the molecular currency of neurological communication. They're manufactured and stored in synaptic vesicles, then released when an electrical action potential reaches the nerve terminal. Once released, they cross the synapse and bind to receptors on the postsynaptic cell—either exciting or inhibiting that target cell. Understanding neurotransmitter imbalances is fundamental to understanding many neurological disorders.</p>
+
+<table>
+    <tr>
+        <th>Neurotransmitter</th>
+        <th>Primary Source</th>
+        <th>Action</th>
+        <th>Clinical Correlation</th>
+    </tr>
+    <tr>
+        <td><strong>Acetylcholine</strong></td>
+        <td>Many brain areas; parasympathetic NS</td>
+        <td>Usually excitatory; sometimes inhibitory (vagal heart stimulation)</td>
+        <td><strong>Myasthenia Gravis</strong>: impaired ACh binding at NMJ</td>
+    </tr>
+    <tr>
+        <td><strong>Dopamine</strong></td>
+        <td>Substantia nigra; basal ganglia</td>
+        <td>Usually inhibitory; affects behavior, attention, fine movement</td>
+        <td><strong>Parkinson's Disease</strong>: decreased dopamine availability</td>
+    </tr>
+    <tr>
+        <td><strong>Norepinephrine</strong></td>
+        <td>Brain stem; hypothalamus; sympathetic NS</td>
+        <td>Usually excitatory; affects mood and overall activity</td>
+        <td>Sympathetic "fight or flight" response</td>
+    </tr>
+    <tr>
+        <td><strong>Serotonin</strong></td>
+        <td>Brain stem; hypothalamus; dorsal horn</td>
+        <td>Inhibitory; controls mood, sleep, inhibits pain pathways</td>
+        <td>Depression, sleep disorders</td>
+    </tr>
+    <tr>
+        <td><strong>GABA</strong></td>
+        <td>Spinal cord; cerebellum; basal ganglia</td>
+        <td>Inhibitory</td>
+        <td>Seizure disorders (decreased GABA)</td>
+    </tr>
+    <tr>
+        <td><strong>Enkephalin/Endorphin</strong></td>
+        <td>Spine; brain stem; thalamus; pituitary</td>
+        <td>Excitatory; pleasurable sensation, inhibits pain</td>
+        <td>Natural pain modulation</td>
+    </tr>
+</table>
+
+<h3>Brain Anatomy: The Four Lobes <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p>The cerebrum—the largest part of the brain—is divided into two hemispheres connected by the corpus callosum. Each hemisphere contains four lobes, each with distinct functions. The convoluted surface (gyri and sulci) maximizes surface area, allowing for higher-level cognitive function.</p>
+
+<table>
+    <tr>
+        <th>Lobe</th>
+        <th>Location</th>
+        <th>Primary Functions</th>
+        <th>Damage Manifestations</th>
+    </tr>
+    <tr>
+        <td><strong>Frontal</strong> (largest)</td>
+        <td>Anterior to central sulcus</td>
+        <td>Concentration, abstract thinking, memory, motor function, judgment, personality, affect, inhibitions</td>
+        <td>Personality changes, poor judgment, motor deficits</td>
+    </tr>
+    <tr>
+        <td><strong>Parietal</strong></td>
+        <td>Posterior to frontal</td>
+        <td>Sensory analysis and interpretation, body position awareness, size/shape discrimination, right-left orientation</td>
+        <td>Sensory deficits, spatial disorientation</td>
+    </tr>
+    <tr>
+        <td><strong>Temporal</strong></td>
+        <td>Inferior to frontal and parietal</td>
+        <td>Auditory reception, memory of sound, understanding language and music</td>
+        <td>Hearing deficits, receptive aphasia (Wernicke's)</td>
+    </tr>
+    <tr>
+        <td><strong>Occipital</strong></td>
+        <td>Most posterior</td>
+        <td>Visual interpretation and memory</td>
+        <td>Visual field deficits, visual processing problems</td>
+    </tr>
+</table>
+
+<svg viewBox="0 0 720 460" style="max-width: 720px;" role="img" aria-label="Lateral view of the brain showing four lobes: Frontal (blue) for personality, judgment, and motor function; Parietal (green) for sensory interpretation; Temporal (purple) for hearing, memory, and speech comprehension; and Occipital (orange) for vision. Broca's area and Wernicke's area are highlighted.">
+    <defs>
+        <linearGradient id="bl-frontal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#93c5fd"/>
+            <stop offset="100%" stop-color="#3182ce"/>
+        </linearGradient>
+        <linearGradient id="bl-parietal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#86efac"/>
+            <stop offset="100%" stop-color="#16a34a"/>
+        </linearGradient>
+        <linearGradient id="bl-temporal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#c4b5fd"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="bl-occipital" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fdba74"/>
+            <stop offset="100%" stop-color="#d97706"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Title -->
+    <text x="360" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">Brain Lobes — Lateral View</text>
+
+    <!-- Brain outline (lateral profile, facing left) -->
+    <path d="M 160,180 C 160,100 220,55 320,50 C 420,45 500,55 530,80 C 560,105 570,140 565,180 C 560,220 540,260 510,290 C 480,320 440,340 400,345 C 360,350 300,345 260,335 C 220,325 190,310 175,290 C 160,270 150,240 148,220 C 146,200 150,185 160,180 Z"
+          fill="none" stroke="#2d3748" stroke-width="2.5"/>
+
+    <!-- Central Sulcus (Rolandic fissure) - divides frontal from parietal -->
+    <path d="M 380,56 C 375,100 365,160 360,210"
+          stroke="#2d3748" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+    <text x="390" y="48" font-size="10" fill="#2d3748" font-style="italic">Central Sulcus</text>
+
+    <!-- Lateral Fissure (Sylvian fissure) - divides temporal from frontal/parietal -->
+    <path d="M 220,230 C 270,215 330,210 400,220"
+          stroke="#2d3748" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+    <text x="280" y="250" font-size="10" fill="#2d3748" font-style="italic">Lateral Fissure</text>
+
+    <!-- Parieto-occipital boundary (approximate, not visible externally but shown for clarity) -->
+    <path d="M 500,100 C 490,160 480,220 475,280"
+          stroke="#2d3748" stroke-width="1.5" stroke-dasharray="4,4" fill="none"/>
+
+    <!-- FRONTAL LOBE - anterior to central sulcus, above lateral fissure -->
+    <path d="M 160,180 C 160,100 220,55 320,50 C 350,48 370,52 380,56 C 375,100 365,160 360,210 C 330,210 270,215 220,230 C 195,220 170,205 160,180 Z"
+          fill="url(#bl-frontal)" opacity="0.45" stroke="none"/>
+    <text x="265" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e40af">FRONTAL</text>
+    <text x="265" y="152" text-anchor="middle" font-size="10" fill="#1e40af">Personality, Judgment</text>
+    <text x="265" y="166" text-anchor="middle" font-size="10" fill="#1e40af">Motor Function, Speech</text>
+
+    <!-- PARIETAL LOBE - posterior to central sulcus, above lateral fissure, anterior to occipital -->
+    <path d="M 380,56 C 420,52 470,60 500,100 C 490,160 480,220 475,280 C 440,250 410,225 400,220 C 330,210 360,210 360,210 C 365,160 375,100 380,56 Z"
+          fill="url(#bl-parietal)" opacity="0.45" stroke="none"/>
+    <text x="435" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">PARIETAL</text>
+    <text x="435" y="152" text-anchor="middle" font-size="10" fill="#166534">Sensory Interpretation</text>
+    <text x="435" y="166" text-anchor="middle" font-size="10" fill="#166534">Spatial Awareness</text>
+
+    <!-- TEMPORAL LOBE - below lateral fissure -->
+    <path d="M 220,230 C 270,215 330,210 400,220 C 440,250 475,280 475,290 C 440,325 400,340 360,345 C 300,345 250,335 220,320 C 195,305 175,285 175,265 C 175,245 195,235 220,230 Z"
+          fill="url(#bl-temporal)" opacity="0.45" stroke="none"/>
+    <text x="320" y="290" text-anchor="middle" font-size="14" font-weight="bold" fill="#5b21b6">TEMPORAL</text>
+    <text x="320" y="307" text-anchor="middle" font-size="10" fill="#5b21b6">Hearing, Memory</text>
+    <text x="320" y="321" text-anchor="middle" font-size="10" fill="#5b21b6">Speech Comprehension</text>
+
+    <!-- OCCIPITAL LOBE - most posterior -->
+    <path d="M 500,100 C 530,80 560,105 565,180 C 560,220 540,260 510,290 C 475,290 475,280 480,220 C 490,160 500,100 500,100 Z"
+          fill="url(#bl-occipital)" opacity="0.45" stroke="none"/>
+    <text x="530" y="185" text-anchor="middle" font-size="14" font-weight="bold" fill="#92400e">OCCIPITAL</text>
+    <text x="530" y="202" text-anchor="middle" font-size="10" fill="#92400e">Vision</text>
+
+    <!-- BROCA'S AREA - left inferior frontal gyrus -->
+    <ellipse cx="235" cy="195" rx="30" ry="18" fill="#3182ce" opacity="0.6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="235" y="199" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Broca's</text>
+    <!-- Leader line to label -->
+    <line x1="210" y1="205" x2="130" y2="365" stroke="#1e40af" stroke-width="1.2"/>
+    <rect x="60" y="352" width="140" height="42" rx="6" fill="#dbeafe" stroke="#3182ce" stroke-width="1.2"/>
+    <text x="130" y="369" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e40af">Broca's Area</text>
+    <text x="130" y="384" text-anchor="middle" font-size="10" fill="#1e40af">Expressive (Motor)</text>
+    <text x="130" y="396" text-anchor="middle" font-size="10" fill="#c53030">"Broken speech"</text>
+
+    <!-- WERNICKE'S AREA - left superior temporal gyrus, near parietal border -->
+    <ellipse cx="400" cy="235" rx="30" ry="16" fill="#7c3aed" opacity="0.6" stroke="#5b21b6" stroke-width="1.5"/>
+    <text x="400" y="239" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Wernicke's</text>
+    <!-- Leader line to label -->
+    <line x1="425" y1="248" x2="530" y2="365" stroke="#5b21b6" stroke-width="1.2"/>
+    <rect x="460" y="352" width="155" height="42" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+    <text x="537" y="369" text-anchor="middle" font-size="11" font-weight="bold" fill="#5b21b6">Wernicke's Area</text>
+    <text x="537" y="384" text-anchor="middle" font-size="10" fill="#5b21b6">Receptive (Sensory)</text>
+    <text x="537" y="396" text-anchor="middle" font-size="10" fill="#c53030">"Wordy but nonsense"</text>
+
+    <!-- Arcuate fasciculus arrow connecting Broca's to Wernicke's -->
+    <path d="M 260,190 C 300,140 370,140 395,220"
+          fill="none" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,3"
+          marker-end="url(#bl-connect-arrow)"/>
+    <defs>
+        <marker id="bl-connect-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="#4a5568"/>
+        </marker>
+    </defs>
+    <text x="330" y="148" text-anchor="middle" font-size="9" fill="#4a5568" font-style="italic">Arcuate Fasciculus</text>
+
+    <!-- Brainstem/spinal cord hint -->
+    <path d="M 260,340 C 250,360 245,380 240,420 C 238,435 235,445 230,455"
+          fill="none" stroke="#2d3748" stroke-width="2"/>
+    <text x="260" y="440" font-size="10" fill="#4a5568">Brainstem →</text>
+
+    <!-- Legend -->
+    <rect x="20" y="45" width="120" height="105" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+    <rect x="30" y="58" width="14" height="14" rx="3" fill="#3182ce" opacity="0.7"/>
+    <text x="50" y="70" font-size="11" fill="#4a5568">Frontal</text>
+    <rect x="30" y="78" width="14" height="14" rx="3" fill="#16a34a" opacity="0.7"/>
+    <text x="50" y="90" font-size="11" fill="#4a5568">Parietal</text>
+    <rect x="30" y="98" width="14" height="14" rx="3" fill="#7c3aed" opacity="0.7"/>
+    <text x="50" y="110" font-size="11" fill="#4a5568">Temporal</text>
+    <rect x="30" y="118" width="14" height="14" rx="3" fill="#d97706" opacity="0.7"/>
+    <text x="50" y="130" font-size="11" fill="#4a5568">Occipital</text>
+</svg>
+
+<h4>Critical Speech Centers</h4>
+
+<div class="comparison-grid">
+    <div class="comparison-card left-card">
+        <h5>Broca's Area (Expressive Aphasia)</h5>
+        <p><strong>Location:</strong> Left inferior frontal gyrus</p>
+        <p><strong>Function:</strong> Motor control of speech</p>
+        <p><strong>If Damaged:</strong> Patient cannot speak or write BUT can understand language</p>
+        <p><strong>Clinical Tip:</strong> Close to left motor area—right-sided paralysis often accompanies Broca's aphasia</p>
+    </div>
+    <div class="comparison-card right-card">
+        <h5>Wernicke's Area (Receptive Aphasia)</h5>
+        <p><strong>Location:</strong> Left posterior temporal gyrus</p>
+        <p><strong>Function:</strong> Language comprehension</p>
+        <p><strong>If Damaged:</strong> Patient cannot understand language; speaks in stream of unconnected words</p>
+        <p><strong>Clinical Tip:</strong> Speech sounds fluent but is nonsensical ("word salad")</p>
+    </div>
+</div>
+
+<h4>Other Critical Structures</h4>
+
+<p><strong>Brain Stem</strong> (midbrain, pons, medulla oblongata): Contains vital reflex centers for respiration, heart rate, blood pressure, coughing, vomiting, swallowing, and sneezing. The reticular formation here controls arousal and sleep-wake cycles. Motor fibers cross (decussate) at the medulla level—this is why a stroke on one side of the brain causes deficits on the opposite side of the body.</p>
+
+<p><strong>Cerebellum:</strong> Located posterior to the brain stem, below the occipital lobe. Responsible for smooth coordination of movement, fine motor control, balance, and <strong>proprioception</strong>—the awareness of body position without looking. Damage causes ataxia (uncoordinated movements).</p>
+
+<p><strong>Hypothalamus:</strong> Small but mighty. Regulates temperature, pituitary hormone secretion, fluid balance, hunger, sleep-wake cycles, blood pressure, and autonomic nervous system function. Connected to the posterior pituitary via the infundibulum.</p>
+
+<h3>The Meninges: Three Protective Layers <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<svg viewBox="0 0 600 300" style="max-width: 600px;" role="img" aria-label="Diagram of the three meningeal layers: dura mater, arachnoid mater, and pia mater, showing their positions between skull and brain">
+    <defs>
+        <linearGradient id="skull" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#e2e8f0"/>
+            <stop offset="100%" style="stop-color:#cbd5e0"/>
+        </linearGradient>
+    </defs>
+    <!-- Skull -->
+    <rect x="50" y="20" width="500" height="40" rx="5" fill="url(#skull)" stroke="#718096" stroke-width="2"/>
+    <text x="300" y="45" text-anchor="middle" font-weight="bold" fill="#4a5568">SKULL (Bone)</text>
+
+    <!-- Epidural Space Label -->
+    <text x="560" y="70" font-size="11" fill="#e53e3e">← Epidural Space (potential)</text>
+
+    <!-- Dura Mater -->
+    <rect x="50" y="65" width="500" height="35" fill="#4a5568"/>
+    <text x="300" y="88" text-anchor="middle" font-weight="bold" fill="white">DURA MATER (Tough, Gray, Inelastic)</text>
+
+    <!-- Subdural Space Label -->
+    <text x="560" y="110" font-size="11" fill="#e53e3e">← Subdural Space (potential)</text>
+
+    <!-- Arachnoid -->
+    <rect x="50" y="105" width="500" height="30" fill="#a0aec0"/>
+    <text x="300" y="125" text-anchor="middle" font-weight="bold" fill="#2d3748">ARACHNOID (Spider web-like)</text>
+
+    <!-- Subarachnoid Space with CSF -->
+    <rect x="50" y="140" width="500" height="40" fill="#bee3f8"/>
+    <text x="300" y="165" text-anchor="middle" fill="#2b6cb0">Subarachnoid Space (contains CSF)</text>
+
+    <!-- Pia Mater -->
+    <rect x="50" y="185" width="500" height="20" fill="#fc8181"/>
+    <text x="300" y="200" text-anchor="middle" font-weight="bold" fill="#742a2a">PIA MATER (Thin, hugs brain)</text>
+
+    <!-- Brain tissue -->
+    <rect x="50" y="210" width="500" height="70" fill="#faf5ff"/>
+    <text x="300" y="250" text-anchor="middle" fill="#553c9a">BRAIN TISSUE</text>
+
+    <!-- Arachnoid villi notation -->
+    <path d="M 480 130 Q 490 100 500 130" fill="none" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="520" y="120" font-size="10" fill="#2b6cb0">Arachnoid villi</text>
+    <text x="520" y="130" font-size="9" fill="#2b6cb0">(absorb CSF)</text>
+</svg>
+
+<div class="pearl">
+    <strong>Herniation:</strong> When intracranial pressure exceeds the brain's compensatory capacity, brain tissue is compressed against or displaced around the dural folds (falx cerebri, tentorium). This is a life-threatening emergency that compresses vital brain stem structures.
+</div>
+
+<div class="warning">
+    Blood or abscess can accumulate in the potential spaces:
+    <ul>
+        <li><strong>Epidural hematoma:</strong> Blood between skull and dura (usually arterial—middle meningeal artery)</li>
+        <li><strong>Subdural hematoma:</strong> Blood between dura and arachnoid (usually venous—bridging veins)</li>
+        <li><strong>Subarachnoid hemorrhage:</strong> Blood in the subarachnoid space (aneurysm rupture, AVM)</li>
+    </ul>
+</div>
+
+<h3>Cerebrospinal Fluid (CSF)</h3>
+
+<table>
+    <tr>
+        <th>Parameter</th>
+        <th>Normal Value</th>
+        <th>Clinical Significance</th>
+    </tr>
+    <tr>
+        <td>Appearance</td>
+        <td>Clear and colorless</td>
+        <td>Pink/bloody = subarachnoid hemorrhage; cloudy = infection</td>
+    </tr>
+    <tr>
+        <td>Specific gravity</td>
+        <td>1.007</td>
+        <td>—</td>
+    </tr>
+    <tr>
+        <td>Production rate</td>
+        <td>~500 mL/day</td>
+        <td>Produced in choroid plexus of ventricles</td>
+    </tr>
+    <tr>
+        <td>Total volume</td>
+        <td>125-150 mL</td>
+        <td>Circulates in ventricles and subarachnoid space</td>
+    </tr>
+    <tr>
+        <td>White blood cells</td>
+        <td>Minimal (0-5/mm³)</td>
+        <td>Elevated in meningitis</td>
+    </tr>
+    <tr>
+        <td>Red blood cells</td>
+        <td>None</td>
+        <td>Present in hemorrhage</td>
+    </tr>
+</table>
+
+<p>CSF is absorbed by <strong>arachnoid villi</strong>—finger-like projections into the venous system. When blood or bacteria enter the subarachnoid space, these villi become obstructed, causing <strong>communicating hydrocephalus</strong>. Blockage within the ventricular system itself causes <strong>obstructive hydrocephalus</strong>.</p>
+
+<h3>Cerebral Circulation: Unique Features <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p>The brain receives approximately <strong>15% of cardiac output</strong>—about 750 mL of blood per minute—despite comprising only 2% of body weight. It cannot store oxygen or glucose, making continuous blood flow absolutely essential.</p>
+
+<h4>Three Unique Features of Cerebral Circulation:</h4>
+<ol>
+    <li><strong>Arterial and venous vessels are NOT parallel</strong> (unlike other organs)—due to venous system's role in CSF absorption</li>
+    <li><strong>Circle of Willis provides collateral circulation</strong>—allows blood flow redirection if one vessel is occluded</li>
+    <li><strong>Blood vessels have TWO layers instead of three</strong>—makes them more prone to rupture under pressure (aneurysm formation)</li>
+</ol>
+
+<div class="pearl">
+    The <strong>Circle of Willis bifurcations</strong> are the most common sites for cerebral aneurysm formation. These outpouchings develop due to vessel wall weakness and can rupture, causing hemorrhagic stroke.
+</div>
+
+<h4>Cerebral Veins</h4>
+<p>Unlike veins elsewhere in the body, cerebral veins have <strong>NO VALVES</strong>. They depend entirely on gravity and blood pressure for flow, which is why positioning (head elevation, neutral alignment) is so critical in managing intracranial pressure.</p>
+
+<h4>The Blood-Brain Barrier</h4>
+<p>Formed by tight junctions between capillary endothelial cells and astrocytes, this barrier protects the CNS from many blood plasma substances—including many medications and antibiotics. The barrier can be <strong>disrupted by trauma, cerebral edema, and hypoxemia</strong>, which has implications for medication selection in CNS disorders.</p>
+
+<h3>Autonomic Nervous System <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Feature</th>
+        <th>Sympathetic ("Fight or Flight")</th>
+        <th>Parasympathetic ("Rest and Digest")</th>
+    </tr>
+    <tr>
+        <td><strong>Primary Neurotransmitter</strong></td>
+        <td>Norepinephrine</td>
+        <td>Acetylcholine</td>
+    </tr>
+    <tr>
+        <td><strong>Heart</strong></td>
+        <td>↑ Rate and contractility</td>
+        <td>↓ Rate</td>
+    </tr>
+    <tr>
+        <td><strong>Bronchioles</strong></td>
+        <td>Dilate</td>
+        <td>Constrict</td>
+    </tr>
+    <tr>
+        <td><strong>Pupils</strong></td>
+        <td>Dilate</td>
+        <td>Constrict</td>
+    </tr>
+    <tr>
+        <td><strong>Blood Vessels</strong></td>
+        <td>Peripheral vasoconstriction (cool skin), dilate to heart/muscles</td>
+        <td>—</td>
+    </tr>
+    <tr>
+        <td><strong>GI System</strong></td>
+        <td>↓ Peristalsis</td>
+        <td>↑ Peristalsis</td>
+    </tr>
+    <tr>
+        <td><strong>Bladder</strong></td>
+        <td>Relaxes (storage)</td>
+        <td>Contracts (voiding)</td>
+    </tr>
+    <tr>
+        <td><strong>Liver</strong></td>
+        <td>Releases glucose</td>
+        <td>—</td>
+    </tr>
+    <tr>
+        <td><strong>Skin</strong></td>
+        <td>Piloerection, ↑ sweating</td>
+        <td>—</td>
+    </tr>
+</table>
+
+<!-- SECTION 2: NEUROLOGIC ASSESSMENT -->
+<h2 id="section-2">2. Neurologic Assessment <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>Health History: Common Neurologic Symptoms</h3>
+<ul>
+    <li><strong>Pain and headache</strong></li>
+    <li><strong>Seizures</strong></li>
+    <li><strong>Dizziness</strong> (abnormal sensation of imbalance/movement) vs. <strong>Vertigo</strong> (illusion of rotation—the room is spinning)</li>
+    <li><strong>Visual disturbances</strong></li>
+    <li><strong>Weakness</strong></li>
+    <li><strong>Abnormal sensations</strong> (paresthesias, numbness)</li>
+</ul>
+
+<h3>Components of the Neurologic Examination</h3>
+
+<table>
+    <tr>
+        <th>Component</th>
+        <th>What to Assess</th>
+    </tr>
+    <tr>
+        <td><strong>Consciousness & Cognition</strong></td>
+        <td>Mental status, intellectual function, thought content, emotional status, language ability, impact on lifestyle</td>
+    </tr>
+    <tr>
+        <td><strong>Cranial Nerves</strong></td>
+        <td>12 pairs—test each according to function (see cranial nerve table)</td>
+    </tr>
+    <tr>
+        <td><strong>Motor System</strong></td>
+        <td>Muscle size, tone, strength; coordination and balance; Romberg test</td>
+    </tr>
+    <tr>
+        <td><strong>Sensory System</strong></td>
+        <td>Tactile sensation, superficial pain, temperature, vibration, proprioception</td>
+    </tr>
+    <tr>
+        <td><strong>Reflexes</strong></td>
+        <td>DTRs (biceps, triceps, brachioradialis, patellar, Achilles), superficial, pathologic (Babinski)</td>
+    </tr>
+</table>
+
+<h4>The Babinski Reflex <span class="source-tag slides">SLIDES</span></h4>
+<p>Stroke the lateral plantar surface of the foot. Normal response in adults: toes flex downward. <strong>Positive Babinski</strong> (toes fan out and big toe extends upward): indicates upper motor neuron lesion affecting the corticospinal tract. Note: Babinski is normal in infants and disappears by 9-10 months as the corticospinal tract matures.</p>
+
+<h3>Gerontologic Considerations <span class="source-tag slides">SLIDES</span></h3>
+
+<p>Distinguishing normal aging from pathology is crucial in older adults:</p>
+
+<table>
+    <tr>
+        <th>Normal Aging Changes</th>
+        <th>Clinical Implications</th>
+    </tr>
+    <tr>
+        <td>Brain weight decreases, ventricle size increases</td>
+        <td>Increased risk for chronic subdural hematoma (brain atrophy stretches bridging veins)</td>
+    </tr>
+    <tr>
+        <td>Cerebral blood flow and metabolism reduced</td>
+        <td>Slower mental function—not to be confused with dementia</td>
+    </tr>
+    <tr>
+        <td>Temperature regulation less efficient</td>
+        <td>Higher risk of hypothermia/hyperthermia</td>
+    </tr>
+    <tr>
+        <td>Decreased visual/hearing acuity; taste bud atrophy</td>
+        <td>Safety concerns, nutritional issues</td>
+    </tr>
+    <tr>
+        <td>Thirst sensation decreased</td>
+        <td>Dehydration risk</td>
+    </tr>
+    <tr>
+        <td>DTRs may be absent or decreased</td>
+        <td>Don't automatically interpret as pathologic</td>
+    </tr>
+    <tr>
+        <td>Reduced pain perception</td>
+        <td>May not report symptoms; injuries go unnoticed</td>
+    </tr>
+</table>
+
+<div class="warning">
+    <strong>Careful with hot and cold packs!</strong> Reduced temperature and pain perception in older adults means they may not feel when something is too hot or too cold, risking burns or frostbite.
+</div>
+
+<div class="nclex-tip">
+    <strong>Know the difference:</strong> Changes in cognition (memory, language, judgment) are NOT normal parts of aging and always require investigation. Mental processing may slow, but significant memory lapses indicate pathology, not age.
+</div>
+
+<!-- SECTION 3: DIAGNOSTIC TESTS -->
+<h2 id="section-3">3. Diagnostic Tests <span class="source-tag slides">SLIDES</span></h2>
+
+<table>
+    <tr>
+        <th>Test</th>
+        <th>Purpose</th>
+        <th>Key Nursing Considerations</th>
+    </tr>
+    <tr>
+        <td><strong>CT Scan</strong></td>
+        <td>Quick structural imaging; differentiates ischemic vs hemorrhagic stroke</td>
+        <td>Done within 20 min of ED arrival for stroke; client must lie still; check for contrast allergy</td>
+    </tr>
+    <tr>
+        <td><strong>MRI</strong></td>
+        <td>Superior tissue detail; detects demyelination, diffuse axonal injury</td>
+        <td>Remove ALL metal; contraindicated with pacemakers; loud noises</td>
+    </tr>
+    <tr>
+        <td><strong>PET Scan</strong></td>
+        <td>Metabolic activity; can detect neurotransmitter levels</td>
+        <td>May cause dizziness, lightheadedness, headache</td>
+    </tr>
+    <tr>
+        <td><strong>EEG</strong></td>
+        <td>Records brain electrical activity; diagnoses seizures, brain death</td>
+        <td>Avoid caffeine; wash hair after (lubricant used); hold anticonvulsants as ordered</td>
+    </tr>
+    <tr>
+        <td><strong>Lumbar Puncture</strong></td>
+        <td>Obtains CSF for analysis</td>
+        <td><strong>CONTRAINDICATED with increased ICP</strong> (risk of herniation); void beforehand</td>
+    </tr>
+    <tr>
+        <td><strong>Cerebral Angiography</strong></td>
+        <td>Visualizes blood vessels; identifies aneurysms, AVMs</td>
+        <td>Check for contrast allergy; assess puncture site post-procedure</td>
+    </tr>
+</table>
+
+<h4>Lumbar Puncture Complications</h4>
+<ul>
+    <li><strong>Rare but serious:</strong> Herniation of intracranial contents, spinal epidural abscess/hematoma, meningitis</li>
+    <li><strong>Common:</strong> Temporary voiding problems, slight fever, backache/spasms, neck stiffness</li>
+    <li><strong>Post-LP headache:</strong> Lessens when lying down; managed with analgesics, hydration, caffeine, supine position</li>
+</ul>
+
+<!-- SECTION 4: ALTERED LOC -->
+<h2 id="section-4">4. Altered Level of Consciousness <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<div class="memory">
+    <strong>LOC is the MOST SENSITIVE indicator</strong> of neurological status. It's always the first thing to change with deterioration and the most reliable measure of the patient's condition. A change in LOC, however subtle, demands immediate attention.
+</div>
+
+<h3>The LOC Continuum</h3>
+
+<table>
+    <tr>
+        <th>State</th>
+        <th>Description</th>
+        <th>Key Feature</th>
+    </tr>
+    <tr>
+        <td><strong>Alert/Conscious</strong></td>
+        <td>Awake, oriented, responds appropriately</td>
+        <td>Normal</td>
+    </tr>
+    <tr>
+        <td><strong>Confused</strong></td>
+        <td>Disoriented, impaired judgment</td>
+        <td>Early warning sign</td>
+    </tr>
+    <tr>
+        <td><strong>Lethargic</strong></td>
+        <td>Drowsy but arousable</td>
+        <td>Requires stimulation to respond</td>
+    </tr>
+    <tr>
+        <td><strong>Obtunded</strong></td>
+        <td>Difficult to arouse, limited responses</td>
+        <td>Sleeps unless stimulated</td>
+    </tr>
+    <tr>
+        <td><strong>Stupor</strong></td>
+        <td>Responds only to vigorous stimulation</td>
+        <td>Requires painful stimuli</td>
+    </tr>
+    <tr>
+        <td><strong>Coma</strong></td>
+        <td>Unconscious, unarousable, unresponsive</td>
+        <td>No response to any stimuli</td>
+    </tr>
+</table>
+
+<h4>Special States of Altered Consciousness</h4>
+
+<table>
+    <tr>
+        <th>State</th>
+        <th>Description</th>
+        <th>Distinguishing Feature</th>
+    </tr>
+    <tr>
+        <td><strong>Akinetic Mutism</strong></td>
+        <td>Unresponsive to environment, no movement or sound</td>
+        <td>May open eyes</td>
+    </tr>
+    <tr>
+        <td><strong>Persistent Vegetative State</strong></td>
+        <td>Devoid of cognitive function</td>
+        <td>Has sleep-wake cycles</td>
+    </tr>
+    <tr>
+        <td><strong>Locked-In Syndrome</strong></td>
+        <td>Cannot move or respond</td>
+        <td>Eye movements intact (pons lesion); cognition preserved</td>
+    </tr>
+</table>
+
+<h3>Motor Response Assessment: Posturing <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<svg viewBox="0 0 700 200" style="max-width: 700px;" role="img" aria-label="Motor response posturing comparison: normal purposeful withdrawal versus decorticate flexion versus decerebrate extension">
+    <!-- Normal Response -->
+    <g transform="translate(50, 20)">
+        <text x="60" y="0" text-anchor="middle" font-weight="bold" fill="#276749">Normal</text>
+        <text x="60" y="15" text-anchor="middle" font-size="11" fill="#276749">Purposeful/Withdraws</text>
+        <ellipse cx="60" cy="45" rx="15" ry="12" fill="#c6f6d5"/>
+        <line x1="60" y1="57" x2="60" y2="100" stroke="#276749" stroke-width="3"/>
+        <line x1="30" y1="75" x2="90" y2="75" stroke="#276749" stroke-width="3"/>
+        <line x1="45" y1="100" x2="45" y2="140" stroke="#276749" stroke-width="3"/>
+        <line x1="75" y1="100" x2="75" y2="140" stroke="#276749" stroke-width="3"/>
+        <text x="60" y="165" text-anchor="middle" font-size="10" fill="#276749">Best Outcome</text>
+    </g>
+
+    <!-- Decorticate -->
+    <g transform="translate(230, 20)">
+        <text x="60" y="0" text-anchor="middle" font-weight="bold" fill="#c05621">Decorticate</text>
+        <text x="60" y="15" text-anchor="middle" font-size="11" fill="#c05621">Flexion Posturing</text>
+        <ellipse cx="60" cy="45" rx="15" ry="12" fill="#fbd38d"/>
+        <line x1="60" y1="57" x2="60" y2="100" stroke="#c05621" stroke-width="3"/>
+        <!-- Flexed arms across chest -->
+        <path d="M 30 75 Q 40 85 60 80" stroke="#c05621" stroke-width="3" fill="none"/>
+        <path d="M 90 75 Q 80 85 60 80" stroke="#c05621" stroke-width="3" fill="none"/>
+        <!-- Extended legs -->
+        <line x1="50" y1="100" x2="40" y2="145" stroke="#c05621" stroke-width="3"/>
+        <line x1="70" y1="100" x2="80" y2="145" stroke="#c05621" stroke-width="3"/>
+        <text x="60" y="165" text-anchor="middle" font-size="10" fill="#c05621">Arms Flexed</text>
+        <text x="60" y="175" text-anchor="middle" font-size="10" fill="#c05621">Legs Extended</text>
+    </g>
+
+    <!-- Decerebrate -->
+    <g transform="translate(410, 20)">
+        <text x="60" y="0" text-anchor="middle" font-weight="bold" fill="#c53030">Decerebrate</text>
+        <text x="60" y="15" text-anchor="middle" font-size="11" fill="#c53030">Extension Posturing</text>
+        <ellipse cx="60" cy="45" rx="15" ry="12" fill="#fed7d7"/>
+        <line x1="60" y1="57" x2="60" y2="100" stroke="#c53030" stroke-width="3"/>
+        <!-- Extended, internally rotated arms -->
+        <line x1="20" y1="75" x2="20" y2="110" stroke="#c53030" stroke-width="3"/>
+        <line x1="100" y1="75" x2="100" y2="110" stroke="#c53030" stroke-width="3"/>
+        <!-- Extended legs -->
+        <line x1="50" y1="100" x2="40" y2="145" stroke="#c53030" stroke-width="3"/>
+        <line x1="70" y1="100" x2="80" y2="145" stroke="#c53030" stroke-width="3"/>
+        <text x="60" y="165" text-anchor="middle" font-size="10" fill="#c53030">ALL Extremities</text>
+        <text x="60" y="175" text-anchor="middle" font-size="10" fill="#c53030">Extended</text>
+    </g>
+
+    <!-- Flaccid -->
+    <g transform="translate(590, 20)">
+        <text x="60" y="0" text-anchor="middle" font-weight="bold" fill="#742a2a">Flaccid</text>
+        <text x="60" y="15" text-anchor="middle" font-size="11" fill="#742a2a">No Response</text>
+        <ellipse cx="60" cy="45" rx="15" ry="12" fill="#feb2b2"/>
+        <line x1="60" y1="57" x2="60" y2="100" stroke="#742a2a" stroke-width="3"/>
+        <!-- Limp arms -->
+        <path d="M 30 75 Q 25 95 20 120" stroke="#742a2a" stroke-width="3" fill="none"/>
+        <path d="M 90 75 Q 95 95 100 120" stroke="#742a2a" stroke-width="3" fill="none"/>
+        <!-- Limp legs -->
+        <path d="M 50 100 Q 40 125 35 145" stroke="#742a2a" stroke-width="3" fill="none"/>
+        <path d="M 70 100 Q 80 125 85 145" stroke="#742a2a" stroke-width="3" fill="none"/>
+        <text x="60" y="165" text-anchor="middle" font-size="10" fill="#742a2a">MOST SEVERE</text>
+        <text x="60" y="175" text-anchor="middle" font-size="10" fill="#742a2a">Worst Outcome</text>
+    </g>
+
+    <!-- Arrow showing severity progression -->
+    <line x1="140" y1="100" x2="560" y2="100" stroke="#4a5568" stroke-width="2" stroke-dasharray="5,5"/>
+    <polygon points="555,95 570,100 555,105" fill="#4a5568"/>
+    <text x="350" y="195" text-anchor="middle" font-size="12" fill="#4a5568">Increasing Severity →</text>
+</svg>
+
+<div class="memory">
+    <strong>"Decorticate = Cord still works"</strong> (flexion—bringing arms toward core)<br>
+    <strong>"Decerebrate = Brain stem Damage"</strong> (extension—brainstem level injury)<br>
+    <strong>Flaccid = worst prognosis</strong> (complete loss of motor function)
+</div>
+
+<h3>Nursing Care for Altered LOC</h3>
+
+<p>The overarching goal is to <strong>compensate for the patient's loss of protective reflexes</strong> and assume responsibility for total patient care while maintaining dignity and privacy.</p>
+
+<div class="nursing-priority">
+    <h4>Priority Interventions</h4>
+
+    <p><strong>Airway (FIRST PRIORITY):</strong></p>
+    <ul>
+        <li>Frequent respiratory monitoring and lung auscultation</li>
+        <li>HOB elevated 30 degrees</li>
+        <li>Lateral or semi-prone positioning</li>
+        <li>Suctioning, oral hygiene, CPT</li>
+    </ul>
+
+    <p><strong>Tissue Integrity:</strong></p>
+    <ul>
+        <li>Turning schedule, correct body alignment</li>
+        <li>Passive ROM</li>
+        <li>Splints, foam boots, trochanter rolls</li>
+        <li>Eye care: cotton balls with saline, artificial tears, eye patches (use cautiously—cornea may contact)</li>
+        <li>Scrupulous oral care</li>
+    </ul>
+
+    <p><strong>Thermoregulation:</strong></p>
+    <ul>
+        <li>For fever: minimal bedding, acetaminophen, hypothermia blanket, cooling sponge bath, fan</li>
+        <li>Monitor frequently; <strong>prevent shivering</strong> (increases ICP and metabolic demands)</li>
+    </ul>
+
+    <p><strong>Sensory Stimulation:</strong></p>
+    <ul>
+        <li>Talk to and touch patient; encourage family to do the same</li>
+        <li>Maintain day-night pattern</li>
+        <li>Orient frequently</li>
+        <li><strong>Exception:</strong> When arousing from coma, patient may have agitation period—minimize stimulation during this time</li>
+    </ul>
+</div>
+
+<!-- SECTION 5: INCREASED ICP -->
+<h2 id="section-5">5. Increased Intracranial Pressure <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>The Monro-Kellie Hypothesis</h3>
+
+<p>The skull is a rigid, closed container with fixed volume. Three components compete for this space:</p>
+
+<div class="flow-container">
+    <div class="flow-box">Brain Tissue<br>(~1400g)</div>
+    <span class="flow-arrow">+</span>
+    <div class="flow-box">Blood<br>(~75 mL)</div>
+    <span class="flow-arrow">+</span>
+    <div class="flow-box">CSF<br>(~75 mL)</div>
+    <span class="flow-arrow">=</span>
+    <div class="flow-box" style="background: #bee3f8;">Constant Volume</div>
+</div>
+
+<p>If one component increases, at least one other must decrease—or <strong>ICP rises</strong>. Normal compensation involves shifting/displacing CSF, increasing CSF absorption, or decreasing cerebral blood volume. When these mechanisms fail, ICP begins to climb.</p>
+
+<div class="formula-box">
+    <p><strong>Normal ICP:</strong> 0-10 mmHg (upper limit 15 mmHg)</p>
+</div>
+
+<!-- Increased ICP Cascade -->
+<svg viewBox="0 0 640 720" style="max-width: 640px;" role="img" aria-label="Increased intracranial pressure cascade showing progression from normal state through compensatory mechanisms, ICP rise, decreased cerebral perfusion pressure, Cushing's triad, brain herniation, and brain death, with color gradient from yellow early to red critical">
+    <defs>
+        <marker id="icp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <polygon points="0 0, 10 5, 0 10" fill="#4a5568"/>
+        </marker>
+        <linearGradient id="icp-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fbbf24"/>
+            <stop offset="30%" stop-color="#f59e0b"/>
+            <stop offset="55%" stop-color="#ef4444"/>
+            <stop offset="80%" stop-color="#dc2626"/>
+            <stop offset="100%" stop-color="#7f1d1d"/>
+        </linearGradient>
+    </defs>
+
+    <text x="320" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#1a365d">Increased ICP — The Deadly Cascade</text>
+
+    <!-- Severity gradient bar -->
+    <rect x="16" y="38" width="8" height="640" rx="4" fill="url(#icp-grad)" opacity="0.6"/>
+    <text x="12" y="85" font-size="8" fill="#d97706" text-anchor="end" transform="rotate(-90,12,85)">EARLY</text>
+    <text x="12" y="600" font-size="8" fill="#991b1b" text-anchor="end" transform="rotate(-90,12,600)">LETHAL</text>
+
+    <!-- BOX 1: Normal State (Monro-Kellie) -->
+    <rect x="120" y="38" width="400" height="60" rx="10" fill="#fefce8" stroke="#d97706" stroke-width="2"/>
+    <text x="320" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">Normal State (Monro-Kellie Doctrine)</text>
+    <text x="320" y="78" text-anchor="middle" font-size="10" fill="#4a5568">Brain (80%) + Blood (10%) + CSF (10%) = Fixed Volume in Rigid Skull</text>
+    <text x="320" y="92" text-anchor="middle" font-size="9" fill="#d97706">ICP: 0–10 mmHg (normal)</text>
+
+    <line x1="320" y1="98" x2="320" y2="118" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 2: Volume Increase -->
+    <rect x="140" y="120" width="360" height="48" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="320" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">↑ Intracranial Volume</text>
+    <text x="320" y="158" text-anchor="middle" font-size="10" fill="#4a5568">Cerebral edema, hematoma, tumor, hydrocephalus, bleeding</text>
+
+    <line x1="320" y1="168" x2="320" y2="188" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 3: Compensatory Mechanisms -->
+    <rect x="140" y="190" width="360" height="48" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="320" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">Compensatory Mechanisms Activate</text>
+    <text x="320" y="228" text-anchor="middle" font-size="10" fill="#4a5568">↓ CSF production, ↑ CSF absorption, ↓ cerebral blood volume</text>
+
+    <line x1="320" y1="238" x2="320" y2="258" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 4: Compensation Exhausted -->
+    <rect x="170" y="260" width="300" height="38" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+    <text x="320" y="284" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">Compensation Exhausted</text>
+
+    <line x1="320" y1="298" x2="320" y2="318" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 5: ICP Rises -->
+    <rect x="160" y="320" width="320" height="48" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/>
+    <text x="320" y="342" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">ICP Rises (&gt; 20 mmHg)</text>
+    <text x="320" y="358" text-anchor="middle" font-size="10" fill="#dc2626">Sustained &gt; 20 mmHg = intervention needed</text>
+
+    <line x1="320" y1="368" x2="320" y2="388" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 6: CPP Drops -->
+    <rect x="130" y="390" width="380" height="48" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+    <text x="320" y="410" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">↓ Cerebral Perfusion Pressure (CPP)</text>
+    <text x="320" y="428" text-anchor="middle" font-size="11" fill="#4a5568" font-weight="600">CPP = MAP − ICP → CPP &lt; 60 = ischemia</text>
+
+    <line x1="320" y1="438" x2="320" y2="458" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 7: Cushing's Triad (wider, with bullet details) -->
+    <rect x="100" y="460" width="440" height="86" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5"/>
+    <text x="320" y="480" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">Cushing's Triad (LATE Signs)</text>
+    <text x="135" y="500" font-size="11" fill="#1a202c">• ↑ Blood Pressure (widening pulse pressure)</text>
+    <text x="135" y="517" font-size="11" fill="#1a202c">• ↓ Heart Rate (bradycardia)</text>
+    <text x="135" y="534" font-size="11" fill="#1a202c">• Irregular Respirations (Cheyne-Stokes → ataxic)</text>
+
+    <!-- Side annotation for Cushing's -->
+    <rect x="462" y="480" width="168" height="56" rx="6" fill="#fff5f5" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="546" y="498" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="700">LATE &amp; OMINOUS</text>
+    <text x="546" y="512" text-anchor="middle" font-size="9" fill="#4a5568">Body's last attempt</text>
+    <text x="546" y="524" text-anchor="middle" font-size="9" fill="#4a5568">to perfuse the brain</text>
+
+    <line x1="320" y1="546" x2="320" y2="566" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 8: Brain Herniation -->
+    <rect x="170" y="568" width="300" height="40" rx="10" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>
+    <text x="320" y="593" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Brain Herniation</text>
+
+    <line x1="320" y1="608" x2="320" y2="628" stroke="#4a5568" stroke-width="2" marker-end="url(#icp-arrow)"/>
+
+    <!-- BOX 9: Brain Death -->
+    <rect x="190" y="630" width="260" height="40" rx="10" fill="#7f1d1d" stroke="#7f1d1d" stroke-width="2"/>
+    <text x="320" y="655" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Brain Death</text>
+
+    <!-- Intervention annotations (left side) -->
+    <rect x="10" y="320" width="138" height="48" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="79" y="338" text-anchor="middle" font-size="9" fill="#166534" font-weight="700">INTERVENE HERE</text>
+    <text x="79" y="352" text-anchor="middle" font-size="8" fill="#4a5568">HOB 30°, mannitol,</text>
+    <text x="79" y="363" text-anchor="middle" font-size="8" fill="#4a5568">hypertonic saline, CSF drain</text>
+    <line x1="148" y1="344" x2="158" y2="344" stroke="#16a34a" stroke-width="1.5"/>
+</svg>
+
+<h3>Cerebral Perfusion Pressure (CPP) <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="formula-box">
+    <p class="formula">CPP = MAP - ICP</p>
+    <p>Mean Arterial Pressure minus Intracranial Pressure</p>
+</div>
+
+<table>
+    <tr>
+        <th>CPP Value</th>
+        <th>Clinical Significance</th>
+    </tr>
+    <tr>
+        <td><strong>70-100 mmHg</strong></td>
+        <td>Normal</td>
+    </tr>
+    <tr>
+        <td><strong>70-80 mmHg</strong></td>
+        <td>Target range to maintain adequate cerebral blood flow</td>
+    </tr>
+    <tr>
+        <td><strong>&lt; 50 mmHg</strong></td>
+        <td><span style="color: #c53030; font-weight: bold;">IRREVERSIBLE NEUROLOGIC DAMAGE</span></td>
+    </tr>
+    <tr>
+        <td><strong>ICP = MAP</strong></td>
+        <td><span style="color: #c53030; font-weight: bold;">CESSATION OF CEREBRAL CIRCULATION</span></td>
+    </tr>
+</table>
+
+<h3>Autoregulation and CO₂</h3>
+
+<p><strong>Autoregulation</strong> is the brain's ability to maintain constant cerebral blood flow despite changes in systemic blood pressure. This mechanism can be impaired by pathologic increases in ICP.</p>
+
+<table>
+    <tr>
+        <th>CO₂ Level</th>
+        <th>Vascular Response</th>
+        <th>Effect on ICP</th>
+    </tr>
+    <tr>
+        <td>↓ CO₂ (hypocapnia)</td>
+        <td>Vasoconstriction</td>
+        <td>↓ ICP (but may cause ischemia)</td>
+    </tr>
+    <tr>
+        <td>↑ CO₂ (hypercapnia)</td>
+        <td>Vasodilation</td>
+        <td>↑ ICP</td>
+    </tr>
+</table>
+
+<h3>Clinical Manifestations of Increased ICP</h3>
+
+<div class="timeline">
+    <div class="timeline-item">
+        <strong>EARLY (Most Sensitive):</strong> Changes in LOC—restlessness, confusion, slowing of speech, delayed responses. The earliest sign!
+    </div>
+    <div class="timeline-item">
+        <strong>EARLY:</strong> Pupillary changes, impaired extraocular movements (pressure on CN II, III, IV, VI)
+    </div>
+    <div class="timeline-item">
+        <strong>PROGRESSING:</strong> Headache (constant, increasing, worse with movement), projectile vomiting
+    </div>
+    <div class="timeline-item">
+        <strong>PROGRESSING:</strong> Weakness on one side (pyramidal tract compression)
+    </div>
+    <div class="timeline-item">
+        <strong>LATE:</strong> Cushing's Triad—<span style="color: #c53030; font-weight: bold;">↑ BP with widened pulse pressure, ↓ HR (bradycardia), irregular respirations</span>
+    </div>
+    <div class="timeline-item">
+        <strong>LATE:</strong> Posturing (decorticate → decerebrate → flaccid)
+    </div>
+    <div class="timeline-item">
+        <strong>OMINOUS:</strong> Loss of brain stem reflexes (pupillary, corneal, gag, swallowing)—approaching death
+    </div>
+</div>
+
+<div class="warning">
+    <strong>Cushing's Triad</strong> (↑ systolic BP with widening pulse pressure + bradycardia + irregular respirations) is a <strong>LATE sign</strong> indicating brain stem compression. By this point, herniation is imminent. The goal is to detect and treat increased ICP BEFORE this triad appears.
+</div>
+
+<h3>Glasgow Coma Scale (GCS) <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<table class="gcs-table">
+    <tr>
+        <th colspan="2">Eye Opening Response</th>
+    </tr>
+    <tr><td>Spontaneous (eyes open, blinking at baseline)</td><td><strong>4</strong></td></tr>
+    <tr><td>To verbal stimuli (command, speech)</td><td><strong>3</strong></td></tr>
+    <tr><td>To pain only (NOT applied to face)</td><td><strong>2</strong></td></tr>
+    <tr><td>No response</td><td><strong>1</strong></td></tr>
+</table>
+
+<table class="gcs-table">
+    <tr>
+        <th colspan="2">Verbal Response</th>
+    </tr>
+    <tr><td>Oriented (person, place, time)</td><td><strong>5</strong></td></tr>
+    <tr><td>Confused conversation (can answer questions)</td><td><strong>4</strong></td></tr>
+    <tr><td>Inappropriate words</td><td><strong>3</strong></td></tr>
+    <tr><td>Incomprehensible speech (moans, groans)</td><td><strong>2</strong></td></tr>
+    <tr><td>No response</td><td><strong>1</strong></td></tr>
+</table>
+
+<table class="gcs-table">
+    <tr>
+        <th colspan="2">Motor Response</th>
+    </tr>
+    <tr><td>Obeys commands</td><td><strong>6</strong></td></tr>
+    <tr><td>Purposeful movement to painful stimulus (localizes)</td><td><strong>5</strong></td></tr>
+    <tr><td>Withdraws from pain</td><td><strong>4</strong></td></tr>
+    <tr><td>Flexion to pain (decorticate)</td><td><strong>3</strong></td></tr>
+    <tr><td>Extension to pain (decerebrate)</td><td><strong>2</strong></td></tr>
+    <tr><td>No response</td><td><strong>1</strong></td></tr>
+</table>
+
+<svg viewBox="0 0 700 420" style="max-width: 700px;" role="img" aria-label="Glasgow Coma Scale visual showing three scoring categories (Eye Opening 1-4, Verbal Response 1-5, Motor Response 1-6) with color-coded severity zones: green for mild (13-15), amber for moderate (9-12), and red for severe (3-8)">
+    <defs>
+        <linearGradient id="gcs-severe" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#dc2626"/>
+            <stop offset="100%" stop-color="#ef4444"/>
+        </linearGradient>
+        <linearGradient id="gcs-moderate" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#d97706"/>
+            <stop offset="100%" stop-color="#f59e0b"/>
+        </linearGradient>
+        <linearGradient id="gcs-mild" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#16a34a"/>
+            <stop offset="100%" stop-color="#22c55e"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Title -->
+    <text x="350" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a365d">Glasgow Coma Scale — Visual Scoring Guide</text>
+
+    <!-- Grid area: y=50 to y=330 (280px height), bars at x=80, 290, 500 -->
+    <!-- Gridlines and scale -->
+    <line x1="60" y1="50" x2="60" y2="330" stroke="#cbd5e0" stroke-width="1"/>
+    <line x1="60" y1="330" x2="660" y2="330" stroke="#718096" stroke-width="1.5"/>
+
+    <!-- Y-axis labels (score values 1-6) -->
+    <text x="50" y="288" text-anchor="end" font-size="11" fill="#4a5568">1</text>
+    <line x1="55" y1="284" x2="660" y2="284" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <text x="50" y="241" text-anchor="end" font-size="11" fill="#4a5568">2</text>
+    <line x1="55" y1="237" x2="660" y2="237" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <text x="50" y="195" text-anchor="end" font-size="11" fill="#4a5568">3</text>
+    <line x1="55" y1="191" x2="660" y2="191" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <text x="50" y="148" text-anchor="end" font-size="11" fill="#4a5568">4</text>
+    <line x1="55" y1="144" x2="660" y2="144" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <text x="50" y="101" text-anchor="end" font-size="11" fill="#4a5568">5</text>
+    <line x1="55" y1="97" x2="660" y2="97" stroke="#e2e8f0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <text x="50" y="55" text-anchor="end" font-size="11" fill="#4a5568">6</text>
+
+    <!-- ===== EYE OPENING (max 4) ===== -->
+    <!-- Bar: 4 units tall = 4*46.7 = 186.8px, from y=330 up to y=143.2 -->
+    <rect x="95" y="144" rx="4" ry="4" width="120" height="186" fill="url(#gcs-mild)" opacity="0.3"/>
+    <!-- Severity segments -->
+    <rect x="95" y="284" rx="0" ry="0" width="120" height="46" fill="url(#gcs-severe)" rx="0" ry="4"/>
+    <rect x="95" y="237" width="120" height="47" fill="url(#gcs-severe)"/>
+    <rect x="95" y="191" width="120" height="46" fill="url(#gcs-moderate)"/>
+    <rect x="95" y="144" width="120" height="47" fill="url(#gcs-mild)" rx="4" ry="0"/>
+    <!-- Bottom corners -->
+    <rect x="95" y="284" width="120" height="46" fill="url(#gcs-severe)" rx="0" ry="0"/>
+    <rect x="95" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <rect x="211" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <!-- Score labels inside bars -->
+    <text x="155" y="312" text-anchor="middle" font-size="10" fill="white" font-weight="bold">1 – None</text>
+    <text x="155" y="265" text-anchor="middle" font-size="10" fill="white" font-weight="bold">2 – To pain</text>
+    <text x="155" y="218" text-anchor="middle" font-size="10" fill="white" font-weight="bold">3 – To voice</text>
+    <text x="155" y="172" text-anchor="middle" font-size="10" fill="white" font-weight="bold">4 – Spontaneous</text>
+    <!-- Category label -->
+    <text x="155" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">Eye Opening</text>
+    <text x="155" y="366" text-anchor="middle" font-size="11" fill="#4a5568">(E: 1–4)</text>
+
+    <!-- ===== VERBAL RESPONSE (max 5) ===== -->
+    <rect x="305" y="97" rx="4" ry="4" width="120" height="233" fill="url(#gcs-mild)" opacity="0.3"/>
+    <!-- Severity segments -->
+    <rect x="305" y="284" width="120" height="46" fill="url(#gcs-severe)"/>
+    <rect x="305" y="237" width="120" height="47" fill="url(#gcs-severe)"/>
+    <rect x="305" y="191" width="120" height="46" fill="url(#gcs-moderate)"/>
+    <rect x="305" y="144" width="120" height="47" fill="url(#gcs-moderate)"/>
+    <rect x="305" y="97" width="120" height="47" fill="url(#gcs-mild)" rx="4"/>
+    <rect x="305" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <rect x="421" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <!-- Score labels inside bars -->
+    <text x="365" y="312" text-anchor="middle" font-size="10" fill="white" font-weight="bold">1 – None</text>
+    <text x="365" y="265" text-anchor="middle" font-size="10" fill="white" font-weight="bold">2 – Incomprehensible</text>
+    <text x="365" y="218" text-anchor="middle" font-size="10" fill="white" font-weight="bold">3 – Inappropriate</text>
+    <text x="365" y="172" text-anchor="middle" font-size="10" fill="white" font-weight="bold">4 – Confused</text>
+    <text x="365" y="125" text-anchor="middle" font-size="10" fill="white" font-weight="bold">5 – Oriented</text>
+    <!-- Category label -->
+    <text x="365" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">Verbal Response</text>
+    <text x="365" y="366" text-anchor="middle" font-size="11" fill="#4a5568">(V: 1–5)</text>
+
+    <!-- ===== MOTOR RESPONSE (max 6) ===== -->
+    <rect x="515" y="50" rx="4" ry="4" width="120" height="280" fill="url(#gcs-mild)" opacity="0.3"/>
+    <!-- Severity segments -->
+    <rect x="515" y="284" width="120" height="46" fill="url(#gcs-severe)"/>
+    <rect x="515" y="237" width="120" height="47" fill="url(#gcs-severe)"/>
+    <rect x="515" y="191" width="120" height="46" fill="url(#gcs-severe)"/>
+    <rect x="515" y="144" width="120" height="47" fill="url(#gcs-moderate)"/>
+    <rect x="515" y="97" width="120" height="47" fill="url(#gcs-moderate)"/>
+    <rect x="515" y="50" width="120" height="47" fill="url(#gcs-mild)" rx="4"/>
+    <rect x="515" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <rect x="631" y="326" width="4" height="4" fill="url(#gcs-severe)"/>
+    <!-- Score labels inside bars -->
+    <text x="575" y="312" text-anchor="middle" font-size="10" fill="white" font-weight="bold">1 – None</text>
+    <text x="575" y="265" text-anchor="middle" font-size="10" fill="white" font-weight="bold">2 – Extension</text>
+    <text x="575" y="218" text-anchor="middle" font-size="10" fill="white" font-weight="bold">3 – Flexion</text>
+    <text x="575" y="172" text-anchor="middle" font-size="10" fill="white" font-weight="bold">4 – Withdrawal</text>
+    <text x="575" y="125" text-anchor="middle" font-size="10" fill="white" font-weight="bold">5 – Localizes</text>
+    <text x="575" y="78" text-anchor="middle" font-size="10" fill="white" font-weight="bold">6 – Obeys</text>
+    <!-- Category label -->
+    <text x="575" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a365d">Motor Response</text>
+    <text x="575" y="366" text-anchor="middle" font-size="11" fill="#4a5568">(M: 1–6)</text>
+
+    <!-- Severity Legend -->
+    <rect x="120" y="385" width="16" height="16" rx="3" fill="#dc2626"/>
+    <text x="142" y="398" font-size="12" fill="#4a5568"><tspan font-weight="bold">Severe (3–8):</tspan> Coma — protect airway</text>
+    <rect x="350" y="385" width="16" height="16" rx="3" fill="#d97706"/>
+    <text x="372" y="398" font-size="12" fill="#4a5568"><tspan font-weight="bold">Moderate (9–12)</tspan></text>
+    <rect x="500" y="385" width="16" height="16" rx="3" fill="#16a34a"/>
+    <text x="522" y="398" font-size="12" fill="#4a5568"><tspan font-weight="bold">Mild (13–15)</tspan></text>
+
+    <!-- Key reminder -->
+    <text x="350" y="416" text-anchor="middle" font-size="11" fill="#c53030" font-weight="bold">GCS ≤ 8 → Intubate ("GR8 = Intubate")</text>
+</svg>
+
+<div class="formula-box">
+    <p><strong>GCS Range: 3-15</strong></p>
+    <p>GCS ≤ 8 = Coma (generally requires airway protection)</p>
+</div>
+
+<h3>Nursing Interventions for Increased ICP <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="nursing-priority">
+    <h4>Positioning</h4>
+    <ul>
+        <li><strong>HOB 30-45 degrees</strong> to promote venous drainage</li>
+        <li><strong>Head in neutral (midline) position</strong>—avoid extreme rotation or flexion of neck (compresses jugular veins)</li>
+        <li>Avoid hip flexion (increases intra-abdominal pressure)</li>
+    </ul>
+
+    <h4>Avoid Activities That Increase ICP</h4>
+    <ul>
+        <li><strong>Valsalva maneuver</strong> (straining)—use stool softeners</li>
+        <li>Coughing, sneezing (suction cautiously—preoxygenate first)</li>
+        <li>Abdominal distention</li>
+        <li>Emotional stress, frequent arousal from sleep</li>
+        <li>Clustering nursing activities (space interventions)</li>
+    </ul>
+
+    <h4>Maintain Calm Environment</h4>
+    <ul>
+        <li>Minimize noise, conversation, environmental stimuli</li>
+        <li>Protect patient from stress</li>
+        <li>Dim lighting if photophobia present</li>
+    </ul>
+
+    <h4>Monitoring</h4>
+    <ul>
+        <li>Monitor fluid status carefully—hourly I&O during acute phase</li>
+        <li>Strict aseptic technique for ICP monitoring system</li>
+        <li>ICP should not increase above 25 mmHg during nursing interventions and should return to baseline within 5 minutes</li>
+    </ul>
+</div>
+
+<h3>Medical Management of Increased ICP</h3>
+
+<table>
+    <tr>
+        <th>Intervention</th>
+        <th>Mechanism</th>
+        <th>Nursing Considerations</th>
+    </tr>
+    <tr>
+        <td><strong>Mannitol</strong> (osmotic diuretic)</td>
+        <td>Pulls fluid from brain tissue into vascular compartment</td>
+        <td>Monitor serum osmolality, electrolytes; watch for heart failure, pulmonary edema</td>
+    </tr>
+    <tr>
+        <td><strong>Hypertonic saline</strong> (3%)</td>
+        <td>Draws water out of brain tissue</td>
+        <td>Monitor sodium levels closely</td>
+    </tr>
+    <tr>
+        <td><strong>Dexamethasone</strong> (corticosteroid)</td>
+        <td>Reduces edema surrounding brain tumors</td>
+        <td>NOT effective for traumatic edema</td>
+    </tr>
+    <tr>
+        <td><strong>CSF drainage</strong> (ventriculostomy)</td>
+        <td>Directly reduces CSF volume</td>
+        <td>Strict aseptic technique; monitor for infection (meningitis signs)</td>
+    </tr>
+    <tr>
+        <td><strong>Hyperventilation</strong> (controversial)</td>
+        <td>↓ CO₂ causes vasoconstriction</td>
+        <td>Risk of cerebral ischemia; PaCO₂ should not go below 30 mmHg</td>
+    </tr>
+    <tr>
+        <td><strong>Sedation/Barbiturates</strong></td>
+        <td>Reduces metabolic demands</td>
+        <td>Lorazepam, midazolam don't affect CBF; use pentobarbital for refractory ICP</td>
+    </tr>
+    <tr>
+        <td><strong>Temperature control</strong></td>
+        <td>Fever increases cerebral metabolism</td>
+        <td>Aggressive fever management; prevent shivering</td>
+    </tr>
+</table>
+
+<h3>Complications of Increased ICP</h3>
+
+<div class="comparison-grid">
+    <div class="comparison-card" style="border-color: #3182ce;">
+        <h5 style="color: #2b6cb0;">SIADH</h5>
+        <p><strong>Cause:</strong> Excessive ADH secretion</p>
+        <p><strong>Presentation:</strong> Water retention, ↓ urine output, dilutional hyponatremia, serum hypo-osmolality</p>
+        <p><strong>Treatment:</strong> Fluid restriction (&lt;800 mL/day); 3% saline for severe cases</p>
+    </div>
+    <div class="comparison-card" style="border-color: #e53e3e;">
+        <h5 style="color: #c53030;">Diabetes Insipidus</h5>
+        <p><strong>Cause:</strong> Decreased ADH secretion (posterior pituitary)</p>
+        <p><strong>Presentation:</strong> Massive urine output (dilute, odorless), hypernatremia, serum hyperosmolality</p>
+        <p><strong>Treatment:</strong> Fluid replacement, desmopressin (synthetic ADH)</p>
+    </div>
+</div>
+
+<div class="nclex-tip">
+    <strong>Post-craniotomy:</strong> Urine output >200 mL/hour for 2 consecutive hours suggests diabetes insipidus. This is a key assessment!
+</div>
+
+<!-- SECTION 6: INTRACRANIAL SURGERY -->
+<h2 id="section-6">6. Intracranial Surgery <span class="source-tag slides">SLIDES</span></h2>
+
+<h3>Types of Procedures</h3>
+
+<table>
+    <tr>
+        <th>Procedure</th>
+        <th>Description</th>
+        <th>Purpose</th>
+    </tr>
+    <tr>
+        <td><strong>Craniotomy</strong></td>
+        <td>Opening of the skull (bone flap created and repositioned)</td>
+        <td>Remove tumor, relieve elevated ICP, evacuate blood clot, control hemorrhage</td>
+    </tr>
+    <tr>
+        <td><strong>Craniectomy</strong></td>
+        <td>Excision (removal) of a portion of skull</td>
+        <td>Decompression for refractory ICP; bone not replaced initially</td>
+    </tr>
+    <tr>
+        <td><strong>Cranioplasty</strong></td>
+        <td>Repair of cranial defect</td>
+        <td>Uses plastic or metal plate to cover skull defect</td>
+    </tr>
+    <tr>
+        <td><strong>Burr Holes</strong></td>
+        <td>Circular openings made in skull</td>
+        <td>Exploration, ventricle access, shunting, aspirate hematoma/abscess</td>
+    </tr>
+    <tr>
+        <td><strong>Transsphenoidal Approach</strong></td>
+        <td>Access through nasal cavity and sphenoid sinus</td>
+        <td>Pituitary adenoma removal; avoids craniotomy</td>
+    </tr>
+</table>
+
+<h3>Transsphenoidal Approach: Specific Considerations <span class="source-tag slides">SLIDES</span></h3>
+
+<ul>
+    <li>Direct access to sella turcica with minimal trauma/hemorrhage</li>
+    <li><strong>Risks:</strong> Transient diabetes insipidus (posterior pituitary manipulation), CSF leakage, visual disturbances, postop meningitis, SIADH</li>
+    <li><strong>Post-op care:</strong> Nasal packing in place, no nose blowing, oral care per protocol, HOB elevated</li>
+</ul>
+
+<h3>Postoperative Care <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p><strong>Goals:</strong> Detect and reduce cerebral edema, relieve pain, prevent seizures, monitor ICP and neurologic status</p>
+
+<div class="warning">
+    <strong>Warning Signs of Increasing ICP Post-Op:</strong>
+    <ul>
+        <li><strong>↑ BP with ↓ HR and respiratory failure</strong> = increased ICP</li>
+        <li>Patient doesn't wake up or deteriorates = potential clot</li>
+        <li>Dilated pupil on operative side = intracranial hematoma</li>
+    </ul>
+</div>
+
+<div class="pearl">
+    <strong>Cerebral edema peaks 24-36 hours post-surgery.</strong> A slight decrease in LOC on postoperative day 1-2 may represent this peak rather than a new complication—but always assess thoroughly.
+</div>
+
+<h4>Postoperative Complications</h4>
+
+<ul>
+    <li><strong>Increased ICP</strong>—monitor neuro status q15-60 min</li>
+    <li><strong>Bleeding and hypovolemic shock</strong></li>
+    <li><strong>Fluid and electrolyte disturbances</strong>—monitor serum Na+, osmolality</li>
+    <li><strong>SIADH or Diabetes Insipidus</strong></li>
+    <li><strong>Infection</strong>—change blood-stained dressings (medium for bacterial growth)</li>
+    <li><strong>CSF leak</strong>—do NOT cough, sneeze, or blow nose</li>
+    <li><strong>Seizures</strong>—anticonvulsants given pre- and post-surgery</li>
+    <li><strong>VTE</strong>—early ambulation, SCDs</li>
+</ul>
+
+<!-- SECTION 7: SEIZURES -->
+<h2 id="section-7">7. Seizures <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<p>A seizure is an abnormal episode of motor, sensory, autonomic, or psychic activity resulting from sudden, uncontrolled electrical discharge from cerebral neurons. Epilepsy is a chronic disorder characterized by recurrent, unprovoked seizures.</p>
+
+<h3>Classification</h3>
+
+<!-- Seizure Classification Tree -->
+<svg viewBox="0 0 760 540" style="max-width: 760px;" role="img" aria-label="Seizure classification tree showing focal seizures in blue branching into focal aware and focal impaired awareness, and generalized seizures in red branching into absence, tonic-clonic, myoclonic, tonic, clonic, and atonic types">
+    <text x="380" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="#1a365d">Seizure Classification</text>
+
+    <!-- ROOT -->
+    <rect x="300" y="34" width="160" height="38" rx="10" fill="#1a365d"/>
+    <text x="380" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">SEIZURES</text>
+
+    <!-- Branch lines from root -->
+    <line x1="380" y1="72" x2="380" y2="88" stroke="#4a5568" stroke-width="2"/>
+    <line x1="190" y1="88" x2="570" y2="88" stroke="#4a5568" stroke-width="2"/>
+    <line x1="190" y1="88" x2="190" y2="102" stroke="#4a5568" stroke-width="2"/>
+    <line x1="570" y1="88" x2="570" y2="102" stroke="#4a5568" stroke-width="2"/>
+
+    <!-- FOCAL BRANCH (Left - Blue) -->
+    <rect x="90" y="102" width="200" height="42" rx="8" fill="#3182ce"/>
+    <text x="190" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">FOCAL (Partial)</text>
+    <text x="190" y="137" text-anchor="middle" font-size="9" fill="#bee3f8">Starts in ONE area of brain</text>
+
+    <line x1="190" y1="144" x2="190" y2="162" stroke="#3182ce" stroke-width="2"/>
+    <line x1="110" y1="162" x2="270" y2="162" stroke="#3182ce" stroke-width="2"/>
+    <line x1="110" y1="162" x2="110" y2="176" stroke="#3182ce" stroke-width="1.5"/>
+    <line x1="270" y1="162" x2="270" y2="176" stroke="#3182ce" stroke-width="1.5"/>
+
+    <!-- Focal Aware -->
+    <rect x="20" y="176" width="180" height="38" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="110" y="193" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="700">Focal Aware</text>
+    <text x="110" y="207" text-anchor="middle" font-size="9" fill="#4a5568">(Simple Partial)</text>
+    <!-- Detail -->
+    <rect x="32" y="220" width="156" height="24" rx="4" fill="#dbeafe"/>
+    <text x="110" y="236" text-anchor="middle" font-size="9" fill="#1d4ed8">Consciousness RETAINED</text>
+
+    <!-- Focal Impaired Awareness -->
+    <rect x="210" y="176" width="180" height="38" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="300" y="193" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="700">Focal Impaired</text>
+    <text x="300" y="207" text-anchor="middle" font-size="9" fill="#4a5568">(Complex Partial)</text>
+    <!-- Detail -->
+    <rect x="222" y="220" width="156" height="24" rx="4" fill="#dbeafe"/>
+    <text x="300" y="236" text-anchor="middle" font-size="9" fill="#1d4ed8">Altered consciousness</text>
+
+    <!-- GENERALIZED BRANCH (Right - Red) -->
+    <rect x="470" y="102" width="200" height="42" rx="8" fill="#dc2626"/>
+    <text x="570" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">GENERALIZED</text>
+    <text x="570" y="137" text-anchor="middle" font-size="9" fill="#fecaca">BOTH hemispheres from onset</text>
+
+    <line x1="570" y1="144" x2="570" y2="162" stroke="#dc2626" stroke-width="2"/>
+
+    <!-- Generalized types - vertical list -->
+    <!-- Absence -->
+    <rect x="460" y="168" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="520" y="185" font-size="11" fill="#991b1b" font-weight="700">Absence (Petit Mal)</text>
+    <text x="520" y="198" font-size="9" fill="#4a5568">Brief staring spells, 5-10 sec</text>
+
+    <line x1="570" y1="204" x2="570" y2="212" stroke="#dc2626" stroke-width="1.5"/>
+
+    <!-- Tonic-Clonic -->
+    <rect x="460" y="212" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="520" y="229" font-size="11" fill="#991b1b" font-weight="700">Tonic-Clonic (Grand Mal)</text>
+    <text x="520" y="242" font-size="9" fill="#4a5568">Stiffening → Rhythmic jerking</text>
+
+    <line x1="570" y1="248" x2="570" y2="256" stroke="#dc2626" stroke-width="1.5"/>
+
+    <!-- Myoclonic -->
+    <rect x="460" y="256" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="520" y="273" font-size="11" fill="#991b1b" font-weight="700">Myoclonic</text>
+    <text x="520" y="286" font-size="9" fill="#4a5568">Brief, sudden muscle jerks</text>
+
+    <line x1="570" y1="292" x2="570" y2="300" stroke="#dc2626" stroke-width="1.5"/>
+
+    <!-- Tonic -->
+    <rect x="460" y="300" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="520" y="317" font-size="11" fill="#991b1b" font-weight="700">Tonic</text>
+    <text x="520" y="330" font-size="9" fill="#4a5568">Sustained muscle stiffening</text>
+
+    <line x1="570" y1="336" x2="570" y2="344" stroke="#dc2626" stroke-width="1.5"/>
+
+    <!-- Clonic -->
+    <rect x="460" y="344" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="520" y="361" font-size="11" fill="#991b1b" font-weight="700">Clonic</text>
+    <text x="520" y="374" font-size="9" fill="#4a5568">Rhythmic jerking movements</text>
+
+    <line x1="570" y1="380" x2="570" y2="388" stroke="#dc2626" stroke-width="1.5"/>
+
+    <!-- Atonic -->
+    <rect x="460" y="388" width="220" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="520" y="405" font-size="11" fill="#991b1b" font-weight="700">Atonic (Drop Attacks)</text>
+    <text x="520" y="418" font-size="9" fill="#4a5568">Sudden loss of muscle tone</text>
+
+    <!-- Key clinical notes -->
+    <rect x="20" y="280" width="390" height="54" rx="8" fill="#3182ce" opacity="0.08" stroke="#3182ce" stroke-width="1"/>
+    <text x="215" y="298" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="700">Focal → Generalized:</text>
+    <text x="215" y="314" text-anchor="middle" font-size="10" fill="#4a5568">Focal seizures can secondarily generalize</text>
+    <text x="215" y="328" text-anchor="middle" font-size="9" fill="#3182ce">(starts focal, then spreads to both hemispheres)</text>
+
+    <!-- Legend -->
+    <rect x="20" y="350" width="390" height="82" rx="8" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="215" y="370" text-anchor="middle" font-size="10" font-weight="700" fill="#1a365d">Status Epilepticus — EMERGENCY</text>
+    <text x="215" y="386" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">Seizure lasting &gt; 5 min OR repeated without recovery</text>
+    <text x="215" y="402" text-anchor="middle" font-size="10" fill="#4a5568">Tx: IV benzodiazepines (lorazepam) → then</text>
+    <text x="215" y="418" text-anchor="middle" font-size="10" fill="#4a5568">fosphenytoin/phenytoin → protect airway</text>
+
+    <!-- Color legend -->
+    <rect x="175" y="500" width="410" height="28" rx="5" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <rect x="195" y="507" width="14" height="14" rx="3" fill="#3182ce"/><text x="215" y="518" font-size="10" fill="#4a5568">= Focal (one hemisphere)</text>
+    <rect x="385" y="507" width="14" height="14" rx="3" fill="#dc2626"/><text x="405" y="518" font-size="10" fill="#4a5568">= Generalized (both hemispheres)</text>
+</svg>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Examples</th>
+    </tr>
+    <tr>
+        <td><strong>Focal</strong> (partial)</td>
+        <td>Originates in ONE hemisphere</td>
+        <td>Focal aware, focal impaired awareness</td>
+    </tr>
+    <tr>
+        <td><strong>Generalized</strong></td>
+        <td>Engages BOTH hemispheres from onset</td>
+        <td>Tonic-clonic, absence, myoclonic, atonic</td>
+    </tr>
+    <tr>
+        <td><strong>Provoked</strong></td>
+        <td>Related to acute, reversible conditions</td>
+        <td>Metabolic disturbances, infection, drug withdrawal</td>
+    </tr>
+</table>
+
+<h3>Clinical Manifestations <span class="source-tag slides">SLIDES</span></h3>
+
+<ul>
+    <li>Range from single staring episode (absence seizure) to full body involvement (generalized tonic-clonic)</li>
+    <li>Tongue often chewed</li>
+    <li>Uncontrolled release of urine and feces</li>
+    <li><strong>Postictal phase:</strong> Confusion, sleepiness lasting hours; patient may not remember the event</li>
+</ul>
+
+<h3>Nursing Management During a Seizure <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="nursing-priority">
+    <h4>Priority: Safety and Documentation</h4>
+
+    <p><strong>During the seizure:</strong></p>
+    <ul>
+        <li>Stay with the patient</li>
+        <li>Protect from injury—clear area, loosen restrictive clothing</li>
+        <li>Do NOT restrain, do NOT put anything in mouth</li>
+        <li>Turn to side when possible to prevent aspiration</li>
+        <li>Time the seizure</li>
+    </ul>
+
+    <p><strong>Document:</strong></p>
+    <ul>
+        <li>Circumstances before seizure (was there an aura?)</li>
+        <li>Type of body movement</li>
+        <li>Pupil size</li>
+        <li>Incontinence (yes/no)</li>
+        <li>Duration</li>
+        <li>Ability to speak after</li>
+        <li>Cognitive status after</li>
+    </ul>
+</div>
+
+<h3>Seizure Interventions <span class="source-tag slides">SLIDES</span></h3>
+
+<ol>
+    <li>Initiate seizure precautions, protect airway</li>
+    <li>Check blood glucose</li>
+    <li>Review labs for renal function</li>
+    <li>Apply O₂ via NC; increase to maintain SpO₂ &gt;90%</li>
+    <li><strong>Administer lorazepam 2 mg IV stat</strong>—may repeat x1 after 2 minutes if seizure continues</li>
+    <li>Notify MD ASAP</li>
+    <li>Get STAT labs</li>
+</ol>
+
+<div class="warning">
+    <strong>Post-Seizure Considerations:</strong> Status epilepticus and prolonged seizures can cause <strong>rhabdomyolysis</strong> (skeletal muscle breakdown). This can lead to acute kidney injury in 15% of patients. Monitor for hyperuricemia. Hydration and alkalinization help protect kidney function.
+</div>
+
+<h3>Status Epilepticus <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="warning">
+    <strong>MEDICAL EMERGENCY:</strong> Continuous seizure activity lasting ≥5 minutes OR serial seizures without recovery between episodes. Causes permanent brain damage from repeated anoxia.
+</div>
+
+<p><strong>Management:</strong></p>
+<ul>
+    <li>Stop seizure ASAP; treat underlying causes (fever, stopping anticonvulsants, infection)</li>
+    <li>Establish <strong>advanced airway</strong></li>
+    <li>IV anticonvulsants, electrolytes, glucose</li>
+    <li>EEG monitoring</li>
+    <li>Continuous cardiac and respiratory monitoring</li>
+    <li>Suction at bedside</li>
+</ul>
+
+<h3>Seizure Precautions</h3>
+<ul>
+    <li>Padded side rails</li>
+    <li>Bed in lowest position</li>
+    <li>Suction equipment at bedside</li>
+    <li>Oxygen available</li>
+    <li>IV access maintained</li>
+    <li>Clutter-free environment</li>
+</ul>
+
+<!-- SECTION 8: HEADACHES -->
+<h2 id="section-8">8. Headaches <span class="source-tag slides">SLIDES</span></h2>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Characteristics</th>
+        <th>Examples</th>
+    </tr>
+    <tr>
+        <td><strong>Primary</strong></td>
+        <td>No known organic cause</td>
+        <td>Migraine, tension, cluster</td>
+    </tr>
+    <tr>
+        <td><strong>Secondary</strong></td>
+        <td>Symptom of underlying condition</td>
+        <td>Brain tumor, aneurysm, post-LP headache</td>
+    </tr>
+</table>
+
+<h3>Migraine Phases <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="timeline">
+    <div class="timeline-item">
+        <strong>1. Premonitory (80% of patients)</strong><br>
+        Hours to days before migraine<br>
+        Symptoms: Depression, irritability, feeling cold, food cravings, anorexia, increased urination, diarrhea or constipation, activity changes
+    </div>
+    <div class="timeline-item">
+        <strong>2. Aura (30% of patients)</strong><br>
+        Immediately before headache<br>
+        Symptoms: Visual disturbances most common (flashing lights, blind spots), numbness/tingling of lips, face, hands, mild confusion, slight weakness, dizziness
+    </div>
+    <div class="timeline-item">
+        <strong>3. Headache</strong><br>
+        Main event<br>
+        Symptoms: Severe, incapacitating; photophobia common; may include nausea and vomiting
+    </div>
+    <div class="timeline-item">
+        <strong>4. Postdrome</strong><br>
+        After pain subsides<br>
+        Symptoms: Weakness, fatigue, cognitive difficulties, mood changes; muscle contraction in neck/scalp; may sleep for extended periods
+    </div>
+</div>
+
+<h3>Management <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Approach</th>
+        <th>Best For</th>
+        <th>Examples</th>
+    </tr>
+    <tr>
+        <td><strong>Abortive</strong></td>
+        <td>Less frequent attacks; take at onset</td>
+        <td><strong>Triptans</strong> (first-line for moderate-severe migraines)</td>
+    </tr>
+    <tr>
+        <td><strong>Preventive</strong></td>
+        <td>Frequent attacks at predictable intervals</td>
+        <td>Beta-blockers, antidepressants, anticonvulsants</td>
+    </tr>
+</table>
+
+<p><strong>Triggers to Avoid:</strong> Alcohol (vasodilator), nitrates, vasodilators, histamines, dairy, coffee, chocolate, fatigue</p>
+
+<p><strong>Comfort Measures:</strong> Quiet, dark room; massage; local heat (for tension); antiemetic; HOB 30 degrees</p>
+
+<!-- SECTION 9: STROKE -->
+<h2 id="section-9">9. Cerebrovascular Disorders: Stroke <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<div class="formula-box" style="border-color: #c53030;">
+    <p><strong>Stroke = "Brain Attack"</strong></p>
+    <p>5th leading cause of death in the US</p>
+    <p>Leading cause of serious long-term disability</p>
+    <p><strong>TIME IS BRAIN:</strong> 1.9 million neurons lost per minute; brain ages 3.6 years per hour without treatment</p>
+</div>
+
+<!-- Stroke Territory Map -->
+<svg viewBox="0 0 700 440" style="max-width: 700px;" role="img" aria-label="Brain diagram showing stroke arterial territories: anterior cerebral artery in blue supplying medial surfaces, middle cerebral artery in red supplying lateral hemisphere as the most common stroke territory, and posterior cerebral artery in green supplying the occipital lobe">
+    <text x="350" y="24" text-anchor="middle" font-size="15" font-weight="700" fill="#1a365d">Stroke Arterial Territories &amp; Deficits</text>
+
+    <!-- Brain lateral outline -->
+    <path d="M100,210 C100,120 150,60 250,50 C320,44 380,50 420,60 C480,76 530,110 550,160 C565,200 560,250 540,285 C520,320 480,340 430,350 C380,358 300,355 240,345 C180,335 130,310 110,270 C98,245 96,230 100,210Z"
+          fill="#f7fafc" stroke="#4a5568" stroke-width="2.5"/>
+
+    <!-- ACA territory (medial/superior - blue) -->
+    <path d="M180,80 C220,58 280,50 330,52 C340,52 345,56 340,64 C330,80 290,95 250,105 C210,115 180,110 170,100 C165,94 170,86 180,80Z"
+          fill="#3182ce" opacity="0.4" stroke="#3182ce" stroke-width="2"/>
+    <text x="260" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">ACA</text>
+
+    <!-- MCA territory (lateral - red, LARGEST) -->
+    <path d="M170,110 C190,100 220,108 260,112 C310,118 350,110 390,120 C430,132 460,155 480,190 C495,220 490,260 470,290 C450,318 420,335 380,342 C340,348 290,340 250,330 C215,322 185,300 165,270 C148,240 145,195 155,160 C160,140 165,120 170,110Z"
+          fill="#dc2626" opacity="0.35" stroke="#dc2626" stroke-width="2"/>
+    <text x="320" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">MCA</text>
+    <text x="320" y="226" text-anchor="middle" font-size="10" fill="#991b1b">MOST COMMON</text>
+
+    <!-- PCA territory (posterior/occipital - green) -->
+    <path d="M430,140 C460,120 500,115 530,135 C555,155 562,190 555,225 C548,260 530,290 500,305 C470,318 445,315 430,300 C418,285 420,260 425,235 C428,210 425,175 430,140Z"
+          fill="#16a34a" opacity="0.4" stroke="#16a34a" stroke-width="2"/>
+    <text x="490" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">PCA</text>
+
+    <!-- Central sulcus approximation -->
+    <line x1="310" y1="55" x2="290" y2="160" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <text x="310" y="48" font-size="8" fill="#4a5568">Central sulcus</text>
+
+    <!-- Lateral sulcus approximation -->
+    <path d="M185,200 Q250,195 340,180" fill="none" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+    <!-- DEFICIT BOXES -->
+    <!-- ACA Deficits (blue) -->
+    <rect x="10" y="30" width="148" height="86" rx="8" fill="#ebf8ff" stroke="#3182ce" stroke-width="2"/>
+    <text x="84" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">ACA Territory</text>
+    <text x="84" y="65" text-anchor="middle" font-size="9" fill="#4a5568">Anterior Cerebral Artery</text>
+    <line x1="20" y1="72" x2="148" y2="72" stroke="#bee3f8" stroke-width="1"/>
+    <text x="84" y="86" text-anchor="middle" font-size="10" fill="#1a202c">Contralateral leg weakness</text>
+    <text x="84" y="100" text-anchor="middle" font-size="10" fill="#1a202c">Personality changes</text>
+    <text x="84" y="112" text-anchor="middle" font-size="9" fill="#3182ce">Urinary incontinence</text>
+
+    <!-- MCA Deficits (red) -->
+    <rect x="10" y="320" width="175" height="110" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="97" y="340" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">MCA Territory</text>
+    <text x="97" y="355" text-anchor="middle" font-size="9" fill="#4a5568">Middle Cerebral Artery</text>
+    <line x1="20" y1="362" x2="175" y2="362" stroke="#fecaca" stroke-width="1"/>
+    <text x="97" y="376" text-anchor="middle" font-size="10" fill="#1a202c">Contralateral arm/face</text>
+    <text x="97" y="390" text-anchor="middle" font-size="10" fill="#1a202c">weakness (UE &gt; LE)</text>
+    <text x="97" y="404" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="600">Aphasia (if dominant)</text>
+    <text x="97" y="418" text-anchor="middle" font-size="9" fill="#dc2626">Neglect (if non-dominant)</text>
+
+    <!-- PCA Deficits (green) -->
+    <rect x="560" y="320" width="135" height="100" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="627" y="340" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">PCA Territory</text>
+    <text x="627" y="355" text-anchor="middle" font-size="9" fill="#4a5568">Posterior Cerebral Artery</text>
+    <line x1="570" y1="362" x2="685" y2="362" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="627" y="376" text-anchor="middle" font-size="10" fill="#1a202c">Visual field deficits</text>
+    <text x="627" y="390" text-anchor="middle" font-size="10" fill="#1a202c">(homonymous</text>
+    <text x="627" y="404" text-anchor="middle" font-size="10" fill="#1a202c">hemianopsia)</text>
+    <text x="627" y="418" text-anchor="middle" font-size="9" fill="#16a34a">Memory issues</text>
+
+    <!-- Connecting lines from boxes to territories -->
+    <line x1="158" y1="73" x2="200" y2="85" stroke="#3182ce" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <line x1="185" y1="330" x2="240" y2="310" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <line x1="560" y1="370" x2="520" y2="290" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <!-- Key reminder -->
+    <rect x="245" y="384" width="250" height="48" rx="8" fill="#1a365d"/>
+    <text x="370" y="404" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Remember: Contralateral Deficits</text>
+    <text x="370" y="420" text-anchor="middle" font-size="10" fill="#bee3f8">Left brain stroke → Right body deficits</text>
+</svg>
+
+<h3>Types of Stroke</h3>
+
+<div class="comparison-grid">
+    <div class="comparison-card" style="border-color: #3182ce;">
+        <h5 style="color: #2b6cb0;">Ischemic Stroke (87%)</h5>
+        <p><strong>Cause:</strong> Obstruction (thrombus or embolism)</p>
+        <p><strong>Mechanism:</strong> Decreased blood flow → anaerobic respiration → lactic acid → acidosis → cell death</p>
+        <p><strong>Penumbra:</strong> Ischemic tissue around infarction that may be salvaged with timely intervention</p>
+    </div>
+    <div class="comparison-card" style="border-color: #c53030;">
+        <h5 style="color: #c53030;">Hemorrhagic Stroke (13%)</h5>
+        <p><strong>Cause:</strong> Bleeding into brain tissue, ventricles, or subarachnoid space</p>
+        <p><strong>Common causes:</strong> Hypertension (primary), ruptured aneurysm, AVM</p>
+        <p><strong>Mortality:</strong> Up to 50%</p>
+    </div>
+</div>
+
+<h3>Clinical Manifestations: BEFAST <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Letter</th>
+        <th>Sign</th>
+    </tr>
+    <tr><td><strong>B</strong></td><td>Balance problems</td></tr>
+    <tr><td><strong>E</strong></td><td>Eyes (visual changes)</td></tr>
+    <tr><td><strong>F</strong></td><td>Face drooping</td></tr>
+    <tr><td><strong>A</strong></td><td>Arm weakness</td></tr>
+    <tr><td><strong>S</strong></td><td>Speech difficulty</td></tr>
+    <tr><td><strong>T</strong></td><td>Time to call 911</td></tr>
+</table>
+
+<h3>Key Terminology <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Term</th>
+        <th>Definition</th>
+    </tr>
+    <tr><td><strong>Hemiplegia</strong></td><td>Paralysis of one side of body</td></tr>
+    <tr><td><strong>Hemiparesis</strong></td><td>Weakness of one side</td></tr>
+    <tr><td><strong>Dysarthria</strong></td><td>Impaired speech from muscle paralysis (slurred speech)</td></tr>
+    <tr><td><strong>Apraxia</strong></td><td>Inability to perform previously learned actions</td></tr>
+    <tr><td><strong>Expressive Aphasia</strong></td><td>Cannot express oneself (speak/write)</td></tr>
+    <tr><td><strong>Receptive Aphasia</strong></td><td>Cannot understand language</td></tr>
+    <tr><td><strong>Hemianopsia</strong></td><td>Blindness in half of visual field</td></tr>
+    <tr><td><strong>Agnosia</strong></td><td>Loss of object recognition (visual, auditory, tactile)</td></tr>
+</table>
+
+<div class="pearl">
+    <strong>Why does a stroke on one side cause deficits on the opposite side?</strong> Upper motor neurons decussate (cross) at the level of the medulla. Damage above this level affects the contralateral (opposite) side of the body.
+</div>
+
+<h3>TIA (Transient Ischemic Attack) <span class="source-tag slides">SLIDES</span></h3>
+
+<p>Temporary neurologic deficit from temporary blood flow impairment. Resolves within 24 hours (most &lt;1 hour). Often called a "warning stroke"—3-15% of strokes are preceded by a TIA. <strong>Requires diagnostic workup!</strong></p>
+
+<h3>Risk Factors <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Nonmodifiable</th>
+        <th>Modifiable</th>
+    </tr>
+    <tr>
+        <td>Age &gt;55 years</td>
+        <td><strong>Hypertension (PRIMARY RISK FACTOR)</strong></td>
+    </tr>
+    <tr>
+        <td>African American, Hispanic</td>
+        <td>Atrial fibrillation</td>
+    </tr>
+    <tr>
+        <td>Gender</td>
+        <td>Diabetes</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Smoking, excessive alcohol</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Obesity, sedentary lifestyle</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Elevated cholesterol/hematocrit</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Sleep apnea (↓ brain blood flow, ↑ BP)</td>
+    </tr>
+</table>
+
+<div class="nclex-tip">
+    <strong>Atrial fibrillation</strong> is the most common cardiac cause of embolic stroke. Blood pools in the fibrillating atria, forming clots that can travel to the brain.
+</div>
+
+<h3>Ischemic Stroke Medical Management <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p><strong>Initial Diagnostic:</strong> Non-contrast CT within <strong>20 minutes of ED arrival</strong> to differentiate ischemic vs hemorrhagic (determines treatment)</p>
+
+<h4>tPA (Tissue Plasminogen Activator) <span class="source-tag heavy">HEAVY IN SLIDES</span></h4>
+
+<div class="formula-box" style="border-color: #48bb78;">
+    <p><strong>Goal: Door-to-Needle within 45 minutes</strong></p>
+    <p>Dosing: 0.9 mg/kg (max 90 mg)</p>
+    <p>10% as bolus over 1 minute</p>
+    <p>Remainder over 1 hour with 50 mL NS flush</p>
+</div>
+
+<table>
+    <tr>
+        <th>Timing</th>
+        <th>Eligibility</th>
+    </tr>
+    <tr>
+        <td>Within 3 hours</td>
+        <td>Standard eligibility criteria</td>
+    </tr>
+    <tr>
+        <td>Extended to 4.5 hours</td>
+        <td>EXCLUDES: age &gt;80, NIHSS &gt;25, history of DM + prior stroke, on oral anticoagulant</td>
+    </tr>
+    <tr>
+        <td>Too late</td>
+        <td><strong>CONTRAINDICATED</strong>—revascularization of necrotic tissue increases cerebral edema and hemorrhage</td>
+    </tr>
+</table>
+
+<div class="warning">
+    <strong>Major Risk of tPA: BLEEDING</strong>
+    <ul>
+        <li>Insert all invasive lines BEFORE administration</li>
+        <li>No anticoagulants for 24 hours</li>
+        <li>Monitor for bleeding (stool, IVs, change in LOC)</li>
+    </ul>
+</div>
+
+<h4>Post-tPA Monitoring</h4>
+<ul>
+    <li>Assess q15 min for 2 hours</li>
+    <li>q30 min for 6 hours</li>
+    <li>q1 hour for 16 hours (total 24 hours)</li>
+    <li>Repeat CT and MRI</li>
+</ul>
+
+<h4>Permissive Hypertension</h4>
+<p>BP may be allowed up to 185/105 to perfuse the penumbra region. Don't aggressively lower BP unless extremely elevated—the brain needs that pressure to maintain perfusion.</p>
+
+<h3>Hemorrhagic Stroke <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p><strong>Cardinal symptom:</strong> Sudden, severe headache—"worst headache of my life"</p>
+<p>Also: Early sudden LOC changes, nausea/vomiting, seizures, nuchal rigidity (if subarachnoid)</p>
+
+<h4>Vasospasm <span class="source-tag slides">SLIDES</span></h4>
+<p>Serious complication occurring 4-14 days after subarachnoid hemorrhage (often 7-8 days when clot lyses). Vasospasm narrows the arterial lumen, reducing blood flow and causing secondary stroke.</p>
+
+<p><strong>Management:</strong></p>
+<ul>
+    <li><strong>Nimodipine</strong>—calcium channel blocker; dilates arterial smooth muscle; given to ALL patients with subarachnoid hemorrhage</li>
+    <li><strong>Triple-H Therapy</strong>—Hypervolemia, Hypertension, Hemodilution (controversial; current guidelines favor euvolemia)</li>
+</ul>
+
+<h3>Aneurysm Precautions <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p>Goal: Non-stimulating environment to prevent ICP increases and further bleeding</p>
+
+<div class="nursing-priority">
+    <h4>Aneurysm Precautions</h4>
+    <ul>
+        <li><strong>Absolute bed rest</strong> with HOB 30 degrees</li>
+        <li>Avoid all activity that may increase ICP or BP</li>
+        <li>Avoid Valsalva maneuver, acute neck flexion/rotation</li>
+        <li>Stool softeners and mild laxatives</li>
+        <li><strong>Non-stimulating environment:</strong> dim lighting, no reading, no TV, no radio</li>
+        <li><strong>Visitors restricted</strong></li>
+        <li>DVT prevention: intermittent pneumatic compression devices</li>
+    </ul>
+</div>
+
+<h3>Stroke Nursing Care <span class="source-tag slides">SLIDES</span></h3>
+
+<h4>Acute Phase Assessment</h4>
+<ul>
+    <li>LOC (most sensitive indicator)</li>
+    <li>Motor symptoms, speech, pupil changes</li>
+    <li>I&O, BP maintenance, bleeding, O₂ saturation</li>
+</ul>
+
+<h4>Rehabilitation Focus</h4>
+<ul>
+    <li>Exercise unaffected side; regular exercise routine</li>
+    <li>Sit upright for meals; chin tuck for swallowing; thickened liquids if needed</li>
+    <li>Scheduled voiding; bowel program with fiber/fluid</li>
+    <li>Communication board for aphasia</li>
+    <li>Early mobilization when stable</li>
+    <li>Passive ROM of paralyzed extremity 4-5 times daily</li>
+</ul>
+
+<!-- SECTION 10: HEAD INJURY -->
+<h2 id="section-10">10. Head Injury / Traumatic Brain Injury <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<p>Most common cause of death from trauma. Falls are the #1 cause of brain trauma. Highest risk groups: children 0-4, adolescents 15-19, adults 65+.</p>
+
+<h3>Types of Injury</h3>
+
+<table>
+    <tr>
+        <th>Primary Injury</th>
+        <th>Secondary Injury</th>
+    </tr>
+    <tr>
+        <td>Direct contact to head/brain at moment of initial injury</td>
+        <td>Evolves over hours/days after initial injury</td>
+    </tr>
+    <tr>
+        <td>Contusions, lacerations, skull fractures, hematomas, concussion</td>
+        <td>Caused by cerebral edema, ischemia, chemical changes</td>
+    </tr>
+    <tr>
+        <td>Usually immediate and fixed</td>
+        <td><strong>PREVENTABLE with good care</strong></td>
+    </tr>
+</table>
+
+<h3>Brain Injury Types <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Key Features</th>
+    </tr>
+    <tr>
+        <td><strong>Concussion</strong> (Mild TBI)</td>
+        <td>Temporary LOC, no structural damage</td>
+        <td>Repeated concussions → CTE (chronic traumatic encephalopathy)</td>
+    </tr>
+    <tr>
+        <td><strong>Contusion</strong></td>
+        <td>More severe with possible surface hemorrhage</td>
+        <td>Effects peak 18-36 hours; longer unconsciousness</td>
+    </tr>
+    <tr>
+        <td><strong>Diffuse Axonal Injury</strong></td>
+        <td>Widespread axon damage</td>
+        <td>Immediate coma; decorticate/decerebrate posturing; diagnosed by MRI</td>
+    </tr>
+    <tr>
+        <td><strong>Coup-Contrecoup</strong></td>
+        <td>Acceleration-deceleration injury</td>
+        <td>Damage at impact site AND opposite side of brain</td>
+    </tr>
+</table>
+
+<h3>Intracranial Hematomas <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Location</th>
+        <th>Classic Presentation</th>
+        <th>Key Points</th>
+    </tr>
+    <tr>
+        <td><strong>Epidural</strong></td>
+        <td>Between skull and dura</td>
+        <td>Brief LOC → <strong>LUCID INTERVAL</strong> → rapid deterioration</td>
+        <td><strong>EMERGENCY!</strong> Usually arterial (middle meningeal artery); requires immediate surgery</td>
+    </tr>
+    <tr>
+        <td><strong>Subdural (Acute)</strong></td>
+        <td>Between dura and brain</td>
+        <td>Symptoms develop over 24-48 hours; LOC, pupillary changes, hemiparesis</td>
+        <td>Often after fall; high mortality; requires craniotomy</td>
+    </tr>
+    <tr>
+        <td><strong>Subdural (Chronic)</strong></td>
+        <td>Between dura and brain</td>
+        <td>Develops over weeks to months; fluctuating symptoms</td>
+        <td>Older adults at high risk (brain atrophy); may mimic stroke</td>
+    </tr>
+    <tr>
+        <td><strong>Intracerebral</strong></td>
+        <td>Within brain substance</td>
+        <td>Varies by location</td>
+        <td>May not be surgically accessible</td>
+    </tr>
+</table>
+
+<h3>Skull Fracture Signs <span class="source-tag slides">SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Finding</th>
+        <th>Significance</th>
+    </tr>
+    <tr>
+        <td><strong>Battle Sign</strong></td>
+        <td>Ecchymosis (bruising) over the mastoid process—indicates basilar skull fracture</td>
+    </tr>
+    <tr>
+        <td><strong>Raccoon Eyes</strong></td>
+        <td>Periorbital ecchymosis—indicates basilar skull fracture</td>
+    </tr>
+    <tr>
+        <td><strong>Halo Sign</strong></td>
+        <td>Ring of clear fluid around blood stain on dressing—indicates CSF leak</td>
+    </tr>
+</table>
+
+<h3>Management Principles <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="warning">
+    <strong>ASSUME CERVICAL SPINE INJURY</strong> until it is ruled out by imaging. Immobilize at scene; one person stabilizes head and neck to prevent flexion, rotation, or extension.
+</div>
+
+<p><strong>Goals:</strong></p>
+<ul>
+    <li>Preserve brain homeostasis</li>
+    <li>Prevent secondary injury</li>
+    <li>Treat cerebral edema</li>
+    <li>Maintain cerebral perfusion</li>
+    <li>Maintain oxygenation</li>
+</ul>
+
+<p><strong>Supportive Measures:</strong></p>
+<ul>
+    <li>Respiratory support (intubation if needed)</li>
+    <li>Seizure precautions and prevention</li>
+    <li>NGT/OGT for reduced gastric motility</li>
+    <li>Sedation with <strong>benzodiazepines</strong> (lorazepam, midazolam)—don't affect CBF or ICP</li>
+</ul>
+
+<h3>Brain Death <span class="source-tag slides">SLIDES</span></h3>
+
+<p><strong>Cardinal Signs:</strong></p>
+<ul>
+    <li>Coma</li>
+    <li>Absence of brain stem reflexes</li>
+    <li>Apnea</li>
+</ul>
+
+<p><strong>Apnea Test:</strong> Ventilated patient taken off ventilator with O₂ cannula delivering O₂ at 4-10 L/min. Absence of respirations with CO₂ rising to 60 mmHg (or 20 mmHg above baseline) over 8-10 minutes confirms brain death.</p>
+
+<p><strong>Brain death = cardiac death;</strong> patient must be taken off life support.</p>
+
+<!-- SECTION 11: SPINAL CORD INJURY -->
+<h2 id="section-11">11. Spinal Cord Injury <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<p>294,000 persons in US live with SCI disability. MVAs are the leading cause. Males account for 78% of SCIs.</p>
+
+<p><strong>Most frequent injury levels:</strong> C5-C7, T12, L1 (areas of greatest mobility)</p>
+
+<!-- Spinal Cord Cross-Section with Tracts -->
+<svg viewBox="0 0 720 520" style="max-width: 720px;" role="img" aria-label="Spinal cord cross-section showing gray matter butterfly shape, white matter tracts including dorsal columns for fine touch, spinothalamic tracts for pain and temperature, and corticospinal tracts for voluntary movement, with injury level effects listed">
+    <text x="360" y="24" text-anchor="middle" font-size="15" font-weight="700" fill="#1a365d">Spinal Cord Cross-Section &amp; Tracts</text>
+
+    <!-- Outer white matter circle -->
+    <ellipse cx="280" cy="210" rx="130" ry="120" fill="#e2e8f0" stroke="#4a5568" stroke-width="2.5"/>
+
+    <!-- Gray matter butterfly/H shape -->
+    <path d="M280,130 C260,130 240,150 230,165 C220,175 200,175 195,170 C185,165 180,170 185,180
+             C190,190 200,195 210,195 C220,195 230,195 240,200 C255,210 255,215 240,225
+             C230,230 220,230 210,230 C200,230 190,235 185,245 C180,255 185,260 195,255
+             C200,250 220,250 230,260 C240,270 260,290 280,290
+             C300,290 320,270 330,260 C340,250 360,250 365,255
+             C370,260 375,255 370,245 C365,235 360,230 350,230 C340,230 330,230 320,225
+             C305,215 305,210 320,200 C330,195 340,195 350,195
+             C360,195 370,190 375,180 C380,170 375,165 365,170
+             C360,175 340,175 330,165 C320,150 300,130 280,130Z"
+          fill="#d6bcfa" stroke="#7c3aed" stroke-width="2"/>
+
+    <!-- Central canal -->
+    <circle cx="280" cy="210" r="5" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.5"/>
+
+    <!-- DORSAL COLUMNS (posterior - top) - Fine touch, proprioception -->
+    <rect x="254" y="98" width="52" height="34" rx="4" fill="#3182ce" opacity="0.6" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="280" y="112" text-anchor="middle" font-size="9" fill="#fff" font-weight="600">Dorsal</text>
+    <text x="280" y="124" text-anchor="middle" font-size="9" fill="#fff" font-weight="600">Columns</text>
+    <!-- Label line -->
+    <line x1="306" y1="115" x2="420" y2="80" stroke="#3182ce" stroke-width="1.5"/>
+    <rect x="422" y="65" width="170" height="36" rx="6" fill="#ebf8ff" stroke="#3182ce" stroke-width="1.5"/>
+    <text x="507" y="80" text-anchor="middle" font-size="10" fill="#2c5282" font-weight="700">Fine Touch, Proprioception</text>
+    <text x="507" y="93" text-anchor="middle" font-size="9" fill="#3182ce">↑ ASCENDING (Sensory)</text>
+
+    <!-- SPINOTHALAMIC TRACTS (anterolateral) - Pain, temperature -->
+    <ellipse cx="195" cy="225" rx="20" ry="28" fill="#16a34a" opacity="0.5" stroke="#16a34a" stroke-width="1.5" transform="rotate(-10,195,225)"/>
+    <ellipse cx="365" cy="225" rx="20" ry="28" fill="#16a34a" opacity="0.5" stroke="#16a34a" stroke-width="1.5" transform="rotate(10,365,225)"/>
+    <!-- Label line from left tract -->
+    <line x1="175" y1="225" x2="60" y2="225" stroke="#16a34a" stroke-width="1.5"/>
+    <rect x="5" y="210" width="155" height="36" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="82" y="225" text-anchor="middle" font-size="10" fill="#166534" font-weight="700">Pain, Temperature</text>
+    <text x="82" y="238" text-anchor="middle" font-size="9" fill="#16a34a">↑ ASCENDING (Sensory)</text>
+
+    <!-- CORTICOSPINAL TRACTS (lateral) - Voluntary movement -->
+    <ellipse cx="185" cy="175" rx="18" ry="30" fill="#dc2626" opacity="0.5" stroke="#dc2626" stroke-width="1.5" transform="rotate(-15,185,175)"/>
+    <ellipse cx="375" cy="175" rx="18" ry="30" fill="#dc2626" opacity="0.5" stroke="#dc2626" stroke-width="1.5" transform="rotate(15,375,175)"/>
+    <!-- Label line from right tract -->
+    <line x1="393" y1="175" x2="420" y2="155" stroke="#dc2626" stroke-width="1.5"/>
+    <rect x="422" y="138" width="180" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="512" y="153" text-anchor="middle" font-size="10" fill="#991b1b" font-weight="700">Voluntary Movement</text>
+    <text x="512" y="166" text-anchor="middle" font-size="9" fill="#dc2626">↓ DESCENDING (Motor)</text>
+
+    <!-- ANTERIOR CORTICOSPINAL (ventral) -->
+    <rect x="267" y="280" width="26" height="30" rx="4" fill="#dc2626" opacity="0.4" stroke="#dc2626" stroke-width="1"/>
+
+    <!-- Orientation labels -->
+    <text x="280" y="80" text-anchor="middle" font-size="10" fill="#4a5568" font-weight="600">POSTERIOR (Dorsal)</text>
+    <text x="280" y="345" text-anchor="middle" font-size="10" fill="#4a5568" font-weight="600">ANTERIOR (Ventral)</text>
+
+    <!-- Gray matter labels -->
+    <text x="230" y="160" text-anchor="middle" font-size="8" fill="#5b21b6">Dorsal</text>
+    <text x="230" y="170" text-anchor="middle" font-size="8" fill="#5b21b6">Horn</text>
+    <text x="230" y="260" text-anchor="middle" font-size="8" fill="#5b21b6">Ventral</text>
+    <text x="230" y="270" text-anchor="middle" font-size="8" fill="#5b21b6">Horn</text>
+
+    <!-- Legend -->
+    <rect x="150" y="360" width="260" height="18" rx="4" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <rect x="160" y="363" width="12" height="12" rx="2" fill="#e2e8f0" stroke="#4a5568" stroke-width="1"/>
+    <text x="178" y="373" font-size="9" fill="#4a5568">White Matter</text>
+    <rect x="260" y="363" width="12" height="12" rx="2" fill="#d6bcfa" stroke="#7c3aed" stroke-width="1"/>
+    <text x="278" y="373" font-size="9" fill="#4a5568">Gray Matter</text>
+    <circle cx="355" cy="369" r="4" fill="#7c3aed"/><text x="365" y="373" font-size="9" fill="#4a5568">Central Canal</text>
+
+    <!-- INJURY LEVEL EFFECTS (right side table) -->
+    <rect x="440" y="210" width="270" height="296" rx="8" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <text x="575" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1a365d">Injury Level Effects</text>
+
+    <rect x="452" y="242" width="246" height="52" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+    <text x="575" y="258" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">C1 – C4</text>
+    <text x="575" y="273" text-anchor="middle" font-size="10" fill="#1a202c">Quadriplegia</text>
+    <text x="575" y="286" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600">Ventilator Dependent</text>
+
+    <rect x="452" y="300" width="246" height="42" rx="5" fill="#fff7ed" stroke="#d97706" stroke-width="1.5"/>
+    <text x="575" y="316" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">C5 – C8</text>
+    <text x="575" y="333" text-anchor="middle" font-size="10" fill="#1a202c">Quadriplegia, varying arm function</text>
+
+    <rect x="452" y="348" width="246" height="42" rx="5" fill="#fffbeb" stroke="#d97706" stroke-width="1"/>
+    <text x="575" y="364" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">T1 – T12</text>
+    <text x="575" y="381" text-anchor="middle" font-size="10" fill="#1a202c">Paraplegia (trunk stability varies)</text>
+
+    <rect x="452" y="396" width="246" height="42" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <text x="575" y="412" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">L1 – S5</text>
+    <text x="575" y="429" text-anchor="middle" font-size="10" fill="#1a202c">Lower extremity involvement</text>
+
+    <rect x="452" y="450" width="246" height="46" rx="5" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="575" y="468" text-anchor="middle" font-size="9" fill="#4a5568" font-weight="600">Higher injury = more function lost</text>
+    <text x="575" y="482" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="600">C3-C5 "keeps the diaphragm alive"</text>
+</svg>
+
+<table>
+    <tr>
+        <th>Term</th>
+        <th>Definition</th>
+    </tr>
+    <tr>
+        <td><strong>Paraplegia</strong></td>
+        <td>Paralysis of lower body</td>
+    </tr>
+    <tr>
+        <td><strong>Tetraplegia (Quadriplegia)</strong></td>
+        <td>Paralysis of all four extremities</td>
+    </tr>
+    <tr>
+        <td><strong>Complete lesion</strong></td>
+        <td>Total loss of sensory and motor function below level</td>
+    </tr>
+    <tr>
+        <td><strong>Incomplete lesion</strong></td>
+        <td>Some function preserved below level</td>
+    </tr>
+</table>
+
+<h3>Spinal Shock vs Neurogenic Shock <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<table>
+    <tr>
+        <th>Spinal Shock</th>
+        <th>Neurogenic Shock</th>
+    </tr>
+    <tr>
+        <td>Sudden depression of reflex activity below injury level (areflexia)</td>
+        <td>Loss of autonomic function below lesion</td>
+    </tr>
+    <tr>
+        <td>Muscular flaccidity, lack of sensation and reflexes</td>
+        <td>Loss of sympathetic tone</td>
+    </tr>
+    <tr>
+        <td>↓ BP, ↓ HR</td>
+        <td>↓ BP, ↓ HR, ↓ cardiac output</td>
+    </tr>
+    <tr>
+        <td>Paralytic ileus (occurs 2-3 days post-SCI; resolves 3-7 days)</td>
+        <td>Venous pooling (peripheral vasodilation)</td>
+    </tr>
+    <tr>
+        <td>MAP maintained at 85 mmHg during hyperacute phase</td>
+        <td><strong>WARM skin</strong> (unlike hypovolemic shock)</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><strong>Hypotension with BRADYCARDIA</strong> (not tachycardia)</td>
+    </tr>
+</table>
+
+<div class="memory">
+    <strong>In neurogenic shock:</strong> Skin is WARM and DRY, heart rate is SLOW (bradycardia). This is the opposite of hypovolemic shock where skin is cool/clammy and heart rate is fast.
+</div>
+
+<h3>Autonomic Dysreflexia <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<div class="warning">
+    <strong>ACUTE EMERGENCY!</strong> Occurs in patients with lesions <strong>ABOVE T6</strong> after spinal shock has resolved (may occur years after injury).
+
+    <p><strong>Pathophysiology:</strong> Noxious stimulus below the level of injury triggers exaggerated sympathetic response that cannot be modulated due to the spinal cord lesion.</p>
+</div>
+
+<h4>Symptoms</h4>
+<ul>
+    <li>Severe, pounding headache</li>
+    <li><strong>Sudden, severe hypertension</strong></li>
+    <li>Profuse diaphoresis above lesion</li>
+    <li>Flushing above lesion, pallor below</li>
+    <li>Nasal congestion</li>
+    <li><strong>Bradycardia</strong></li>
+</ul>
+
+<h4>Most Common Triggers</h4>
+<ul>
+    <li><strong>Distended bladder (MOST COMMON)</strong>—kinked catheter, blocked drainage</li>
+    <li>Constipation, fecal impaction</li>
+    <li>Skin stimulation (pressure injury, tight clothing)</li>
+</ul>
+
+<h4>Nursing Interventions <span class="source-tag heavy">HEAVY IN SLIDES</span></h4>
+
+<ol>
+    <li><strong>SIT THE PATIENT UP</strong> (lowers BP using gravity)</li>
+    <li>Rapid assessment to identify and eliminate cause:
+        <ul>
+            <li>Check catheter for kinks/blockage—irrigate or replace</li>
+            <li>Check rectum for fecal impaction</li>
+            <li>Examine skin for irritation</li>
+        </ul>
+    </li>
+    <li>Administer ganglionic blocking agent: <strong>hydralazine IV</strong> if BP remains severely elevated</li>
+    <li>Label chart that patient is at risk for autonomic dysreflexia</li>
+    <li>Educate patient on prevention and management</li>
+</ol>
+
+<h3>SCI Nursing Care <span class="source-tag slides">SLIDES</span></h3>
+
+<h4>Respiratory (High Priority with High Injuries)</h4>
+<ul>
+    <li>Monitor carefully for respiratory failure</li>
+    <li>Pulse oximetry and ABGs</li>
+    <li>Early, vigorous pulmonary care</li>
+    <li>Suction with caution; assisted coughing</li>
+</ul>
+
+<h4>Mobility</h4>
+<ul>
+    <li>Maintain proper body alignment</li>
+    <li><strong>PROM at least 4 times daily</strong>—contractures develop rapidly!</li>
+    <li>Monitor BP with position changes</li>
+    <li>Splints to prevent footdrop</li>
+    <li>DVT prevention: anticoagulation within 72 hours for at least 3 months</li>
+</ul>
+
+<h4>Leading Causes of Death in SCI Patients</h4>
+<ul>
+    <li>Pneumonia</li>
+    <li>Pulmonary embolism</li>
+    <li>Sepsis (often from pressure injuries or UTIs)</li>
+</ul>
+
+<!-- SECTION 12: MENINGITIS -->
+<h2 id="section-12">12. Meningitis <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<p>Inflammation of the meninges and fluid space surrounding the brain and spinal cord.</p>
+
+<table>
+    <tr>
+        <th>Type</th>
+        <th>Cause</th>
+        <th>Key Features</th>
+    </tr>
+    <tr>
+        <td><strong>Bacterial (Septic)</strong></td>
+        <td>S. pneumoniae, N. meningitidis</td>
+        <td>More severe; requires immediate antibiotics; can be fatal</td>
+    </tr>
+    <tr>
+        <td><strong>Viral (Aseptic)</strong></td>
+        <td>Enteroviruses; secondary to cancer or HIV</td>
+        <td>More common in summer/early fall; generally self-limiting</td>
+    </tr>
+    <tr>
+        <td><strong>Cryptococcal</strong></td>
+        <td>Cryptococcus fungus</td>
+        <td>Most common in AIDS patients</td>
+    </tr>
+</table>
+
+<h3>Clinical Manifestations <span class="source-tag slides">SLIDES</span></h3>
+
+<ul>
+    <li>Headache and fever (high throughout illness)</li>
+    <li><strong>Nuchal rigidity</strong> (stiff, painful neck)</li>
+    <li><strong>Positive Kernig sign</strong>—with thigh flexed on abdomen, leg cannot be fully extended</li>
+    <li><strong>Positive Brudzinski sign</strong>—neck flexion causes flexion of hips and knees (more sensitive)</li>
+    <li>Photophobia</li>
+    <li>Petechial or purpuric rash (especially with N. meningitidis)</li>
+    <li>Changes in LOC, behavioral changes</li>
+</ul>
+
+<svg viewBox="0 0 600 280" style="max-width: 500px;" role="img" aria-label="Demonstration of Kernig sign and Brudzinski sign, classic meningeal irritation tests">
+    <!-- Kernig Sign -->
+    <g transform="translate(50, 30)">
+        <text x="100" y="0" text-anchor="middle" font-weight="bold" fill="#2b6cb0">Kernig Sign</text>
+
+        <!-- Body outline -->
+        <ellipse cx="50" cy="50" rx="15" ry="12" fill="#bee3f8" stroke="#2b6cb0" stroke-width="2"/>
+        <line x1="50" y1="62" x2="50" y2="120" stroke="#2b6cb0" stroke-width="3"/>
+
+        <!-- Flexed thigh -->
+        <line x1="45" y1="120" x2="20" y2="80" stroke="#2b6cb0" stroke-width="3"/>
+        <!-- Leg that cannot extend -->
+        <line x1="20" y1="80" x2="40" y2="50" stroke="#2b6cb0" stroke-width="3"/>
+
+        <!-- Other leg straight -->
+        <line x1="55" y1="120" x2="80" y2="170" stroke="#2b6cb0" stroke-width="3"/>
+
+        <!-- Annotation -->
+        <text x="100" y="90" font-size="11" fill="#2b6cb0">Cannot fully</text>
+        <text x="100" y="102" font-size="11" fill="#2b6cb0">extend leg</text>
+        <path d="M 50 60 L 85 85" stroke="#e53e3e" stroke-width="2" stroke-dasharray="4" fill="none"/>
+    </g>
+
+    <!-- Brudzinski Sign -->
+    <g transform="translate(320, 30)">
+        <text x="100" y="0" text-anchor="middle" font-weight="bold" fill="#38a169">Brudzinski Sign</text>
+
+        <!-- Body - supine -->
+        <ellipse cx="50" cy="60" rx="15" ry="12" fill="#c6f6d5" stroke="#38a169" stroke-width="2"/>
+
+        <!-- Neck being flexed -->
+        <path d="M 50 72 C 30 90 30 100 50 100" stroke="#38a169" stroke-width="3" fill="none"/>
+
+        <!-- Arrow showing neck flexion -->
+        <path d="M 60 50 Q 40 30 30 50" stroke="#e53e3e" stroke-width="2" fill="none"/>
+        <polygon points="30,50 25,40 35,45" fill="#e53e3e"/>
+
+        <!-- Body -->
+        <line x1="50" y1="100" x2="50" y2="130" stroke="#38a169" stroke-width="3"/>
+
+        <!-- Hips and knees flex -->
+        <path d="M 45 130 Q 30 115 35 95" stroke="#38a169" stroke-width="3" fill="none"/>
+        <path d="M 55 130 Q 70 115 65 95" stroke="#38a169" stroke-width="3" fill="none"/>
+
+        <!-- Annotation -->
+        <text x="100" y="120" font-size="11" fill="#38a169">Hips/knees</text>
+        <text x="100" y="132" font-size="11" fill="#38a169">flex reflexively</text>
+    </g>
+
+    <text x="300" y="220" text-anchor="middle" font-size="13" fill="#4a5568">Both signs indicate meningeal irritation</text>
+    <text x="300" y="240" text-anchor="middle" font-size="12" fill="#4a5568" font-style="italic">Brudzinski is more sensitive than Kernig</text>
+</svg>
+
+<h3>Management <span class="source-tag slides">SLIDES</span></h3>
+
+<p><strong>Prevention:</strong> Meningococcal vaccine at age 11-12 with booster at 16; first-year college students and military</p>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li>Early high-dose IV antibiotics (Penicillin G with ceftriaxone for bacterial)</li>
+    <li>Dexamethasone (reduces inflammatory response)</li>
+    <li>Treatment for dehydration, shock, seizures</li>
+    <li><strong>Close contacts:</strong> Antimicrobial prophylaxis within 24 hours (rifampin, cipro, Rocephin)</li>
+</ul>
+
+<p><strong>Nursing:</strong> Infection control precautions; frequent neuro assessment; pain and fever management; monitor for increased ICP</p>
+
+<!-- SECTION 13: AUTOIMMUNE DISORDERS -->
+<h2 id="section-13">13. Autoimmune Neurologic Disorders <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>Multiple Sclerosis (MS)</h3>
+
+<p>Progressive immune-related <strong>demyelination</strong> of the CNS. Frequently relapsing-remitting pattern with exacerbations and periods of stability. Peak onset 25-50 years; women affected more than men. No cure; 7-14 year shorter life expectancy.</p>
+
+<p><strong>Manifestations:</strong></p>
+<ul>
+    <li>Fatigue, weakness, numbness</li>
+    <li>Difficulty with coordination, loss of balance</li>
+    <li>Pain, visual disturbances</li>
+    <li><strong>Spasticity (90% of patients)</strong>, often in lower extremities</li>
+</ul>
+
+<p><strong>Diagnosis:</strong> Multiple plaques in CNS on MRI</p>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li>Disease-modifying therapies: interferons, glatiramer acetate, IV methylprednisolone</li>
+    <li>Symptom management: baclofen or dantrolene for spasticity</li>
+</ul>
+
+<p><strong>Nursing Care:</strong></p>
+<ul>
+    <li>Avoid extreme fatigue and strenuous activity</li>
+    <li><strong>Maintain temperate environment</strong>—heat worsens symptoms; use air conditioning</li>
+    <li>Bladder/bowel programs</li>
+    <li>Fall prevention; assistive devices</li>
+</ul>
+
+<h3>Myasthenia Gravis <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p>Autoimmune disorder where <strong>antibodies attack acetylcholine receptors</strong> at the neuromuscular junction, impairing nerve-to-muscle communication.</p>
+
+<p><strong>Initial Manifestations:</strong></p>
+<ul>
+    <li>Ocular muscles first: <strong>diplopia and ptosis</strong> (drooping eyelid)</li>
+    <li>Weakness of facial muscles</li>
+    <li>Dysphonia (voice impairment), dysphagia</li>
+    <li>Generalized weakness (worsens with use, improves with rest)</li>
+</ul>
+
+<p><strong>Diagnosis:</strong></p>
+<ul>
+    <li><strong>Tensilon Test:</strong> IV edrophonium → immediate improvement in muscle strength = positive test
+        <ul><li><strong>Have atropine available</strong> for side effects (bradycardia, asystole, bronchoconstriction)</li></ul>
+    </li>
+    <li>Ice Test (alternative when Tensilon contraindicated—cardiac issues/asthma): Ice pack over eyes for 1 minute → ptosis temporarily resolves</li>
+</ul>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li><strong>Mestinon (pyridostigmine)</strong>—first-line; inhibits acetylcholine breakdown at NMJ</li>
+    <li>Immunosuppressants, IVIG, plasmapheresis</li>
+    <li><strong>Thymectomy</strong>—typically in patients &lt;60 years; can result in complete remission; earlier = better outcomes. Monitor post-op in ICU for respiratory depression</li>
+</ul>
+
+<h4>Myasthenic Crisis vs Cholinergic Crisis</h4>
+
+<table>
+    <tr>
+        <th>Myasthenic Crisis</th>
+        <th>Cholinergic Crisis</th>
+    </tr>
+    <tr>
+        <td><strong>Undermedication</strong> or disease exacerbation</td>
+        <td><strong>Overmedication</strong> with cholinesterase inhibitors</td>
+    </tr>
+    <tr>
+        <td>Often triggered by respiratory infection</td>
+        <td>Too much medication</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;"><strong>Both present with:</strong> Severe generalized weakness, respiratory/bulbar weakness → may require intubation</td>
+    </tr>
+</table>
+
+<div class="warning">
+    <strong>Avoid sedatives and tranquilizers</strong> in myasthenia patients—they can cause respiratory and cardiac depression. Monitor respiratory status closely; patients may need mechanical ventilation.
+</div>
+
+<h3>Guillain-Barré Syndrome (GBS) <span class="source-tag heavy">HEAVY IN SLIDES</span></h3>
+
+<p>Autoimmune attack on <strong>peripheral nerve myelin</strong>. 60-70% follow a viral infection 1-3 weeks prior (CMV, Epstein-Barr, H. influenzae, Mycoplasma). Peak severity within 2-4 weeks. Most patients recover completely.</p>
+
+<p><strong>Manifestations:</strong></p>
+<ul>
+    <li>Weakness, paralysis, paresthesia (numbness, "pins and needles")</li>
+    <li><strong>Starts in lower extremities and ASCENDS upward</strong></li>
+    <li>Pain, diminished or absent reflexes</li>
+    <li>Autonomic dysfunction: tachycardia, bradycardia, hypertension, hypotension</li>
+    <li>Bulbar weakness (can't swallow or clear secretions)</li>
+</ul>
+
+<div class="warning">
+    <strong>GBS is a medical emergency.</strong> Elective intubation BEFORE autonomic dysfunction occurs improves outcomes. Respiratory failure is the major life-threatening complication.
+</div>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li>ICU with continuous monitoring</li>
+    <li>Respiratory support</li>
+    <li>Plasmapheresis or IVIG to reduce circulating antibodies</li>
+</ul>
+
+<p><strong>Nursing Focus:</strong></p>
+<ul>
+    <li>Monitor vital capacity and negative inspiratory force</li>
+    <li>Continuous cardiac monitoring (autonomic dysfunction)</li>
+    <li>DVT prevention: compression devices, SCDs</li>
+    <li>Passive ROM at least 2x daily</li>
+    <li>Assess swallowing and gag reflex—aspiration precautions</li>
+    <li>Communication planning (patient may be unable to speak)</li>
+</ul>
+
+<!-- SECTION 14: CRANIAL NERVE DISORDERS -->
+<h2 id="section-14">14. Cranial Nerve Disorders <span class="source-tag slides">SLIDES</span></h2>
+
+<h3>Trigeminal Neuralgia (Tic Douloureux)</h3>
+
+<p>Condition of <strong>CN V</strong> (trigeminal nerve) characterized by paroxysms of severe, stabbing facial pain. Probable cause: vascular compression. More common in 5th-6th decade, women, and patients with MS.</p>
+
+<p><strong>Triggers:</strong> Washing face, brushing teeth, eating, draft of air—any facial stimulation. Patients may avoid eating, neglect hygiene, and isolate themselves.</p>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li>Antiseizure medications: carbamazepine (Tegretol), gabapentin (Neurontin), phenytoin</li>
+    <li>Baclofen (antispasmodic)</li>
+    <li>Surgical: microvascular decompression, radiofrequency coagulation</li>
+</ul>
+
+<h3>Bell's Palsy</h3>
+
+<p>Unilateral inflammation of <strong>CN VII</strong> (facial nerve) causing sudden facial paralysis.</p>
+
+<p><strong>Manifestations:</strong></p>
+<ul>
+    <li>Unilateral facial weakness/paralysis with facial distortion</li>
+    <li>Increased lacrimation</li>
+    <li>Difficulty with speech and eating</li>
+</ul>
+
+<p><strong>Key Point:</strong> Most patients recover completely in 3-5 weeks; rarely recurs.</p>
+
+<p><strong>Treatment:</strong></p>
+<ul>
+    <li>Corticosteroids within 72 hours</li>
+    <li>Eye protection (shield at night, artificial tears, sunglasses)</li>
+    <li>Facial exercises and massage</li>
+    <li><strong>Reassure patient this is NOT a stroke</strong></li>
+</ul>
+
+<!-- KEY FORMULAS AND PRIORITY CONCEPTS -->
+<h2 id="section-formulas">Key Formulas and Priority Concepts</h2>
+
+<table>
+    <tr>
+        <th>Parameter</th>
+        <th>Normal Value</th>
+        <th>Critical Threshold</th>
+    </tr>
+    <tr>
+        <td>ICP</td>
+        <td>0-10 mmHg</td>
+        <td>&gt;15 mmHg requires intervention</td>
+    </tr>
+    <tr>
+        <td>CPP = MAP - ICP</td>
+        <td>70-100 mmHg</td>
+        <td>&lt;50 mmHg = irreversible damage</td>
+    </tr>
+    <tr>
+        <td>GCS</td>
+        <td>15</td>
+        <td>≤8 = coma (airway protection needed)</td>
+    </tr>
+    <tr>
+        <td>Cerebral blood flow</td>
+        <td>~750 mL/min (15% CO)</td>
+        <td>&lt;25 mL/100g/min = ischemia</td>
+    </tr>
+    <tr>
+        <td>CSF volume</td>
+        <td>125-150 mL</td>
+        <td>Production: 500 mL/day</td>
+    </tr>
+</table>
+
+<div class="nursing-priority">
+    <h4>Top Priority Nursing Concepts</h4>
+    <ol>
+        <li><strong>Airway always first</strong>—especially with altered LOC</li>
+        <li><strong>LOC is the most sensitive indicator</strong>—first thing to change with deterioration</li>
+        <li><strong>ICP management:</strong> HOB 30-45°, neutral head, avoid Valsalva</li>
+        <li><strong>Prevent secondary injury</strong>—edema peaks 24-36 hours post-injury</li>
+        <li><strong>Assume C-spine injury</strong> in all trauma until ruled out</li>
+        <li><strong>Time is brain:</strong> Door-to-needle 45 min for tPA</li>
+        <li><strong>Autonomic dysreflexia = emergency:</strong> Sit up, find cause (usually bladder)</li>
+        <li><strong>Respiratory failure:</strong> Major concern in GBS, myasthenia, high SCI</li>
+    </ol>
+</div>
+
+<hr>
+<p style="text-align: center; color: #718096; font-size: 0.9rem;">
+    <em>Study Guide: Complex Neurological Disorders (Chapters 60-65)</em><br>
+    Sources: Lecture slides (primary), Brunner & Suddarth's textbook, practice questions
+</p>
+
+</div><!-- end content-wrapper -->
+</main><!-- end main-content -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var sections = document.querySelectorAll('h2[id]');
+    var navLinks = document.querySelectorAll('.nav-link');
+    var hamburger = document.querySelector('.hamburger');
+    var sidebar = document.querySelector('.sidebar');
+    var overlay = document.querySelector('.sidebar-overlay');
+
+    // --- Scroll spy with aria-current ---
+    function updateActiveLink() {
+        var scrollPos = window.scrollY + 120;
+        var currentSection = '';
+        for (var i = 0; i < sections.length; i++) {
+            if (scrollPos >= sections[i].offsetTop) {
+                currentSection = sections[i].getAttribute('id');
+            }
+        }
+        for (var j = 0; j < navLinks.length; j++) {
+            var link = navLinks[j];
+            if (link.getAttribute('href') === '#' + currentSection) {
+                link.classList.add('active');
+                link.setAttribute('aria-current', 'true');
+            } else {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+            }
+        }
+    }
+    var scrollTimer;
+    window.addEventListener('scroll', function() {
+        if (scrollTimer) cancelAnimationFrame(scrollTimer);
+        scrollTimer = requestAnimationFrame(updateActiveLink);
+    });
+    updateActiveLink();
+
+    // --- Mobile hamburger menu ---
+    function openMenu() {
+        sidebar.classList.add('open');
+        overlay.classList.add('open');
+        hamburger.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        hamburger.setAttribute('aria-label', 'Close navigation menu');
+    }
+    function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-label', 'Open navigation menu');
+    }
+    hamburger.addEventListener('click', function() {
+        sidebar.classList.contains('open') ? closeMenu() : openMenu();
+    });
+    overlay.addEventListener('click', closeMenu);
+
+    // Close menu when a nav link is clicked (mobile)
+    for (var k = 0; k < navLinks.length; k++) {
+        navLinks[k].addEventListener('click', function() {
+            if (window.innerWidth <= 768) closeMenu();
+        });
+    }
+
+    // Escape key closes menu
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeMenu();
+            hamburger.focus();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

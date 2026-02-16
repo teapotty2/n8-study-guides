@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiac Output & Perfusion - Interactive Concept Map</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        .header {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 500;
+            position: relative;
+        }
+        .header-left { text-align: left; }
+        .header h1 { font-size: 1.25rem; }
+        .header p { color: #94a3b8; font-size: 0.8rem; }
+        .header-controls { display: flex; align-items: center; gap: 0.75rem; }
+        .search-box { position: relative; }
+        .search-box input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            padding: 0.4rem 0.75rem 0.4rem 2rem;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: #f87171; }
+        .search-box input::placeholder { color: #64748b; }
+        .search-box::before {
+            content: '\1F50D';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+        .search-results.visible { display: block; }
+        .search-result-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #334155;
+        }
+        .search-result-item:hover { background: rgba(248, 113, 113, 0.15); }
+        .search-result-item .sr-title { color: #f87171; }
+        .search-result-item .sr-type { color: #64748b; font-size: 0.75rem; }
+        .zoom-controls { display: flex; gap: 4px; }
+        .zoom-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .zoom-btn:hover { background: rgba(255,255,255,0.2); }
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            cursor: grab;
+        }
+        .map-container.grabbing { cursor: grabbing; }
+        .map-inner {
+            position: absolute;
+            width: 2400px;
+            height: 1500px;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+        .connections {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .conn-line {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .conn-line.dashed { stroke-dasharray: 8, 4; }
+        .conn-line.active {
+            stroke: #f87171;
+            stroke-width: 3;
+            stroke-dasharray: 0;
+            filter: drop-shadow(0 0 6px rgba(248,113,113,0.5));
+        }
+        .conn-line.dimmed { stroke: #1e293b; stroke-width: 1; }
+        .conn-label {
+            fill: #64748b;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: fill 0.3s;
+        }
+        .conn-label.active { fill: #f87171; }
+        .conn-label.dimmed { fill: transparent; }
+        .node {
+            position: absolute;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            text-align: center;
+            min-width: 130px;
+            max-width: 180px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+        .node:hover { transform: scale(1.08); z-index: 100; }
+        .node.active { transform: scale(1.12); z-index: 100; box-shadow: 0 0 30px rgba(248,113,113,0.4); }
+        .node.connected { transform: scale(1.05); z-index: 90; box-shadow: 0 0 20px rgba(248,113,113,0.2); }
+        .node.dimmed { opacity: 0.25; transform: scale(0.95); }
+        .node.search-match { box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); z-index: 110; }
+        .node h3 { font-size: 0.9rem; margin-bottom: 0.15rem; line-height: 1.2; }
+        .node p { font-size: 0.7rem; opacity: 0.8; line-height: 1.3; }
+        /* Node types - Cardiac themed */
+        .node.central { background: linear-gradient(135deg, #dc2626, #ef4444); border: 3px solid #fca5a5; min-width: 180px; }
+        .node.anatomy { background: linear-gradient(135deg, #7c3aed, #8b5cf6); border: 2px solid #c4b5fd; }
+        .node.assessment { background: linear-gradient(135deg, #0891b2, #06b6d4); border: 2px solid #67e8f9; }
+        .node.determinant { background: linear-gradient(135deg, #2563eb, #3b82f6); border: 2px solid #93c5fd; }
+        .node.arrhythmia { background: linear-gradient(135deg, #ea580c, #f97316); border: 2px solid #fdba74; }
+        .node.acs { background: linear-gradient(135deg, #b91c1c, #dc2626); border: 2px solid #fca5a5; }
+        .node.hf { background: linear-gradient(135deg, #be185d, #ec4899); border: 2px solid #f9a8d4; }
+        .node.valve { background: linear-gradient(135deg, #059669, #10b981); border: 2px solid #6ee7b7; }
+        .node.intervention { background: linear-gradient(135deg, #4f46e5, #6366f1); border: 2px solid #a5b4fc; }
+        .node.shock { background: linear-gradient(135deg, #78350f, #92400e); border: 2px solid #d97706; }
+        .node.electrolyte { background: linear-gradient(135deg, #0d9488, #14b8a6); border: 2px solid #5eead4; }
+        .node.inflammatory { background: linear-gradient(135deg, #c2410c, #ea580c); border: 2px solid #fb923c; }
+        /* Info panel */
+        .info-panel {
+            position: fixed;
+            right: -400px;
+            top: 52px;
+            width: 380px;
+            background: rgba(15, 23, 42, 0.97);
+            border-left: 2px solid #475569;
+            padding: 1.5rem;
+            z-index: 1000;
+            height: calc(100vh - 52px);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+        }
+        .info-panel.visible { right: 0; }
+        .info-panel .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none; border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .info-panel .close-btn:hover { color: white; }
+        .info-panel h2 { color: #f87171; margin-bottom: 1rem; padding-right: 2rem; font-size: 1.2rem; }
+        .info-panel h3 { color: #fbbf24; margin: 1rem 0 0.5rem 0; font-size: 0.9rem; }
+        .info-panel p { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; }
+        .info-panel ul { margin-left: 1.25rem; color: #e2e8f0; }
+        .info-panel li { margin-bottom: 0.4rem; font-size: 0.88rem; line-height: 1.4; }
+        .info-panel .exam-trap {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid #ef4444;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+        .info-panel .clinical-pearl {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 4px solid #22d3ee;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+        .info-panel .connection-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #475569;
+        }
+        .info-panel .connection-list span {
+            display: inline-block;
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .info-panel .connection-list span:hover { background: #f87171; color: #0f172a; }
+        .legend {
+            position: fixed;
+            left: 12px; bottom: 12px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            z-index: 500;
+            border: 1px solid #334155;
+        }
+        .legend h4 { margin-bottom: 0.4rem; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1rem; }
+        .legend-item { display: flex; align-items: center; font-size: 0.7rem; color: #94a3b8; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; flex-shrink: 0; }
+        .minimap {
+            position: fixed;
+            right: 12px; bottom: 12px;
+            width: 180px; height: 110px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            z-index: 500;
+            overflow: hidden;
+        }
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid #f87171;
+            border-radius: 2px;
+            background: rgba(248, 113, 113, 0.08);
+            pointer-events: none;
+        }
+        .minimap-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; }
+        .kb-hint {
+            position: fixed;
+            left: 12px; top: 64px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            z-index: 500;
+            border: 1px solid #334155;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+        .kb-hint kbd {
+            background: #334155;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            color: #94a3b8;
+            font-family: inherit;
+        }
+        .info-panel::-webkit-scrollbar { width: 6px; }
+        .info-panel::-webkit-scrollbar-track { background: transparent; }
+        .info-panel::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1>Cardiac Output & Perfusion - Concept Map</h1>
+            <p>Click nodes to explore | Drag to pan | Scroll to zoom</p>
+        </div>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search concepts..." autocomplete="off"/>
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">&minus;</button>
+                <button class="zoom-btn" onclick="resetView()" title="Reset view">&#8634;</button>
+            </div>
+        </div>
+    </div>
+    <div class="map-container" id="map-container">
+        <div class="map-inner" id="map-inner">
+            <svg class="connections" id="connections-svg"></svg>
+        </div>
+    </div>
+    <div class="info-panel" id="info-panel">
+        <button class="close-btn" onclick="closePanel()">&times;</button>
+        <h2 id="panel-title"></h2>
+        <div id="panel-content"></div>
+    </div>
+    <div class="legend">
+        <h4>Node Types</h4>
+        <div style="display:flex;gap:1rem;margin-bottom:0.4rem;font-size:0.7rem;color:#94a3b8;">
+            <span><span style="display:inline-block;width:20px;height:2px;background:#334155;vertical-align:middle;margin-right:4px;"></span>Direct</span>
+            <span><span style="display:inline-block;width:20px;height:0;border-top:2px dashed #334155;vertical-align:middle;margin-right:4px;"></span>Cross-link</span>
+        </div>
+        <div class="legend-grid">
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Central</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div>Anatomy</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div>Assessment</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>CO Determinants</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Arrhythmias</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626;"></div>ACS/MI</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ec4899;"></div>Heart Failure</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Valvular</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6366f1;"></div>Interventions</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#92400e;"></div>Shock</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ea580c;"></div>Inflammatory</div>
+        </div>
+    </div>
+    <div class="kb-hint">
+        <kbd>Esc</kbd> close panel &nbsp; <kbd>/</kbd> search &nbsp; <kbd>R</kbd> reset view
+    </div>
+    <div class="minimap" id="minimap">
+        <div class="minimap-viewport" id="minimap-vp"></div>
+    </div>
+
+<script>
+// ===== DATA =====
+const nodes = {
+    // TIER 1 - Central Hub
+    central: {
+        label: 'CARDIAC OUTPUT\n& PERFUSION', sub: 'CO = SV x HR (4-6 L/min)',
+        type: 'central', x: 1100, y: 50
+    },
+    // TIER 2 - Core Branches
+    anatomy: {
+        label: 'Cardiac\nAnatomy', sub: 'Chambers, valves, conduction',
+        type: 'anatomy', x: 180, y: 230
+    },
+    co_determinants: {
+        label: 'CO\nDeterminants', sub: 'Preload, afterload, contractility',
+        type: 'determinant', x: 500, y: 230
+    },
+    assessment: {
+        label: 'Cardiac\nAssessment', sub: 'Physical exam, labs, ECG',
+        type: 'assessment', x: 820, y: 230
+    },
+    arrhythmias: {
+        label: 'Cardiac\nArrhythmias', sub: 'Rate & rhythm disorders',
+        type: 'arrhythmia', x: 1140, y: 230
+    },
+    acs: {
+        label: 'Acute Coronary\nSyndrome', sub: 'UA, NSTEMI, STEMI',
+        type: 'acs', x: 1460, y: 230
+    },
+    heart_failure: {
+        label: 'Heart\nFailure', sub: 'Left-sided, right-sided',
+        type: 'hf', x: 1780, y: 230
+    },
+    shock_hub: {
+        label: 'Shock\nStates', sub: 'Inadequate perfusion',
+        type: 'shock', x: 2100, y: 230
+    },
+    // TIER 3 - Major Conditions/Systems
+    conduction: {
+        label: 'Conduction\nSystem', sub: 'SA → AV → Bundle → Purkinje',
+        type: 'anatomy', x: 80, y: 440
+    },
+    preload: {
+        label: 'Preload', sub: 'Ventricular stretch (LVEDP)',
+        type: 'determinant', x: 350, y: 440
+    },
+    afterload: {
+        label: 'Afterload', sub: 'Resistance to ejection',
+        type: 'determinant', x: 550, y: 440
+    },
+    contractility: {
+        label: 'Contractility', sub: 'Force of contraction',
+        type: 'determinant', x: 750, y: 440
+    },
+    ecg: {
+        label: 'ECG\nInterpretation', sub: 'P-QRS-T analysis',
+        type: 'assessment', x: 950, y: 440
+    },
+    atrial_arrhythmias: {
+        label: 'Atrial\nArrhythmias', sub: 'AFib, flutter, PACs',
+        type: 'arrhythmia', x: 1150, y: 440
+    },
+    ventricular_arrhythmias: {
+        label: 'Ventricular\nArrhythmias', sub: 'VT, VF, PVCs',
+        type: 'arrhythmia', x: 1350, y: 440
+    },
+    angina: {
+        label: 'Angina\nPectoris', sub: 'Stable, unstable, variant',
+        type: 'acs', x: 1550, y: 440
+    },
+    mi: {
+        label: 'Myocardial\nInfarction', sub: 'TIME IS MUSCLE',
+        type: 'acs', x: 1750, y: 440
+    },
+    left_hf: {
+        label: 'Left-Sided\nHF', sub: 'Pulmonary congestion',
+        type: 'hf', x: 1950, y: 440
+    },
+    right_hf: {
+        label: 'Right-Sided\nHF', sub: 'Systemic congestion',
+        type: 'hf', x: 2150, y: 440
+    },
+    // TIER 4 - Specific Conditions/Treatments
+    av_blocks: {
+        label: 'AV Blocks', sub: '1st, 2nd, 3rd degree',
+        type: 'arrhythmia', x: 80, y: 650
+    },
+    electrolytes: {
+        label: 'Electrolyte\nImbalances', sub: 'K+, Ca++, Mg++ effects',
+        type: 'electrolyte', x: 280, y: 650
+    },
+    hemodynamics: {
+        label: 'Hemodynamic\nMonitoring', sub: 'CVP, PA catheter',
+        type: 'assessment', x: 480, y: 650
+    },
+    afib: {
+        label: 'Atrial\nFibrillation', sub: 'Most common arrhythmia',
+        type: 'arrhythmia', x: 680, y: 650
+    },
+    vfib: {
+        label: 'Ventricular\nFibrillation', sub: 'Death without defib',
+        type: 'arrhythmia', x: 880, y: 650
+    },
+    vtach: {
+        label: 'Ventricular\nTachycardia', sub: 'Wide QRS, emergency',
+        type: 'arrhythmia', x: 1080, y: 650
+    },
+    cardioversion: {
+        label: 'Cardioversion', sub: 'Synchronized shock',
+        type: 'intervention', x: 1280, y: 650
+    },
+    defibrillation: {
+        label: 'Defibrillation', sub: 'Unsynchronized shock',
+        type: 'intervention', x: 1480, y: 650
+    },
+    pci: {
+        label: 'PCI/Stent', sub: 'Door-to-balloon <60 min',
+        type: 'intervention', x: 1680, y: 650
+    },
+    pulm_edema: {
+        label: 'Pulmonary\nEdema', sub: 'Acute LV failure',
+        type: 'hf', x: 1880, y: 650
+    },
+    cardiogenic_shock: {
+        label: 'Cardiogenic\nShock', sub: '50% mortality',
+        type: 'shock', x: 2080, y: 650
+    },
+    // TIER 5 - Interventions/Protocols
+    pacemaker: {
+        label: 'Pacemakers', sub: 'Temporary & permanent',
+        type: 'intervention', x: 80, y: 860
+    },
+    icd: {
+        label: 'ICD', sub: 'VT/VF termination',
+        type: 'intervention', x: 280, y: 860
+    },
+    torsades: {
+        label: 'Torsades\nde Pointes', sub: 'Prolonged QT → Mg sulfate',
+        type: 'arrhythmia', x: 480, y: 860
+    },
+    thrombolytics: {
+        label: 'Thrombolytics', sub: 'Door-to-needle <30 min',
+        type: 'intervention', x: 680, y: 860
+    },
+    cabg: {
+        label: 'CABG', sub: 'Bypass surgery',
+        type: 'intervention', x: 880, y: 860
+    },
+    hf_meds: {
+        label: 'HF\nMedications', sub: 'ACEi, BB, diuretics',
+        type: 'intervention', x: 1080, y: 860
+    },
+    valve_disorders: {
+        label: 'Valvular\nDisorders', sub: 'Stenosis, regurgitation',
+        type: 'valve', x: 1280, y: 860
+    },
+    cardiomyopathy: {
+        label: 'Cardiomyopathy', sub: 'DCM, HCM, RCM',
+        type: 'hf', x: 1480, y: 860
+    },
+    septic_shock: {
+        label: 'Septic\nShock', sub: 'Hour-1 Bundle',
+        type: 'shock', x: 1680, y: 860
+    },
+    cardiac_arrest: {
+        label: 'Cardiac\nArrest', sub: 'H\'s and T\'s',
+        type: 'arrhythmia', x: 1880, y: 860
+    },
+    // TIER 6 - Prevention/Bundles
+    acls: {
+        label: 'ACLS\nAlgorithm', sub: 'CPR, defib, meds',
+        type: 'intervention', x: 1100, y: 1060
+    },
+    htn: {
+        label: 'Hypertension', sub: 'The silent killer',
+        type: 'determinant', x: 600, y: 1060
+    },
+    cad_prevention: {
+        label: 'CAD\nPrevention', sub: 'Statins, lifestyle',
+        type: 'intervention', x: 1600, y: 1060
+    },
+    // N8 Core Thread: Compensatory Mechanisms
+    compensatory: {
+        label: 'Compensatory\nMechanisms', sub: 'SNS, RAAS, remodeling',
+        type: 'determinant', x: 1400, y: 140
+    },
+    // Infectious/Inflammatory Heart Diseases (Week 2)
+    endocarditis: {
+        label: 'Infective\nEndocarditis', sub: 'Valve vegetations, emboli',
+        type: 'inflammatory', x: 300, y: 1200
+    },
+    myocarditis: {
+        label: 'Myocarditis', sub: 'Viral/bacterial inflammation',
+        type: 'inflammatory', x: 550, y: 1200
+    },
+    pericarditis: {
+        label: 'Pericarditis', sub: 'Friction rub, tamponade risk',
+        type: 'inflammatory', x: 800, y: 1200
+    }
+};
+
+// Edges: [from, to, label, dashed?]
+const edges = [
+    // Central connections
+    ['central', 'anatomy', '', false],
+    ['central', 'co_determinants', '', false],
+    ['central', 'assessment', '', false],
+    ['central', 'arrhythmias', '', false],
+    ['central', 'acs', '', false],
+    ['central', 'heart_failure', '', false],
+    ['central', 'shock_hub', '', false],
+    // Anatomy branch
+    ['anatomy', 'conduction', 'electrical system', false],
+    ['conduction', 'av_blocks', 'block types', false],
+    ['conduction', 'ecg', 'recorded by', false],
+    // CO Determinants branch
+    ['co_determinants', 'preload', 'Frank-Starling', false],
+    ['co_determinants', 'afterload', 'resistance', false],
+    ['co_determinants', 'contractility', 'inotropy', false],
+    ['preload', 'hemodynamics', 'measured by', false],
+    ['afterload', 'htn', 'increased by', false],
+    // Assessment branch
+    ['assessment', 'ecg', 'key tool', false],
+    ['assessment', 'hemodynamics', 'invasive', false],
+    ['ecg', 'electrolytes', 'affects', false],
+    // Arrhythmias branch
+    ['arrhythmias', 'atrial_arrhythmias', 'supraventricular', false],
+    ['arrhythmias', 'ventricular_arrhythmias', 'life-threatening', false],
+    ['atrial_arrhythmias', 'afib', 'most common', false],
+    ['ventricular_arrhythmias', 'vtach', 'wide QRS', false],
+    ['ventricular_arrhythmias', 'vfib', 'chaotic', false],
+    ['vtach', 'torsades', 'polymorphic', false],
+    ['av_blocks', 'pacemaker', 'treated with', false],
+    ['afib', 'cardioversion', 'rhythm control', false],
+    ['vfib', 'defibrillation', 'requires', false],
+    ['vtach', 'cardioversion', 'with pulse', false],
+    ['vtach', 'defibrillation', 'pulseless', false],
+    // ACS branch
+    ['acs', 'angina', 'ischemia', false],
+    ['acs', 'mi', 'infarction', false],
+    ['angina', 'cad_prevention', 'prevent progression', false],
+    ['mi', 'pci', 'preferred', false],
+    ['mi', 'thrombolytics', 'if no PCI', false],
+    ['mi', 'cabg', 'multi-vessel', false],
+    ['mi', 'cardiogenic_shock', 'complication', false],
+    // Heart failure branch
+    ['heart_failure', 'left_hf', 'backward failure', false],
+    ['heart_failure', 'right_hf', 'systemic backup', false],
+    ['left_hf', 'pulm_edema', 'acute', false],
+    ['left_hf', 'hf_meds', 'treated with', false],
+    ['right_hf', 'hf_meds', 'treated with', false],
+    ['cardiomyopathy', 'heart_failure', 'can cause', false],
+    ['valve_disorders', 'heart_failure', 'can cause', false],
+    // Shock branch
+    ['shock_hub', 'cardiogenic_shock', 'pump failure', false],
+    ['shock_hub', 'septic_shock', 'distributive', false],
+    // Cardiac arrest pathway
+    ['vfib', 'cardiac_arrest', 'causes', false],
+    ['vtach', 'cardiac_arrest', 'pulseless', false],
+    ['cardiac_arrest', 'acls', 'protocol', false],
+    ['defibrillation', 'acls', 'part of', false],
+    ['pacemaker', 'icd', 'combined', false],
+    ['icd', 'vtach', 'terminates', false],
+    // Cross-links (dashed)
+    ['electrolytes', 'torsades', 'hypoK/Mg', true],
+    ['electrolytes', 'arrhythmias', 'triggers', true],
+    ['htn', 'heart_failure', 'leads to', true],
+    ['htn', 'acs', 'risk factor', true],
+    ['afib', 'heart_failure', 'reduces CO', true],
+    ['cardiogenic_shock', 'acls', 'may require', true],
+    ['pulm_edema', 'cardiogenic_shock', 'progresses to', true],
+    ['preload', 'heart_failure', 'altered in', true],
+    ['afterload', 'heart_failure', 'increased in', true],
+    ['contractility', 'cardiomyopathy', 'decreased in', true],
+    ['valve_disorders', 'afib', 'can cause', true],
+    ['septic_shock', 'cardiac_arrest', 'can cause', true],
+    // Compensatory mechanism connections (N8 Core Thread)
+    ['central', 'compensatory', 'when CO drops', false],
+    ['compensatory', 'heart_failure', 'worsens long-term', false],
+    ['compensatory', 'preload', 'RAAS \u2191 volume', true],
+    ['compensatory', 'afterload', 'SNS vasoconstricts', true],
+    // Infectious disease connections (Week 2)
+    ['endocarditis', 'valve_disorders', 'damages valves', false],
+    ['myocarditis', 'cardiomyopathy', 'can cause DCM', false],
+    ['endocarditis', 'heart_failure', 'can cause', true],
+    ['myocarditis', 'heart_failure', 'can cause', true],
+    ['pericarditis', 'shock_hub', 'tamponade \u2192 obstructive', true],
+    // Critical cross-links (QA fixes #5, #6)
+    ['mi', 'left_hf', 'primary cause', true],
+    ['cardiogenic_shock', 'hemodynamics', 'monitored by', true]
+];
+
+// ===== NODE DETAIL CONTENT =====
+const nodeInfo = {
+    central: {
+        title: 'Cardiac Output & Perfusion',
+        content: `
+            <h3>Core Formula</h3>
+            <p><strong>CO = Stroke Volume × Heart Rate</strong> (Normal: 4-6 L/min)</p>
+            <h3>Key Concepts</h3>
+            <ul>
+                <li><strong>Ejection Fraction (EF)</strong> — % of blood ejected per beat; normal 55-65%; <40% = HF indicator</li>
+                <li><strong>Preload</strong> — degree of stretch at end-diastole (Frank-Starling Law)</li>
+                <li><strong>Afterload</strong> — resistance heart must overcome to eject blood</li>
+                <li><strong>Contractility</strong> — force of myocardial contraction (inotropy)</li>
+            </ul>
+            <h3>Clinical Significance</h3>
+            <p>Adequate CO ensures tissue perfusion. When CO drops, compensatory mechanisms activate (↑HR, vasoconstriction) but eventually fail → shock.</p>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> "The heart is a demand pump — it only works as well as its supply (preload), resistance (afterload), and muscle strength (contractility) allow."
+            </div>
+        `
+    },
+    anatomy: {
+        title: 'Cardiac Anatomy',
+        content: `
+            <h3>Chamber Functions</h3>
+            <ul>
+                <li><strong>Right atrium</strong> — receives deoxygenated blood from SVC/IVC</li>
+                <li><strong>Right ventricle</strong> — low-pressure pump to lungs</li>
+                <li><strong>Left atrium</strong> — receives oxygenated blood from pulmonary veins</li>
+                <li><strong>Left ventricle</strong> — 2-3× thicker than RV; pumps to systemic circulation</li>
+            </ul>
+            <h3>Anatomical Position</h3>
+            <ul>
+                <li>Heart rotated within chest; LV close to chest wall</li>
+                <li><strong>PMI (Point of Maximum Impulse)</strong> — 5th ICS, midclavicular line</li>
+            </ul>
+            <h3>Auscultation Sites</h3>
+            <p><strong>"All People Enjoy Time Magazine"</strong></p>
+            <ul>
+                <li><strong>A</strong>ortic — R 2nd ICS</li>
+                <li><strong>P</strong>ulmonic — L 2nd ICS</li>
+                <li><strong>E</strong>rb's Point — L 3rd ICS</li>
+                <li><strong>T</strong>ricuspid — L 4th ICS</li>
+                <li><strong>M</strong>itral — L 5th ICS, MCL</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Don't confuse auscultation sites with actual valve locations. You hear the aortic valve at R 2nd ICS, but the valve itself is behind the sternum.
+            </div>
+        `
+    },
+    co_determinants: {
+        title: 'Cardiac Output Determinants',
+        content: `
+            <h3>The Three Factors</h3>
+            <ul>
+                <li><strong>Preload</strong> — volume/stretch at end-diastole</li>
+                <li><strong>Afterload</strong> — resistance to ejection</li>
+                <li><strong>Contractility</strong> — muscle strength independent of load</li>
+            </ul>
+            <h3>Frank-Starling Law</h3>
+            <p>Greater stretch → stronger contraction → greater stroke volume (up to a point). Think of stretching a rubber band.</p>
+            <h3>Clinical Applications</h3>
+            <ul>
+                <li><strong>Low preload</strong> → "fill the tank" with fluids</li>
+                <li><strong>High afterload</strong> → reduce with vasodilators (ACEi, ARBs)</li>
+                <li><strong>Low contractility</strong> → positive inotropes (dobutamine, digoxin)</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> In heart failure, the Frank-Starling curve shifts DOWN and RIGHT — the heart needs more preload to generate the same output, and eventually even maximum stretch can't compensate.
+            </div>
+        `
+    },
+    preload: {
+        title: 'Preload',
+        content: `
+            <h3>Definition</h3>
+            <p>Degree of myocardial fiber stretch at end-diastole. Reflects ventricular filling (LVEDP/LVEDV).</p>
+            <h3>What Decreases Preload</h3>
+            <ul>
+                <li>Blood loss, dehydration (FVD)</li>
+                <li>Diuretics, vasodilators (nitroglycerin)</li>
+                <li>Reduced venous return</li>
+            </ul>
+            <h3>What Increases Preload</h3>
+            <ul>
+                <li>IV fluids, blood products</li>
+                <li>Fluid retention (renal failure)</li>
+                <li>Leg elevation, Trendelenburg</li>
+            </ul>
+            <h3>Clinical Assessment</h3>
+            <ul>
+                <li><strong>CVP</strong> — reflects right heart preload (normal 2-6 mmHg)</li>
+                <li><strong>PAWP</strong> — reflects left heart preload</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Low CVP (<2 mmHg) = hypovolemia → give fluids. High CVP (>6 mmHg) = hypervolemia or R-sided HF → restrict fluids/diuretics. This is a common prioritization question.
+            </div>
+        `
+    },
+    afterload: {
+        title: 'Afterload',
+        content: `
+            <h3>Definition</h3>
+            <p>Resistance the ventricle must overcome to eject blood. Primarily determined by SVR (systemic vascular resistance).</p>
+            <h3>What Decreases Afterload</h3>
+            <ul>
+                <li><strong>ABC medications:</strong> ACE inhibitors, ARBs, Beta-blockers, CCBs</li>
+                <li>Vasodilation (sepsis, anaphylaxis)</li>
+            </ul>
+            <h3>What Increases Afterload</h3>
+            <ul>
+                <li>Vasoconstrictors (norepinephrine, vasopressin)</li>
+                <li>Hypertension, aortic stenosis</li>
+                <li>Vasoconstriction (cold, SNS activation)</li>
+            </ul>
+            <h3>Clinical Implications</h3>
+            <p>Prolonged ↑ afterload → LV hypertrophy → heart failure. This is why HTN control is critical.</p>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Afterload has an INVERSE relationship with stroke volume — reduce afterload to increase SV. That's why vasodilators help in HF.
+            </div>
+        `
+    },
+    contractility: {
+        title: 'Contractility (Inotropy)',
+        content: `
+            <h3>Definition</h3>
+            <p>Ability of myocardium to contract independent of preload/afterload. The heart's intrinsic "squeeze."</p>
+            <h3>Positive Inotropes (↑ Contractility)</h3>
+            <ul>
+                <li><strong>Catecholamines:</strong> dopamine, dobutamine, epinephrine, norepinephrine</li>
+                <li><strong>Digoxin</strong> — classic positive inotrope</li>
+                <li>SNS stimulation</li>
+            </ul>
+            <h3>Negative Inotropes (↓ Contractility)</h3>
+            <ul>
+                <li><strong>Beta-blockers</strong></li>
+                <li><strong>CCBs</strong> (diltiazem, verapamil)</li>
+                <li>Hypoxemia, acidosis</li>
+                <li>Myocardial damage (MI)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Beta-blockers are NEGATIVE inotropes but still used in HF because they reduce HR, decrease O₂ demand, and prevent remodeling. The benefit outweighs the reduced contractility.
+            </div>
+        `
+    },
+    assessment: {
+        title: 'Cardiac Assessment',
+        content: `
+            <h3>Common Symptoms</h3>
+            <ul>
+                <li><strong>Chest pain</strong> — may radiate to jaw, arm, neck, back, epigastric</li>
+                <li><strong>Dyspnea</strong> — SOB, orthopnea, PND</li>
+                <li><strong>Edema</strong> — peripheral, weight gain</li>
+                <li><strong>Palpitations</strong> — feeling heart beat</li>
+                <li><strong>Syncope</strong> — transient LOC</li>
+            </ul>
+            <h3>Physical Findings</h3>
+            <ul>
+                <li><strong>Clubbing</strong> — chronic hypoxemia</li>
+                <li><strong>Cool/diaphoretic skin</strong> — low CO</li>
+                <li><strong>Central cyanosis</strong> — serious cardiac disorder</li>
+                <li><strong>JVD</strong> — R-sided HF, fluid overload</li>
+            </ul>
+            <h3>Heart Sounds</h3>
+            <ul>
+                <li><strong>S1</strong> — AV valves closing (systole start)</li>
+                <li><strong>S2</strong> — semilunar valves closing (diastole start)</li>
+                <li><strong>S3</strong> — PATHOLOGIC; fluid overload/HF</li>
+                <li><strong>S4</strong> — PATHOLOGIC; stiff ventricle</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Women and older adults often have ATYPICAL MI presentations — fatigue, weakness, dyspnea rather than classic chest pain. Always have high index of suspicion.
+            </div>
+        `
+    },
+    ecg: {
+        title: 'ECG Interpretation',
+        content: `
+            <h3>ECG Components</h3>
+            <ul>
+                <li><strong>P wave</strong> — atrial depolarization (≤0.11 sec)</li>
+                <li><strong>PR interval</strong> — atrial depol + AV delay (0.12-0.20 sec)</li>
+                <li><strong>QRS</strong> — ventricular depolarization (<0.12 sec)</li>
+                <li><strong>ST segment</strong> — should be isoelectric</li>
+                <li><strong>T wave</strong> — ventricular repolarization</li>
+                <li><strong>QT interval</strong> — total ventricular activity (0.32-0.40 sec)</li>
+            </ul>
+            <h3>Rate Determination</h3>
+            <ul>
+                <li><strong>6-second method:</strong> Count R waves × 10</li>
+                <li><strong>1500 method:</strong> 1500 ÷ small boxes between R-R</li>
+                <li><strong>300 method:</strong> 300, 150, 100, 75, 60, 50...</li>
+            </ul>
+            <h3>Lead Placement</h3>
+            <p><strong>"White on Right, Smoke over Fire, Clouds over Grass"</strong></p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Prolonged QT (>0.44 sec) → Torsades de Pointes risk. Know the drugs that prolong QT: IV Haldol, Cipro, Zithromax, lithium, methadone.
+            </div>
+        `
+    },
+    electrolytes: {
+        title: 'Electrolyte Imbalances & the Heart',
+        content: `
+            <h3>Potassium</h3>
+            <ul>
+                <li><strong>Hypokalemia:</strong> U wave, flat T, prolonged QT, ST depression → Torsades risk</li>
+                <li><strong>Hyperkalemia:</strong> PEAKED (tented) T waves, widened QRS → cardiac arrest</li>
+            </ul>
+            <h3>Calcium</h3>
+            <ul>
+                <li><strong>Hypocalcemia:</strong> Prolonged QT, prolonged ST</li>
+                <li><strong>Hypercalcemia:</strong> Shortened QT, shortened ST</li>
+            </ul>
+            <h3>Magnesium</h3>
+            <ul>
+                <li><strong>Hypomagnesemia:</strong> Prolonged QT, flat T wave → Torsades risk</li>
+                <li><strong>Hypermagnesemia:</strong> PR, QT, QRS all prolonged</li>
+            </ul>
+            <h3>Hyperkalemia Treatment</h3>
+            <p>Calcium gluconate (stabilize membrane) → Insulin + D50 → Albuterol → Kayexalate → Dialysis (definitive)</p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Hypokalemia AND Hypomagnesemia both cause Torsades de Pointes. The treatment for Torsades is IV MAGNESIUM SULFATE regardless of K+ level.
+            </div>
+        `
+    },
+    arrhythmias: {
+        title: 'Cardiac Arrhythmias',
+        content: `
+            <h3>Definition</h3>
+            <p>Disorders of electrical impulse formation or conduction → rate/rhythm disturbance → altered blood flow.</p>
+            <h3>Categories</h3>
+            <ul>
+                <li><strong>Atrial:</strong> PAC, AFib, A-flutter, SVT</li>
+                <li><strong>Junctional:</strong> AV node becomes pacemaker</li>
+                <li><strong>Ventricular:</strong> PVC, VT, VF, Torsades</li>
+                <li><strong>Conduction blocks:</strong> 1st, 2nd, 3rd degree AV block</li>
+            </ul>
+            <h3>Terminology</h3>
+            <ul>
+                <li><strong>Chronotropy</strong> — affects HR</li>
+                <li><strong>Dromotropy</strong> — affects AV conduction</li>
+                <li><strong>Inotropy</strong> — affects contractility</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Not all arrhythmias need treatment. Assess the PATIENT, not just the monitor. Hemodynamic stability determines urgency.
+            </div>
+        `
+    },
+    atrial_arrhythmias: {
+        title: 'Atrial Arrhythmias',
+        content: `
+            <h3>Premature Atrial Complex (PAC)</h3>
+            <ul>
+                <li>Early beat from ectopic atrial focus</li>
+                <li>Patient feels "skipped beat"</li>
+                <li>>6/min may indicate worsening state or AFib onset</li>
+            </ul>
+            <h3>Atrial Flutter</h3>
+            <ul>
+                <li>Atrial rate: 250-400 bpm</li>
+                <li><strong>Saw-tooth (F waves)</strong> pattern</li>
+                <li>P:QRS ratio 2:1, 3:1, or 4:1</li>
+            </ul>
+            <h3>Supraventricular Tachycardia (SVT)</h3>
+            <ul>
+                <li>Narrow QRS tachycardia from above ventricles</li>
+                <li>Treatment: Vagal maneuvers → Adenosine</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Saw-tooth pattern = atrial flutter. Chaotic baseline with no P waves = AFib. Don't confuse these on rhythm strips.
+            </div>
+        `
+    },
+    afib: {
+        title: 'Atrial Fibrillation',
+        content: `
+            <h3>Most Common Sustained Arrhythmia</h3>
+            <ul>
+                <li>Atrial rate: 300-600 bpm</li>
+                <li>Ventricular rate: 120-200 bpm (untreated)</li>
+                <li><strong>No discernible P waves — fibrillatory (f) waves</strong></li>
+                <li><strong>Irregularly irregular rhythm</strong></li>
+            </ul>
+            <h3>Consequences</h3>
+            <ul>
+                <li><strong>Loss of atrial kick (25-30% of CO)</strong></li>
+                <li>↑ Risk for stroke, HF, myocardial ischemia</li>
+                <li>Blood pools in atria → clot formation</li>
+            </ul>
+            <h3>Treatment</h3>
+            <ul>
+                <li><strong>Rate control:</strong> Beta-blockers, CCBs (goal <80 bpm)</li>
+                <li><strong>Rhythm control:</strong> Cardioversion (if stable)</li>
+                <li><strong>Anticoagulation:</strong> Prevent stroke (warfarin or DOACs)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> AFib >48 hours requires ANTICOAGULATION before cardioversion to prevent stroke from dislodged clot. This is heavily tested.
+            </div>
+        `
+    },
+    ventricular_arrhythmias: {
+        title: 'Ventricular Arrhythmias',
+        content: `
+            <h3>PVC (Premature Ventricular Complex)</h3>
+            <ul>
+                <li>Wide, bizarre QRS (≥0.12 sec)</li>
+                <li><strong>Bigeminy</strong> — every other beat is PVC</li>
+                <li><strong>Trigeminy</strong> — every 3rd beat</li>
+                <li>Treatment: Correct underlying cause; amiodarone if frequent</li>
+            </ul>
+            <h3>Key Characteristics</h3>
+            <ul>
+                <li>Originate BELOW bundle of His</li>
+                <li>Wide QRS because conduction is abnormal</li>
+                <li>Can deteriorate into VT/VF</li>
+            </ul>
+            <h3>Causes</h3>
+            <ul>
+                <li>Cardiac ischemia, MI</li>
+                <li>Electrolyte imbalances (especially K+, Mg++)</li>
+                <li>Digitalis toxicity</li>
+                <li>Caffeine, nicotine, alcohol</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Monomorphic (unifocal) PVCs = same shape = single ectopic focus. Polymorphic (multifocal) PVCs = different shapes = multiple foci = more dangerous.
+            </div>
+        `
+    },
+    vtach: {
+        title: 'Ventricular Tachycardia (VT)',
+        content: `
+            <h3>Definition</h3>
+            <p>≥3 consecutive PVCs at rate 100-200 bpm. <strong>MEDICAL EMERGENCY.</strong></p>
+            <h3>Characteristics</h3>
+            <ul>
+                <li>Wide, bizarre QRS (≥0.12 sec)</li>
+                <li>Regular or slightly irregular</li>
+                <li>P waves may be hidden or dissociated</li>
+            </ul>
+            <h3>Treatment Algorithm</h3>
+            <ul>
+                <li><strong>WITH pulse:</strong> Assess stability → Synchronized cardioversion if unstable; Amiodarone if stable</li>
+                <li><strong>WITHOUT pulse:</strong> Treat as cardiac arrest → CPR + Defibrillation</li>
+            </ul>
+            <h3>Recurrent VT</h3>
+            <p>EF <35% + recurrent VT → ICD placement indicated</p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> VT WITH pulse = synchronized cardioversion. VT WITHOUT pulse = defibrillation (no sync). The PULSE determines the approach.
+            </div>
+        `
+    },
+    vfib: {
+        title: 'Ventricular Fibrillation (VF)',
+        content: `
+            <h3>Most Common Arrhythmia in Cardiac Arrest</h3>
+            <ul>
+                <li>Rapid, disorganized electrical activity</li>
+                <li>No coordinated heartbeat — ineffective quivering</li>
+                <li>Rate: >300 bpm</li>
+                <li>No recognizable QRS complex</li>
+            </ul>
+            <h3>Consequences</h3>
+            <p><strong>DEATH IMMINENT without immediate intervention.</strong> No cardiac output = no perfusion.</p>
+            <h3>Treatment</h3>
+            <ol>
+                <li><strong>EARLY DEFIBRILLATION</strong> — single most important intervention</li>
+                <li>High-quality CPR</li>
+                <li>Epinephrine 1mg IV q3-5min</li>
+                <li>Amiodarone 300mg IV (then 150mg)</li>
+            </ol>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> VF = chaotic, no organized rhythm = DEFIBRILLATION (unsynchronized). Every minute without defib decreases survival by 7-10%.
+            </div>
+        `
+    },
+    torsades: {
+        title: 'Torsades de Pointes',
+        content: `
+            <h3>Definition</h3>
+            <p>"Twisting of the peaks" — polymorphic VT with characteristic undulating pattern. <strong>Preceded by prolonged QT interval.</strong></p>
+            <h3>Causes</h3>
+            <ul>
+                <li><strong>Hypokalemia, hypomagnesemia, hypocalcemia</strong></li>
+                <li><strong>Drugs:</strong> IV Haldol, Cipro, Zithromax, lithium, methadone</li>
+                <li>Congenital long QT syndrome</li>
+            </ul>
+            <h3>Treatment</h3>
+            <ul>
+                <li><strong>IV MAGNESIUM SULFATE 1-2g</strong> — first-line treatment</li>
+                <li>Correct electrolyte imbalances</li>
+                <li>Discontinue offending drugs</li>
+                <li>If pulseless: CPR + defibrillation + Mag</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Torsades = give MAGNESIUM. This is true even if Mg level is normal. Mag stabilizes the membrane. Amiodarone can actually WORSEN Torsades (it prolongs QT).
+            </div>
+        `
+    },
+    av_blocks: {
+        title: 'AV Blocks',
+        content: `
+            <h3>First-Degree AV Block</h3>
+            <ul>
+                <li>PR interval >0.20 sec (but constant)</li>
+                <li>All impulses conducted, just delayed</li>
+                <li>Usually benign — observe</li>
+            </ul>
+            <h3>Second-Degree Type I (Wenckebach)</h3>
+            <ul>
+                <li><strong>PR progressively lengthens until QRS drops</strong></li>
+                <li>Usually benign — address cause</li>
+            </ul>
+            <h3>Second-Degree Type II (Mobitz II)</h3>
+            <ul>
+                <li><strong>PR constant, then sudden dropped QRS</strong></li>
+                <li>More dangerous — may progress to complete block</li>
+                <li>May need temporary pacing</li>
+            </ul>
+            <h3>Third-Degree (Complete Heart Block)</h3>
+            <ul>
+                <li><strong>NO atrial impulses reach ventricles</strong></li>
+                <li>Atria and ventricles beat independently (AV dissociation)</li>
+                <li>Treatment: Atropine → Transcutaneous pacing → Permanent pacer</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> "PR gets longer, longer, DROP" = Type I. "PR stays same, then DROP" = Type II. Type II is more dangerous and needs closer monitoring.
+            </div>
+        `
+    },
+    cardioversion: {
+        title: 'Cardioversion',
+        content: `
+            <h3>Definition</h3>
+            <p><strong>SYNCHRONIZED</strong> electrical shock timed to QRS to convert tachyarrhythmia to sinus rhythm.</p>
+            <h3>Indications</h3>
+            <ul>
+                <li>Atrial fibrillation/flutter</li>
+                <li>SVT not responsive to vagal/adenosine</li>
+                <li><strong>VT WITH pulse</strong></li>
+            </ul>
+            <h3>Preparation</h3>
+            <ul>
+                <li>NPO 4+ hours if elective</li>
+                <li>Moderate sedation (patient conscious)</li>
+                <li>Hold digoxin 48 hours (toxicity risk)</li>
+                <li>AFib >48h: anticoagulate first</li>
+            </ul>
+            <h3>Safety Measures</h3>
+            <ul>
+                <li>Good skin contact with pads</li>
+                <li>Away from O₂ and patches</li>
+                <li>"I'm clear, you're clear, ALL clear"</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Cardioversion = SYNC mode ON. Defibrillation = SYNC mode OFF. If sync mode fails to capture R wave, it won't discharge — check lead placement.
+            </div>
+        `
+    },
+    defibrillation: {
+        title: 'Defibrillation',
+        content: `
+            <h3>Definition</h3>
+            <p><strong>UNSYNCHRONIZED</strong> electrical shock to depolarize the entire heart and allow SA node to reset.</p>
+            <h3>Indications</h3>
+            <ul>
+                <li><strong>Ventricular Fibrillation</strong></li>
+                <li><strong>Pulseless VT</strong></li>
+            </ul>
+            <h3>Key Points</h3>
+            <ul>
+                <li>No preparation needed — EMERGENCY</li>
+                <li>Patient is pulseless/unconscious</li>
+                <li>Shock immediately, then resume CPR</li>
+                <li>Early defibrillation = single most important factor</li>
+            </ul>
+            <h3>Energy Levels</h3>
+            <ul>
+                <li>Biphasic: 120-200 J (manufacturer specific)</li>
+                <li>Monophasic: 360 J</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Every minute of VF without defibrillation decreases survival by 7-10%. AEDs save lives because they enable early defibrillation by bystanders.
+            </div>
+        `
+    },
+    acs: {
+        title: 'Acute Coronary Syndrome (ACS)',
+        content: `
+            <h3>Spectrum of Disease</h3>
+            <ol>
+                <li><strong>Unstable Angina</strong> — ischemia, NO biomarker elevation</li>
+                <li><strong>NSTEMI</strong> — elevated troponin, no ST elevation</li>
+                <li><strong>STEMI</strong> — ST elevation in ≥2 contiguous leads</li>
+            </ol>
+            <h3>Pathophysiology</h3>
+            <p>Plaque rupture → platelet aggregation → thrombus → coronary occlusion → myocardial ischemia/infarction</p>
+            <h3>"TIME IS MUSCLE"</h3>
+            <ul>
+                <li>12-lead ECG within 10 minutes of arrival</li>
+                <li>Door-to-balloon (PCI): <60 minutes</li>
+                <li>Door-to-needle (thrombolytics): <30 minutes</li>
+            </ul>
+            <h3>ECG Changes</h3>
+            <ul>
+                <li><strong>Ischemia:</strong> ST depression, T-wave inversion</li>
+                <li><strong>Injury:</strong> ST elevation</li>
+                <li><strong>Infarction:</strong> Q waves (may be permanent)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> STEMI = ST elevation = full-thickness damage = emergent reperfusion. NSTEMI has elevated biomarkers but NO ST elevation.
+            </div>
+        `
+    },
+    angina: {
+        title: 'Angina Pectoris',
+        content: `
+            <h3>Definition</h3>
+            <p>Chest pain/pressure from insufficient coronary blood flow (demand > supply).</p>
+            <h3>Types</h3>
+            <ul>
+                <li><strong>Stable</strong> — predictable, with exertion, relieved by rest/NTG</li>
+                <li><strong>Unstable</strong> — increasing severity, at rest, NOT relieved by NTG</li>
+                <li><strong>Variant (Prinzmetal's)</strong> — rest pain, coronary vasospasm, ST elevation</li>
+            </ul>
+            <h3>Nitroglycerin (NTG)</h3>
+            <ul>
+                <li>Potent vasodilator → ↓ preload and afterload</li>
+                <li>Take seated (prevent syncope)</li>
+                <li>May repeat q5min × 3 doses</li>
+                <li><strong>If not relieved after 3 doses → call 911</strong></li>
+                <li>Replace every 6 months (volatile)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Stable angina = predictable, relieved by rest/NTG. UNSTABLE angina = unpredictable, NOT relieved = medical emergency. This distinction determines urgency.
+            </div>
+        `
+    },
+    mi: {
+        title: 'Myocardial Infarction',
+        content: `
+            <h3>MONA Protocol (Initial Treatment)</h3>
+            <ul>
+                <li><strong>M</strong>orphine — reduces pain, ↓ preload/afterload</li>
+                <li><strong>O</strong>xygen — if SpO₂ <95%</li>
+                <li><strong>N</strong>itroglycerin</li>
+                <li><strong>A</strong>spirin 162-325mg (chew)</li>
+            </ul>
+            <h3>Cardiac Biomarkers</h3>
+            <ul>
+                <li><strong>Troponin</strong> — rises 3h, stays elevated 2 weeks; most specific</li>
+                <li><strong>CK-MB</strong> — peaks at 24h</li>
+                <li><strong>Myoglobin</strong> — rises first (1-3h); best for RULING OUT</li>
+            </ul>
+            <h3>Additional Treatment</h3>
+            <ul>
+                <li>Beta-blocker, ACE inhibitor within 24h</li>
+                <li>Anticoagulation (heparin + antiplatelets)</li>
+                <li>Statin therapy</li>
+                <li>Reperfusion: PCI preferred; thrombolytics if PCI unavailable</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> "Time is muscle" — every 30 minutes of delay increases mortality. The goal is reperfusion as fast as possible. Don't wait for biomarkers if ECG shows STEMI.
+            </div>
+        `
+    },
+    pci: {
+        title: 'PCI (Percutaneous Coronary Intervention)',
+        content: `
+            <h3>Definition</h3>
+            <p>Catheter-based intervention to open blocked coronary arteries. Includes PTCA (balloon) and stent placement.</p>
+            <h3>Time Goals</h3>
+            <ul>
+                <li><strong>Door-to-balloon: <60 minutes</strong></li>
+                <li>Preferred reperfusion strategy for STEMI</li>
+            </ul>
+            <h3>Pre-Procedure</h3>
+            <ul>
+                <li>Assess renal function (contrast risk)</li>
+                <li>N-acetylcysteine + IVF for CIN prevention</li>
+                <li>NPO 8-12 hours</li>
+            </ul>
+            <h3>Post-Procedure Care</h3>
+            <ul>
+                <li>Observe site for bleeding, hematoma</li>
+                <li>Assess pulses, color, temp of affected limb</li>
+                <li>Bed rest 2-6h, leg straight, HOB ≤30°</li>
+                <li>Monitor for arrhythmias</li>
+                <li>Dual antiplatelet therapy (aspirin + P2Y12 inhibitor)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Post-cath: check pulses distal to insertion site (radial or femoral approach). Loss of pulse = arterial occlusion = emergency.
+            </div>
+        `
+    },
+    thrombolytics: {
+        title: 'Thrombolytic Therapy',
+        content: `
+            <h3>When Used</h3>
+            <p>STEMI when PCI not available within 120 minutes. <strong>Door-to-needle: <30 minutes.</strong></p>
+            <h3>Agents</h3>
+            <ul>
+                <li>Alteplase (tPA), Tenecteplase (TNK)</li>
+            </ul>
+            <h3>Absolute Contraindications</h3>
+            <ul>
+                <li>Active internal bleeding</li>
+                <li>Bleeding disorder</li>
+                <li>Recent major surgery (<3 weeks)</li>
+                <li>History of hemorrhagic stroke</li>
+                <li>Uncontrolled HTN (>180/110)</li>
+                <li>Pregnancy</li>
+            </ul>
+            <h3>Nursing Care</h3>
+            <ul>
+                <li>Minimize skin punctures</li>
+                <li>Avoid IM injections</li>
+                <li>Draw blood when starting IV</li>
+                <li>Monitor for bleeding and reperfusion signs</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Signs of successful reperfusion: resolution of chest pain, resolution of ST elevation, reperfusion arrhythmias (PVCs, accelerated idioventricular rhythm).
+            </div>
+        `
+    },
+    heart_failure: {
+        title: 'Heart Failure',
+        content: `
+            <h3>Definition</h3>
+            <p>Clinical syndrome where the heart cannot pump enough blood to meet metabolic demands OR can only do so at elevated filling pressures.</p>
+            <h3>Types by EF</h3>
+            <ul>
+                <li><strong>HFrEF</strong> — reduced EF (<40%); systolic failure</li>
+                <li><strong>HFpEF</strong> — preserved EF (≥50%); diastolic failure</li>
+            </ul>
+            <h3>Primary Cause: CAD</h3>
+            <p>Most common reason for hospitalization in patients >65 years old.</p>
+            <h3>Key Monitoring</h3>
+            <ul>
+                <li><strong>Daily weights</strong> — same time, scale, clothing</li>
+                <li><strong>Call MD if:</strong> Gain 2 lbs in 1 day OR >5 lbs in 1 week</li>
+                <li><strong>BNP >100 pg/mL</strong> — indicative of HF</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> HF is a clinical syndrome, not a single disease. Always ask: What caused this? (CAD, HTN, valve disease, cardiomyopathy) Treatment depends on the underlying etiology.
+            </div>
+        `
+    },
+    left_hf: {
+        title: 'Left-Sided Heart Failure',
+        content: `
+            <h3>Pathophysiology</h3>
+            <p>LV cannot adequately eject blood → blood backs up into pulmonary circulation → pulmonary congestion.</p>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li><strong>Pulmonary congestion:</strong> Crackles on auscultation</li>
+                <li><strong>S3 gallop:</strong> "Kentucky" = ventricular gallop</li>
+                <li><strong>Dyspnea on exertion (DOE)</strong></li>
+                <li><strong>Orthopnea:</strong> SOB when lying flat</li>
+                <li><strong>PND:</strong> Paroxysmal nocturnal dyspnea</li>
+                <li><strong>Pink, frothy sputum</strong> — pulmonary edema</li>
+                <li><strong>Oliguria:</strong> ↓ renal perfusion</li>
+            </ul>
+            <h3>Think "Backward Failure"</h3>
+            <p>Blood backs up into lungs → respiratory symptoms predominate.</p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Left-sided HF = LUNG symptoms (crackles, dyspnea, orthopnea, PND). Right-sided HF = PERIPHERAL symptoms (edema, JVD, hepatomegaly).
+            </div>
+        `
+    },
+    right_hf: {
+        title: 'Right-Sided Heart Failure',
+        content: `
+            <h3>Pathophysiology</h3>
+            <p>RV cannot adequately pump to lungs → blood backs up into systemic venous circulation.</p>
+            <h3>Most Common Cause</h3>
+            <p><strong>Left-sided HF</strong> — increased pulmonary pressures → RV strain</p>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li><strong>JVD:</strong> Jugular venous distention</li>
+                <li><strong>Dependent edema:</strong> Legs, sacrum</li>
+                <li><strong>Hepatomegaly:</strong> Enlarged, tender liver</li>
+                <li><strong>Ascites:</strong> Abdominal fluid</li>
+                <li><strong>Weight gain:</strong> 10 lbs = 4.5 L fluid</li>
+                <li><strong>Hepatojugular reflux</strong></li>
+            </ul>
+            <h3>Cor Pulmonale</h3>
+            <p>R-sided HF caused by LUNG disease (COPD → pulmonary HTN → RV failure)</p>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Think of right-sided HF as "systemic backup." Everything below the right heart gets congested: liver, gut, legs.
+            </div>
+        `
+    },
+    pulm_edema: {
+        title: 'Pulmonary Edema',
+        content: `
+            <h3>Definition</h3>
+            <p>Acute LV failure → blood backs up → fluid leaks into pulmonary interstitium and alveoli.</p>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li>Severe dyspnea, orthopnea</li>
+                <li>Anxiety, restlessness</li>
+                <li>Cyanosis, pallor</li>
+                <li>Weak, rapid pulse</li>
+                <li><strong>Pink, frothy sputum</strong></li>
+                <li>Crackles throughout lung fields</li>
+            </ul>
+            <h3>Management</h3>
+            <ul>
+                <li><strong>Position upright with legs dangling</strong> (↓ venous return)</li>
+                <li>High-flow O₂ (nonrebreather)</li>
+                <li>Diuretics (furosemide IV)</li>
+                <li>Vasodilators (NTG, morphine)</li>
+                <li>BiPAP/CPAP if available</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Pulmonary edema = sit patient UP with legs DANGLING. This reduces venous return (preload) and lets gravity help. Don't lay them flat!
+            </div>
+        `
+    },
+    hf_meds: {
+        title: 'Heart Failure Medications',
+        content: `
+            <h3>Core Medications</h3>
+            <ul>
+                <li><strong>ACE Inhibitors</strong> (lisinopril, enalapril) — ↓ afterload, prevent remodeling</li>
+                <li><strong>ARBs</strong> (losartan, valsartan) — if ACEi intolerant</li>
+                <li><strong>Beta-blockers</strong> (carvedilol, metoprolol) — ↓ HR, prevent remodeling</li>
+                <li><strong>Loop diuretics</strong> (furosemide) — ↓ fluid volume</li>
+                <li><strong>Aldosterone antagonists</strong> (spironolactone) — advanced HF</li>
+                <li><strong>Digoxin</strong> — positive inotrope; narrow therapeutic window</li>
+            </ul>
+            <h3>Monitoring</h3>
+            <ul>
+                <li>K+ levels (diuretics deplete, ACEi/ARBs/spironolactone retain)</li>
+                <li>Renal function (ACEi/ARBs can ↑ creatinine)</li>
+                <li>HR and BP (beta-blockers)</li>
+                <li>Digoxin levels (therapeutic 0.5-2.0 ng/mL)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> ACEi → watch for cough (switch to ARB), hyperkalemia, angioedema. Digoxin toxicity: N/V, visual changes (yellow-green halos), bradycardia.
+            </div>
+        `
+    },
+    cardiogenic_shock: {
+        title: 'Cardiogenic Shock',
+        content: `
+            <h3>Definition</h3>
+            <p>Pump failure → inadequate CO → tissue hypoperfusion. <strong>RARE but DEADLY — 50% mortality even with immediate care.</strong></p>
+            <h3>Common Cause</h3>
+            <p>Follows large MI (>40% of LV damaged)</p>
+            <h3>Clinical Signs</h3>
+            <ul>
+                <li>Hypotension (SBP <90 mmHg)</li>
+                <li>Cold, clammy skin (vasoconstriction)</li>
+                <li>Altered mental status</li>
+                <li>Oliguria (<30 mL/hr)</li>
+                <li>Tachycardia, weak pulses</li>
+            </ul>
+            <h3>Management</h3>
+            <ul>
+                <li>Correct underlying cause (reperfusion for MI)</li>
+                <li>Inotropes: dobutamine (↑ contractility)</li>
+                <li>Vasopressors if needed</li>
+                <li>Mechanical support: IABP, LVAD</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Cardiogenic shock = the heart is the problem. Fluids won't help (unlike hypovolemic shock). Focus on improving contractility and reducing workload.
+            </div>
+        `
+    },
+    pacemaker: {
+        title: 'Pacemakers',
+        content: `
+            <h3>Indications</h3>
+            <ul>
+                <li>Symptomatic bradycardia</li>
+                <li>Heart block (especially 3rd degree)</li>
+                <li>Sick sinus syndrome</li>
+            </ul>
+            <h3>Types</h3>
+            <ul>
+                <li><strong>Temporary:</strong> Transcutaneous (emergency, uncomfortable)</li>
+                <li><strong>Permanent:</strong> Subcutaneous generator with leads to heart</li>
+            </ul>
+            <h3>NASPE-BPEG Code</h3>
+            <ul>
+                <li>1st letter: Chamber PACED (A, V, D)</li>
+                <li>2nd letter: Chamber SENSED (A, V, D, O)</li>
+                <li>3rd letter: Response (I=inhibit, T=trigger, D=dual)</li>
+                <li>Example: <strong>VVI</strong> = paces V, senses V, inhibits if V depolarizes</li>
+            </ul>
+            <h3>Patient Education</h3>
+            <ul>
+                <li>Avoid strong magnetic fields</li>
+                <li>Walk through security quickly</li>
+                <li>Carry identification card</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Pacemaker spike followed by QRS = capture (working). If you see spikes without capture = malfunction (not pacing the heart).
+            </div>
+        `
+    },
+    icd: {
+        title: 'Implantable Cardioverter Defibrillator (ICD)',
+        content: `
+            <h3>Function</h3>
+            <p>Detects and terminates life-threatening VT/VF automatically. Can also function as pacemaker.</p>
+            <h3>Indications</h3>
+            <ul>
+                <li>Survived cardiac arrest from VF/VT</li>
+                <li>EF <35% with HF symptoms</li>
+                <li>Recurrent sustained VT</li>
+            </ul>
+            <h3>Post-Insertion Care</h3>
+            <ul>
+                <li>CXR to rule out pneumothorax</li>
+                <li>Monitor for bleeding, hematoma</li>
+                <li>Assess for arrhythmias</li>
+                <li>Psychological support (anxiety about shocks)</li>
+            </ul>
+            <h3>Patient Education</h3>
+            <ul>
+                <li>If shock occurs: sit/lie down, call provider</li>
+                <li>Multiple shocks or feeling unwell → emergency</li>
+                <li>Avoid strong magnets, cell phone on opposite side</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> ICDs save lives but cause significant anxiety. Patients may fear shocks, limit activities, or develop depression. Address psychosocial needs.
+            </div>
+        `
+    },
+    valve_disorders: {
+        title: 'Valvular Heart Disorders',
+        content: `
+            <h3>Types</h3>
+            <ul>
+                <li><strong>Stenosis:</strong> Valve doesn't open completely → reduced flow</li>
+                <li><strong>Regurgitation:</strong> Valve doesn't close properly → backflow</li>
+            </ul>
+            <h3>Mitral Valve</h3>
+            <ul>
+                <li><strong>Stenosis:</strong> LA→LV flow impaired; low-pitched diastolic murmur at apex</li>
+                <li><strong>Regurgitation:</strong> LV→LA backflow; blowing systolic murmur at apex</li>
+            </ul>
+            <h3>Aortic Valve</h3>
+            <ul>
+                <li><strong>Stenosis:</strong> LV→Aorta flow impaired; harsh systolic murmur</li>
+                <li><strong>Regurgitation:</strong> Aorta→LV backflow; high-pitched diastolic murmur</li>
+            </ul>
+            <h3>Treatment</h3>
+            <ul>
+                <li>Medical: manage HF symptoms, anticoagulation for AFib</li>
+                <li>Surgical: valve repair or replacement (mechanical vs bioprosthetic)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Mechanical valves = lifelong anticoagulation (high thromboemboli risk). Bioprosthetic = no anticoagulation needed but less durable (7-15 years).
+            </div>
+        `
+    },
+    cardiomyopathy: {
+        title: 'Cardiomyopathy',
+        content: `
+            <h3>Types</h3>
+            <ul>
+                <li><strong>Dilated (DCM):</strong> Most common; heart dilates and weakens; causes include viral, alcohol, chemo</li>
+                <li><strong>Hypertrophic (HCM):</strong> LV thickens; <strong>leading cause of sudden death in young athletes</strong></li>
+                <li><strong>Restrictive (RCM):</strong> Stiff muscle, can't fill; least common</li>
+                <li><strong>ARVC/D:</strong> Arrhythmogenic right ventricular cardiomyopathy; sudden cardiac death may be first sign</li>
+            </ul>
+            <h3>HCM Special Considerations</h3>
+            <ul>
+                <li>Avoid preload-reducing situations (hot tubs, saunas)</li>
+                <li>Avoid strenuous exercise</li>
+                <li>Screen family members (genetic)</li>
+            </ul>
+            <h3>Management</h3>
+            <ul>
+                <li>Treat underlying cause</li>
+                <li>HF medications</li>
+                <li>ICD for high-risk patients</li>
+                <li>Heart transplant (end-stage)</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Young athlete with sudden cardiac death → think HCM. This is why pre-participation screening is important.
+            </div>
+        `
+    },
+    shock_hub: {
+        title: 'Shock States',
+        content: `
+            <h3>Definition</h3>
+            <p>Inadequate tissue perfusion → cellular hypoxia → organ dysfunction → death if untreated.</p>
+            <h3>Types</h3>
+            <ul>
+                <li><strong>Hypovolemic:</strong> ↓ volume (bleeding, dehydration)</li>
+                <li><strong>Cardiogenic:</strong> Pump failure</li>
+                <li><strong>Distributive:</strong> Vasodilation (septic, anaphylactic, neurogenic)</li>
+                <li><strong>Obstructive:</strong> Mechanical obstruction (PE, tamponade, tension pneumo)</li>
+            </ul>
+            <h3>Stages</h3>
+            <ol>
+                <li><strong>Compensatory:</strong> Body compensates; BP may be normal</li>
+                <li><strong>Progressive:</strong> Compensation failing; organ dysfunction</li>
+                <li><strong>Irreversible:</strong> MODS, death imminent</li>
+            </ol>
+            <h3>Goals</h3>
+            <ul>
+                <li>MAP >65 mmHg</li>
+                <li>Urine output >0.5 mL/kg/hr</li>
+                <li>Lactate clearing</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Narrowing pulse pressure (normal 30-40 mmHg) is an early sign of shock — compensation is failing. Don't wait for hypotension.
+            </div>
+        `
+    },
+    septic_shock: {
+        title: 'Septic Shock',
+        content: `
+            <h3>Definition</h3>
+            <p>Sepsis with hypotension requiring vasopressors AND lactate >2 mmol/L despite adequate fluid resuscitation.</p>
+            <h3>Hour-1 Bundle</h3>
+            <ol>
+                <li>Measure lactate</li>
+                <li>Obtain blood cultures BEFORE antibiotics</li>
+                <li>Administer broad-spectrum antibiotics</li>
+                <li>Begin rapid fluid resuscitation (30 mL/kg crystalloid) if hypotensive or lactate ≥4</li>
+                <li>Apply vasopressors if hypotensive during or after fluids</li>
+            </ol>
+            <h3>First-Line Vasopressor</h3>
+            <p><strong>NOREPINEPHRINE</strong> — preferred for septic shock</p>
+            <h3>Key Point</h3>
+            <p><strong>Every hour of delay in antibiotics increases mortality.</strong></p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Blood cultures BEFORE antibiotics — but don't delay antibiotics waiting for cultures. Draw them, then give antibiotics immediately.
+            </div>
+        `
+    },
+    cardiac_arrest: {
+        title: 'Cardiac Arrest',
+        content: `
+            <h3>Shockable Rhythms</h3>
+            <ul>
+                <li><strong>VF</strong> — defibrillate immediately</li>
+                <li><strong>Pulseless VT</strong> — defibrillate immediately</li>
+            </ul>
+            <h3>Non-Shockable Rhythms</h3>
+            <ul>
+                <li><strong>Asystole</strong> — flatline in 2 leads</li>
+                <li><strong>PEA</strong> — organized rhythm but no pulse</li>
+            </ul>
+            <h3>H's and T's (Reversible Causes)</h3>
+            <ul>
+                <li><strong>H's:</strong> Hypovolemia, Hypoxia, H+ (acidosis), Hypo/Hyperkalemia, Hypothermia</li>
+                <li><strong>T's:</strong> Tension pneumo, Tamponade, Toxins, Thrombosis (PE/MI), Trauma</li>
+            </ul>
+            <h3>Every Minute Counts</h3>
+            <p>Brain damage begins within 4-6 minutes without perfusion.</p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Asystole requires confirmation in TWO leads (may be fine VF in one view). Never defibrillate asystole — it's not a shockable rhythm.
+            </div>
+        `
+    },
+    acls: {
+        title: 'ACLS Algorithm',
+        content: `
+            <h3>High-Quality CPR</h3>
+            <ul>
+                <li>Rate: 100-120 compressions/min</li>
+                <li>Depth: ≥2 inches (adults)</li>
+                <li>Allow complete chest recoil</li>
+                <li>Minimize interruptions</li>
+                <li>Switch compressors every 2 minutes</li>
+            </ul>
+            <h3>Medications</h3>
+            <ul>
+                <li><strong>Epinephrine:</strong> 1 mg IV q3-5 min (all arrests)</li>
+                <li><strong>Amiodarone:</strong> 300 mg IV for VF/pVT (then 150 mg)</li>
+                <li><strong>Atropine:</strong> 0.5 mg IV for symptomatic bradycardia (max 3 mg)</li>
+                <li><strong>Magnesium:</strong> 1-2 g IV for Torsades</li>
+            </ul>
+            <h3>Post-ROSC Care</h3>
+            <ul>
+                <li>Optimize ventilation/oxygenation</li>
+                <li>Treat hypotension</li>
+                <li><strong>Targeted Temperature Management</strong> (32-36°C)</li>
+                <li>Identify and treat cause</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Push hard, push fast, let the chest fully recoil, and minimize interruptions. The quality of compressions is the single most important factor in survival.
+            </div>
+        `
+    },
+    hemodynamics: {
+        title: 'Hemodynamic Monitoring',
+        content: `
+            <h3>Setup</h3>
+            <ul>
+                <li>Pressure bag at 300 mmHg</li>
+                <li>NS flush system (3-5 mL/hr for patency)</li>
+                <li>Transducer at phlebostatic axis (4th ICS, mid-axillary)</li>
+            </ul>
+            <h3>Central Venous Pressure (CVP)</h3>
+            <ul>
+                <li>Normal: 2-6 mmHg</li>
+                <li>Reflects right heart preload</li>
+                <li><strong>>6 mmHg:</strong> Hypervolemia, R-sided HF</li>
+                <li><strong><2 mmHg:</strong> Hypovolemia</li>
+            </ul>
+            <h3>Pulmonary Artery Catheter</h3>
+            <ul>
+                <li>Measures PA pressures, PAWP, CO</li>
+                <li>PAWP reflects LV filling pressure</li>
+                <li>Balloon inflated max 15 seconds</li>
+            </ul>
+            <h3>Arterial Line</h3>
+            <ul>
+                <li>Continuous BP monitoring</li>
+                <li>Frequent ABG access</li>
+                <li><strong>Modified Allen test</strong> before radial insertion</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Positive Allen test (pink return ≤7 sec) = adequate collateral circulation = safe for radial artery line. Negative = don't use that radial artery.
+            </div>
+        `
+    },
+    htn: {
+        title: 'Hypertension',
+        content: `
+            <h3>BP Classifications (ACC/AHA 2017)</h3>
+            <ul>
+                <li>Normal: <120/80</li>
+                <li>Elevated: 120-129/<80</li>
+                <li>Stage 1: 130-139 OR 80-89</li>
+                <li>Stage 2: ≥140 OR ≥90</li>
+            </ul>
+            <h3>"The Silent Killer"</h3>
+            <p>Usually NO symptoms until organ damage occurs.</p>
+            <h3>Complications</h3>
+            <ul>
+                <li>Stroke, MI, heart failure</li>
+                <li>Kidney disease, retinopathy</li>
+                <li>Aortic dissection</li>
+            </ul>
+            <h3>Hypertensive Emergency</h3>
+            <ul>
+                <li>BP >180/120 WITH target organ damage</li>
+                <li>Treatment: IV vasodilators (nicardipine, nitroprusside)</li>
+            </ul>
+            <h3>DASH Diet</h3>
+            <p>Low sodium (1,500-3,200 mg/day), whole grains, fruits, vegetables, lean proteins.</p>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Hypertensive EMERGENCY = organ damage (encephalopathy, MI, stroke, pulmonary edema) = IV meds. Hypertensive URGENCY = no organ damage = oral meds.
+            </div>
+        `
+    },
+    cabg: {
+        title: 'CABG (Coronary Artery Bypass Graft)',
+        content: `
+            <h3>Indications</h3>
+            <ul>
+                <li>Multi-vessel CAD</li>
+                <li>Left main disease</li>
+                <li>Failed PCI</li>
+                <li>Diabetics with multi-vessel disease</li>
+            </ul>
+            <h3>Graft Sources</h3>
+            <ul>
+                <li><strong>Internal mammary artery</strong> — best long-term patency</li>
+                <li><strong>Saphenous vein</strong> — commonly used</li>
+                <li>Radial artery</li>
+            </ul>
+            <h3>Most Common Complication</h3>
+            <p><strong>ATRIAL FIBRILLATION</strong> — occurs in 20-40% post-CABG</p>
+            <h3>Post-Op Nursing Care</h3>
+            <ul>
+                <li>Maintain cardiac output</li>
+                <li>Monitor for bleeding, tamponade</li>
+                <li>Pain management</li>
+                <li>Promote gas exchange (incentive spirometry)</li>
+                <li>Leg incision care (if saphenous used)</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Post-CABG AFib usually occurs days 2-4. It's so common that beta-blockers are often given prophylactically.
+            </div>
+        `
+    },
+    cad_prevention: {
+        title: 'CAD Prevention',
+        content: `
+            <h3>Risk Factor Modification</h3>
+            <ul>
+                <li><strong>Smoking cessation</strong> — most modifiable risk</li>
+                <li><strong>Exercise:</strong> 150 min/week moderate OR 75 min/week vigorous</li>
+                <li><strong>Diet:</strong> Mediterranean, low saturated fat, high fiber</li>
+                <li><strong>Weight management</strong></li>
+            </ul>
+            <h3>Target Values</h3>
+            <ul>
+                <li>LDL <100 mg/dL (or <70 if very high risk)</li>
+                <li>Total cholesterol <200 mg/dL</li>
+                <li>HDL >40 (men), >50 (women)</li>
+                <li>Triglycerides <150 mg/dL</li>
+                <li>BP <130/80</li>
+                <li>HbA1c <7% (diabetics)</li>
+            </ul>
+            <h3>Pharmacologic</h3>
+            <ul>
+                <li><strong>Statins</strong> — cornerstone of therapy; ↓ LDL, pleiotropic effects</li>
+                <li>Aspirin for secondary prevention</li>
+                <li>ACE inhibitors for high-risk patients</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Statins do more than lower cholesterol — they stabilize plaque, reduce inflammation, and improve endothelial function. That's why they're so effective.
+            </div>
+        `
+    },
+    compensatory: {
+        title: 'Compensatory Mechanisms',
+        content: `
+            <h3>Why the Body Compensates</h3>
+            <p>When CO drops, the body activates three compensatory mechanisms to maintain perfusion. They <strong>help short-term but harm long-term</strong> — this is the central paradox of heart failure.</p>
+            <h3>1. Sympathetic Nervous System (SNS)</h3>
+            <ul>
+                <li>\u2191 HR and contractility (chronotropic + inotropic)</li>
+                <li>Vasoconstriction \u2192 \u2191 afterload</li>
+                <li><strong>Long-term harm:</strong> \u2191 O\u2082 demand, \u2191 afterload \u2192 further \u2193 CO</li>
+                <li><strong>Drug target:</strong> Beta-blockers block SNS effects</li>
+            </ul>
+            <h3>2. RAAS (Renin-Angiotensin-Aldosterone System)</h3>
+            <ul>
+                <li>Angiotensin II \u2192 vasoconstriction \u2192 \u2191 afterload</li>
+                <li>Aldosterone \u2192 Na\u207a/H\u2082O retention \u2192 \u2191 preload</li>
+                <li><strong>Long-term harm:</strong> Fluid overload, pulmonary congestion, edema</li>
+                <li><strong>Drug targets:</strong> ACEi, ARBs, aldosterone antagonists</li>
+            </ul>
+            <h3>3. Ventricular Remodeling</h3>
+            <ul>
+                <li>Myocyte hypertrophy \u2192 thicker walls</li>
+                <li>Chamber dilation \u2192 increased volume</li>
+                <li><strong>Long-term harm:</strong> Stiff, dilated, weakened heart</li>
+                <li><strong>Drug targets:</strong> ACEi + BB prevent/slow remodeling</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> "Why give beta-blockers in HF if they're negative inotropes?" Because they block the harmful SNS activation and prevent remodeling. The long-term benefit outweighs the short-term contractility reduction. Never start at full dose \u2014 titrate up slowly.
+            </div>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> BNP is the body's counter-regulatory hormone \u2014 released when ventricles are stretched. It promotes natriuresis and vasodilation, opposing RAAS. That's why BNP >100 pg/mL indicates HF.
+            </div>
+        `
+    },
+    endocarditis: {
+        title: 'Infective Endocarditis',
+        content: `
+            <h3>Definition</h3>
+            <p>Infection of the endocardium (inner lining of heart), typically affecting heart valves. Vegetations form on valve leaflets.</p>
+            <h3>High-Risk Populations</h3>
+            <ul>
+                <li>Prosthetic heart valves and pacemakers/ICDs</li>
+                <li>IV drug use</li>
+                <li>Older adults (most common demographic)</li>
+            </ul>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li><strong>Fever</strong> \u2014 most common symptom</li>
+                <li><strong>New or changing heart murmur</strong> (worsens over time)</li>
+                <li>Petechiae on body</li>
+                <li>Embolic events (stroke, splenic infarct)</li>
+            </ul>
+            <h3>Prevention</h3>
+            <ul>
+                <li>Prophylactic antibiotics before dental procedures</li>
+                <li>Amoxicillin 2g PO 1 hour before procedure</li>
+                <li>Alternatives: Keflex, Ancef, Rocephin, Azithromycin</li>
+                <li>Good oral hygiene</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> IV antibiotics are required once endocarditis develops \u2014 usually 4-6 weeks. Prevention with prophylactic antibiotics before dental work is key for high-risk patients. Fever >7 days = notify provider.
+            </div>
+        `
+    },
+    myocarditis: {
+        title: 'Myocarditis',
+        content: `
+            <h3>Definition</h3>
+            <p>Inflammation of the myocardium. Can lead to heart dilation, thrombi on heart wall, and dilated cardiomyopathy.</p>
+            <h3>Causes</h3>
+            <ul>
+                <li><strong>Viral:</strong> HIV, Influenza A, COVID-19</li>
+                <li>Bacterial, fungal, parasitic</li>
+                <li>Immunocompromised patients at higher risk</li>
+                <li>Can go undiagnosed</li>
+            </ul>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li>Fatigue, dyspnea, syncope, palpitations</li>
+                <li>Slight chest discomfort</li>
+                <li>Flu-like symptoms</li>
+            </ul>
+            <h3>Management</h3>
+            <ul>
+                <li>Determine and treat underlying cause</li>
+                <li>Cardiac monitoring</li>
+                <li>Assess for cardiac tamponade</li>
+                <li>NSAIDs for pain management</li>
+                <li><strong>Prevention:</strong> Immunizations</li>
+            </ul>
+            <div class="clinical-pearl">
+                <strong>Clinical Pearl:</strong> Myocarditis can silently progress to dilated cardiomyopathy (DCM). A patient with "flu-like" symptoms plus new cardiac findings should raise suspicion.
+            </div>
+        `
+    },
+    pericarditis: {
+        title: 'Pericarditis',
+        content: `
+            <h3>Definition</h3>
+            <p>Inflammation of the pericardial sac surrounding the heart. May be acute, chronic, or recurring.</p>
+            <h3>Timing</h3>
+            <ul>
+                <li>May develop after pericardiectomy</li>
+                <li>10 days to 2 months post-MI</li>
+            </ul>
+            <h3>Clinical Manifestations</h3>
+            <ul>
+                <li>Chest pain beneath clavicle, neck, or scapular region</li>
+                <li>Pain worsens with deep inspiration and turning</li>
+                <li><strong>Pericardial friction rub</strong> \u2014 left lower sternal border</li>
+                <li>Mild fever, \u2191 WBC, anemia</li>
+                <li>Nonproductive cough or hiccup</li>
+            </ul>
+            <h3>Complications</h3>
+            <ul>
+                <li><strong>Pericardial effusion</strong> \u2014 fluid accumulation</li>
+                <li><strong>Cardiac tamponade</strong> \u2014 effusion compresses heart \u2192 \u2193 CO \u2192 obstructive shock</li>
+            </ul>
+            <h3>Management</h3>
+            <ul>
+                <li>NSAIDs (first-line); steroids if contraindicated (e.g., kidney failure)</li>
+                <li>Pericardiocentesis to remove fluid</li>
+                <li>Pericardial window for drainage</li>
+            </ul>
+            <div class="exam-trap">
+                <strong>EXAM TRAP:</strong> Pericarditis pain is PLEURITIC (worse with inspiration) and positional. Cardiac tamponade = Beck's triad: hypotension, JVD, muffled heart sounds. This is an obstructive shock emergency.
+            </div>
+        `
+    }
+};
+
+// ===== RENDERING =====
+const mapInner = document.getElementById('map-inner');
+const svg = document.getElementById('connections-svg');
+
+const adjacency = {};
+for (const id in nodes) adjacency[id] = new Set();
+edges.forEach(([a, b]) => {
+    adjacency[a].add(b);
+    adjacency[b].add(a);
+});
+
+for (const [id, data] of Object.entries(nodes)) {
+    const el = document.createElement('div');
+    el.className = `node ${data.type}`;
+    el.id = `node-${id}`;
+    el.style.left = data.x + 'px';
+    el.style.top = data.y + 'px';
+    const lines = data.label.split('\n');
+    el.innerHTML = lines.map(l => `<h3>${l}</h3>`).join('') + `<p>${data.sub}</p>`;
+    el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        activateNode(id);
+    });
+    mapInner.appendChild(el);
+}
+
+function getNodeCenter(id) {
+    const el = document.getElementById('node-' + id);
+    if (!el) return { x: nodes[id].x, y: nodes[id].y };
+    return {
+        x: el.offsetLeft + el.offsetWidth / 2,
+        y: el.offsetTop + el.offsetHeight / 2
+    };
+}
+
+function renderEdges() {
+    svg.innerHTML = '';
+    svg.setAttribute('viewBox', '0 0 2400 1500');
+    edges.forEach(([a, b, label, dashed]) => {
+        const pa = getNodeCenter(a);
+        const pb = getNodeCenter(b);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', pa.x);
+        line.setAttribute('y1', pa.y);
+        line.setAttribute('x2', pb.x);
+        line.setAttribute('y2', pb.y);
+        line.classList.add('conn-line');
+        line.dataset.from = a;
+        line.dataset.to = b;
+        if (dashed) line.classList.add('dashed');
+        svg.appendChild(line);
+        if (label) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', (pa.x + pb.x) / 2);
+            text.setAttribute('y', (pa.y + pb.y) / 2 - 6);
+            text.classList.add('conn-label');
+            text.dataset.from = a;
+            text.dataset.to = b;
+            text.textContent = label;
+            svg.appendChild(text);
+        }
+    });
+}
+
+requestAnimationFrame(() => {
+    requestAnimationFrame(renderEdges);
+});
+
+let activeNodeId = null;
+
+function activateNode(id) {
+    activeNodeId = id;
+    const info = nodeInfo[id];
+    if (!info) return;
+    document.getElementById('panel-title').textContent = info.title;
+    const connLinks = Array.from(adjacency[id]).map(cid => {
+        const n = nodes[cid];
+        const displayName = n ? n.label.replace('\n', ' ') : cid;
+        return `<span onclick="activateNode('${cid}')">${displayName}</span>`;
+    }).join('');
+    document.getElementById('panel-content').innerHTML = info.content +
+        `<div class="connection-list"><h3>Connected To:</h3>${connLinks}</div>`;
+    document.getElementById('info-panel').classList.add('visible');
+    const connected = adjacency[id];
+    document.querySelectorAll('.node').forEach(el => {
+        const nid = el.id.replace('node-', '');
+        el.classList.remove('active', 'connected', 'dimmed');
+        if (nid === id) el.classList.add('active');
+        else if (connected.has(nid)) el.classList.add('connected');
+        else el.classList.add('dimmed');
+    });
+    document.querySelectorAll('.conn-line').forEach(l => {
+        l.classList.remove('active', 'dimmed');
+        if (l.dataset.from === id || l.dataset.to === id) l.classList.add('active');
+        else l.classList.add('dimmed');
+    });
+    document.querySelectorAll('.conn-label').forEach(t => {
+        t.classList.remove('active', 'dimmed');
+        if (t.dataset.from === id || t.dataset.to === id) t.classList.add('active');
+        else t.classList.add('dimmed');
+    });
+}
+
+function closePanel() {
+    document.getElementById('info-panel').classList.remove('visible');
+    activeNodeId = null;
+    document.querySelectorAll('.node').forEach(n => n.classList.remove('active', 'connected', 'dimmed'));
+    document.querySelectorAll('.conn-line').forEach(l => l.classList.remove('active', 'dimmed'));
+    document.querySelectorAll('.conn-label').forEach(t => t.classList.remove('active', 'dimmed'));
+}
+
+const container = document.getElementById('map-container');
+const inner = document.getElementById('map-inner');
+let scale = 0.55;
+let panX = -50;
+let panY = 0;
+let isPanning = false;
+let startX, startY;
+
+function applyTransform() {
+    inner.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    updateMinimap();
+}
+
+container.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.node') || e.target.closest('.info-panel')) return;
+    isPanning = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+    container.classList.add('grabbing');
+});
+
+window.addEventListener('mousemove', (e) => {
+    if (!isPanning) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    applyTransform();
+});
+
+window.addEventListener('mouseup', () => {
+    isPanning = false;
+    container.classList.remove('grabbing');
+});
+
+container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    const newScale = Math.min(1.5, Math.max(0.3, scale + delta));
+    const rect = container.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    panX = cx - (cx - panX) * (newScale / scale);
+    panY = cy - (cy - panY) * (newScale / scale);
+    scale = newScale;
+    applyTransform();
+}, { passive: false });
+
+function zoomIn() { scale = Math.min(1.5, scale + 0.1); applyTransform(); }
+function zoomOut() { scale = Math.max(0.3, scale - 0.1); applyTransform(); }
+function resetView() { scale = 0.55; panX = -50; panY = 0; applyTransform(); closePanel(); }
+
+applyTransform();
+
+const minimap = document.getElementById('minimap');
+const minimapVP = document.getElementById('minimap-vp');
+const mmW = 180, mmH = 110, mapW = 2400, mapH = 1500;
+
+function renderMinimapDots() {
+    const colors = {
+        central: '#ef4444', anatomy: '#8b5cf6', assessment: '#06b6d4',
+        determinant: '#3b82f6', arrhythmia: '#f97316', acs: '#dc2626',
+        hf: '#ec4899', valve: '#10b981', intervention: '#6366f1',
+        shock: '#92400e', electrolyte: '#14b8a6', inflammatory: '#ea580c'
+    };
+    for (const [id, data] of Object.entries(nodes)) {
+        const dot = document.createElement('div');
+        dot.className = 'minimap-dot';
+        dot.style.background = colors[data.type] || '#fff';
+        dot.style.left = (data.x / mapW * mmW) + 'px';
+        dot.style.top = (data.y / mapH * mmH) + 'px';
+        minimap.appendChild(dot);
+    }
+}
+
+function updateMinimap() {
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+    const vpLeft = (-panX / scale) / mapW * mmW;
+    const vpTop = (-panY / scale) / mapH * mmH;
+    const vpW = (cw / scale) / mapW * mmW;
+    const vpH = (ch / scale) / mapH * mmH;
+    minimapVP.style.left = Math.max(0, vpLeft) + 'px';
+    minimapVP.style.top = Math.max(0, vpTop) + 'px';
+    minimapVP.style.width = Math.min(mmW, vpW) + 'px';
+    minimapVP.style.height = Math.min(mmH, vpH) + 'px';
+}
+
+renderMinimapDots();
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    if (q.length < 2) {
+        searchResults.classList.remove('visible');
+        clearSearchHighlight();
+        return;
+    }
+    const matches = [];
+    for (const [id, data] of Object.entries(nodes)) {
+        const text = (data.label + ' ' + data.sub).toLowerCase();
+        const rawInfo = nodeInfo[id] ? (nodeInfo[id].title + ' ' + nodeInfo[id].content) : '';
+        const infoText = rawInfo.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').toLowerCase();
+        if (text.includes(q) || infoText.includes(q)) {
+            matches.push({ id, label: data.label.replace('\n', ' '), type: data.type });
+        }
+    }
+    if (matches.length === 0) {
+        searchResults.innerHTML = '<div class="search-result-item"><span style="color:#64748b">No matches</span></div>';
+    } else {
+        searchResults.innerHTML = matches.map(m =>
+            `<div class="search-result-item" onclick="goToNode('${m.id}')">
+                <span class="sr-title">${m.label}</span>
+                <span class="sr-type">${m.type}</span>
+            </div>`
+        ).join('');
+    }
+    searchResults.classList.add('visible');
+    document.querySelectorAll('.node').forEach(el => {
+        el.classList.remove('search-match');
+        const nid = el.id.replace('node-', '');
+        if (matches.some(m => m.id === nid)) el.classList.add('search-match');
+    });
+});
+
+searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        searchInput.value = '';
+        searchInput.blur();
+        searchResults.classList.remove('visible');
+        clearSearchHighlight();
+    } else if (e.key === 'Enter') {
+        const first = searchResults.querySelector('.search-result-item');
+        if (first) first.click();
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-box')) {
+        searchResults.classList.remove('visible');
+    }
+});
+
+function clearSearchHighlight() {
+    document.querySelectorAll('.node').forEach(el => el.classList.remove('search-match'));
+}
+
+function goToNode(id) {
+    searchResults.classList.remove('visible');
+    searchInput.value = '';
+    clearSearchHighlight();
+    const el = document.getElementById('node-' + id);
+    if (!el) return;
+    const cx = el.offsetLeft + el.offsetWidth / 2;
+    const cy = el.offsetTop + el.offsetHeight / 2;
+    panX = container.clientWidth / 2 - cx * scale;
+    panY = container.clientHeight / 2 - cy * scale;
+    applyTransform();
+    activateNode(id);
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'Escape') closePanel();
+    if (e.key === '/' || (e.key === 'f' && (e.ctrlKey || e.metaKey))) {
+        e.preventDefault();
+        searchInput.focus();
+    }
+    if (e.key === 'r' || e.key === 'R') resetView();
+});
+
+container.addEventListener('click', (e) => {
+    if (!e.target.closest('.node')) closePanel();
+});
+</script>
+</body>
+</html>

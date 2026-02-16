@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluid &amp; Electrolytes, DKA/HHS, Renal Disorders — Flashcards</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;padding:1.5rem}
+.screen.active{display:flex;align-items:center;justify-content:center}
+
+/* ===== START SCREEN ===== */
+.start-container{max-width:900px;width:100%;margin:0 auto}
+.start-container h1{font-size:1.8rem;color:#22d3ee;text-align:center;margin-bottom:.3rem}
+.subtitle{text-align:center;color:#94a3b8;font-size:.95rem;margin-bottom:1.5rem}
+#progress-summary{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
+#progress-summary h3{font-size:.95rem;color:#94a3b8;margin-bottom:.5rem}
+.overall-bar{height:10px;background:#0f172a;border-radius:5px;display:flex;overflow:hidden;margin-bottom:.4rem}
+.mb-gotit{background:#4ade80}
+.mb-unsure{background:#fbbf24}
+.mb-missed{background:#f87171}
+.overall-text{font-size:.8rem;color:#94a3b8;text-align:center}
+
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.cat-btn{background:#1e293b;border:2px solid var(--cat-color,#334155);border-radius:10px;padding:.75rem;cursor:pointer;transition:all .2s}
+.cat-btn:hover,.cat-btn.selected{background:color-mix(in srgb,var(--cat-color) 15%,#1e293b);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.cat-btn.selected{border-width:3px}
+.cat-name{display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:.9rem;margin-bottom:.25rem}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-count{font-size:.75rem;color:#94a3b8;margin-bottom:.4rem;display:block}
+.cat-mastery-bar{height:5px;background:#0f172a;border-radius:3px;display:flex;overflow:hidden;margin-bottom:.2rem}
+.cat-mastery-text{font-size:.7rem;color:#64748b}
+
+.options-row{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1.25rem;flex-wrap:wrap}
+.toggle-label{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:#94a3b8;cursor:pointer}
+.toggle-label input{accent-color:#22d3ee}
+
+.start-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:#22d3ee;color:#0f172a;border:none;padding:.6rem 1.5rem;border-radius:8px;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:#06b6d4;transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:#94a3b8;border:1px solid #334155;padding:.5rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:#94a3b8;color:#e2e8f0}
+.btn-weak{background:transparent;color:#fbbf24;border:1px solid #fbbf24;padding:.5rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s}
+.btn-weak:hover{background:rgba(251,191,36,.1)}
+.btn-reset{background:transparent;color:#f87171;border:1px solid rgba(248,113,113,.3);padding:.5rem 1rem;border-radius:8px;font-size:.8rem;cursor:pointer}
+.btn-reset:hover{border-color:#f87171;background:rgba(248,113,113,.1)}
+
+/* ===== CARD SCREEN ===== */
+.card-screen{max-width:700px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.progress-section{flex:1;min-width:200px}
+.progress-text{font-size:.85rem;color:#94a3b8;margin-bottom:.3rem}
+.progress-text span{color:#22d3ee;font-weight:600}
+.requeue-badge{font-size:.75rem;color:#fbbf24;margin-left:.5rem}
+.progress-bar{height:6px;background:#0f172a;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:#22d3ee;border-radius:3px;transition:width .3s}
+.cat-badge{background:#334155;color:#e2e8f0;padding:.25rem .75rem;border-radius:20px;font-size:.8rem;font-weight:600;white-space:nowrap}
+
+.flashcard{perspective:1200px;cursor:pointer;margin-bottom:1rem;min-height:320px}
+.card-inner{position:relative;width:100%;min-height:320px;transition:transform .5s;transform-style:preserve-3d}
+.flashcard.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;top:0;left:0;width:100%;min-height:320px;backface-visibility:hidden;border-radius:16px;padding:2rem;display:flex;flex-direction:column;justify-content:center}
+.card-front{background:linear-gradient(145deg,#1e293b,#273549);border:1px solid #334155}
+.card-back{background:linear-gradient(145deg,#1a2940,#1e3348);border:1px solid #22d3ee;transform:rotateY(180deg)}
+.card-content{font-size:1.05rem;line-height:1.7}
+.card-content .answer-label{color:#22d3ee;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.card-content .answer-text{margin-bottom:.75rem}
+.card-content .tip-box{background:rgba(34,211,238,.08);border-left:3px solid #22d3ee;padding:.5rem .75rem;border-radius:0 6px 6px 0;margin-top:.5rem;font-size:.9rem;color:#67e8f9}
+.flip-hint{text-align:center;color:#475569;font-size:.8rem;margin-top:1rem}
+
+.conf-controls{display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+.conf-controls.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.conf-btn{flex:1;max-width:160px;border:2px solid;border-radius:12px;padding:.6rem;cursor:pointer;text-align:center;transition:all .2s;background:transparent}
+.conf-missed{border-color:#f87171;color:#f87171}
+.conf-missed:hover{background:rgba(248,113,113,.15)}
+.conf-unsure{border-color:#fbbf24;color:#fbbf24}
+.conf-unsure:hover{background:rgba(251,191,36,.15)}
+.conf-gotit{border-color:#4ade80;color:#4ade80}
+.conf-gotit:hover{background:rgba(74,222,128,.15)}
+.conf-icon{font-size:1.3rem;display:block}
+.conf-label{font-size:.85rem;font-weight:600;display:block}
+.conf-key{font-size:.7rem;opacity:.5;display:block;margin-top:.1rem}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.kb-hints{font-size:.75rem;color:#475569}
+.kb-hints kbd{background:#1e293b;border:1px solid #334155;border-radius:4px;padding:1px 5px;font-family:inherit;font-size:.7rem}
+
+/* ===== RESULTS SCREEN ===== */
+.results-container{max-width:700px;width:100%;margin:0 auto}
+.results-container h1{color:#22d3ee;text-align:center;margin-bottom:1.5rem;font-size:1.6rem}
+.stats-row{display:flex;gap:1rem;justify-content:center;margin-bottom:2rem;flex-wrap:wrap}
+.stat-card{flex:1;min-width:120px;max-width:180px;text-align:center;padding:1rem;border-radius:12px;border:1px solid #334155;background:#1e293b}
+.stat-value{font-size:2rem;font-weight:700}
+.stat-label{font-size:.85rem;color:#94a3b8;margin:.2rem 0}
+.stat-pct{font-size:.8rem;opacity:.7}
+.stat-gotit .stat-value{color:#4ade80}
+.stat-unsure .stat-value{color:#fbbf24}
+.stat-missed .stat-value{color:#f87171}
+
+.breakdown-section{margin-bottom:1.5rem}
+.breakdown-section h3{font-size:1rem;color:#94a3b8;margin-bottom:.75rem}
+.cat-stat-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.85rem}
+.cat-stat-name{width:160px;flex-shrink:0;color:#e2e8f0}
+.cat-stat-bar{flex:1;height:8px;background:#0f172a;border-radius:4px;display:flex;overflow:hidden}
+.bar-seg{height:100%}
+.bar-gotit{background:#4ade80}
+.bar-unsure{background:#fbbf24}
+.bar-missed{background:#f87171}
+.cat-stat-pct{width:45px;text-align:right;color:#94a3b8;flex-shrink:0}
+
+.weak-section{margin-bottom:1.5rem}
+.weak-section h3{font-size:1rem;color:#fbbf24;margin-bottom:.5rem}
+.weak-item{display:flex;justify-content:space-between;padding:.4rem .75rem;background:rgba(251,191,36,.05);border-radius:6px;margin-bottom:.3rem;font-size:.85rem}
+
+.results-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+
+@media(max-width:600px){
+  .screen{padding:1rem}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .flashcard,.card-face,.card-inner{min-height:280px}
+  .card-content{font-size:.95rem}
+  .stats-row{flex-direction:column;align-items:center}
+  .cat-stat-name{width:120px;font-size:.8rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ START SCREEN ============ -->
+<div id="screen-start" class="screen active">
+<div class="start-container">
+  <h1>Fluid &amp; Electrolytes, DKA/HHS &amp; Renal Disorders</h1>
+  <p class="subtitle">Brunner Ch 46 &amp; 48 | Lecture Slides &mdash; 200 cards across 10 categories</p>
+
+  <div id="progress-summary" style="display:none">
+    <h3>Overall Progress</h3>
+    <div class="overall-bar">
+      <div class="mb-gotit" id="ov-gotit"></div>
+      <div class="mb-unsure" id="ov-unsure"></div>
+      <div class="mb-missed" id="ov-missed"></div>
+    </div>
+    <div class="overall-text" id="ov-text"></div>
+  </div>
+
+  <div class="cat-grid" id="cat-grid"></div>
+
+  <div class="options-row">
+    <label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+    <label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+  </div>
+
+  <div class="start-actions">
+    <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+    <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+    <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+  </div>
+</div>
+</div>
+
+<!-- ============ CARD SCREEN ============ -->
+<div id="screen-card" class="screen">
+<div class="card-screen">
+  <div class="card-header">
+    <div class="progress-section">
+      <div class="progress-text">
+        <span id="cur-num">1</span> / <span id="tot-num">0</span>
+        <span class="requeue-badge" id="requeue-info"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    </div>
+    <span class="cat-badge" id="cur-cat">Category</span>
+  </div>
+
+  <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="card-content" id="front-content"></div>
+        <div class="flip-hint">SPACE or click to flip</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-content" id="back-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf-controls" id="conf-controls">
+    <button class="conf-btn conf-missed" onclick="rate('missed')">
+      <span class="conf-icon">&#x2717;</span><span class="conf-label">Missed</span><span class="conf-key">Press 1</span>
+    </button>
+    <button class="conf-btn conf-unsure" onclick="rate('unsure')">
+      <span class="conf-icon">~</span><span class="conf-label">Unsure</span><span class="conf-key">Press 2</span>
+    </button>
+    <button class="conf-btn conf-gotit" onclick="rate('gotit')">
+      <span class="conf-icon">&#x2713;</span><span class="conf-label">Got It</span><span class="conf-key">Press 3</span>
+    </button>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+    <div class="kb-hints"><kbd>Space</kbd> Flip &nbsp;<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate &nbsp;<kbd>Esc</kbd> Exit</div>
+  </div>
+</div>
+</div>
+
+<!-- ============ RESULTS SCREEN ============ -->
+<div id="screen-results" class="screen">
+<div class="results-container">
+  <h1>Session Complete</h1>
+  <div class="stats-row" id="stats-row"></div>
+  <div class="breakdown-section" id="breakdown-section"></div>
+  <div class="weak-section" id="weak-section"></div>
+  <div class="results-actions">
+    <button class="btn-primary" onclick="reviewMissed()">Review Missed Cards</button>
+    <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+    <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+  </div>
+</div>
+</div>
+
+<script>
+/* ========== CATEGORIES ========== */
+const categories = {
+  'dm-foundations': { name: 'DM Foundations', color: '#3b82f6' },
+  'insulin': { name: 'Insulin Therapy', color: '#8b5cf6' },
+  'oral-agents': { name: 'Oral & Non-Insulin Agents', color: '#6366f1' },
+  'hypoglycemia': { name: 'Hypoglycemia', color: '#f97316' },
+  'dka': { name: 'DKA', color: '#ef4444' },
+  'hhs': { name: 'HHS', color: '#ec4899' },
+  'dm-complications': { name: 'DM Complications', color: '#eab308' },
+  'aki': { name: 'Acute Kidney Injury', color: '#14b8a6' },
+  'ckd-eskd': { name: 'CKD / ESKD', color: '#10b981' },
+  'dialysis-transplant': { name: 'Dialysis & Transplant', color: '#06b6d4' }
+};
+
+/* ========== CARDS ========== */
+const cards = [
+  // ===== DM FOUNDATIONS (1-20) =====
+  {id:1, cat:'dm-foundations', q:'What are the four diagnostic criteria for diabetes mellitus, and what thresholds confirm diagnosis?', a:'FPG \u2265 126 mg/dL (fasting \u2265 8 hrs), Random glucose \u2265 200 mg/dL with symptoms, 2-hr OGTT \u2265 200 mg/dL (75g load), HgbA1C \u2265 6.5%. All must be confirmed by repeat testing on a different day unless unequivocal hyperglycemia with metabolic decompensation.', tip:'NCLEX may present a single elevated lab and ask "what is the next step?" The answer is repeat testing to confirm\u2014not treatment.'},
+  {id:2, cat:'dm-foundations', q:'What is the fundamental pathophysiologic difference between Type 1 and Type 2 diabetes?', a:'Type 1: Autoimmune beta-cell destruction \u2192 absolute insulin deficiency. Type 2: Insulin resistance + progressive beta-cell dysfunction \u2192 relative insulin deficiency. Type 1 needs exogenous insulin for survival; Type 2 may initially respond to oral agents.', tip:'If a question describes acute onset with weight loss and ketones in a young patient, think Type 1. Gradual onset found on routine labs in an older, overweight patient = Type 2.'},
+  {id:3, cat:'dm-foundations', q:'What are the "three Ps" of diabetes and what causes each one?', a:'Polyuria (osmotic diuresis from glucosuria), Polydipsia (dehydration from fluid loss triggers thirst), Polyphagia (cells are starving despite high blood glucose because glucose can\'t enter without insulin).', tip:'The three Ps are most dramatic in Type 1. Type 2 onset is typically gradual\u2014patients may not notice symptoms.'},
+  {id:4, cat:'dm-foundations', q:'What does an HgbA1C of 7% represent, and what is the ADA target?', a:'HgbA1C reflects average blood glucose over the past 2\u20133 months. A1C of 7% correlates with an estimated average glucose of ~154 mg/dL. The ADA recommends maintaining A1C below 7% to reduce complication risk.'},
+  {id:5, cat:'dm-foundations', q:'What is LADA, and why does it matter clinically?', a:'Latent Autoimmune Diabetes of Adults\u2014autoimmune beta-cell destruction presenting in adulthood. Often misclassified as Type 2 initially because of age of onset. Matters because these patients will eventually need insulin (oral agents will fail) and are at risk for DKA.'},
+  {id:6, cat:'dm-foundations', q:'What is the relationship between gestational diabetes and future diabetes risk?', a:'Gestational diabetes is caused by insulin resistance from placental hormones. It resolves postpartum BUT signals significantly increased future risk of developing Type 2 diabetes. These patients need lifelong glucose screening.'},
+  {id:7, cat:'dm-foundations', q:'What are the five pillars of diabetes self-management?', a:'1) Nutritional therapy, 2) Exercise, 3) Glucose monitoring (SMBG), 4) Pharmacologic therapy, 5) Education. All five work together\u2014pharmacology alone is insufficient.'},
+  {id:8, cat:'dm-foundations', q:'How does exercise affect blood glucose differently at moderate vs. intense levels?', a:'Moderate exercise lowers blood glucose (can cause delayed hypoglycemia hours later). Intense exercise (weightlifting, sprinting) paradoxically raises blood glucose via adrenaline/counter-regulatory hormone release. A 15g carb snack before/after moderate exercise helps prevent hypoglycemia.', tip:'If NCLEX asks about a Type 1 patient exercising, the concern is hypoglycemia. The answer involves a carb snack and glucose monitoring, not skipping exercise.'},
+  {id:9, cat:'dm-foundations', q:'When teaching diabetes self-management, what should the nurse prioritize for a newly diagnosed, overwhelmed patient?', a:'"Survival skills" first: recognizing hypo/hyperglycemia, when to call for help, and basic medication administration. Assess readiness to learn BEFORE teaching\u2014a patient who is overwhelmed, in pain, or grieving the diagnosis will not retain complex information.', tip:'NCLEX loves readiness-to-learn questions. An anxious, newly diagnosed patient asking "why me?" needs emotional support first, not carb counting.'},
+  {id:10, cat:'dm-foundations', q:'Why are whole fruits preferred over fruit juice for diabetic patients?', a:'Whole fruits contain fiber that slows glucose absorption, blunting the blood sugar spike. Juice delivers concentrated simple sugar without fiber, causing a rapid glucose rise. Combining carbs with protein or fat also slows absorption.'},
+  {id:11, cat:'dm-foundations', q:'What is the bidirectional relationship between COVID-19 and diabetes?', a:'Diabetic patients with COVID have significantly higher rates of intubation and death. Severe COVID\'s inflammatory cascade can also trigger new-onset diabetes in some patients. The relationship goes both ways.'},
+  {id:12, cat:'dm-foundations', q:'What percentage of adult diabetes is Type 2, and which populations are disproportionately affected?', a:'Type 2 accounts for approximately 95% of adult diabetes. Minority populations and older adults are disproportionately affected. About one-third of the 34.1 million Americans with diabetes remain undiagnosed.'},
+
+  // ===== INSULIN THERAPY (13-35) =====
+  {id:13, cat:'insulin', q:'Name the four categories of injectable insulin and give an example of each.', a:'Rapid-acting (Lispro, Aspart, Glulisine), Short-acting (Regular/Humulin R), Intermediate (NPH), Long-acting (Glargine, Detemir). Also: Inhaled insulin (Afrezza)\u2014rapid-acting via lungs.'},
+  {id:14, cat:'insulin', q:'Which insulin is the ONLY type approved for IV administration?', a:'Regular insulin (Humulin R) is the ONLY insulin that can be given intravenously. In DKA, a continuous regular insulin drip is standard. Never give any other insulin type IV\u2014the kinetics are unpredictable and dangerous.', tip:'This is a classic NCLEX question. If any answer option involves giving NPH, glargine, or lispro IV, eliminate it immediately.'},
+  {id:15, cat:'insulin', q:'What is the onset, peak, and duration of rapid-acting insulin (lispro/aspart)?', a:'Onset: 5\u201315 minutes. Peak: 30 min\u20131 hour. Duration: 3\u20135 hours. Give immediately before or with meals.'},
+  {id:16, cat:'insulin', q:'What is the onset, peak, and duration of Regular insulin when given subcutaneously?', a:'Onset: 30\u201360 minutes. Peak: 2\u20133 hours. Duration: 4\u20136 hours. Give 15\u201330 minutes before meals.'},
+  {id:17, cat:'insulin', q:'Why can\'t long-acting insulin (glargine) be mixed with other insulins?', a:'Glargine has a pH of 4 (acidic), which would alter the pharmacokinetics of any insulin mixed with it. It provides a slow, continuous "peakless" release over 24 hours. Must be given as a separate injection.'},
+  {id:18, cat:'insulin', q:'How do you identify NPH insulin, and what special handling does it require?', a:'NPH appears cloudy/milky (all other insulins are clear). Roll the vial gently to resuspend\u2014never shake it. Shaking can denature the protein and alter absorption.', tip:'If a question describes a "cloudy" insulin, it\'s NPH. If a patient is about to shake the vial, intervene.'},
+  {id:19, cat:'insulin', q:'What is the Somogyi effect, and why is the treatment counterintuitive?', a:'Somogyi = blood sugar swings low at ~3 AM (rebound hypoglycemia), then bounces HIGH by morning due to counter-regulatory hormones. Treatment: DECREASE evening NPH or increase bedtime snack. Increasing insulin worsens the overnight hypo and makes the rebound worse.', tip:'NCLEX tests this because the instinct to increase insulin for morning hyperglycemia is wrong in Somogyi. "Somogyi = Swing" = LESS insulin.'},
+  {id:20, cat:'insulin', q:'What is the Dawn phenomenon, and how does treatment differ from the Somogyi effect?', a:'Dawn phenomenon: Blood glucose is normal until ~3 AM, then rises due to nocturnal growth hormone surge. Treatment: Move NPH from dinnertime to bedtime (to provide better overnight coverage). Unlike Somogyi, there is no 3 AM hypoglycemia.'},
+  {id:21, cat:'insulin', q:'What is insulin waning, and how is it treated?', a:'Insulin waning: Progressive rise in blood glucose from bedtime to morning because the evening insulin dose wears off too soon. Treatment: Increase evening dose or add bedtime insulin.'},
+  {id:22, cat:'insulin', q:'How do you diagnostically differentiate the three causes of morning hyperglycemia?', a:'Check blood glucose at bedtime, 3 AM, and upon waking. Insulin waning: progressive rise. Dawn phenomenon: normal until 3 AM, then rises. Somogyi: normal or high at bedtime, LOW at 3 AM, then HIGH in morning (the swing).', tip:'This three-point check is almost always the correct "next step" when a patient reports unexplained morning hyperglycemia.'},
+  {id:23, cat:'insulin', q:'What is lipodystrophy, and how is it prevented?', a:'Lipodystrophy = lumpy fatty deposits or atrophied areas at injection sites from repeated use of the same spot. Prevented by systematic site rotation. Return demonstration is the gold standard for verifying patient injection technique.'},
+  {id:24, cat:'insulin', q:'When starting an IV insulin drip in DKA, why must you flush the entire tubing first?', a:'Insulin adheres to plastic IV tubing. If you don\'t flush insulin through the entire line first, the initial dose is absorbed by the tubing and the patient receives less insulin than intended.'},
+  {id:25, cat:'insulin', q:'When transitioning from IV insulin to subcutaneous insulin, what is the critical timing rule?', a:'Do NOT stop the insulin drip until subcutaneous insulin has been started AND absorbed. There must be overlap\u2014if you stop the drip first, there\'s a gap in insulin coverage and the patient can decompensate back into DKA.'},
+  {id:26, cat:'insulin', q:'What six metabolic functions does insulin perform beyond lowering blood glucose?', a:'1) Transports glucose into cells, 2) Stimulates glycogen storage in liver/muscle, 3) Signals liver to stop releasing stored glucose, 4) Promotes fat storage in adipose tissue, 5) Accelerates amino acid transport into cells, 6) Inhibits breakdown of stored glucose, protein, and fat.'},
+
+  // ===== ORAL & NON-INSULIN AGENTS (27-42) =====
+  {id:27, cat:'oral-agents', q:'What is the mechanism of metformin, and what is its most dangerous adverse effect?', a:'Metformin inhibits hepatic glucose production (doesn\'t stimulate insulin secretion). Most dangerous effect: lactic acidosis. Contraindicated in impaired renal/hepatic function. Monitor BUN/creatinine.', tip:'Metformin + contrast dye + renal impairment = lactic acidosis. This combination is heavily tested.'},
+  {id:28, cat:'oral-agents', q:'What is the critical rule for metformin and contrast dye procedures?', a:'Hold metformin 48 hours BEFORE and 48 hours AFTER any procedure involving iodinated contrast dye. The combination can precipitate lactic acidosis. Always check renal function (BUN, creatinine) before restarting.'},
+  {id:29, cat:'oral-agents', q:'Why are sulfonylureas contraindicated in patients with sulfa allergies?', a:'Sulfonylureas (glimepiride, glipizide, glyburide) have a sulfonamide chemical structure. Cross-reactivity with sulfa allergy can occur. They also carry significant hypoglycemia risk because they directly stimulate beta cells to release insulin regardless of blood glucose level.'},
+  {id:30, cat:'oral-agents', q:'A patient on acarbose (alpha-glucosidase inhibitor) becomes hypoglycemic. Why can\'t you give sucrose?', a:'Acarbose blocks the digestion of complex carbohydrates including sucrose. If the patient is hypoglycemic, treat with pure GLUCOSE (glucose tablets, glucose gel)\u2014not juice, candy, or table sugar\u2014because the drug blocks sucrose absorption.', tip:'This is a classic "trick" question. The student who memorizes "Rule of 15 with juice" will get it wrong for this specific drug.'},
+  {id:31, cat:'oral-agents', q:'What unique benefit do SGLT2 inhibitors offer, and what infections do they increase risk for?', a:'SGLT2 inhibitors (canagliflozin) prevent renal glucose reabsorption, causing glycosuria. Benefit: weight loss. Risk: increased UTIs and genital yeast infections because glucose in the urine feeds bacteria and yeast.'},
+  {id:32, cat:'oral-agents', q:'What serious adverse effect should be monitored with GLP-1 agonists (e.g., liraglutide)?', a:'Pancreatitis. GLP-1 agonists are incretin mimetics given SQ that promote insulin release and slow gastric emptying. They also promote weight loss. Teach patients to report severe abdominal pain radiating to the back.'},
+  {id:33, cat:'oral-agents', q:'Why do beta-blockers pose a special risk for diabetic patients on sulfonylureas?', a:'Beta-blockers mask the adrenergic symptoms of hypoglycemia (tachycardia, tremor, sweating). A patient on both sulfonylureas and beta-blockers may have no warning signs and progress straight to confusion, seizures, or loss of consciousness.'},
+  {id:34, cat:'oral-agents', q:'What monitoring is required for thiazolidinediones (pioglitazone, rosiglitazone)?', a:'Monitor liver function tests (LFTs)\u2014risk of hepatotoxicity. Also watch for edema, weight gain, and heart failure exacerbation. These drugs sensitize peripheral tissues to insulin.'},
+  {id:35, cat:'oral-agents', q:'What is the key patient education point for non-sulfonylurea secretagogues (repaglinide, nateglinide)?', a:'Take only if eating; skip the dose if the meal is skipped. They cause rapid, short-acting beta-cell insulin release timed to meals. Taking without eating causes hypoglycemia.'},
+  {id:36, cat:'oral-agents', q:'What makes DPP-4 inhibitors (sitagliptin) unique among oral diabetes drugs?', a:'DPP-4 inhibitors are weight-neutral\u2014they don\'t cause weight gain or significant weight loss. They increase incretin levels, promoting insulin release and decreasing glucagon. Low hypoglycemia risk when used alone.'},
+
+  // ===== HYPOGLYCEMIA (37-50) =====
+  {id:37, cat:'hypoglycemia', q:'At what blood glucose level is hypoglycemia defined, and what level is "clinically significant"?', a:'Hypoglycemia: < 70 mg/dL. Clinically significant: < 54 mg/dL. Three most common causes: too much insulin/oral agent, too much physical activity, not enough food.'},
+  {id:38, cat:'hypoglycemia', q:'What symptoms differentiate mild, moderate, and severe hypoglycemia?', a:'Mild (54\u201370): Adrenergic\u2014sweating, tremor, tachycardia, palpitations, hunger, nervousness. Moderate (<54): Neuroglycopenic\u2014confusion, headache, slurred speech, drowsiness, numbness of lips/tongue. Severe (well <54): Disorientation, seizures, loss of consciousness, death.'},
+  {id:39, cat:'hypoglycemia', q:'Describe the Rule of 15 for treating hypoglycemia in a conscious patient.', a:'Give 15\u201320g fast-acting carbohydrate (3\u20134 glucose tablets, 4\u20136 oz juice or regular soda). Recheck BG in 15 minutes. Repeat if still <70. Once normalized, provide protein + complex carb snack unless a meal is within 30\u201360 minutes.', tip:'Never give diet soda\u2014it has no sugar. And never give juice to an unconscious patient (aspiration risk is immediate and lethal).'},
+  {id:40, cat:'hypoglycemia', q:'How do you treat severe hypoglycemia in an unconscious patient in the hospital vs. community?', a:'Hospital: IV push 25\u201350 mL of D50W (50% dextrose). Community: SQ or IM glucagon 1 mg. Position patient on side after glucagon (it causes nausea; aspiration risk when consciousness returns).'},
+  {id:41, cat:'hypoglycemia', q:'What is hypoglycemic unawareness, and which patients are at risk?', a:'Loss of adrenergic warning signs (no sweating, tremor, or tachycardia)\u2014patient goes straight from "fine" to confused/unconscious. Occurs in patients with autonomic neuropathy (long-standing diabetes). Requires tighter monitoring and frequent glucose checks.', tip:'On NCLEX, if a long-standing diabetic patient is suddenly found confused with no preceding symptoms, think hypoglycemic unawareness.'},
+  {id:42, cat:'hypoglycemia', q:'Why is glucagon given IM/SQ rather than orally?', a:'An unconscious patient cannot swallow safely (aspiration risk). Glucagon stimulates the liver to release stored glycogen as glucose. It works in minutes but causes nausea/vomiting\u2014hence the lateral positioning.'},
+  {id:43, cat:'hypoglycemia', q:'A patient on an alpha-glucosidase inhibitor and a sulfonylurea develops hypoglycemia. What do you give?', a:'Pure glucose (glucose tablets or glucose gel). The alpha-glucosidase inhibitor blocks digestion of sucrose and complex carbs, so juice/candy/sugar won\'t work fast enough. Only pure glucose bypasses this drug\'s mechanism.'},
+
+  // ===== DKA (44-68) =====
+  {id:44, cat:'dka', q:'What three precipitating events most commonly trigger DKA?', a:'1) Missed/omitted insulin doses, 2) Illness or infection (stress hormones raise glucose), 3) Undiagnosed/untreated Type 1 diabetes (DKA may be the initial presentation).'},
+  {id:45, cat:'dka', q:'Explain the DKA pathophysiology cascade in 4 steps.', a:'1) Absent/inadequate insulin \u2192 2) Glucose can\'t enter cells + liver releases more glucose \u2192 HYPERGLYCEMIA. Simultaneously, lipolysis \u2192 free fatty acids \u2192 liver converts to KETONES \u2192 METABOLIC ACIDOSIS. 3) Hyperglycemia triggers osmotic diuresis \u2192 massive fluid and electrolyte loss \u2192 DEHYDRATION. 4) All converge: hypotension, tachycardia, altered mental status, coma, death.'},
+  {id:46, cat:'dka', q:'What are the lab values that define DKA?', a:'BG: 250\u2013800+ mg/dL. pH: 6.8\u20137.3 (acidotic). Bicarb: 0\u201315 mEq/L (low). PCO2: 10\u201330 mmHg (respiratory compensation). Anion gap: elevated (>12). Ketones: present in blood and urine. BUN/Cr/Hct: elevated from hemoconcentration.'},
+  {id:47, cat:'dka', q:'What is the FIRST treatment priority in DKA, and why not insulin first?', a:'REHYDRATION first (NS 500\u20131000 mL/hr for 2\u20134 hours). Rationale: Insulin given before rehydration can cause precipitous glucose drop and cardiovascular collapse. The patient may need 6\u201310 liters of fluid. Rehydration alone will begin to lower glucose via improved renal perfusion.'},
+  {id:48, cat:'dka', q:'Explain the "potassium trap" in DKA.', a:'Serum K+ may look normal or HIGH on admission because acidosis drives K+ out of cells. But total body K+ is DEPLETED from osmotic diuresis. As insulin and fluids correct acidosis, K+ shifts back into cells and serum levels plummet. Without aggressive K+ replacement, fatal hypokalemia and cardiac arrest can result.', tip:'NCLEX loves this: "The patient in DKA has a potassium of 4.8. What\'s the priority?" Replacing potassium\u2014because it\'s about to drop.'},
+  {id:49, cat:'dka', q:'When should you switch IV fluids to dextrose-containing solutions during DKA treatment?', a:'When blood glucose reaches ~300 mg/dL, add dextrose (D5W) to IV fluids. This prevents precipitous glucose drop while allowing insulin to continue correcting acidosis. Blood glucose often normalizes before acidosis resolves.'},
+  {id:50, cat:'dka', q:'Why is IV bicarbonate generally AVOIDED in DKA treatment?', a:'Bicarbonate administration precipitates further potassium drops (alkalosis drives K+ into cells). Insulin itself reverses acidosis by stopping ketone production. Bicarb is only considered in life-threatening acidosis (pH < 6.9).'},
+  {id:51, cat:'dka', q:'What are Kussmaul respirations, and what do they indicate in DKA?', a:'Deep, rapid respirations\u2014the lungs\' attempt to compensate for metabolic acidosis by blowing off CO2. Combined with fruity/acetone breath odor from exhaled ketones, these are hallmark signs of DKA.'},
+  {id:52, cat:'dka', q:'What monitoring is required during DKA treatment?', a:'BG hourly (POCT). Electrolytes (K+, Na+, Cl-, Ca, Mg, Phos, BUN, Cr) q6h. ECG q2\u20134h for first 8 hours (K+ changes). VS, lung sounds (fluid overload risk), urine output, renal function. After BG stable \u00d7 4 consecutive hours, move to q2h BG.'},
+  {id:53, cat:'dka', q:'What is the anion gap, and what is its significance in DKA?', a:'Anion gap = Na+ - (Cl- + HCO3-). Normal: 8\u201312 mEq/L. In DKA, ketoacid accumulation widens the gap. A closing anion gap during treatment signals that acidosis is resolving.'},
+  {id:54, cat:'dka', q:'Explain pseudohyponatremia in DKA and how to correct for it.', a:'Hyperglycemia pulls water from cells into blood, diluting sodium. The reported Na+ is falsely low. Corrected Na+ = Measured Na+ + [1.6 \u00d7 (Glucose - 100) / 100]. The corrected value reflects true sodium status.'},
+  {id:55, cat:'dka', q:'What are the "sick day rules" for a diabetic patient?', a:'NEVER skip insulin when ill (stress hormones raise BG even without eating). Test BG every 3\u20134 hours. Test urine ketones if BG > 300. Take supplemental fluids hourly. Call provider if: BG > 300 \u00d72 readings, positive ketones, unable to keep fluids down, or illness > 1\u20132 days.', tip:'The #1 fatal mistake patients make: skipping insulin because "I\'m not eating." Stress hormones raise BG regardless of intake.'},
+  {id:56, cat:'dka', q:'Why must caution be used with aggressive fluid resuscitation in DKA patients with heart failure?', a:'DKA requires 6\u201310 liters of fluid replacement. In patients with HF or renal failure, this volume can tip them into pulmonary edema. Monitor lung sounds, JVD, and respiratory status closely during resuscitation.'},
+  {id:57, cat:'dka', q:'What is the typical insulin protocol for DKA?', a:'Continuous IV regular insulin drip at ~5 units/hr. Flush insulin through entire tubing first (adheres to plastic). Monitor BG hourly. Do NOT stop drip until SQ insulin is started. The drip may continue 12\u201324 hours until bicarb \u2265 15\u201318 mEq/L.'},
+  {id:58, cat:'dka', q:'At what potassium level should replacement be withheld in DKA, and why?', a:'Withhold K+ replacement ONLY if the patient is hyperkalemic (K+ elevated) OR not urinating (oliguric/anuric). If they can\'t excrete potassium, adding more risks fatal hyperkalemia. Otherwise, replace aggressively\u2014up to 40 mEq/hr may be needed.'},
+
+  // ===== HHS (59-68) =====
+  {id:59, cat:'hhs', q:'What is HHS, and how does its pathophysiology differ from DKA?', a:'Hyperglycemic Hyperosmolar Syndrome: Type 2 emergency where the body produces ENOUGH insulin to prevent ketosis but NOT enough to prevent hyperglycemia. No ketoacidosis. Instead: insidious osmotic diuresis over days\u2013weeks \u2192 profound dehydration \u2192 dangerous hyperosmolality \u2192 neurologic deterioration.'},
+  {id:60, cat:'hhs', q:'What are the hallmark lab values of HHS?', a:'BG: 600\u20131200+ mg/dL. Serum osmolality: > 320 mOsm/L. Arterial pH: NORMAL (no acidosis). Ketones: absent or minimal. Bicarb: normal. Profound dehydration with hypotension and tachycardia.'},
+  {id:61, cat:'hhs', q:'Why is HHS mortality (5\u201316%) so much higher than DKA (<1%)?', a:'Two reasons: 1) DKA presents early because GI symptoms (N/V, abdominal pain) are impossible to ignore. 2) HHS patients are typically older with more comorbidities, and the insidious onset means they present with profound dehydration that\'s harder to reverse.', tip:'"Speed of recognition determines survival in both conditions." This framing works for any NCLEX question about DKA vs HHS.'},
+  {id:62, cat:'hhs', q:'What is the hallmark clinical presentation of HHS vs. DKA?', a:'HHS hallmark: ALTERED MENTAL STATUS (confusion, lethargy, seizures, coma)\u2014from cerebral dehydration. DKA hallmark: GI symptoms (nausea, vomiting, abdominal pain) + Kussmaul breathing + fruity breath.'},
+  {id:63, cat:'hhs', q:'What is the treatment priority in HHS, and how does it differ from DKA?', a:'Fluid and electrolyte replacement is the FIRST priority (even before insulin). Dehydration is more dangerous than hyperglycemia. Insulin plays a less central role than in DKA because there\'s no acidosis to reverse. Many patients can later control diabetes with diet or oral agents.'},
+  {id:64, cat:'hhs', q:'What typically triggers HHS?', a:'Physiologic stressors in older Type 2 patients: stroke, infection, surgery, or medications that worsen hyperglycemia (especially thiazide diuretics). Sometimes the initial presentation of previously undiagnosed Type 2 diabetes.'},
+  {id:65, cat:'hhs', q:'Compare the onset, ketone status, and respiratory findings of DKA vs. HHS.', a:'DKA: Rapid onset (<24h), ketones present, Kussmaul respirations, fruity breath. HHS: Slow onset (days\u2013weeks), ketones absent/minimal, normal or shallow respirations, no fruity breath.'},
+  {id:66, cat:'hhs', q:'What neurologic signs might you see in HHS, and why?', a:'Confusion, lethargy, seizures, hallucinations, coma\u2014all from cerebral dehydration. Serum osmolality > 320 mOsm/L draws water out of brain cells. These neurologic changes are often what finally bring the patient to medical attention.'},
+
+  // ===== DM COMPLICATIONS (67-80) =====
+  {id:67, cat:'dm-complications', q:'What is the #1 cause of death in diabetic patients?', a:'Cardiovascular disease (accelerated atherosclerosis). Affects coronary arteries (CAD, MI), cerebral vessels (stroke), and peripheral arteries (PVD, claudication). Risk reduction: tight glycemic control, BP management, lipid control, smoking cessation, antiplatelet therapy.'},
+  {id:68, cat:'dm-complications', q:'What is the earliest detectable sign of diabetic nephropathy, and what is first-line treatment?', a:'Microalbuminuria (> 30 mg albumin per 24 hours on two consecutive tests). First-line treatment: ACE inhibitors\u2014they slow progression independent of blood pressure effects. This is the direct link between diabetes and eventual kidney failure.', tip:'NCLEX: A diabetic patient\'s urine shows microalbuminuria. What medication do you expect? ACE inhibitor\u2014even if BP is normal.'},
+  {id:69, cat:'dm-complications', q:'Describe the progression of diabetic peripheral neuropathy.', a:'Paresthesias/burning \u2192 Numbness \u2192 Unsteady gait \u2192 Charcot joints (structural joint destruction from repeated undetected trauma). Earliest symptom: tingling in feet. Tested with monofilament testing for loss of protective sensation.'},
+  {id:70, cat:'dm-complications', q:'What are the manifestations of autonomic neuropathy in diabetes?', a:'Fixed tachycardia, orthostatic hypotension, gastroparesis (delayed gastric emptying\u2014makes glucose control unpredictable), neurogenic bladder, erectile dysfunction, and hypoglycemic unawareness. These seem unrelated but share the same cause: autonomic nerve damage.'},
+  {id:71, cat:'dm-complications', q:'What patient education is essential for diabetic foot care?', a:'Inspect feet daily (mirror for soles). Never walk barefoot. No heating pads or hot water bottles on feet (can\'t feel burns). Properly fitting shoes. Trim nails straight across. Report any cuts, blisters, or color changes immediately.', tip:'The foot ulceration cascade: minor injury \u2192 not detected (no sensation) \u2192 infection \u2192 amputation. Prevention through education is the nurse\'s most powerful tool.'},
+  {id:72, cat:'dm-complications', q:'What are the three stages of diabetic retinopathy?', a:'Nonproliferative (background) \u2192 Preproliferative \u2192 Proliferative. Microaneurysms and hemorrhages cause progressive vision loss. Annual dilated eye exams are essential. Laser photocoagulation can slow progression.'},
+  {id:73, cat:'dm-complications', q:'Why is gastroparesis particularly problematic for glucose management?', a:'Delayed gastric emptying makes glucose absorption unpredictable. Insulin given before a meal may peak before food is absorbed, causing hypoglycemia. Then food absorbs later, causing delayed hyperglycemia. Timing insulin becomes extremely difficult.'},
+  {id:74, cat:'dm-complications', q:'What is the difference between macrovascular and microvascular complications of diabetes?', a:'Macrovascular: accelerated atherosclerosis of large vessels (CAD, stroke, PVD). Microvascular: damage to smallest vessels (retinopathy, nephropathy, neuropathy). Both are driven by chronic hyperglycemia. A1C < 7% significantly reduces risk of both.'},
+
+  // ===== AKI (75-100) =====
+  {id:75, cat:'aki', q:'What is AKI, and what characterizes it clinically?', a:'Acute Kidney Injury: sudden, potentially reversible decrease in kidney function. Characterized by rising BUN and creatinine and usually oliguria (urine output < 400 mL/day). RIFLE classification: Risk \u2192 Injury \u2192 Failure \u2192 Loss \u2192 ESKD.'},
+  {id:76, cat:'aki', q:'What are the three categories of AKI and one example cause of each?', a:'Prerenal: decreased blood flow (hypovolemia, hemorrhage, HF, sepsis). Intrarenal (intrinsic): direct kidney tissue damage (nephrotoxic drugs, prolonged ischemia, rhabdomyolysis). Postrenal: urinary outflow obstruction (BPH, kidney stones, tumors).'},
+  {id:77, cat:'aki', q:'What lab finding helps distinguish prerenal AKI from intrarenal AKI?', a:'BUN:Creatinine ratio > 20:1 suggests prerenal (kidneys are structurally intact but underperfused, so they reabsorb urea more aggressively). Intrarenal shows renal tubular casts in urine (indicating structural damage to tubules).'},
+  {id:78, cat:'aki', q:'Why do burns cause prerenal AKI?', a:'Burns cause massive fluid loss through damaged skin \u2192 hypovolemia \u2192 decreased renal perfusion (hypoperfusion). The kidneys are structurally normal but aren\'t getting enough blood flow to filter properly.', tip:'Understanding the mechanism helps you predict, prevent, and prioritize. Burns = fluid loss = prerenal. Aminoglycosides = direct toxicity = intrarenal.'},
+  {id:79, cat:'aki', q:'Name four common nephrotoxic agents that cause intrarenal AKI.', a:'1) Aminoglycosides (gentamicin, tobramycin), 2) Contrast dye, 3) NSAIDs, 4) Myoglobin from rhabdomyolysis. Also: vancomycin at toxic levels. All are directly toxic to renal tubular cells.'},
+  {id:80, cat:'aki', q:'What are the four phases of AKI in order?', a:'1) Initiation (hours\u2013days; insult begins, prevention still possible). 2) Oliguria (UO < 400 mL/day, BUN/Cr rise, hyperkalemia, acidosis; 10\u201314 days). 3) Diuresis (UO increases to 1\u20134.5 L/day; risk of dehydration/hypokalemia). 4) Recovery (gradual improvement; 3\u201312 months, may have permanent GFR decrease).'},
+  {id:81, cat:'aki', q:'Why is the diuresis phase of AKI dangerous, and what is the nursing priority?', a:'The kidneys are recovering but can\'t yet concentrate urine\u2014output can reach 4.5 L/day. The danger is now DEHYDRATION and electrolyte loss (hypokalemia, hyponatremia)\u2014the exact opposite of the oliguric phase. Priority: aggressive fluid and electrolyte replacement.', tip:'Heavily tested because it\'s counterintuitive. "The kidneys are making urine again\u2014great!" No\u2014the patient can now dehydrate rapidly.'},
+  {id:82, cat:'aki', q:'How does the oliguric phase duration affect prognosis in AKI?', a:'The longer the oliguric phase lasts, the worse the prognosis. A typical duration is 10\u201314 days. Extended oliguria suggests more severe kidney damage and increases the likelihood of progression to CKD.'},
+  {id:83, cat:'aki', q:'List four nursing interventions to prevent AKI.', a:'1) Pre-procedure IV hydration (NS) before contrast dye. 2) Hold nephrotoxic medications before/after contrast. 3) Monitor drug levels for aminoglycosides and vancomycin. 4) N-acetylcysteine (Mucomyst) prophylactically before contrast. 5) Avoid NSAIDs in renal impairment. 6) Maintain hydration in patients on nephrotoxic drugs.'},
+  {id:84, cat:'aki', q:'What diagnostic finding on imaging is the hallmark of postrenal AKI?', a:'Hydronephrosis (swelling of the kidney from backed-up urine). Relief of the obstruction restores kidney function\u2014making this the most "fixable" type of AKI.'},
+  {id:85, cat:'aki', q:'Why is N-acetylcysteine (Mucomyst) sometimes given before contrast procedures?', a:'It may provide renal protection against contrast-induced nephropathy through its antioxidant properties. Given prophylactically (usually oral) before and after contrast. Combined with aggressive IV hydration for maximum prevention.'},
+
+  // ===== CKD / ESKD (86-120) =====
+  {id:86, cat:'ckd-eskd', q:'What are the two most common causes of CKD in the United States?', a:'1) Diabetes mellitus and 2) Hypertension together account for the majority of CKD cases. Both are modifiable\u2014prevention through glycemic and blood pressure control can slow or prevent progression to ESKD.'},
+  {id:87, cat:'ckd-eskd', q:'What are the 5 stages of CKD based on GFR?', a:'Stage 1: GFR > 90 (damage, normal GFR). Stage 2: 60\u201389 (mild decrease). Stage 3: 30\u201359 (moderate; complications begin). Stage 4: 15\u201329 (severe; prepare for RRT). Stage 5: < 15 or on dialysis (ESKD\u2014dialysis or transplant required).'},
+  {id:88, cat:'ckd-eskd', q:'What is the critical conceptual difference between AKI and CKD?', a:'AKI is potentially REVERSIBLE (if caught early and cause addressed). CKD is PROGRESSIVE and IRREVERSIBLE. Once nephrons are destroyed, they don\'t regenerate\u2014remaining nephrons hypertrophy but eventually fail.'},
+  {id:89, cat:'ckd-eskd', q:'Explain the renal osteodystrophy cascade step by step.', a:'Phosphorus UP (kidneys can\'t excrete it) \u2192 Calcium DOWN (phosphorus binds calcium) \u2192 Vitamin D DOWN (kidneys can\'t convert to active calcitriol, reducing gut calcium absorption) \u2192 PTH UP (parathyroid compensates by leaching calcium from bones) \u2192 BONES WEAKEN (renal osteodystrophy, pathologic fractures).', tip:'This cascade is tested frequently. Follow the dominoes: phosphorus is the trigger, bones are the casualty.'},
+  {id:90, cat:'ckd-eskd', q:'Why do ESKD patients develop anemia, and how is it treated?', a:'Failed kidneys produce inadequate erythropoietin (EPO), which normally stimulates RBC production. Treatment: epoetin alfa or darbepoetin injections + IV iron + folic acid. Target Hgb: 10\u201311.5 g/dL (higher targets increase thrombosis risk).'},
+  {id:91, cat:'ckd-eskd', q:'What type of anemia occurs in CKD/ESKD?', a:'Normochromic, normocytic anemia. RBCs are normal size and color but there aren\'t enough of them due to decreased EPO, shortened RBC lifespan, and impaired platelet function (also causes bleeding tendency).'},
+  {id:92, cat:'ckd-eskd', q:'What is uremic frost, and what causes it?', a:'Crystallized urea deposited on the skin surface, appearing as a whitish powdery coating. Occurs in severe uremia when BUN is extremely elevated. The body is literally trying to excrete waste through the skin.'},
+  {id:93, cat:'ckd-eskd', q:'Why is hyperkalemia the most dangerous electrolyte emergency in ESKD?', a:'Kidneys normally excrete 80% of body potassium. In ESKD, K+ accumulates rapidly. Combined with metabolic acidosis (shifts K+ out of cells) and dietary indiscretion, serum K+ can reach lethal levels\u2014causing cardiac arrest.'},
+  {id:94, cat:'ckd-eskd', q:'Describe the ECG progression of hyperkalemia.', a:'Mild (5.5\u20136.0): Tall, peaked T waves (earliest sign). Moderate (6.0\u20137.0): Flat P waves, prolonged PR. Severe (7.0\u20138.0): Widened QRS. Critical (>8.0): Sine wave pattern \u2192 V-fib/cardiac arrest.', tip:'Peaked T waves = think hyperkalemia immediately. This ECG finding is a classic board question.'},
+  {id:95, cat:'ckd-eskd', q:'What is the FIRST treatment for hyperkalemic emergency and why?', a:'Calcium gluconate IV. It does NOT lower potassium\u2014it stabilizes the cardiac membrane against fatal dysrhythmias. You\'re buying time for other treatments to work. Think of it as a "cardiac shield."', tip:'NCLEX trap: calcium gluconate is first but doesn\'t fix K+. If the question asks "which intervention lowers potassium," pick insulin+glucose, not calcium.'},
+  {id:96, cat:'ckd-eskd', q:'List 5 treatments for hyperkalemia and their mechanisms.', a:'1) Calcium gluconate\u2014stabilizes heart (doesn\'t lower K+). 2) Regular insulin + D50\u2014drives K+ into cells. 3) Sodium bicarb\u2014alkalinizes, drives K+ into cells. 4) Kayexalate\u2014removes K+ via GI (hours). 5) Dialysis\u2014definitive removal. Also: nebulized albuterol (adjunct).'},
+  {id:97, cat:'ckd-eskd', q:'What GI manifestations occur in ESKD, and what causes them?', a:'Anorexia, nausea/vomiting, hiccups, uremic fetor (urine-like breath odor), stomatitis (mouth inflammation). All caused by uremic toxin accumulation irritating the GI mucosa.'},
+  {id:98, cat:'ckd-eskd', q:'What neurologic manifestations occur in ESKD?', a:'Lethargy, confusion, seizures, restless leg syndrome, peripheral neuropathy. All caused by uremic toxin accumulation affecting the nervous system.'},
+  {id:99, cat:'ckd-eskd', q:'What cardiovascular complications occur in ESKD?', a:'Hypertension (volume overload + RAAS dysfunction), heart failure, pericarditis (uremic toxins), accelerated atherosclerosis. Cardiovascular disease is the leading cause of death in ESKD patients.'},
+  {id:100, cat:'ckd-eskd', q:'What are the key components of ESKD nursing assessment?', a:'Fluid status (daily weights, I&O, edema, lung sounds, JVD). Nutritional status (weight trends, albumin, protein intake). Electrolytes (K+, Na+, Ca, Phos, Mg). Activity tolerance/fatigue. Self-esteem and coping. Potential complications: hyperkalemia, pericarditis, infection.'},
+  {id:101, cat:'ckd-eskd', q:'Why does metabolic acidosis develop in ESKD?', a:'The kidneys can no longer excrete hydrogen ions (H+) or regenerate bicarbonate. Acid accumulates in the blood. This acidosis also contributes to hyperkalemia by driving potassium out of cells into the blood.'},
+
+  // ===== DIALYSIS & TRANSPLANT (102-200) =====
+  {id:102, cat:'dialysis-transplant', q:'What three physical principles drive hemodialysis?', a:'1) Diffusion: solutes (urea, creatinine, electrolytes) move from high concentration (blood) to low (dialysate). 2) Osmosis: water moves from low to high solute concentration. 3) Ultrafiltration: hydrostatic pressure pushes excess water across the membrane.'},
+  {id:103, cat:'dialysis-transplant', q:'What is the preferred long-term vascular access for hemodialysis, and why?', a:'AV Fistula (AVF)\u2014surgical anastomosis of artery to vein. Preferred because it has the lowest infection and thrombosis risk and longest patency. Disadvantage: takes 3\u20136 months to mature.', tip:'NCLEX: "Which access is best for long-term dialysis?" Always AVF. "Which is available immediately?" HD catheter.'},
+  {id:104, cat:'dialysis-transplant', q:'List the six "NEVER" rules for protecting an AV fistula.', a:'1) NO blood pressure on access arm. 2) NO venipuncture or blood draws. 3) NO IV starts. 4) NO constrictive clothing/jewelry. 5) Don\'t sleep on access arm. 6) Report decreased thrill/bruit, swelling, pain, or infection signs immediately.'},
+  {id:105, cat:'dialysis-transplant', q:'How do you assess AV fistula patency?', a:'Palpate for THRILL (vibration felt with fingertips) and auscultate for BRUIT (whooshing sound with stethoscope). Presence of both confirms patency. Absence of either = possible clotting = notify provider immediately.', tip:'Thrill and bruit\u2014if you can\'t feel or hear them, the fistula may be clotted. This is an emergency.'},
+  {id:106, cat:'dialysis-transplant', q:'What is disequilibrium syndrome, and when is it most likely to occur?', a:'Rapid BUN reduction during dialysis creates an osmotic gradient \u2192 water shifts into the brain \u2192 cerebral edema. Symptoms: headache, nausea, restlessness, seizures. Most common with FIRST dialysis treatment or very high BUN. Prevention: slow dialysis rate, shorter initial sessions.'},
+  {id:107, cat:'dialysis-transplant', q:'What is the most common complication of hemodialysis, and how is it managed?', a:'Hypotension\u2014caused by rapid fluid removal via ultrafiltration. Management: lower head of bed, NS bolus, reduce ultrafiltration rate. This is why antihypertensives are held before dialysis.'},
+  {id:108, cat:'dialysis-transplant', q:'What position should a patient be placed in if air embolism occurs during hemodialysis?', a:'Clamp the tubing immediately. Position patient on LEFT SIDE with HEAD DOWN (left lateral Trendelenburg). This traps air in the right atrium, preventing it from entering the pulmonary vasculature.', tip:'Left side, head down for air embolism. This position is also tested in central line air embolism scenarios.'},
+  {id:109, cat:'dialysis-transplant', q:'Why are antihypertensives held before dialysis and given after?', a:'Dialysis removes fluid, which lowers blood pressure. If you combine fluid removal with a full antihypertensive dose, the patient develops dangerous hypotension. Give the medication after dialysis when fluid has been removed.'},
+  {id:110, cat:'dialysis-transplant', q:'How does peritoneal dialysis work?', a:'Sterile dialysate is infused through a catheter into the peritoneal cavity, dwells for a prescribed time (diffusion and osmosis occur across the peritoneal membrane, ~22,000 cm\u00b2 surface area), then drains by gravity. Cycle: infuse (10 min) \u2192 dwell (4\u20138 hrs) \u2192 drain (20\u201330 min).'},
+  {id:111, cat:'dialysis-transplant', q:'What is the FIRST sign of peritonitis in a peritoneal dialysis patient?', a:'CLOUDY DIALYSATE EFFLUENT. Normal effluent is clear and pale yellow. Cloudy = peritonitis until proven otherwise. Other signs: diffuse abdominal pain with rebound tenderness, fever, nausea, malaise.', tip:'This is one of the most tested facts in peritoneal dialysis. Cloudy effluent = peritonitis = culture first, then antibiotics.'},
+  {id:112, cat:'dialysis-transplant', q:'What is the nursing action sequence when peritonitis is suspected in PD?', a:'1) Obtain a culture of the effluent FIRST. 2) Start antibiotics (intraperitoneal + systemic). 3) Continue dialysis during treatment. Do not stop PD\u2014the antibiotics are added to the dialysate.'},
+  {id:113, cat:'dialysis-transplant', q:'What is the difference between CAPD and CCPD?', a:'CAPD (Continuous Ambulatory): 4\u20135 manual exchanges/day, patient-independent, no machine. CCPD (Continuous Cyclic): automated cycler does 3\u20135 exchanges overnight while sleeping, frees daytime hours.'},
+  {id:114, cat:'dialysis-transplant', q:'What determines how much fluid is removed during peritoneal dialysis?', a:'The dextrose concentration of the dialysate: 1.5%, 2.5%, or 4.25%. Higher concentrations create greater osmotic gradient, pulling more fluid. But chronic use of higher concentrations damages the peritoneal membrane over time.'},
+  {id:115, cat:'dialysis-transplant', q:'If PD drainage is insufficient, what is the FIRST nursing action?', a:'Reposition the patient (roll to the other side). Constipation is a common cause of poor drainage (bowel presses on catheter), so maintaining regular bowel function is part of PD care.', tip:'Students often jump to "call the doctor." First try repositioning\u2014it\'s a simple intervention that frequently works.'},
+  {id:116, cat:'dialysis-transplant', q:'What is CRRT, and when is it used instead of conventional hemodialysis?', a:'Continuous Renal Replacement Therapy\u2014used in ICU for hemodynamically unstable patients who can\'t tolerate the rapid fluid/solute shifts of standard HD. Runs continuously over 24+ hours, removing fluid and toxins slowly and gently.'},
+  {id:117, cat:'dialysis-transplant', q:'Name the three types of CRRT and their primary functions.', a:'CVVH (Continuous Venovenous Hemofiltration): fluid removal. CVVHD (Continuous Venovenous Hemodialysis): solute + fluid removal. CVVHDF (Continuous Venovenous Hemodiafiltration): combined filtration + dialysis.'},
+  {id:118, cat:'dialysis-transplant', q:'What infection control measures are required during peritoneal dialysis exchanges?', a:'Strict hand hygiene before/during every exchange. Wear mask and hair bonnet. No visitors during exchange; door closed. Sterile cap on catheter during dwell. Exit site care: daily or 3\u20134x weekly with soap/water. Never submerge exit site in bathwater.'},
+  {id:119, cat:'dialysis-transplant', q:'What are the complications specific to peritoneal dialysis (besides peritonitis)?', a:'Protein loss in dialysate \u2192 hypoalbuminemia. Hernias (increased intra-abdominal pressure). Lower back pain. Constipation. Catheter site leakage. Bleeding. Exit site/tunnel infections.'},
+  {id:120, cat:'dialysis-transplant', q:'Why must all IV fluids be given as slowly as possible to dialysis patients?', a:'Dialysis patients cannot excrete water normally. Rapid IV infusion causes volume overload \u2192 pulmonary edema. Use IV pumps for accuracy. Maintain meticulous I&O records.'},
+  {id:121, cat:'dialysis-transplant', q:'Describe the pericarditis \u2192 tamponade progression in ESKD patients.', a:'Pericarditis (chest pain, friction rub, pulsus paradoxus >10 mmHg) \u2192 Pericardial effusion (friction rub DISAPPEARS, muffled heart sounds) \u2192 Cardiac tamponade (narrowing pulse pressure, inaudible heart sounds, hypotension, JVD = EMERGENCY requiring pericardial window).', tip:'Key insight: friction rub disappearing = getting WORSE, not better. Fluid has filled the pericardial space.'},
+  {id:122, cat:'dialysis-transplant', q:'What is pulsus paradoxus, and what does it indicate?', a:'Blood pressure drops > 10 mmHg during inspiration. Indicates pericarditis or cardiac tamponade. In tamponade, the fluid-filled pericardium restricts cardiac filling during inspiration, causing an exaggerated BP drop.'},
+  {id:123, cat:'dialysis-transplant', q:'What is the treatment of choice for selected patients with ESKD?', a:'Kidney transplantation\u2014but it is NOT a cure. The transplant won\'t function for the patient\'s entire lifespan. It requires lifelong immunosuppression. It is an elective procedure; patients should be in the best possible condition beforehand.'},
+  {id:124, cat:'dialysis-transplant', q:'Where is a transplanted kidney placed, and why?', a:'In the iliac fossa (anterior to iliac crest) for easier vascular access. Renal artery \u2192 iliac artery, renal vein \u2192 iliac vein, ureter \u2192 bladder. The patient\'s native kidneys are usually NOT removed.'},
+  {id:125, cat:'dialysis-transplant', q:'What is the difference between living donor and deceased donor kidney transplant outcomes?', a:'Living donor kidneys have better long-term outcomes and typically function immediately. Deceased donor kidneys may have ATN (acute tubular necrosis) and take 2\u20133 weeks to function, requiring temporary dialysis.'},
+  {id:126, cat:'dialysis-transplant', q:'What are the three types of transplant rejection?', a:'Hyperacute (within 24h; antibody-mediated \u2192 immediate organ removal). Acute (3\u201314 days; T-cell mediated \u2192 increased immunosuppression). Chronic (months\u2013years; progressive fibrosis \u2192 may require return to dialysis).'},
+  {id:127, cat:'dialysis-transplant', q:'What may be the ONLY sign of acute rejection in a patient on cyclosporine?', a:'An asymptomatic rise in serum creatinine. Cyclosporine masks the classic rejection symptoms (fever, graft tenderness, malaise, oliguria). This is why lab monitoring is non-negotiable in transplant patients.', tip:'If a question says "transplant patient on cyclosporine with rising creatinine but no other symptoms"\u2014think rejection.'},
+  {id:128, cat:'dialysis-transplant', q:'What is the most reliable method for detecting transplant rejection?', a:'Percutaneous renal biopsy is the most reliable. Other methods: ultrasound (for hydronephrosis) and nuclear medicine studies. Treatable rejection episodes during the first year are not uncommon. 1-year graft survival: 90\u201395%.'},
+  {id:129, cat:'dialysis-transplant', q:'Why must transplant patients avoid grapefruit for life?', a:'Grapefruit inhibits CYP3A4 enzyme activity, which metabolizes cyclosporine and tacrolimus. This raises drug levels to potentially toxic ranges (nephrotoxicity, neurotoxicity). Must avoid ALL grapefruit products lifelong.'},
+  {id:130, cat:'dialysis-transplant', q:'What is the ironic risk of calcineurin inhibitors (tacrolimus, cyclosporine)?', a:'Nephrotoxicity\u2014the drugs protecting the transplanted kidney can themselves damage it. This requires careful drug level monitoring and dose adjustments. Other side effects: hyperkalemia, neurotoxicity (tremors), HTN.'},
+  {id:131, cat:'dialysis-transplant', q:'What are the key side effects of cyclosporine that patients should know about?', a:'Nephrotoxicity (monitor drug levels and creatinine). Hirsutism (excess hair growth). Gingival hyperplasia (gum overgrowth). Must take with food, same time daily. AVOID GRAPEFRUIT.'},
+  {id:132, cat:'dialysis-transplant', q:'What is the #1 cause of morbidity and mortality after kidney transplantation?', a:'Cardiovascular disease. Immunosuppressive medications contribute to HTN, hyperlipidemia, and diabetes. Patients require lifelong cardiovascular risk management and cancer screening beyond standard recommendations.'},
+  {id:133, cat:'dialysis-transplant', q:'How frequently is urine output monitored immediately post-transplant?', a:'Every HOUR. IV fluids are adjusted based on urine volume and serum electrolyte levels. If a deceased donor kidney has ATN, the patient may be anuric/oliguric/polyuric for 2\u20133 weeks and require temporary dialysis.'},
+  {id:134, cat:'dialysis-transplant', q:'Why can\'t transplant patients have fresh flowers in their room?', a:'Immunosuppression makes them vulnerable to fungal spores and bacteria harbored in soil and water of flower arrangements. Also: strict hand hygiene, frequent urine cultures, and culture all wound drainage.'},
+  {id:135, cat:'dialysis-transplant', q:'What GI prophylaxis do post-transplant patients receive, and why?', a:'H2 blockers (famotidine) or PPIs (omeprazole) to prevent corticosteroid-induced GI ulceration and bleeding. Also prophylactic oral antifungal rinses for fungal colonization from combined immunosuppression + antibiotics.'},
+  {id:136, cat:'dialysis-transplant', q:'What should a transplant patient report immediately after discharge?', a:'Decreased urine output, weight gain, malaise, fever, respiratory distress, tenderness over graft, blood pressure changes, anxiety/depression. Also inform ALL healthcare providers (including dentists) about the transplant and immunosuppressive regimen.'},
+  {id:137, cat:'dialysis-transplant', q:'What is a common knowledge gap about living organ donors?', a:'The living donor often experiences MORE pain than the transplant recipient and requires more analgesia. Both need the same level of nursing care. The donor should have lifelong blood pressure monitoring since one kidney now handles the workload of two.'},
+  {id:138, cat:'dialysis-transplant', q:'List four contraindications to kidney transplantation.', a:'Recent malignancy, active/chronic infection (HIV, Hep B/C), severe irreversible extrarenal disease (inoperable cardiac disease), BMI > 35, active substance use disorder, inability to give informed consent, active psychiatric disease, history of treatment nonadherence.'},
+  {id:139, cat:'dialysis-transplant', q:'What is the nursing response when a dialysis patient expresses desire to discontinue treatment?', a:'Take it seriously\u2014don\'t dismiss or treat as crisis. Arrange psychiatric evaluation to rule out treatable depression. Provide counseling support. If depression is ruled out, respect the patient\'s informed decision as an advance directive.'},
+  {id:140, cat:'dialysis-transplant', q:'What is the rule about HD catheters when a dialysis patient is hospitalized?', a:'Only a dialysis nurse or physician should access an HD catheter. If used in an emergency, withdraw the catheter dwell volume before administering any medication or fluid.'},
+  {id:141, cat:'dialysis-transplant', q:'What distinguishes an AV graft from an AV fistula?', a:'AVG uses a synthetic tube connecting artery to vein (matures in 2\u20133 weeks). AVF is a direct artery-to-vein surgical connection (matures in 3\u20136 months). AVG has higher infection and thrombosis risk but is used when native vessels are inadequate.'},
+  {id:142, cat:'dialysis-transplant', q:'What are the indications for initiating hemodialysis?', a:'Dangerously high or rising potassium, fluid overload/impending pulmonary edema, increasing metabolic acidosis, uremic symptoms (pericarditis, encephalopathy, neuropathy), and removal of certain drugs/toxins.'},
+  {id:143, cat:'dialysis-transplant', q:'What is countercurrent flow in the dialyzer, and why does it matter?', a:'Blood flows one direction through hollow fibers while dialysate flows the opposite direction around them. This maximizes the concentration gradient across the membrane at every point, making diffusion more efficient. Standard HD is 3x/week, 3\u20134 hours/session.'},
+  {id:144, cat:'dialysis-transplant', q:'Why does sirolimus need to be given 4 hours AFTER cyclosporine?', a:'Sirolimus and cyclosporine interact\u2014concurrent administration increases sirolimus levels to potentially toxic ranges. The 4-hour separation allows cyclosporine absorption to clear before sirolimus is given.'},
+  {id:145, cat:'dialysis-transplant', q:'What is the connection between uncontrolled diabetes and the need for dialysis?', a:'Uncontrolled diabetes \u2192 microvascular damage \u2192 diabetic nephropathy (earliest sign: microalbuminuria) \u2192 progressive CKD (stages 1\u21925) \u2192 ESKD (GFR < 15) \u2192 dialysis or transplant. Diabetes is the #1 cause of ESKD. Prevention points: A1C < 7%, BP control, ACE inhibitors for microalbuminuria.'},
+  {id:146, cat:'dialysis-transplant', q:'What surgery complications are the chief concerns after kidney surgery?', a:'Hemorrhage and shock (kidney is highly vascular). Also: paralytic ileus, pneumonia, infection, fluid imbalance, DVT. Monitor VS frequently (initially hourly), assess incision/drains, strict I&O.'},
+  {id:147, cat:'dialysis-transplant', q:'What precaution about mycophenolate mofetil capsules should the nurse know?', a:'Do NOT crush capsules. Avoid contact with the powder\u2014wash hands thoroughly if contact occurs. Give with food for GI tolerance. Obtain baseline CBC with differential (monitors for bone marrow suppression).'},
+  {id:148, cat:'dialysis-transplant', q:'Why is belatacept contraindicated in EBV-seronegative patients?', a:'Belatacept (a costimulation blocker, IV only) is associated with an increased risk of post-transplant lymphoproliferative disorder (PTLD) in EBV-seronegative patients. Also monitor for progressive multifocal leukoencephalopathy (PML).'},
+  {id:149, cat:'dialysis-transplant', q:'What vaccine restriction applies to all transplant patients on immunosuppression?', a:'NO live vaccines (e.g., MMR, varicella, live influenza). Immunosuppressed patients cannot mount a safe immune response to live organisms and could develop the disease the vaccine is meant to prevent.'},
+  {id:150, cat:'dialysis-transplant', q:'What is the typical HD catheter access site, and what is its biggest disadvantage?', a:'Double-lumen catheter in subclavian, internal jugular, or femoral vein. Available immediately but has the HIGHEST infection risk of all access types. Should be temporary. Also risks venous stenosis.'},
+
+  // ===== ADDITIONAL CROSS-CUTTING CARDS (151-200) =====
+  {id:151, cat:'dka', q:'A Type 1 diabetic presents with BG 450, pH 7.1, bicarb 8, positive ketones, Kussmaul respirations. What is this?', a:'DKA. All criteria met: hyperglycemia > 250, pH < 7.3 (acidotic), bicarb < 15, ketones present, respiratory compensation (Kussmaul breathing). Treatment: fluids first, then IV regular insulin drip, aggressive K+ replacement.'},
+  {id:152, cat:'hhs', q:'A 72-year-old Type 2 diabetic presents with BG 980, serum osmolality 340, pH 7.38, no ketones, confusion. What is this?', a:'HHS. Extreme hyperglycemia > 600, hyperosmolality > 320, normal pH (no acidosis), absent ketones, altered mental status in an older Type 2 patient. Treatment: aggressive fluid replacement first, then insulin.'},
+  {id:153, cat:'insulin', q:'A nurse is about to draw up NPH and regular insulin in the same syringe. What is the correct order?', a:'Draw up Regular (clear) FIRST, then NPH (cloudy). Memory aid: "Clear before cloudy" or "RN" = Regular then NPH. This prevents contaminating the regular insulin vial with NPH particles.', tip:'"Clear before cloudy" is a classic NCLEX question. If you contaminate regular with NPH, the onset/peak becomes unpredictable.'},
+  {id:154, cat:'hypoglycemia', q:'A diabetic patient is found unconscious. BG is 38 mg/dL. No IV access is available. What do you give?', a:'Glucagon 1 mg IM or SQ. Position patient on their side (glucagon causes nausea; aspiration risk when consciousness returns). Never attempt oral glucose in an unconscious patient.'},
+  {id:155, cat:'aki', q:'A patient develops AKI after receiving IV contrast dye. What category is this?', a:'Intrarenal (intrinsic) AKI. Contrast dye is directly nephrotoxic to renal tubular cells. Prevention: pre-procedure IV hydration, hold nephrotoxic meds, possibly N-acetylcysteine prophylaxis.'},
+  {id:156, cat:'ckd-eskd', q:'A patient with ESKD has a potassium of 6.8 mEq/L with peaked T waves on ECG. What is the first intervention?', a:'IV calcium gluconate to stabilize the cardiac membrane. Then: insulin + D50 to drive K+ into cells. Then consider Kayexalate or dialysis for definitive removal. Calcium gluconate does NOT lower K+\u2014it protects the heart.'},
+  {id:157, cat:'dialysis-transplant', q:'A nurse observes that a patient\'s peritoneal dialysis effluent is cloudy. What actions should be taken in order?', a:'1) Obtain effluent culture FIRST. 2) Start intraperitoneal + systemic antibiotics. 3) Continue dialysis during treatment. Also assess for abdominal pain, fever, rebound tenderness. Cloudy effluent = peritonitis until proven otherwise.'},
+  {id:158, cat:'dm-complications', q:'A diabetic patient can recite that metformin "decreases hepatic glucose production" but can\'t explain when NOT to take it. What is the correct answer?', a:'Do NOT take metformin: with impaired renal/hepatic function, 48h before/after contrast dye procedures, when severely dehydrated, during acute illness with risk of lactic acidosis, or when drinking excessive alcohol. Understanding contraindications matters more than mechanism.'},
+  {id:159, cat:'dialysis-transplant', q:'A transplant patient on cyclosporine has a creatinine that rose from 1.2 to 2.4 over 3 days with no other symptoms. What do you suspect?', a:'Acute rejection. On cyclosporine, rising creatinine may be the ONLY sign\u2014classic symptoms (fever, graft tenderness, oliguria) are masked. Notify provider immediately. Percutaneous renal biopsy is the most reliable diagnostic test.'},
+  {id:160, cat:'ckd-eskd', q:'What foods should a patient with hyperkalemia avoid?', a:'High-potassium foods: bananas, oranges, potatoes, tomatoes, avocados, spinach, beans, nuts, chocolate, salt substitutes (contain KCl). Teach patients to read labels and work with a renal dietitian.'},
+  {id:161, cat:'insulin', q:'What happens if you give glargine insulin IV by mistake?', a:'Dangerous\u2014glargine (long-acting) has a pH of 4 and is designed for slow, continuous SQ absorption over 24 hours. IV administration bypasses this mechanism; the kinetics become unpredictable. Only Regular insulin is approved for IV use.'},
+  {id:162, cat:'dka', q:'Why does blood glucose often normalize before acidosis resolves in DKA?', a:'IV fluids dilute glucose and improve renal perfusion (excreting glucose). But ketone metabolism takes longer to reverse. The insulin drip must continue until bicarb \u2265 15\u201318 mEq/L, even if BG is normal. Switch to dextrose-containing fluids to prevent hypoglycemia while continuing insulin.'},
+  {id:163, cat:'aki', q:'What is rhabdomyolysis, and how does it cause AKI?', a:'Skeletal muscle breakdown releases myoglobin into the blood. Myoglobin is directly toxic to renal tubules, causing intrarenal AKI. Common causes: crush injuries, prolonged immobility, severe burns, statin medications. Diagnosis: elevated CK, dark "cola-colored" urine.'},
+  {id:164, cat:'ckd-eskd', q:'Why do ESKD patients have increased bleeding risk?', a:'Uremia impairs platelet function (platelet aggregation and adhesion are defective). Combined with anemia and heparin use during dialysis, bleeding risk is significantly elevated. Monitor for bruising, GI bleeding, prolonged bleeding from access sites.'},
+  {id:165, cat:'dm-foundations', q:'What nutritional guidelines does the ADA recommend for diabetic patients?', a:'Carbohydrates: 50\u201360% of calories (emphasize whole grains). Fat: < 30% (saturated fat < 10%). Cholesterol: < 300 mg/day. Combine starches with protein or fat to slow absorption. Whole fruits over juice.'},
+  {id:166, cat:'dialysis-transplant', q:'What long-term complications of immunosuppressive therapy should transplant patients be screened for?', a:'Nephrotoxicity (ironic), hypertension, hyperlipidemia, diabetes (new-onset from steroids), cataracts, gingival hyperplasia, increased cancer risk, osteoporosis, blood dyscrasias. Cardiovascular disease is the #1 cause of post-transplant mortality.'},
+  {id:167, cat:'hhs', q:'Why do patients with HHS present later than those with DKA?', a:'HHS has no ketoacidosis and no GI symptoms (no N/V, no abdominal pain). Patients tolerate polyuria and polydipsia until neurologic changes finally bring them to medical attention. By then, dehydration is severe and harder to reverse.'},
+  {id:168, cat:'aki', q:'What is the significance of a BUN:Creatinine ratio > 20:1?', a:'Suggests prerenal AKI\u2014the kidneys are structurally intact but hypoperfused. They compensate by reabsorbing more urea (increasing BUN disproportionately to creatinine). Once perfusion is restored, kidney function returns.'},
+  {id:169, cat:'ckd-eskd', q:'What is Kayexalate, and what is its most common side effect?', a:'Sodium polystyrene sulfonate\u2014a cation exchange resin that removes potassium through the GI tract (oral or rectal). Takes hours to work. Most common side effect: constipation and fecal impaction. Not useful for acute emergency\u2014use as adjunct after stabilizing with calcium gluconate and insulin.'},
+  {id:170, cat:'dialysis-transplant', q:'What does "paired exchange" mean in kidney transplantation?', a:'When a willing living donor is incompatible with their intended recipient, paired exchange programs match them with another incompatible pair for a swap. Donor A gives to Recipient B, Donor B gives to Recipient A. Expands the pool of available living donor kidneys.'},
+  {id:171, cat:'insulin', q:'What pulmonary requirement exists for inhaled insulin (Afrezza)?', a:'Pulmonary function testing is required before starting and periodically during use. Afrezza is a rapid-acting inhaled insulin with onset < 15 minutes and duration 2\u20133 hours. Contraindicated in chronic lung disease (COPD, asthma).'},
+  {id:172, cat:'dka', q:'What is the significance of an elevated anion gap in a metabolic acidosis patient?', a:'Elevated anion gap (> 12 mEq/L) indicates the acidosis is caused by accumulation of unmeasured anions\u2014in DKA, these are ketoacids. Normal anion gap acidosis has a different set of causes (diarrhea, renal tubular acidosis). The anion gap narrows as DKA treatment succeeds.'},
+  {id:173, cat:'dm-complications', q:'What is Charcot joint, and what causes it?', a:'Progressive structural joint destruction in the foot/ankle from repeated undetected trauma. Caused by severe peripheral neuropathy\u2014the patient can\'t feel injuries, so weight-bearing continues on damaged joints. Late complication of diabetic neuropathy.'},
+  {id:174, cat:'ckd-eskd', q:'Why is EPO therapy limited to a target hemoglobin of 10\u201311.5 g/dL?', a:'Higher hemoglobin targets (>11.5) increase the risk of vascular thrombosis, hypertension, and cardiovascular events. The goal is to reduce symptoms of anemia (fatigue, dyspnea) without overcorrecting.'},
+  {id:175, cat:'dialysis-transplant', q:'What nursing concerns exist about CRRT anticoagulation?', a:'CRRT requires continuous anticoagulation (heparin or citrate) to prevent circuit clotting. Nursing implications: monitor for bleeding, check coagulation studies frequently, assess access site, hourly I&O, frequent vital signs.'},
+  {id:176, cat:'oral-agents', q:'Why does metformin carry a lactic acidosis risk specifically in renal impairment?', a:'Metformin is renally excreted. If kidney function is impaired, metformin accumulates to toxic levels, shifting cellular metabolism toward anaerobic pathways, producing lactic acid. Combined with contrast dye (which temporarily worsens renal function), the risk multiplies.'},
+  {id:177, cat:'dka', q:'What ECG monitoring frequency is recommended during the first 8 hours of DKA treatment, and why?', a:'ECG every 2\u20134 hours for the first 8 hours. Reason: potassium levels are shifting rapidly as acidosis is corrected and insulin drives K+ into cells. ECG changes (peaked T waves, widened QRS, flat P waves) signal dangerous hypo- or hyperkalemia before labs return.'},
+  {id:178, cat:'aki', q:'During the recovery phase of AKI, what should the patient be told about long-term prognosis?', a:'Recovery takes 3\u201312 months. Some patients will have permanent decrease in GFR. Some progress to CKD. Ongoing monitoring of renal function is essential. Avoid nephrotoxic drugs and maintain adequate hydration.'},
+  {id:179, cat:'dialysis-transplant', q:'When should a patient with CKD Stage 4 begin planning for vascular access?', a:'At Stage 4 (GFR 15\u201329). An AV fistula takes 3\u20136 months to mature, so it must be created well before dialysis is needed. Planning early avoids emergency HD catheter placement (highest infection risk).'},
+  {id:180, cat:'ckd-eskd', q:'What is uremic fetor?', a:'A urine-like breath odor caused by the breakdown of urea in saliva to ammonia. Occurs when BUN is extremely elevated in ESKD. Accompanies other uremic GI symptoms: anorexia, nausea, stomatitis, metallic taste.'},
+  {id:181, cat:'dm-foundations', q:'What secondary conditions can cause diabetes?', a:'Cushing syndrome (cortisol excess raises glucose), pancreatitis/pancreatectomy (destruction of beta cells), medications (corticosteroids, thiazide diuretics). These are classified as "secondary diabetes" and treatment targets the underlying cause when possible.'},
+  {id:182, cat:'hypoglycemia', q:'What is the mechanism difference between mild hypoglycemia symptoms and moderate symptoms?', a:'Mild: ADRENERGIC\u2014sympathetic nervous system activation (sweating, tremor, tachycardia, hunger). Moderate: NEUROGLYCOPENIC\u2014brain glucose deprivation (confusion, slurred speech, headache, numbness). The brain runs on glucose and has no reserves.'},
+  {id:183, cat:'dialysis-transplant', q:'What happens to most transplant patients\' native kidneys during transplant surgery?', a:'They are usually LEFT IN PLACE. The transplanted kidney goes in the iliac fossa. Native kidneys are only removed if they pose a risk\u2014enlarged polycystic kidneys that could rupture or become infected.'},
+  {id:184, cat:'ckd-eskd', q:'How does ESKD affect the endocrine system?', a:'Hormonal disruption from uremia causes infertility and sexual dysfunction in both men and women. Women may have amenorrhea or irregular menses. Men may have erectile dysfunction. These impact quality of life and require sensitive nursing assessment.'},
+  {id:185, cat:'dka', q:'A DKA patient\'s potassium is 3.2 mEq/L on admission. What is the priority before starting insulin?', a:'Replace potassium FIRST before starting insulin. Insulin drives K+ further into cells, which could drop this already-low K+ to lethal levels. K+ must be \u2265 4 mEq/L before insulin is safe to start. ECG monitoring is critical.'},
+  {id:186, cat:'dialysis-transplant', q:'What is hyperacute rejection and what is the only treatment?', a:'Antibody-mediated rejection occurring within 24 hours of transplant. Pre-formed antibodies attack the transplanted kidney, causing glomerular capillary thrombosis and necrosis. The ONLY treatment is immediate removal of the transplanted organ.'},
+  {id:187, cat:'aki', q:'How do NSAIDs cause kidney injury?', a:'NSAIDs inhibit prostaglandin synthesis, which reduces afferent arteriolar vasodilation in the kidney. This decreases renal blood flow and GFR. In patients with existing renal impairment or volume depletion, this can precipitate AKI. Avoid NSAIDs in any patient with renal compromise.'},
+  {id:188, cat:'oral-agents', q:'Which class of diabetes medications can cause weight loss as a side effect?', a:'SGLT2 inhibitors (glycosuria = calorie loss) and GLP-1 agonists (decreased appetite + slowed gastric emptying). This makes them particularly useful in overweight/obese Type 2 patients who need glucose control AND weight management.'},
+  {id:189, cat:'ckd-eskd', q:'Why does ESKD cause metabolic acidosis, and how does this connect to hyperkalemia?', a:'Failed kidneys can\'t excrete H+ or regenerate bicarbonate \u2192 acid accumulates. Acidosis drives potassium out of cells into the blood (H+ enters cells, K+ exits to maintain electrical neutrality). So acidosis directly worsens hyperkalemia\u2014a double threat.'},
+  {id:190, cat:'dialysis-transplant', q:'What is the significance of muscle cramps during hemodialysis?', a:'Caused by rapid fluid and electrolyte shifts during ultrafiltration. Management: NS bolus and adjustment of the dialysis prescription (slower ultrafiltration rate, longer session). Persistent cramps suggest the prescribed dry weight needs reassessment.'},
+  {id:191, cat:'dm-complications', q:'What is monofilament testing, and when is it used?', a:'A standardized nylon filament is pressed against specific points on the foot. If the patient cannot feel it, they have lost protective sensation (peripheral neuropathy). Used annually for all diabetic patients to detect early neuropathy before ulceration occurs.'},
+  {id:192, cat:'insulin', q:'Why does NPH insulin have an unpredictable absorption pattern?', a:'NPH peaks at 4\u201312 hours (a wide range) and has duration up to 24 hours. The cloudy suspension must be resuspended by gentle rolling, and inconsistent mixing leads to variable absorption. This wide peak window creates hypoglycemia risk, especially overnight.'},
+  {id:193, cat:'ckd-eskd', q:'What dietary restrictions apply to patients with ESKD?', a:'Limit potassium (avoid bananas, oranges, potatoes), phosphorus (avoid dairy, processed foods), sodium (fluid retention), and protein (reduce uremia). Fluid restriction based on urine output + 500\u2013600 mL. Adequate calories to prevent catabolism.'},
+  {id:194, cat:'dialysis-transplant', q:'What infections are most common in the first month after kidney transplant?', a:'Surgical complications, infections from invasive devices (catheters, drains), and genitourinary infections (bacteriuria). After 6 months with stable function and no rejection episodes, infection risk decreases. Lifelong vigilance is still required.'},
+  {id:195, cat:'dka', q:'In the DKA correction formula for sodium, what does it tell you clinically?', a:'Corrected Na+ = Measured Na+ + [1.6 \u00d7 (Glucose \u2013 100) / 100]. If corrected sodium is significantly higher than measured, the patient has true hypernatremia masked by dilutional hyponatremia from hyperglycemia. This guides fluid type selection (NS vs. half-NS).'},
+  {id:196, cat:'dialysis-transplant', q:'What is the typical hemodialysis schedule?', a:'Three times per week, 3\u20134 hours per session. Uses a hollow-fiber dialyzer with countercurrent flow. Patients must plan life around the schedule. Missed sessions risk fluid overload, hyperkalemia, and uremic symptoms.'},
+  {id:197, cat:'ckd-eskd', q:'Why are ESKD patients at increased risk for infection beyond immunosuppression?', a:'Uremia itself depresses immune function: decreased phagocytic ability, impaired WBC function, and dysfunctional platelets. Combined with repeated vascular access, catheter use, and (in transplant patients) immunosuppressive drugs, infection is a major cause of morbidity.'},
+  {id:198, cat:'dm-foundations', q:'Why must all diagnostic tests for diabetes be confirmed by repeat testing on a different day?', a:'To rule out acute, transient hyperglycemia from stress, illness, or lab error. The exception: unequivocal hyperglycemia with acute metabolic decompensation (e.g., DKA presentation)\u2014diagnosis is made on the spot and treatment begins immediately.'},
+  {id:199, cat:'dialysis-transplant', q:'What corticosteroid-related complications require prophylactic treatment in transplant patients?', a:'GI ulceration \u2192 prophylactic H2 blockers or PPIs. Osteoporosis \u2192 calcium/vitamin D supplementation. Diabetes \u2192 glucose monitoring. Fungal colonization \u2192 oral antifungal rinses. Also: cataracts (regular eye exams), immunocompromise, Cushing syndrome.'},
+  {id:200, cat:'dialysis-transplant', q:'What makes the diabetes-to-dialysis connection a "continuum" rather than two separate topics?', a:'Uncontrolled diabetes \u2192 microvascular damage \u2192 nephropathy (microalbuminuria) \u2192 progressive CKD \u2192 ESKD \u2192 dialysis or transplant. Every nursing intervention for glycemic control, BP management, and medication adherence simultaneously protects the kidneys. By dialysis, prevention opportunities are gone.'}
+];
+
+/* ========== STORAGE & STATE ========== */
+const STORAGE_KEY = 'fluid-electrolytes-fc-v1';
+let saved = {};
+let state = { deck:[], idx:0, flipped:false, results:{}, overflow:[], totalOriginal:0 };
+
+function loadProgress(){ try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ saved={}; } }
+function saveProgress(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); }
+
+/* ========== SCREEN MANAGEMENT ========== */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(name==='start') renderStartScreen();
+}
+
+function renderStartScreen(){
+  loadProgress();
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+
+  let totalStudied=0, totalGotit=0, totalUnsure=0, totalMissed=0;
+
+  Object.entries(categories).forEach(([id, cat])=>{
+    const catCards = cards.filter(c=>c.cat===id);
+    let g=0,u=0,m=0,unseen=0;
+    catCards.forEach(c=>{
+      const r = saved[c.id];
+      if(r==='gotit'){g++;totalGotit++;}
+      else if(r==='unsure'){u++;totalUnsure++;}
+      else if(r==='missed'){m++;totalMissed++;}
+      else unseen++;
+    });
+    const studied = g+u+m;
+    totalStudied += studied;
+    const total = catCards.length;
+    const pctG = total? (g/total*100):0;
+    const pctU = total? (u/total*100):0;
+    const pctM = total? (m/total*100):0;
+
+    const btn = document.createElement('div');
+    btn.className = 'cat-btn';
+    btn.dataset.cat = id;
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.innerHTML = `
+      <span class="cat-name"><span class="cat-dot" style="background:${cat.color}"></span>${cat.name}</span>
+      <span class="cat-count">${total} cards</span>
+      <div class="cat-mastery">
+        <div class="cat-mastery-bar">
+          <div class="mb-gotit" style="width:${pctG}%"></div>
+          <div class="mb-unsure" style="width:${pctU}%"></div>
+          <div class="mb-missed" style="width:${pctM}%"></div>
+        </div>
+        <div class="cat-mastery-text">${Math.round(pctG)}% mastered</div>
+      </div>`;
+    btn.onclick = ()=> handleCatClick(id);
+    grid.appendChild(btn);
+  });
+
+  // Overall progress
+  const ps = document.getElementById('progress-summary');
+  if(totalStudied > 0){
+    ps.style.display = 'block';
+    const t = cards.length;
+    document.getElementById('ov-gotit').style.width = (totalGotit/t*100)+'%';
+    document.getElementById('ov-unsure').style.width = (totalUnsure/t*100)+'%';
+    document.getElementById('ov-missed').style.width = (totalMissed/t*100)+'%';
+    document.getElementById('ov-text').textContent = `${totalGotit} mastered \u00b7 ${totalUnsure} unsure \u00b7 ${totalMissed} missed \u00b7 ${t-totalStudied} unseen`;
+  } else { ps.style.display = 'none'; }
+
+  // Weak count
+  const weakCount = cards.filter(c=> saved[c.id]==='missed' || saved[c.id]==='unsure').length;
+  document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+}
+
+let selectedCats = new Set();
+function handleCatClick(catId){
+  const multi = document.getElementById('chk-multi').checked;
+  if(multi){
+    if(selectedCats.has(catId)) selectedCats.delete(catId);
+    else selectedCats.add(catId);
+  } else {
+    selectedCats.clear();
+    selectedCats.add(catId);
+    startSession([...selectedCats]);
+    return;
+  }
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    b.classList.toggle('selected', selectedCats.has(b.dataset.cat));
+  });
+  if(selectedCats.size > 0 && !multi) startSession([...selectedCats]);
+}
+
+document.getElementById('chk-multi').addEventListener('change', function(){
+  if(!this.checked && selectedCats.size > 0){
+    startSession([...selectedCats]);
+  }
+  selectedCats.clear();
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
+});
+
+/* ========== SESSION CONTROL ========== */
+function startSession(catIds){
+  let deck = cards.filter(c=> catIds.includes(c.cat)).map(c=>c.id);
+  if(deck.length===0) return;
+  if(document.getElementById('chk-shuffle').checked) shuffle(deck);
+  state = { deck, idx:0, flipped:false, results:{}, overflow:[], totalOriginal:deck.length };
+  selectedCats.clear();
+  showScreen('card');
+  displayCard();
+}
+function startAll(){
+  const ids = Object.keys(categories);
+  let deck = cards.map(c=>c.id);
+  if(document.getElementById('chk-shuffle').checked) shuffle(deck);
+  state = { deck, idx:0, flipped:false, results:{}, overflow:[], totalOriginal:deck.length };
+  showScreen('card');
+  displayCard();
+}
+function studyWeak(){
+  let deck = cards.filter(c=> saved[c.id]==='missed' || saved[c.id]==='unsure').map(c=>c.id);
+  if(deck.length===0) return;
+  if(document.getElementById('chk-shuffle').checked) shuffle(deck);
+  state = { deck, idx:0, flipped:false, results:{}, overflow:[], totalOriginal:deck.length };
+  showScreen('card');
+  displayCard();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} }
+
+/* ========== CARD DISPLAY ========== */
+function displayCard(){
+  if(state.idx >= state.deck.length){
+    if(state.overflow.length > 0){
+      state.deck = state.deck.concat(state.overflow);
+      state.overflow = [];
+    }
+    if(state.idx >= state.deck.length){
+      saveSessionResults();
+      showResults();
+      return;
+    }
+  }
+  const cardId = state.deck[state.idx];
+  const card = cards.find(c=>c.id===cardId);
+  if(!card) return;
+
+  state.flipped = false;
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  document.getElementById('conf-controls').classList.remove('visible');
+
+  document.getElementById('front-content').innerHTML = card.q;
+
+  let back = `<div class="answer-label">Answer</div><div class="answer-text">${card.a}</div>`;
+  if(card.tip) back += `<div class="tip-box">${card.tip}</div>`;
+  document.getElementById('back-content').innerHTML = back;
+
+  const cat = categories[card.cat];
+  const badge = document.getElementById('cur-cat');
+  badge.textContent = cat.name;
+  badge.style.background = cat.color;
+  badge.style.color = '#fff';
+
+  document.getElementById('cur-num').textContent = state.idx + 1;
+  document.getElementById('tot-num').textContent = state.deck.length;
+  const pct = ((state.idx) / state.totalOriginal * 100);
+  document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
+
+  const requeued = state.deck.length - state.totalOriginal;
+  const ri = document.getElementById('requeue-info');
+  ri.textContent = requeued > 0 ? `+${requeued} requeued` : '';
+}
+
+function flipCard(){
+  if(state.flipped) return;
+  state.flipped = true;
+  document.getElementById('flashcard').classList.add('flipped');
+  document.getElementById('conf-controls').classList.add('visible');
+}
+
+/* ========== RATING ========== */
+function rate(confidence){
+  if(!state.flipped) return;
+  const cardId = state.deck[state.idx];
+  state.results[cardId] = confidence;
+
+  if(confidence === 'missed'){
+    const offset = 5 + Math.floor(Math.random()*3);
+    const insertAt = state.idx + offset;
+    if(insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  } else if(confidence === 'unsure'){
+    const offset = 8 + Math.floor(Math.random()*3);
+    const insertAt = state.idx + offset;
+    if(insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  }
+
+  state.idx++;
+  displayCard();
+}
+
+function saveSessionResults(){
+  Object.entries(state.results).forEach(([id, r])=>{ saved[id] = r; });
+  saveProgress();
+}
+
+/* ========== RESULTS ========== */
+function showResults(){
+  showScreen('results');
+  const r = state.results;
+  let g=0,u=0,m=0;
+  Object.values(r).forEach(v=>{ if(v==='gotit')g++; else if(v==='unsure')u++; else m++; });
+  const total = g+u+m;
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card stat-gotit"><div class="stat-value">${g}</div><div class="stat-label">Got It</div><div class="stat-pct">${total?Math.round(g/total*100):0}%</div></div>
+    <div class="stat-card stat-unsure"><div class="stat-value">${u}</div><div class="stat-label">Unsure</div><div class="stat-pct">${total?Math.round(u/total*100):0}%</div></div>
+    <div class="stat-card stat-missed"><div class="stat-value">${m}</div><div class="stat-label">Missed</div><div class="stat-pct">${total?Math.round(m/total*100):0}%</div></div>`;
+
+  // Category breakdown
+  const bd = document.getElementById('breakdown-section');
+  let bdHTML = '<h3>By Category</h3>';
+  const weakItems = [];
+
+  Object.entries(categories).forEach(([id, cat])=>{
+    const catResults = Object.entries(r).filter(([cid])=> cards.find(c=>c.id==cid)?.cat===id);
+    if(catResults.length === 0) return;
+    let cg=0,cu=0,cm=0;
+    catResults.forEach(([,v])=>{ if(v==='gotit')cg++; else if(v==='unsure')cu++; else cm++; });
+    const ct = cg+cu+cm;
+    const pctG = ct? (cg/ct*100):0;
+    const pctU = ct? (cu/ct*100):0;
+    const pctM = ct? (cm/ct*100):0;
+
+    bdHTML += `<div class="cat-stat-row">
+      <div class="cat-stat-name" style="color:${cat.color}">${cat.name}</div>
+      <div class="cat-stat-bar">
+        <div class="bar-seg bar-gotit" style="width:${pctG}%"></div>
+        <div class="bar-seg bar-unsure" style="width:${pctU}%"></div>
+        <div class="bar-seg bar-missed" style="width:${pctM}%"></div>
+      </div>
+      <div class="cat-stat-pct">${Math.round(pctG)}%</div>
+    </div>`;
+
+    if(pctG < 60) weakItems.push({ name: cat.name, pct: Math.round(pctG) });
+  });
+  bd.innerHTML = bdHTML;
+
+  const ws = document.getElementById('weak-section');
+  if(weakItems.length > 0){
+    ws.innerHTML = '<h3>Focus Areas</h3>' + weakItems.map(w=>`<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`).join('');
+  } else { ws.innerHTML = ''; }
+}
+
+function reviewMissed(){
+  let deck = Object.entries(state.results).filter(([,v])=>v==='missed').map(([id])=>parseInt(id));
+  if(deck.length===0) return;
+  if(document.getElementById('chk-shuffle').checked) shuffle(deck);
+  state = { deck, idx:0, flipped:false, results:{}, overflow:[], totalOriginal:deck.length };
+  showScreen('card');
+  displayCard();
+}
+function reviewMissedAndUnsure(){
+  let deck = Object.entries(state.results).filter(([,v])=>v==='missed'||v==='unsure').map(([id])=>parseInt(id));
+  if(deck.length===0) return;
+  if(document.getElementById('chk-shuffle').checked) shuffle(deck);
+  state = { deck, idx:0, flipped:false, results:{}, overflow:[], totalOriginal:deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function exitSession(){
+  saveSessionResults();
+  if(Object.keys(state.results).length > 0) showResults();
+  else showScreen('start');
+}
+
+function resetProgress(){
+  if(!confirm('Reset all progress? This cannot be undone.')) return;
+  saved = {};
+  localStorage.removeItem(STORAGE_KEY);
+  renderStartScreen();
+}
+
+/* ========== KEYBOARD SHORTCUTS ========== */
+document.addEventListener('keydown', e=>{
+  const cardScreen = document.getElementById('screen-card').classList.contains('active');
+  const resultsScreen = document.getElementById('screen-results').classList.contains('active');
+
+  if(cardScreen){
+    if(e.key===' '||e.code==='Space'){e.preventDefault();flipCard();}
+    if(e.key==='1') rate('missed');
+    if(e.key==='2') rate('unsure');
+    if(e.key==='3') rate('gotit');
+    if(e.key==='Escape') exitSession();
+  }
+  if(resultsScreen){
+    if(e.key==='Escape'||e.key==='Enter') showScreen('start');
+  }
+});
+
+/* ========== MULTI-SELECT START ========== */
+document.addEventListener('click', e=>{
+  if(!document.getElementById('chk-multi').checked) return;
+  const startBtn = document.querySelector('.start-actions .btn-primary');
+  if(startBtn && selectedCats.size > 0){
+    startBtn.onclick = ()=> startSession([...selectedCats]);
+  }
+});
+
+/* ========== INIT ========== */
+loadProgress();
+renderStartScreen();
+</script>
+</body>
+</html>

@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECG Rhythm Strip Portfolio — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(231,76,60,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+.mode-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.mode-btn.active {
+  background: var(--cardiac);
+  color: white;
+}
+
+.mode-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.9em;
+  box-shadow: var(--shadow);
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); border-color: var(--cardiac); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+/* ─── RHYTHM STRIP CARDS ─── */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.rhythm-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+  border-left: 5px solid var(--cardiac);
+  cursor: pointer;
+}
+
+.rhythm-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+}
+
+.rhythm-header {
+  margin-bottom: 16px;
+}
+
+.rhythm-name {
+  font-size: 1.3em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.rhythm-category {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rhythm-svg-container {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+
+.rhythm-svg-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 140px;
+}
+
+.rhythm-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.lethal {
+  background: var(--cardiac-bg);
+  color: var(--cardiac);
+}
+
+.badge.non-lethal {
+  background: var(--oxy-bg);
+  color: var(--oxy);
+}
+
+.badge.atrial {
+  background: var(--fluid-bg);
+  color: var(--fluid);
+}
+
+.badge.ventricular {
+  background: var(--emergency-bg);
+  color: var(--emergency);
+}
+
+.badge.block {
+  background: var(--neuro-bg);
+  color: var(--neuro);
+}
+
+/* ─── EXPANDABLE DETAILS ─── */
+.details-toggle {
+  width: 100%;
+  padding: 12px;
+  background: var(--surface);
+  border: none;
+  border-radius: 8px;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-size: 0.95em;
+}
+
+.details-toggle:hover { background: var(--surface-hover); }
+
+.details-content {
+  display: none;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+}
+
+.details-content.show { display: block; }
+
+.detail-section {
+  margin-bottom: 12px;
+}
+
+.detail-label {
+  font-weight: 700;
+  color: var(--cardiac);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.detail-text {
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.decision-prompt {
+  background: var(--fluid-bg);
+  border-left: 3px solid var(--fluid);
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 0.9em;
+}
+
+.decision-prompt strong {
+  color: var(--fluid);
+}
+
+/* ─── COMPARISON MODE ─── */
+.comparison-container {
+  display: none;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.comparison-container.active { display: block; }
+
+.comparison-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.comparison-pair .rhythm-card {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.comparison-title {
+  grid-column: 1 / -1;
+  font-size: 1.2em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.vs-label {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85em;
+  margin: -10px 0 10px;
+  font-style: italic;
+}
+
+/* ─── QUIZ MODE ─── */
+.quiz-container {
+  display: none;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-container.active { display: block; }
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.quiz-header h2 { font-size: 1.6em; font-weight: 800; margin-bottom: 8px; }
+
+.quiz-progress {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--cardiac);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.quiz-question {
+  background: var(--surface);
+  border-left: 4px solid var(--cardiac);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.quiz-rhythm-display {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.quiz-rhythm-display svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.option-btn {
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.option-btn:hover { border-color: var(--cardiac); background: var(--surface); }
+.option-btn.selected { border-color: var(--cardiac); background: var(--cardiac-bg); }
+.option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.feedback {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: none;
+  border-left: 4px solid;
+}
+
+.feedback.show { display: block; }
+
+.feedback.correct {
+  border-left-color: var(--success);
+  background: rgba(39,174,96,0.1);
+}
+
+.feedback.incorrect {
+  border-left-color: var(--danger);
+  background: rgba(231,76,60,0.1);
+}
+
+.feedback-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback.correct .feedback-title { color: var(--success); }
+.feedback.incorrect .feedback-title { color: var(--danger); }
+
+.feedback-text {
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1em;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.submit-btn:hover:not(:disabled) { background: #c0392b; transform: translateY(-2px); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1em;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+
+.next-btn:hover { background: #c0392b; transform: translateY(-2px); }
+
+/* ─── DEVICE & ELECTROLYTE SECTION ─── */
+.info-section {
+  display: none;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.info-section.active { display: block; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--cardiac);
+}
+
+.info-card h3 {
+  font-size: 1.15em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.info-list {
+  list-style: none;
+  font-size: 0.9em;
+  line-height: 1.8;
+}
+
+.info-list li {
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.info-list li:before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--cardiac);
+  font-weight: 700;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .search-bar { width: 100%; }
+
+  .mode-toggle {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .comparison-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-options {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state p {
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+/* ─── PRINT ─── */
+@media print {
+  .header-btn, .controls, .search-bar, .filter-btn, .dark-mode-toggle, .details-toggle, .submit-btn, .next-btn, .option-btn {
+    display: none !important;
+  }
+
+  .cards-container, .quiz-container, .comparison-container, .info-section {
+    display: block !important;
+  }
+
+  .rhythm-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>ECG Rhythm Strip Portfolio</h1>
+      <p class="subtitle">N8 Interactive Study Tool — Cardiac Arrhythmia Recognition & Management</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="switchMode('browse')">Browse Rhythms</button>
+      <button class="mode-btn" onclick="switchMode('quiz')">Quiz Mode</button>
+      <button class="mode-btn" onclick="switchMode('comparison')">Compare</button>
+      <button class="mode-btn" onclick="switchMode('devices')">Devices & Electrolytes</button>
+    </div>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search rhythm name or category..." onkeyup="filterRhythms()">
+
+    <div class="filter-group">
+      <button class="filter-btn" onclick="toggleFilter('all')">All</button>
+      <button class="filter-btn" onclick="toggleFilter('lethal')">Lethal</button>
+      <button class="filter-btn" onclick="toggleFilter('non-lethal')">Non-Lethal</button>
+      <button class="filter-btn" onclick="toggleFilter('atrial')">Atrial</button>
+      <button class="filter-btn" onclick="toggleFilter('ventricular')">Ventricular</button>
+      <button class="filter-btn" onclick="toggleFilter('block')">Blocks</button>
+    </div>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <!-- BROWSE MODE -->
+  <div id="browseMode" class="browse-mode">
+    <div class="cards-container" id="rhythmCards"></div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="quizMode" class="quiz-container">
+    <div class="quiz-header">
+      <h2>ECG Rhythm Quiz</h2>
+      <p class="quiz-progress"><span id="quizCurrent">1</span> / <span id="quizTotal">13</span></p>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="quizProgressBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-question">
+      <div class="quiz-rhythm-display" id="quizDisplay"></div>
+      <p style="text-align: center; font-weight: 600; margin-top: 12px;">What rhythm is this?</p>
+    </div>
+
+    <div class="quiz-options" id="quizOptions"></div>
+
+    <div class="feedback" id="quizFeedback"></div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>
+    <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <!-- COMPARISON MODE -->
+  <div id="comparisonMode" class="comparison-container">
+    <div id="comparisonContent"></div>
+  </div>
+
+  <!-- DEVICES & ELECTROLYTES -->
+  <div id="devicesMode" class="info-section">
+    <div id="devicesContent"></div>
+  </div>
+</div>
+
+<div class="footer">
+  ECG Rhythm Strip Portfolio | N8 NCLEX-RN Intensive | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+
+// ─── RHYTHM DATA ───
+const rhythmData = [
+  {
+    id: 'nsr',
+    name: 'Normal Sinus Rhythm',
+    category: 'Sinus Rhythms',
+    classification: ['non-lethal', 'atrial'],
+    rate: '60-100 bpm',
+    rhythm: 'Regular',
+    pWaves: 'Present, upright in II, one before each QRS',
+    prInterval: '0.12-0.20 sec (3-5 boxes)',
+    qrsComplex: '< 0.12 sec (< 3 boxes), normal morphology',
+    significance: 'Normal baseline rhythm. Heart functioning optimally.',
+    nurseCare: 'Monitor and document. Patient education on heart health.',
+    emergency: 'No emergency intervention needed.',
+    decision: 'Continue routine monitoring.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid1" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid1)"/>
+        <polyline points="50,100 70,100 80,80 90,70 100,100 110,100 130,100 140,85 150,70 160,100 170,100 190,100 200,100 220,100 230,85 240,70 250,100 260,100 280,100 290,100 310,100 320,85 330,70 340,100 350,100 370,100 380,100 400,100 410,85 420,70 430,100 440,100 460,100 470,100 490,100 500,85 510,70 520,100 530,100 550,100 560,100 580,100 590,85 600,70 610,100 620,100 640,100 650,100 670,100 680,85 690,70 700,100 710,100 730,100" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['sinus-brady', 'sinus-tachy'],
+    details: 'NSR represents optimal cardiac electrical and mechanical function.'
+  },
+
+  {
+    id: 'sinus-brady',
+    name: 'Sinus Bradycardia',
+    category: 'Sinus Rhythms',
+    classification: ['non-lethal', 'atrial'],
+    rate: '< 60 bpm',
+    rhythm: 'Regular',
+    pWaves: 'Present, upright, one before each QRS',
+    prInterval: '0.12-0.20 sec',
+    qrsComplex: '< 0.12 sec',
+    significance: 'Slow heart rate. Can be normal (athletes, sleep) or pathologic (MI, hypothyroidism, increased ICP, AV block, beta-blockers, digoxin).',
+    nurseCare: 'Assess for symptoms: dizziness, syncope, weakness, fatigue. Monitor for hemodynamic instability. Check labs: TSH, electrolytes, digoxin level if on it.',
+    emergency: 'If symptomatic (SBP <90, altered mental status, ischemia): prepare atropine 0.5-1mg IV. Transcutaneous pacing pads nearby.',
+    decision: 'Treat underlying cause. If symptomatic, give atropine or pace.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid2)"/>
+        <polyline points="50,100 70,100 80,85 90,70 100,100 110,100 150,100 160,100 180,85 190,70 200,100 210,100 250,100 260,100 280,85 290,70 300,100 310,100 350,100 360,100 380,85 390,70 400,100 410,100 450,100 460,100 480,85 490,70 500,100 510,100 550,100 560,100 580,85 590,70 600,100 610,100 650,100 660,100 680,85 690,70 700,100 710,100" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['nsr', 'sinus-tachy'],
+    details: 'Slower than NSR but maintains sinus mechanism. Intervals remain normal.'
+  },
+
+  {
+    id: 'sinus-tachy',
+    name: 'Sinus Tachycardia',
+    category: 'Sinus Rhythms',
+    classification: ['non-lethal', 'atrial'],
+    rate: '> 100 bpm (typically 100-150)',
+    rhythm: 'Regular',
+    pWaves: 'Present, may merge with preceding T wave at high rates',
+    prInterval: 'May appear shortened',
+    qrsComplex: '< 0.12 sec',
+    significance: 'Fast but organized. Causes: fever, pain, anxiety, hypoxia, hypovolemia, HF, sepsis, thyrotoxicosis, PE, MI, anemia.',
+    nurseCare: 'Find & treat cause. Check O2 sat, temp, pain, anxiety, fluid status, HR response to activity. Labs: CBC, TSH, lactate, troponin.',
+    emergency: 'Usually not emergency unless hemodynamically unstable or myocardial ischemia present.',
+    decision: 'Identify and treat underlying cause.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid3" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid3)"/>
+        <polyline points="50,100 65,100 72,85 80,70 88,100 95,100 110,100 122,85 130,70 138,100 145,100 160,100 172,85 180,70 188,100 195,100 210,100 222,85 230,70 238,100 245,100 260,100 272,85 280,70 288,100 295,100 310,100 322,85 330,70 338,100 345,100 360,100 372,85 380,70 388,100 395,100 410,100 422,85 430,70 438,100 445,100 460,100 472,85 480,70 488,100 495,100 510,100 522,85 530,70 538,100 545,100 560,100 572,85 580,70 588,100 595,100 610,100 622,85 630,70 638,100 645,100 660,100 672,85 680,70 688,100 695,100 710,100 722,85 730,70 738,100 745,100" stroke="#27AE60" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['nsr', 'sinus-brady'],
+    details: 'Increased rate but normal conduction. P waves may be harder to see if merged with T wave.'
+  },
+
+  {
+    id: 'afib',
+    name: 'Atrial Fibrillation',
+    category: 'Atrial Arrhythmias',
+    classification: ['non-lethal', 'atrial'],
+    rate: 'Ventricular response 60-100 (controlled), >100 (uncontrolled/RVR)',
+    rhythm: 'Irregularly irregular',
+    pWaves: 'ABSENT. Replaced by chaotic baseline undulations (fibrillatory waves)',
+    prInterval: 'Cannot measure (no P waves)',
+    qrsComplex: '< 0.12 sec (narrow complex)',
+    significance: 'Most common arrhythmia. Loss of atrial kick (reduces CO 15-25%). Risk for thrombus formation & stroke. Can cause RVR with hemodynamic compromise.',
+    nurseCare: 'Assess rate, rhythm, symptoms, stroke risk (CHA2DS2-VASc score). Monitor for: chest pain, dyspnea, dizziness, syncope. Check rate control goal (60-100 rest, <110 with activity per AFFIRM trial).',
+    emergency: 'If RVR (>120) with hemodynamic instability: oxygen, IV access, digoxin/beta-blocker/CCB for rate control, prepare for synchronized cardioversion if unstable. Anticoagulate per protocol.',
+    decision: 'Rate control first (diltiazem, verapamil, beta-blocker, or digoxin), then anticoagulation. Consider rhythm control (amiodarone) if symptomatic or structural disease.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid4" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid4)"/>
+        <polyline points="50,100 55,95 60,105 65,90 70,110 75,95 80,100 85,102 90,98 95,104 100,97 105,101 110,99 115,103 120,96 125,104 130,98 135,102 140,97 145,105 150,96 155,101 160,99 165,104 170,95 175,105 180,90 185,110 190,95 195,100 200,102 205,98 210,104 215,97 220,101 225,99 230,103 235,96 240,104 245,98 250,102 255,97 260,105 265,96 270,101 275,99 280,104 285,95 290,105 295,90 300,110 305,95 310,100 315,102 320,98 325,104 330,97 335,101 340,99 345,103 350,96 355,104 360,98 365,102 370,97 375,105 380,96 385,101 390,99 395,104 400,95 405,105 410,90 415,110 420,95 425,100 430,102 435,98 440,104 445,97 450,101 455,99 460,103 465,96 470,104 475,98 480,102 485,97 490,105 495,96 500,101 505,99 510,104 515,95 520,105 525,90 530,110 535,95 540,100 545,102 550,98 555,104 560,97 565,101 570,99 575,103 580,96 585,104 590,98 595,102 600,97 605,105 610,96 615,101 620,99 625,104 630,95 635,105 640,90 645,110 650,95 655,100 660,102 665,98 670,104 675,97 680,101 685,99 690,103 695,96 700,104 705,98 710,102 715,97 720,105 725,96 730,101" stroke="#E67E22" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['aflutter', 'svt'],
+    details: 'Chaotic atrial activity produces irregular ventricular response. High stroke risk without anticoagulation.'
+  },
+
+  {
+    id: 'aflutter',
+    name: 'Atrial Flutter',
+    category: 'Atrial Arrhythmias',
+    classification: ['non-lethal', 'atrial'],
+    rate: 'Atrial 250-350 bpm, Ventricular 150 bpm (2:1 block) or variable',
+    rhythm: 'Regular or regular with variable block',
+    pWaves: 'ABSENT. Replaced by characteristic sawtooth pattern (F waves) across baseline',
+    prInterval: 'Cannot measure',
+    qrsComplex: '< 0.12 sec',
+    significance: 'Organized atrial activity but rapid rate. Usually 2:1 conduction (every 2nd atrial beat conducts). Can deteriorate to A-fib. Similar stroke risk as A-fib.',
+    nurseCare: 'Assess rate, symptoms, stability. Look for sawtooth pattern. Anticoagulate. Prepare for rate/rhythm control.',
+    emergency: 'If RVR with hemodynamic instability: rate control with IV beta-blocker/CCB/digoxin, or synchronized cardioversion (50-100J for atrial flutter).',
+    decision: 'Rate control with beta-blocker, CCB, or digoxin. Consider ablation or synchronized cardioversion. Anticoagulate.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid5" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid5)"/>
+        <polyline points="50,90 60,110 70,90 80,110 90,90 100,110 110,90 120,110 130,90 140,110 150,90 160,110 170,90 180,110 185,90 195,80 205,70 215,90 225,90 235,90 245,80 255,70 265,90 275,90 285,90 295,80 305,70 315,90 325,90 335,90 345,80 355,70 365,90 375,90 385,90 395,80 405,70 415,90 425,90 435,90 445,80 455,70 465,90 475,90 485,90 495,80 505,70 515,90 525,90 535,90 545,80 555,70 565,90 575,90 585,90 595,80 605,70 615,90 625,90 635,90 645,80 655,70 665,90 675,90 685,90 695,80 705,70 715,90 725,90 735,90 745,80 755,70 765,90 775,90" stroke="#E67E22" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['afib', 'svt'],
+    details: 'Pathognomonic sawtooth baseline with regular ventricular response (2:1 block most common).'
+  },
+
+  {
+    id: 'svt',
+    name: 'Supraventricular Tachycardia (SVT)',
+    category: 'Supraventricular Arrhythmias',
+    classification: ['non-lethal', 'atrial'],
+    rate: '150-250 bpm (usually 180-220)',
+    rhythm: 'Regular (sudden onset/offset)',
+    pWaves: 'Usually buried in QRS or T wave (hard to see)',
+    prInterval: 'Cannot measure',
+    qrsComplex: '< 0.12 sec (narrow complex)',
+    significance: 'Sudden-onset regular tachycardia. Most common in young pts with no structural disease (AVNRT, AVRT). Can cause palpitations, syncope, chest pain. Hemodynamically significant at high rates.',
+    nurseCare: 'Assess hemodynamic stability, symptoms, precipitants (caffeine, stress, exercise). Have adenosine ready.',
+    emergency: 'If stable: vagal maneuvers first (Valsalva, carotid massage, ice water to face). If fails: adenosine 6mg IV rapid push + NS flush (first-line). If unstable: synchronized cardioversion 100-200J.',
+    decision: 'First-line stable SVT: adenosine 6mg IV push, repeat 12mg if needed. Avoid adenosine in asthma/COPD. If unstable or refractory: synchronized cardioversion.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid6" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid6)"/>
+        <polyline points="50,100 60,100 68,85 76,70 84,100 92,100 108,100 116,85 124,70 132,100 140,100 156,100 164,85 172,70 180,100 188,100 204,100 212,85 220,70 228,100 236,100 252,100 260,85 268,70 276,100 284,100 300,100 308,85 316,70 324,100 332,100 348,100 356,85 364,70 372,100 380,100 396,100 404,85 412,70 420,100 428,100 444,100 452,85 460,70 468,100 476,100 492,100 500,85 508,70 516,100 524,100 540,100 548,85 556,70 564,100 572,100 588,100 596,85 604,70 612,100 620,100 636,100 644,85 652,70 660,100 668,100 684,100 692,85 700,70 708,100 716,100" stroke="#3498DB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['afib', 'sinus-tachy'],
+    details: 'Regular rhythm with constant, rapid rate distinguishes from A-fib (irregular) and sinus tachy (slower onset).'
+  },
+
+  {
+    id: 'junctional',
+    name: 'Junctional Rhythm',
+    category: 'Junctional Rhythms',
+    classification: ['non-lethal', 'atrial'],
+    rate: '40-60 bpm',
+    rhythm: 'Regular',
+    pWaves: 'ABSENT or inverted just BEFORE QRS or AFTER QRS, or buried in QRS',
+    prInterval: '< 0.12 sec (if visible)',
+    qrsComplex: '< 0.12 sec',
+    significance: 'Escape rhythm when SA node fails or is suppressed. Common with digitalis toxicity (may also see junctional tachycardia >100 bpm). Can also occur with hypoxia, hyperkalemia, inferior MI.',
+    nurseCare: 'If due to digitalis: check digoxin level, K+, renal function. Monitor symptoms. If due to hypoxia: give O2. Assess hemodynamics.',
+    emergency: 'Usually benign escape rhythm. If junctional tachycardia (>100) with digitalis: HOLD digoxin, check level, give K+ if low, consider Digibind if toxicity.',
+    decision: 'Treat underlying cause. If digoxin toxicity: hold drug, monitor closely.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid7" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid7)"/>
+        <polyline points="50,100 70,100 80,85 90,70 100,100 110,100 130,100 145,85 160,70 175,100 185,100 205,100 220,85 235,70 250,100 260,100 280,100 295,85 310,70 325,100 335,100 355,100 370,85 385,70 400,100 410,100 430,100 445,85 460,70 475,100 485,100 505,100 520,85 535,70 550,100 560,100 580,100 595,85 610,70 625,100 635,100 655,100 670,85 685,70 700,100 710,100" stroke="#8E44AD" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['sinus-brady', 'nsr'],
+    details: 'Escape rhythm with inverted or absent P waves. Associated with digitalis and electrolyte abnormalities.'
+  },
+
+  {
+    id: 'pac',
+    name: 'Premature Atrial Contractions (PACs)',
+    category: 'Ectopic Rhythms',
+    classification: ['non-lethal', 'atrial'],
+    rate: 'Variable (interrupted by early beats)',
+    rhythm: 'Irregular (regular with occasional early beats)',
+    pWaves: 'Premature (early) P wave, often abnormal morphology, different from sinus P',
+    prInterval: 'May be prolonged or shortened',
+    qrsComplex: '< 0.12 sec (narrow complex)',
+    significance: 'Single or frequent early ectopic beats from atrium. Often benign, but frequent PACs (>6/min) or runs suggest underlying pathology (caffeine, stress, hypoxia, electrolyte abnormalities, heart disease, stimulants).',
+    nurseCare: 'Assess frequency, triggers, symptoms. Check caffeine, medications, electrolytes, O2 sat. Reassure patient (usually benign).',
+    emergency: 'Usually not emergency. Reduce triggers.',
+    decision: 'Counsel on caffeine/stress reduction. Treat underlying cause if frequent.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid8" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid8)"/>
+        <polyline points="50,100 70,100 80,85 90,70 100,100 110,100 130,100 140,85 150,70 160,100 170,100 190,100 200,100 210,90 215,75 220,100 230,100 250,100 260,85 270,70 280,100 290,100 310,100 320,85 330,70 340,100 350,100 370,100 380,85 390,70 400,100 410,100 430,100 440,85 450,70 460,100 470,100 490,100 500,100 510,90 515,75 520,100 530,100 550,100 560,85 570,70 580,100 590,100 610,100 620,85 630,70 640,100 650,100 670,100 680,85 690,70 700,100 710,100" stroke="#27AE60" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['pvc', 'nsr'],
+    details: 'Early beat with abnormal P wave, followed by normal QRS. Regular rhythm interrupted by ectopy.'
+  },
+
+  {
+    id: 'pvc',
+    name: 'Premature Ventricular Contractions (PVCs)',
+    category: 'Ventricular Ectopy',
+    classification: ['non-lethal', 'ventricular'],
+    rate: 'Variable (interrupted by early beats)',
+    rhythm: 'Irregular',
+    pWaves: 'No P wave before PVC',
+    prInterval: 'None',
+    qrsComplex: '>0.12 sec (wide, bizarre morphology)',
+    significance: 'Ectopic beat from ventricle. Single PVCs benign; frequent (>6/min), multifocal, or in runs suggest risk (MI, electrolyte abnormalities, stimulants, cardiomyopathy). Patterns: bigeminy (every other), trigeminy (every 3rd), couplets (2 in a row), runs (3+ in a row).',
+    nurseCare: 'Assess frequency, pattern, triggers, symptoms (palpitations, syncope). Check K+, Mg2+, O2 sat, caffeine, meds. Provide reassurance for isolated PVCs.',
+    emergency: 'If frequent/symptomatic: treat triggers, give K+ (if low), Mg2+ (if low). If run of VT: monitor closely, have amiodarone/lidocaine ready. If sustained VT with instability: prepare for cardioversion.',
+    decision: 'Isolated PVCs: reassure and monitor. Frequent: treat underlying cause, check electrolytes, consider beta-blocker if symptomatic.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid9" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid9)"/>
+        <polyline points="50,100 70,100 80,85 90,70 100,100 110,100 130,100 140,85 150,70 160,100 170,100 190,100 200,60 210,40 220,80 230,100 240,100 260,100 270,85 280,70 290,100 300,100 320,100 330,85 340,70 350,100 360,100 380,100 385,50 390,35 395,70 400,100 410,100 430,100 440,85 450,70 460,100 470,100 490,100 500,85 510,70 520,100 530,100 550,100 560,50 570,35 580,70 590,100 600,100 620,100 630,85 640,70 650,100 660,100 680,100 690,85 700,70 710,100 720,100" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['pac', 'vtach'],
+    details: 'Wide, bizarre QRS (>0.12 sec) without preceding P wave. Can occur in patterns (bigeminy, trigeminy, couplets).'
+  },
+
+  {
+    id: 'vtach',
+    name: 'Ventricular Tachycardia',
+    category: 'Life-Threatening Arrhythmias',
+    classification: ['lethal', 'ventricular'],
+    rate: '> 100 bpm (typically 150-250)',
+    rhythm: 'Usually regular',
+    pWaves: 'ABSENT (buried or dissociated)',
+    prInterval: 'None',
+    qrsComplex: '> 0.12 sec, wide, bizarre morphology',
+    significance: 'LETHAL arrhythmia. Can be sustained (>30 sec) or nonsustained (<30 sec). Causes: CAD/MI (most common), cardiomyopathy, electrolyte abnormalities, drug toxicity, long QT syndrome, Brugada. Can degenerate to V-fib.',
+    nurseCare: 'STAT alert provider. Continuous monitoring, IV access. If pulse present (pulsed VT/synchronized cardioversion). If pulseless: begin CPR immediately.',
+    emergency: 'IMMEDIATE intervention required. If symptomatic/pulsed: synchronized cardioversion 100-200J (biphasic), then amiodarone 300mg IV. If pulseless VT: unsynchronized defibrillation 360J, CPR, epinephrine, amiodarone per ACLS.',
+    decision: 'EMERGENCY: Pulsed VT = synchronized cardioversion. Pulseless VT = defibrillate, CPR, ACLS drugs. Treat underlying cause after stabilization.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid10" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid10)"/>
+        <polyline points="50,100 60,100 68,50 76,30 84,100 92,100 105,100 113,45 121,25 129,95 137,100 150,100 158,55 166,35 174,105 182,100 195,100 203,50 211,30 219,100 227,100 240,100 248,45 256,25 264,95 272,100 285,100 293,55 301,35 309,105 317,100 330,100 338,50 346,30 354,100 362,100 375,100 383,45 391,25 399,95 407,100 420,100 428,55 436,35 444,105 452,100 465,100 473,50 481,30 489,100 497,100 510,100 518,45 526,25 534,95 542,100 555,100 563,55 571,35 579,105 587,100 600,100 608,50 616,30 624,100 632,100 645,100 653,45 661,25 669,95 677,100 690,100 698,55 706,35 714,105 722,100" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['pvc', 'vfib'],
+    details: 'Regular rhythm of wide, bizarre complexes. Pulsed VT requires synchronized cardioversion. Pulseless = defibrillate.'
+  },
+
+  {
+    id: 'vfib',
+    name: 'Ventricular Fibrillation',
+    category: 'Life-Threatening Arrhythmias',
+    classification: ['lethal', 'ventricular'],
+    rate: 'Disorganized (unmeasurable)',
+    rhythm: 'Chaotic, disorganized',
+    pWaves: 'None',
+    prInterval: 'None',
+    qrsComplex: 'None recognizable; fine or coarse fibrillatory waves',
+    significance: 'IMMEDIATELY LETHAL. Complete loss of organized electrical and mechanical activity. Causes cardiac arrest. Must defibrillate STAT. Survival depends on time to defibrillation (every minute = 7-10% ↓ survival).',
+    nurseCare: 'This is a CODE situation. STAT CPR, STAT defibrillation, call 911/activate code team.',
+    emergency: 'ABSOLUTE EMERGENCY. Immediate unsynchronized defibrillation (BLS-first responder level). CPR during charging. ACLS protocol: epinephrine, amiodarone, repeat defibrillation q2 min. Targeted temperature management after ROSC.',
+    decision: 'DEFIBRILLATE immediately. CPR during charging. Follow ACLS algorithm.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid11" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid11)"/>
+        <path d="M 50,100 L 60,70 L 70,130 L 80,50 L 90,140 L 100,60 L 110,125 L 120,55 L 130,135 L 140,65 L 150,120 L 160,60 L 170,130 L 180,70 L 190,115 L 200,65 L 210,125 L 220,75 L 230,110 L 240,70 L 250,120 L 260,80 L 270,105 L 280,75 L 290,120 L 300,85 L 310,100 L 320,80 L 330,115 L 340,90 L 350,105 L 360,85 L 370,115 L 380,95 L 390,100 L 400,90 L 410,110 L 420,100 L 430,100 L 440,95 L 450,105 L 460,100 L 470,100 L 480,95 L 490,105 L 500,100 L 510,100 L 520,95 L 530,105 L 540,100 L 550,100 L 560,95 L 570,105 L 580,100 L 590,100 L 600,95 L 610,105 L 620,100 L 630,100 L 640,95 L 650,105 L 660,100 L 670,100 L 680,95 L 690,105 L 700,100 L 710,100 L 720,95 L 730,105 L 740,100 L 750,100" stroke="#E74C3C" stroke-width="2" fill="none"/>
+      </svg>
+    `,
+    compareTo: ['vtach', 'asystole'],
+    details: 'Chaotic, disorganized baseline. No recognizable QRS complexes. Requires immediate defibrillation.'
+  },
+
+  {
+    id: 'torsades',
+    name: 'Torsades de Pointes',
+    category: 'Life-Threatening Arrhythmias',
+    classification: ['lethal', 'ventricular'],
+    rate: '150-250 bpm',
+    rhythm: 'Regular but chaotic morphology',
+    pWaves: 'None',
+    prInterval: 'None',
+    qrsComplex: 'Wide, polymorphic; appears to "twist" around baseline (QRS axis changes)',
+    significance: 'Polymorphic VT associated with LONG QT INTERVAL (acquired or congenital). Causes: hypokalemia, hypomagnesemia, hypocalcemia, QT-prolonging drugs (antiarrhythmics, antipsychotics, macrolides), female, bradycardia, sudden emotional stress. Can degenerate to V-fib.',
+    nurseCare: 'Check K+ (correct if <3.5), Mg2+ (give if <1.8), Ca2+. Review QT interval. Discontinue QT-prolonging drugs. Increase HR (pacing) to shorten QT.',
+    emergency: 'If sustained/unstable: cardioversion/defibrillation. Give Mg2+ 1-2g IV over 5-20min even if level unknown (safe). If symptomatic: transvenous pacing to increase HR.',
+    decision: 'EMERGENCY: Defibrillate if unstable. Correct K+, Mg2+. Give IV Mg2+. Remove QT-prolonging drugs. Consider pacing to increase HR.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid12" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid12)"/>
+        <polyline points="50,100 55,80 60,30 65,110 70,20 75,120 80,35 85,105 90,40 95,100 100,50 105,95 110,60 115,90 120,70 125,85 130,80 135,90 140,75 145,95 150,70 155,100 160,65 165,105 170,60 175,110 180,55 185,115 190,50 195,120 200,45 205,125 210,40 215,130 220,35 225,135 230,30 235,140 240,35 245,135 250,40 255,130 260,50 265,120 270,60 275,110 280,70 285,100 290,80 295,90 300,85 305,95 310,80 315,100 320,75 325,105 330,70 335,110 340,65 345,115 350,60 355,120 360,55 365,125 370,50 375,130 380,45 385,135 390,40 395,140 400,35 405,145 410,30 415,150 420,35 425,145 430,40 435,140 440,50 445,130 450,60 455,120 460,70 465,110 470,80 475,100 480,85 485,95 490,90 495,92 500,91 505,91 510,91 515,91" stroke="#E67E22" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['vtach', 'vfib'],
+    details: 'Polymorphic VT with characteristic "twisting" appearance. Associated with long QT and electrolyte abnormalities.'
+  },
+
+  {
+    id: 'asystole',
+    name: 'Asystole',
+    category: 'Cardiac Arrest Rhythms',
+    classification: ['lethal', 'ventricular'],
+    rate: 'None (0 bpm)',
+    rhythm: 'Flat line',
+    pWaves: 'None',
+    prInterval: 'None',
+    qrsComplex: 'None (straight line)',
+    significance: 'Cardiac standstill. Complete electrical silence. LETHAL. Causes: severe hypoxia, hyperkalemia, hypothermia, drug overdose, tension pneumothorax, tamponade, massive PE, massive MI. Poor prognosis; historically very rarely survives. Recent data suggest early ECMO may improve outcomes.',
+    nurseCare: 'This is a CODE. Begin high-quality CPR immediately.',
+    emergency: 'ABSOLUTE EMERGENCY. CPR, ACLS protocol: epinephrine q3-5min, consider underlying causes (H's and T's). Consider reversible causes (hyperkalemia, tension pneumothorax, tamponade). May consider ECMO if reversible cause.',
+    decision: 'CPR, ACLS drugs, rule out reversible causes. Consider advanced interventions (ECMO, extracorporeal resuscitation).',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid13" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid13)"/>
+        <polyline points="50,100 750,100" stroke="#E74C3C" stroke-width="2" fill="none"/>
+      </svg>
+    `,
+    compareTo: ['vfib', 'pea'],
+    details: 'Completely flat baseline. Requires immediate CPR and ACLS. Poor prognosis.'
+  },
+
+  {
+    id: '1st-degree',
+    name: '1st Degree AV Block',
+    category: 'Heart Blocks',
+    classification: ['non-lethal', 'block'],
+    rate: '60-100 bpm',
+    rhythm: 'Regular',
+    pWaves: 'Present, upright, one before each QRS',
+    prInterval: '> 0.20 sec (> 5 boxes) — prolonged but constant',
+    qrsComplex: '< 0.12 sec',
+    significance: 'Delayed AV conduction. All impulses conduct but slowly. Usually benign, asymptomatic. Causes: aging, athlete\'s heart, AV nodal disease, medication (beta-blockers, CCB, digoxin), inferior MI, rheumatic heart disease.',
+    nurseCare: 'Monitor. Usually no intervention needed. Assess for causative medications.',
+    emergency: 'Usually not emergency. Monitor for progression to higher-degree block.',
+    decision: 'Observe. If due to medication, may hold agent if causing symptoms. Usually benign.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid14" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid14)"/>
+        <polyline points="50,100 70,100 76,88 82,70 88,100 94,100 120,100 130,88 140,70 150,100 160,100 190,100 200,88 210,70 220,100 230,100 260,100 270,88 280,70 290,100 300,100 330,100 340,88 350,70 360,100 370,100 400,100 410,88 420,70 430,100 440,100 470,100 480,88 490,70 500,100 510,100 540,100 550,88 560,70 570,100 580,100 610,100 620,88 630,70 640,100 650,100 680,100 690,88 700,70 710,100 720,100" stroke="#8E44AD" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['2nd-type1', '2nd-type2'],
+    details: 'Every impulse conducts, but PR interval is prolonged (>0.20 sec). Regular rhythm.'
+  },
+
+  {
+    id: '2nd-type1',
+    name: '2nd Degree AV Block Type I (Wenckebach)',
+    category: 'Heart Blocks',
+    classification: ['non-lethal', 'block'],
+    rate: '60-100 bpm (overall)',
+    rhythm: 'Irregular (progressive PR prolongation, then dropped beat)',
+    pWaves: 'Present, progressive PR lengthening until one P not followed by QRS',
+    prInterval: 'Progressively lengthens (0.20 → 0.22 → 0.24 → drop), then resets',
+    qrsComplex: '< 0.12 sec (normal complexes that conduct)',
+    significance: 'Progressive AV delay until one impulse drops. Benign, usually not symptomatic. Causes: AV nodal disease, inferior MI, medication, vagal tone. Often seen in athletes.',
+    nurseCare: 'Monitor. Usually asymptomatic and requires no intervention.',
+    emergency: 'Rarely requires pacing. Monitor for progression.',
+    decision: 'Observe. If symptomatic (rare) or progresses: consider pacing, but usually watchful waiting.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid15" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid15)"/>
+        <polyline points="50,100 70,100 76,88 82,70 88,100 94,100 118,100 128,88 138,70 148,100 158,100 185,100 198,88 211,70 224,100 234,100 264,100 280,88 296,70 312,100 330,100 360,100 370,88 380,70 390,100 400,100 430,100 440,88 450,70 460,100 470,100 500,100 510,88 520,70 530,100 540,100 570,100 580,88 590,70 600,100 610,100 640,100 650,88 660,70 670,100 680,100 710,100 720,88 730,70 740,100 750,100" stroke="#8E44AD" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['1st-degree', '2nd-type2'],
+    details: 'Progressive PR lengthening with periodic dropped beats. Creates characteristic "Wenckebach" pattern.'
+  },
+
+  {
+    id: '2nd-type2',
+    name: '2nd Degree AV Block Type II (Mobitz)',
+    category: 'Heart Blocks',
+    classification: ['lethal', 'block'],
+    rate: '60-100 bpm (overall, with pauses)',
+    rhythm: 'Irregular (abrupt dropped beats)',
+    pWaves: 'Present, most followed by QRS, but some P waves not followed by QRS (abrupt)',
+    prInterval: 'Constant (unlike Type I) when conducted',
+    qrsComplex: '≥ 0.12 sec (usually wide, infranodal block)',
+    significance: 'Intermittent failure of conduction below AV node (infranodal). Implies infra-nodal disease. Risk for progression to 3rd-degree block. Usually symptomatic (syncope, dizziness). Causes: anterior MI, septal necrosis, Lenegre/Lev disease, hyperkalemia.',
+    nurseCare: 'ALERT provider. Prepare pacing pads. Monitor continuously. Patient likely symptomatic.',
+    emergency: 'This WILL likely progress to 3rd degree block. Symptomatic bradycardia = prepare transcutaneous pacing. Many require temporary or permanent pacemaker.',
+    decision: 'Often requires PACING. Transcutaneous pacing pads, prepare for transvenous pacing or permanent pacemaker placement.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid16" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid16)"/>
+        <polyline points="50,100 70,100 76,88 82,70 88,100 94,100 120,100 130,88 140,70 150,100 160,100 190,100 200,88 210,70 220,100 230,100 260,100 270,100 280,100 290,100 300,100 330,100 340,88 350,70 360,100 370,100 400,100 410,88 420,70 430,100 440,100 470,100 480,100 490,100 500,100 510,100 540,100 550,88 560,70 570,100 580,100 610,100 620,88 630,70 640,100 650,100 680,100 690,100 700,100 710,100 720,100" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['1st-degree', '2nd-type1'],
+    details: 'Abrupt dropped beats with constant PR interval. High risk of progression to complete heart block.'
+  },
+
+  {
+    id: '3rd-degree',
+    name: '3rd Degree AV Block (Complete Heart Block)',
+    category: 'Heart Blocks',
+    classification: ['lethal', 'block'],
+    rate: 'Atrial > 60, Ventricular 30-50 (junctional escape) or 20-40 (ventricular escape)',
+    rhythm: 'Both atrial and ventricular regular, but INDEPENDENT (dissociation)',
+    pWaves: 'Present, regular, marching through QRS, no relationship to QRS',
+    prInterval: 'Cannot measure (not related)',
+    qrsComplex: '< 0.12 sec (junctional escape) or > 0.12 sec (ventricular escape)',
+    significance: 'COMPLETE AV DISSOCIATION. No impulses from atrium reach ventricle. Ventricles escape at intrinsic rate (junctional >50, ventricular <50). LETHAL. Causes: anterior MI, digitalis toxicity, Lyme disease (early in endemic areas), infiltrative disease, congenital (rare).',
+    nurseCare: 'ALERT provider STAT. Prepare pacing pads. Monitor continuously. Patient WILL be symptomatic (syncope, hypotension, chest pain).',
+    emergency: 'ABSOLUTE EMERGENCY. Requires IMMEDIATE pacing (transcutaneous or transvenous). If symptomatic: atropine 0.5-1mg IV may help junctional escape, but pacing is definitive.',
+    decision: 'EMERGENCY PACING. Transcutaneous pacing immediately, prepare for transvenous pacing or permanent pacemaker.',
+    svg: `
+      <svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;">
+        <defs><pattern id="grid17" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs>
+        <rect width="800" height="200" fill="url(#grid17)"/>
+        <polyline points="50,80 60,80 66,70 72,55 78,80 84,80 110,80 116,70 122,55 128,80 134,80 160,80 166,70 172,55 178,80 184,80 210,80 216,70 222,55 228,80 234,80 260,80 266,70 272,55 278,80 284,80 310,80 316,70 322,55 328,80 334,80 360,80 366,70 372,55 378,80 384,80 410,80 416,70 422,55 428,80 434,80 460,80 466,70 472,55 478,80 484,80 510,80 516,70 522,55 528,80 534,80 560,80 566,70 572,55 578,80 584,80 610,80 616,70 622,55 628,80 634,80 660,80 666,70 672,55 678,80 684,80 710,80 716,70 722,55 728,80 734,80 50,120 70,120 76,110 82,95 88,120 94,120 130,120 140,110 150,95 160,120 170,120 210,120 220,110 230,95 240,120 250,120 290,120 300,110 310,95 320,120 330,120 370,120 380,110 390,95 400,120 410,120 450,120 460,110 470,95 480,120 490,120 530,120 540,110 550,95 560,120 570,120 610,120 620,110 630,95 640,120 650,120 690,120 700,110 710,95 720,120 730,120" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    compareTo: ['2nd-type1', '2nd-type2'],
+    details: 'Complete dissociation: P waves march independently through QRS. Ventricular rate slow (escape rhythm). Requires pacing.'
+  },
+
+  {
+    id: 'pea',
+    name: 'Pulseless Electrical Activity (PEA)',
+    category: 'Cardiac Arrest Rhythms',
+    classification: ['lethal', 'ventricular'],
+    rate: 'Variable (electrical activity present but no pulse)',
+    rhythm: 'May appear organized (any rhythm on monitor, but NO pulse)',
+    pWaves: 'May be present',
+    prInterval: 'May appear normal',
+    qrsComplex: 'May appear normal or wide',
+    significance: 'LETHAL. Organized electrical activity WITHOUT mechanical contraction — no pulse, no cardiac output. Causes: Hs and Ts — Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia, Tension pneumothorax, Tamponade, Toxins, Thrombosis (PE or MI).',
+    nurseCare: 'This is a CODE situation. CHECK PULSE FIRST — the monitor may look normal but patient has no pulse. Begin CPR immediately.',
+    emergency: 'ABSOLUTE EMERGENCY. CPR + epinephrine q3-5min. Do NOT defibrillate (not a shockable rhythm). Focus on identifying and treating reversible cause (Hs and Ts). Volume resuscitation if hypovolemia. Needle decompression if tension pneumo. Pericardiocentesis if tamponade.',
+    decision: 'CPR, epinephrine, FIND THE CAUSE. PEA is not shockable — defibrillation will NOT help. Treat the underlying Hs and Ts.',
+    svg: '<svg viewBox="0 0 800 200" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px;"><defs><pattern id="gridPEA" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#efefef" stroke-width="0.5"/></pattern></defs><rect width="800" height="200" fill="url(#gridPEA)"/><polyline points="50,100 70,100 80,85 90,70 100,100 110,100 130,100 140,85 150,70 160,100 170,100 190,100 200,85 210,70 220,100 230,100 250,100 260,85 270,70 280,100 290,100 310,100 320,85 330,70 340,100 350,100 370,100 380,85 390,70 400,100 410,100 430,100 440,85 450,70 460,100 470,100 490,100 500,85 510,70 520,100 530,100 550,100 560,85 570,70 580,100 590,100 610,100 620,85 630,70 640,100 650,100 670,100 680,85 690,70 700,100 710,100" stroke="#E74C3C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="400" y="175" text-anchor="middle" fill="#E74C3C" font-size="14" font-weight="700">⚠ LOOKS NORMAL BUT NO PULSE — CHECK PATIENT</text></svg>',
+    compareTo: ['asystole', 'nsr'],
+    details: 'Monitor shows organized electrical activity but patient has no pulse. Key teaching point: ALWAYS check the patient, not just the monitor.'
+  }
+];
+
+// ─── INITIALIZATION ───
+let currentMode = 'browse';
+let activeFilters = new Set(['all']);
+let quizIndex = 0;
+let quizScore = { correct: 0, total: 0 };
+let selectedAnswer = null;
+
+function init() {
+  applyTheme();
+  renderRhythmCards();
+}
+
+// ─── DARK MODE ───
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('n8hub_darkmode', newTheme);
+  document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// ─── MODE SWITCHING ───
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if ((mode === 'browse' && btn.textContent.includes('Browse')) ||
+        (mode === 'quiz' && btn.textContent.includes('Quiz')) ||
+        (mode === 'comparison' && btn.textContent.includes('Compare')) ||
+        (mode === 'devices' && btn.textContent.includes('Devices'))) {
+      btn.classList.add('active');
+    }
+  });
+
+  document.getElementById('browseMode').style.display = 'none';
+  document.getElementById('quizMode').classList.remove('active');
+  document.getElementById('comparisonMode').classList.remove('active');
+  document.getElementById('devicesMode').classList.remove('active');
+
+  if (mode === 'browse') {
+    document.getElementById('browseMode').style.display = 'block';
+    renderRhythmCards();
+  } else if (mode === 'quiz') {
+    document.getElementById('quizMode').classList.add('active');
+    initQuiz();
+  } else if (mode === 'comparison') {
+    document.getElementById('comparisonMode').classList.add('active');
+    renderComparison();
+  } else if (mode === 'devices') {
+    document.getElementById('devicesMode').classList.add('active');
+    renderDevicesAndElectrolytes();
+  }
+}
+
+// ─── RENDER RHYTHM CARDS ───
+function renderRhythmCards() {
+  const container = document.getElementById('rhythmCards');
+  container.innerHTML = '';
+  const filtered = getFilteredRhythms();
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><p>No rhythms match your filter.</p></div>';
+    return;
+  }
+
+  filtered.forEach(rhythm => {
+    const card = document.createElement('div');
+    card.className = 'rhythm-card';
+
+    const badges = rhythm.classification.map(c => `<span class="badge ${c}">${c}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="rhythm-header">
+        <div class="rhythm-name">${rhythm.name}</div>
+        <div class="rhythm-category">${rhythm.category}</div>
+      </div>
+      <div class="rhythm-badges">${badges}</div>
+      ${rhythm.svg}
+      <button class="details-toggle" onclick="toggleDetails(this)">View Details ▼</button>
+      <div class="details-content">
+        <div class="detail-section">
+          <div class="detail-label">Rate</div>
+          <div class="detail-text">${rhythm.rate}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Rhythm</div>
+          <div class="detail-text">${rhythm.rhythm}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">P Waves</div>
+          <div class="detail-text">${rhythm.pWaves}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">PR Interval</div>
+          <div class="detail-text">${rhythm.prInterval}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">QRS Complex</div>
+          <div class="detail-text">${rhythm.qrsComplex}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Clinical Significance</div>
+          <div class="detail-text">${rhythm.significance}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Nursing Care</div>
+          <div class="detail-text">${rhythm.nurseCare}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">Emergency Response</div>
+          <div class="detail-text">${rhythm.emergency}</div>
+        </div>
+        <div class="detail-section">
+          <div class="decision-prompt"><strong>What would you do?</strong><br>${rhythm.decision}</div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function toggleDetails(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('show');
+  btn.textContent = content.classList.contains('show') ? 'Hide Details ▲' : 'View Details ▼';
+}
+
+// ─── FILTERING ───
+function getFilteredRhythms() {
+  let filtered = rhythmData;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  if (search) {
+    filtered = filtered.filter(r =>
+      r.name.toLowerCase().includes(search) ||
+      r.category.toLowerCase().includes(search)
+    );
+  }
+
+  if (!activeFilters.has('all')) {
+    filtered = filtered.filter(r =>
+      r.classification.some(c => activeFilters.has(c))
+    );
+  }
+
+  return filtered;
+}
+
+function filterRhythms() {
+  if (currentMode === 'browse') {
+    renderRhythmCards();
+  }
+}
+
+function toggleFilter(filter) {
+  if (filter === 'all') {
+    activeFilters.clear();
+    activeFilters.add('all');
+  } else {
+    activeFilters.delete('all');
+    if (activeFilters.has(filter)) {
+      activeFilters.delete(filter);
+    } else {
+      activeFilters.add(filter);
+    }
+    if (activeFilters.size === 0) {
+      activeFilters.add('all');
+    }
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const btnText = btn.textContent.trim().toLowerCase();
+    let btnFilter = 'all';
+    if (btnText === 'lethal') btnFilter = 'lethal';
+    else if (btnText === 'non-lethal') btnFilter = 'non-lethal';
+    else if (btnText === 'atrial') btnFilter = 'atrial';
+    else if (btnText === 'ventricular') btnFilter = 'ventricular';
+    else if (btnText === 'blocks') btnFilter = 'block';
+
+    btn.classList.toggle('active', activeFilters.has(btnFilter));
+  });
+
+  filterRhythms();
+}
+
+// ─── QUIZ MODE ───
+const quizScenarios = [
+  { id: 'nsr', correct: 'nsr' },
+  { id: 'sinus-brady', correct: 'sinus-brady' },
+  { id: 'sinus-tachy', correct: 'sinus-tachy' },
+  { id: 'afib', correct: 'afib' },
+  { id: 'aflutter', correct: 'aflutter' },
+  { id: 'svt', correct: 'svt' },
+  { id: 'junctional', correct: 'junctional' },
+  { id: 'pvc', correct: 'pvc' },
+  { id: 'vtach', correct: 'vtach' },
+  { id: 'vfib', correct: 'vfib' },
+  { id: '3rd-degree', correct: '3rd-degree' },
+  { id: '2nd-type2', correct: '2nd-type2' },
+  { id: 'pea', correct: 'pea' }
+];
+
+function initQuiz() {
+  quizIndex = 0;
+  quizScore = { correct: 0, total: quizScenarios.length };
+  selectedAnswer = null;
+  showQuizQuestion();
+}
+
+function showQuizQuestion() {
+  const scenario = quizScenarios[quizIndex];
+  const rhythm = rhythmData.find(r => r.id === scenario.id);
+  const quizDisplay = document.getElementById('quizDisplay');
+  const quizOptions = document.getElementById('quizOptions');
+
+  quizDisplay.innerHTML = rhythm.svg;
+
+  const allIds = rhythmData.map(r => r.id);
+  const shuffled = allIds.sort(() => Math.random() - 0.5).slice(0, 4);
+  if (!shuffled.includes(scenario.correct)) {
+    shuffled[Math.floor(Math.random() * 4)] = scenario.correct;
+  }
+
+  quizOptions.innerHTML = shuffled.map(id => {
+    const r = rhythmData.find(x => x.id === id);
+    return `<button class="option-btn" onclick="selectAnswer('${id}', this)" data-id="${id}">${r.name}</button>`;
+  }).join('');
+
+  document.getElementById('quizCurrent').textContent = quizIndex + 1;
+  document.getElementById('quizProgressBar').style.width = (quizIndex / quizScenarios.length * 100) + '%';
+  document.getElementById('quizFeedback').classList.remove('show', 'correct', 'incorrect');
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('nextBtn').classList.add('hidden');
+}
+
+function selectAnswer(id, btn) {
+  selectedAnswer = id;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function submitAnswer() {
+  if (!selectedAnswer) return;
+
+  const scenario = quizScenarios[quizIndex];
+  const isCorrect = selectedAnswer === scenario.correct;
+  const correctRhythm = rhythmData.find(r => r.id === scenario.correct);
+  const feedback = document.getElementById('quizFeedback');
+
+  if (isCorrect) {
+    quizScore.correct++;
+    feedback.classList.add('show', 'correct');
+    feedback.innerHTML = `<div class="feedback-title">✓ Correct!</div><div class="feedback-text">This is ${correctRhythm.name}.</div>`;
+  } else {
+    feedback.classList.add('show', 'incorrect');
+    feedback.innerHTML = `<div class="feedback-title">✗ Incorrect</div><div class="feedback-text"><strong>Correct Answer: ${correctRhythm.name}</strong><br>Key features: ${correctRhythm.pWaves}</div>`;
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex < quizScenarios.length) {
+    selectedAnswer = null;
+    showQuizQuestion();
+  } else {
+    showQuizSummary();
+  }
+}
+
+function showQuizSummary() {
+  const accuracy = Math.round(quizScore.correct / quizScore.total * 100);
+  const quizDisplay = document.getElementById('quizDisplay');
+  const quizOptions = document.getElementById('quizOptions');
+  const feedback = document.getElementById('quizFeedback');
+
+  document.getElementById('quizCurrent').textContent = quizScore.total;
+  document.getElementById('quizProgressBar').style.width = '100%';
+  quizDisplay.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:2.5em;font-weight:800;color:var(--cardiac);margin:10px 0;">' + quizScore.correct + '/' + quizScore.total + '</div><div style="font-size:1.3em;font-weight:700;">' + accuracy + '% Accuracy</div></div>';
+  quizOptions.innerHTML = '';
+  feedback.classList.remove('show','correct','incorrect');
+  feedback.innerHTML = '';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').classList.add('hidden');
+
+  // Show restart button in the options area
+  quizOptions.innerHTML = '<button class="submit-btn" style="grid-column:1/-1;" onclick="resetQuizDOM()">Restart Quiz</button>';
+
+  // Track results
+  try { if (typeof StudyData !== "undefined") {
+    StudyData.recordResult("ecg-portfolio", "cardiac", quizScore.correct, quizScore.total);
+  }} catch(e) {}
+}
+
+function resetQuizDOM() {
+  // Re-render quiz elements cleanly
+  const quizMode = document.getElementById('quizMode');
+  quizMode.innerHTML = '<div class="quiz-header"><h2>ECG Rhythm Quiz</h2><p class="quiz-progress"><span id="quizCurrent">1</span> / <span id="quizTotal">13</span></p><div class="progress-bar-bg"><div class="progress-bar-fill" id="quizProgressBar" style="width:0%"></div></div></div><div class="quiz-question"><div class="quiz-rhythm-display" id="quizDisplay"></div><p style="text-align:center;font-weight:600;margin-top:12px;">What rhythm is this?</p></div><div class="quiz-options" id="quizOptions"></div><div class="feedback" id="quizFeedback"></div><button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Submit Answer</button><button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">Next Question</button>';
+  initQuiz();
+}
+
+// ─── COMPARISON MODE ───
+function renderComparison() {
+  const comparisons = [
+    { title: 'Afib vs Flutter vs SVT', pairs: [['afib', 'aflutter'], ['aflutter', 'svt']] },
+    { title: 'Type I vs Type II 2nd Degree Block', pairs: [['2nd-type1', '2nd-type2']] },
+    { title: 'Junctional vs Sinus Bradycardia', pairs: [['junctional', 'sinus-brady']] }
+  ];
+
+  let html = '';
+  comparisons.forEach(comp => {
+    html += `<h2 style="font-size: 1.4em; font-weight: 800; margin: 24px 0 16px;">${comp.title}</h2>`;
+    comp.pairs.forEach(pair => {
+      const r1 = rhythmData.find(r => r.id === pair[0]);
+      const r2 = rhythmData.find(r => r.id === pair[1]);
+      html += `
+        <div class="comparison-pair">
+          <div class="comparison-title">Side-by-Side Comparison</div>
+          <div class="rhythm-card" style="border-left: 3px solid var(--cardiac); padding: 0;">
+            <div class="rhythm-header">
+              <div class="rhythm-name" style="font-size: 1.1em;">${r1.name}</div>
+            </div>
+            ${r1.svg}
+            <div class="detail-text" style="padding: 12px; font-size: 0.85em;"><strong>Key:</strong> ${r1.significance}</div>
+          </div>
+          <div class="rhythm-card" style="border-left: 3px solid var(--fluid); padding: 0;">
+            <div class="rhythm-header">
+              <div class="rhythm-name" style="font-size: 1.1em;">${r2.name}</div>
+            </div>
+            ${r2.svg}
+            <div class="detail-text" style="padding: 12px; font-size: 0.85em;"><strong>Key:</strong> ${r2.significance}</div>
+          </div>
+        </div>
+      `;
+    });
+  });
+
+  document.getElementById('comparisonContent').innerHTML = html;
+}
+
+// ─── DEVICES & ELECTROLYTES ───
+function renderDevicesAndElectrolytes() {
+  const content = `
+    <h2 style="font-size: 1.4em; font-weight: 800; margin: 20px 0;">Pacemakers: NASPE-BPEG 5-Letter Code</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Chamber Paced</h3>
+        <ul class="info-list">
+          <li>A = Atrium</li>
+          <li>V = Ventricle</li>
+          <li>D = Dual (both)</li>
+          <li>O = None</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Chamber Sensed</h3>
+        <ul class="info-list">
+          <li>A = Atrium</li>
+          <li>V = Ventricle</li>
+          <li>D = Dual</li>
+          <li>O = None</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Response to Sensing</h3>
+        <ul class="info-list">
+          <li>I = Inhibited (output suppressed)</li>
+          <li>T = Triggered (output delivered)</li>
+          <li>D = Dual (inhibited & triggered)</li>
+          <li>O = None</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Rate Modulation</h3>
+        <ul class="info-list">
+          <li>R = Rate modulation (adapts to activity)</li>
+          <li>O = None</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Multisite Pacing</h3>
+        <ul class="info-list">
+          <li>A = Atrial</li>
+          <li>V = Ventricular</li>
+          <li>D = Dual (biventricular, for CRT)</li>
+          <li>O = None</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="font-size: 1.4em; font-weight: 800; margin: 20px 0;">Pacemaker Complications</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Loss of Capture</h3>
+        <ul class="info-list">
+          <li>Pacemaker output fires but doesn't depolarize chamber</li>
+          <li>Cause: lead displacement, high threshold, battery depletion</li>
+          <li>ECG: pacemaker spike NOT followed by QRS/P wave</li>
+          <li>Nursing: STAT alert provider, may need lead reposition/replacement</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Undersensing</h3>
+        <ul class="info-list">
+          <li>Pacemaker fails to sense intrinsic activity</li>
+          <li>Cause: lead displacement, sensitivity too high, fibrosis around lead</li>
+          <li>ECG: pacemaker spike fires during intrinsic beats, causing competition</li>
+          <li>Nursing: may see double beats, alert provider for sensitivity adjustment</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Oversensing</h3>
+        <ul class="info-list">
+          <li>Pacemaker senses non-cardiac signals (muscle activity, electromagnetic interference)</li>
+          <li>Cause: lead sensitivity too low, EMI from cell phone/MRI</li>
+          <li>ECG: pacemaker inhibited when it shouldn't be (inappropriate pauses)</li>
+          <li>Nursing: warn against MRI, keep cell phone away from pacemaker</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Infection/Lead Issues</h3>
+        <ul class="info-list">
+          <li>Pocket infection, lead fracture, lead dislodgement</li>
+          <li>Signs: fever, swelling at pocket, hiccups, palpitations</li>
+          <li>Nursing: strict sterile precautions post-implant, monitor for signs</li>
+          <li>May require antibiotic therapy or device replacement</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="font-size: 1.4em; font-weight: 800; margin: 20px 0;">Cardioversion & Defibrillation</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Synchronized Cardioversion</h3>
+        <ul class="info-list">
+          <li>Use: stable atrial arrhythmias (A-fib, flutter, SVT), pulsed VT</li>
+          <li>Shock timed to QRS complex (avoids T wave = VF risk)</li>
+          <li>Energy: 100-200J biphasic (increase if unsuccessful)</li>
+          <li>Requires: sedation, IV access, ECG monitoring</li>
+          <li>Nursing: ensure good skin contact, clear bed of O2/moisture, call "clear"</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Unsynchronized Defibrillation</h3>
+        <ul class="info-list">
+          <li>Use: pulseless VT/V-fib (no coordination possible)</li>
+          <li>Shock delivered immediately (not synchronized)</li>
+          <li>Energy: 360J monophasic or 120-200J biphasic</li>
+          <li>Follow immediately with CPR</li>
+          <li>Nursing: CONTINUE CPR during charging, deliver shock, resume CPR</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Electrode Placement (12-Lead)</h3>
+        <ul class="info-list">
+          <li style="font-weight: 700; color: var(--cardiac);">White = Right arm</li>
+          <li style="font-weight: 700; color: var(--cardiac);">Black = Left arm</li>
+          <li style="font-weight: 700; color: var(--cardiac);">Green = Left leg</li>
+          <li style="font-weight: 700; color: var(--cardiac);">Red = Right leg</li>
+          <li>Mnemonic: "White on right, black on left, green-red on feet"</li>
+          <li>Chest leads: V1-V6 across precordium</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Cardioversion Safety</h3>
+        <ul class="info-list">
+          <li>Ensure good skin contact (prepare skin, use pads)</li>
+          <li>Women: pad placement left of breast, NOT directly on breast</li>
+          <li>Clear bed of: bedding, pillows, oxygen tubing</li>
+          <li>Check pulse if regular rhythm returns (don't assume)</li>
+          <li>Post-conversion: monitor for dysrhythmias, reinitiate anticoag</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="font-size: 1.4em; font-weight: 800; margin: 20px 0;">Electrolyte Effects on ECG</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Hypokalemia (K+ < 3.5)</h3>
+        <ul class="info-list">
+          <li>U waves (prominent after T wave)</li>
+          <li>T wave flattening/inversion</li>
+          <li>ST depression</li>
+          <li>PR prolongation</li>
+          <li>Risk: cardiac arrhythmias (PVCs, A-fib)</li>
+          <li>Management: K+ supplementation, monitor digoxin level</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hyperkalemia (K+ > 5.5)</h3>
+        <ul class="info-list">
+          <li>Peaked T waves (tall, narrow)</li>
+          <li>ST depression</li>
+          <li>QRS widening (eventually)</li>
+          <li>PR prolongation</li>
+          <li>Advanced: "sine wave" (extreme widening), then asystole</li>
+          <li>Management: IV insulin+glucose, Ca2+ gluconate, K+-binding resins</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hypocalcemia (Ca2+ < 8.5)</h3>
+        <ul class="info-list">
+          <li>Prolonged QT interval</li>
+          <li>ST prolongation</li>
+          <li>Symptoms: tetany, paresthesias, seizures</li>
+          <li>Management: IV calcium gluconate or chloride</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hypercalcemia (Ca2+ > 10.5)</h3>
+        <ul class="info-list">
+          <li>SHORTENED QT interval</li>
+          <li>Shortened ST segment</li>
+          <li>Early repolarization</li>
+          <li>Management: hydration, diuretics, bisphosphonates</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hypomagnesemia (Mg2+ < 1.8)</h3>
+        <ul class="info-list">
+          <li>Prolonged PR, QRS, QT</li>
+          <li>Increases risk for Torsades de Pointes</li>
+          <li>T wave inversion</li>
+          <li>Management: IV Mg2+ supplementation</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Hypermagnesemia (Mg2+ > 2.5)</h3>
+        <ul class="info-list">
+          <li>PR prolongation</li>
+          <li>QRS widening</li>
+          <li>Bradycardia</li>
+          <li>Rare clinical problem</li>
+          <li>Management: hydration, diuretics if needed</li>
+        </ul>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('devicesContent').innerHTML = content;
+}
+
+// ─── BACK TO HUB ───
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+// ─── START ───
+init();
+
+</script>
+
+</body>
+</html>

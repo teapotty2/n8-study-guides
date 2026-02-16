@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxygenation &amp; Gas Exchange - Comprehensive Concept Map</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 500;
+            position: relative;
+        }
+
+        .header-left { text-align: left; }
+        .header h1 { font-size: 1.25rem; }
+        .header p { color: #94a3b8; font-size: 0.8rem; }
+
+        .header-controls { display: flex; align-items: center; gap: 0.75rem; }
+
+        .search-box { position: relative; }
+
+        .search-box input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            padding: 0.4rem 0.75rem 0.4rem 2rem;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus { border-color: #22d3ee; }
+        .search-box input::placeholder { color: #64748b; }
+
+        .search-box::before {
+            content: '\1F50D';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-results.visible { display: block; }
+
+        .search-result-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .search-result-item:hover { background: rgba(34, 211, 238, 0.15); }
+        .search-result-item .sr-title { color: #22d3ee; }
+        .search-result-item .sr-type { color: #64748b; font-size: 0.75rem; }
+
+        .zoom-controls { display: flex; gap: 4px; }
+
+        .zoom-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .zoom-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .map-container.grabbing { cursor: grabbing; }
+
+        .map-inner {
+            position: absolute;
+            width: 2600px;
+            height: 1500px;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .connections {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .conn-line {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+
+        .conn-line.dashed { stroke-dasharray: 8, 4; }
+
+        .conn-line.active {
+            stroke: #22d3ee;
+            stroke-width: 3;
+            stroke-dasharray: none;
+            filter: drop-shadow(0 0 6px rgba(34,211,238,0.5));
+        }
+
+        .conn-line.dimmed { stroke: #1e293b; stroke-width: 1; }
+
+        .conn-label {
+            fill: #64748b;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: fill 0.3s;
+        }
+
+        .conn-label.active { fill: #22d3ee; }
+        .conn-label.dimmed { fill: transparent; }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            text-align: center;
+            min-width: 130px;
+            max-width: 180px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .node:hover { transform: scale(1.08); z-index: 100; }
+        .node.active { transform: scale(1.12); z-index: 100; box-shadow: 0 0 30px rgba(34,211,238,0.4); }
+        .node.connected { transform: scale(1.05); z-index: 90; box-shadow: 0 0 20px rgba(34,211,238,0.2); }
+        .node.dimmed { opacity: 0.25; transform: scale(0.95); }
+        .node.search-match { box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); z-index: 110; }
+
+        .node h3 { font-size: 0.9rem; margin-bottom: 0.15rem; line-height: 1.2; }
+        .node p { font-size: 0.7rem; opacity: 0.8; line-height: 1.3; }
+
+        /* Node types — domain-specific for respiratory */
+        .node.central { background: linear-gradient(135deg, #7c3aed, #a855f7); border: 3px solid #c4b5fd; min-width: 180px; }
+        .node.anatomy { background: linear-gradient(135deg, #2563eb, #3b82f6); border: 2px solid #93c5fd; }
+        .node.assessment { background: linear-gradient(135deg, #0891b2, #06b6d4); border: 2px solid #67e8f9; }
+        .node.obstructive { background: linear-gradient(135deg, #ea580c, #f97316); border: 2px solid #fdba74; }
+        .node.acute { background: linear-gradient(135deg, #dc2626, #ef4444); border: 2px solid #fca5a5; }
+        .node.trauma { background: linear-gradient(135deg, #4b5563, #6b7280); border: 2px solid #9ca3af; }
+        .node.airway { background: linear-gradient(135deg, #059669, #10b981); border: 2px solid #6ee7b7; }
+        .node.upper { background: linear-gradient(135deg, #b45309, #d97706); border: 2px solid #fbbf24; }
+        .node.infection { background: linear-gradient(135deg, #be185d, #ec4899); border: 2px solid #f9a8d4; }
+        .node.complication { background: linear-gradient(135deg, #78350f, #92400e); border: 2px solid #d97706; }
+        .node.vascular { background: linear-gradient(135deg, #6d28d9, #8b5cf6); border: 2px solid #c4b5fd; }
+
+        /* Info panel */
+        .info-panel {
+            position: fixed;
+            right: -400px;
+            top: 52px;
+            width: 380px;
+            background: rgba(15, 23, 42, 0.97);
+            border-left: 2px solid #475569;
+            padding: 1.5rem;
+            z-index: 1000;
+            height: calc(100vh - 52px);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+        }
+
+        .info-panel.visible { right: 0; }
+
+        .info-panel .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none; border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .info-panel .close-btn:hover { color: white; }
+        .info-panel h2 { color: #22d3ee; margin-bottom: 1rem; padding-right: 2rem; font-size: 1.2rem; }
+        .info-panel h3 { color: #f59e0b; margin: 1rem 0 0.5rem 0; font-size: 0.9rem; }
+        .info-panel p { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; }
+        .info-panel ul { margin-left: 1.25rem; color: #e2e8f0; }
+        .info-panel li { margin-bottom: 0.4rem; font-size: 0.88rem; line-height: 1.4; }
+
+        .info-panel .exam-trap {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid #ef4444;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .clinical-pearl {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 4px solid #22d3ee;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .connection-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #475569;
+        }
+
+        .info-panel .connection-list span {
+            display: inline-block;
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .info-panel .connection-list span:hover { background: #22d3ee; color: #0f172a; }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            left: 12px; bottom: 12px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            z-index: 500;
+            border: 1px solid #334155;
+        }
+
+        .legend h4 { margin-bottom: 0.4rem; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1rem; }
+
+        .legend-item { display: flex; align-items: center; font-size: 0.7rem; color: #94a3b8; }
+
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; flex-shrink: 0; }
+
+        .minimap {
+            position: fixed;
+            right: 12px; bottom: 12px;
+            width: 200px; height: 120px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            z-index: 500;
+            overflow: hidden;
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid #22d3ee;
+            border-radius: 2px;
+            background: rgba(34, 211, 238, 0.08);
+            pointer-events: none;
+        }
+
+        .minimap-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; }
+
+        .kb-hint {
+            position: fixed;
+            left: 12px; top: 64px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            z-index: 500;
+            border: 1px solid #334155;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .kb-hint kbd {
+            background: #334155;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            color: #94a3b8;
+            font-family: inherit;
+        }
+
+        .info-panel::-webkit-scrollbar { width: 6px; }
+        .info-panel::-webkit-scrollbar-track { background: transparent; }
+        .info-panel::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1>Oxygenation &amp; Gas Exchange &mdash; Comprehensive Concept Map</h1>
+            <p>Ch 17-20 | Click nodes to explore | Drag to pan | Scroll to zoom</p>
+        </div>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search concepts..." autocomplete="off"/>
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">&minus;</button>
+                <button class="zoom-btn" onclick="resetView()" title="Reset view">&#8634;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-container" id="map-container">
+        <div class="map-inner" id="map-inner">
+            <svg class="connections" id="connections-svg"></svg>
+        </div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+        <button class="close-btn" onclick="closePanel()">&times;</button>
+        <h2 id="panel-title"></h2>
+        <div id="panel-content"></div>
+    </div>
+
+    <div class="legend">
+        <h4>Node Types</h4>
+        <div style="display:flex;gap:1rem;margin-bottom:0.4rem;font-size:0.7rem;color:#94a3b8;">
+            <span><span style="display:inline-block;width:20px;height:2px;background:#334155;vertical-align:middle;margin-right:4px;"></span>Direct</span>
+            <span><span style="display:inline-block;width:20px;height:0;border-top:2px dashed #334155;vertical-align:middle;margin-right:4px;"></span>Cross-link</span>
+        </div>
+        <div class="legend-grid">
+            <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div>Central</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>A&amp;P / Foundation</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div>Assessment / Dx</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Obstructive</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Acute / Critical</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6b7280;"></div>Trauma</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Airway / Intervention</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d97706;"></div>Upper Respiratory</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ec4899;"></div>Infection</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#92400e;"></div>Complication</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div>Vascular</div>
+        </div>
+    </div>
+
+    <div class="kb-hint">
+        <kbd>Esc</kbd> close panel &nbsp; <kbd>/</kbd> search &nbsp; <kbd>R</kbd> reset view
+    </div>
+
+    <div class="minimap" id="minimap">
+        <div class="minimap-viewport" id="minimap-vp"></div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const nodes = {
+        // TIER 1 — Central hub
+        central: {
+            label: 'OXYGENATION', sub: 'Gas Exchange & Ventilation (Ch 17-20)',
+            type: 'central', x: 1150, y: 50
+        },
+
+        // TIER 2 — Seven core branches
+        gas_exchange: {
+            label: 'Gas Exchange\n& V/Q', sub: 'Ventilation-perfusion matching',
+            type: 'anatomy', x: 180, y: 230
+        },
+        assessment: {
+            label: 'Respiratory\nAssessment', sub: 'Breath sounds, patterns, findings',
+            type: 'assessment', x: 530, y: 230
+        },
+        abgs: {
+            label: 'ABG\nInterpretation', sub: 'pH, PaCO\u2082, HCO\u2083, PaO\u2082',
+            type: 'assessment', x: 880, y: 230
+        },
+        o2_therapy: {
+            label: 'O\u2082 Therapy\n& Devices', sub: 'Low-flow & high-flow systems',
+            type: 'airway', x: 1230, y: 230
+        },
+        airway_mgmt: {
+            label: 'Airway\nManagement', sub: 'ETT, Trach, suctioning',
+            type: 'airway', x: 1580, y: 230
+        },
+        upper_resp: {
+            label: 'Upper Respiratory\nDisorders', sub: 'URI, pharyngitis, epistaxis',
+            type: 'upper', x: 1930, y: 230
+        },
+        chest_trauma: {
+            label: 'Chest Trauma', sub: 'Blunt & penetrating injury',
+            type: 'trauma', x: 2280, y: 230
+        },
+
+        // TIER 3 — Disease & condition hubs
+        copd: {
+            label: 'COPD', sub: 'Chronic obstructive disease',
+            type: 'obstructive', x: 100, y: 460
+        },
+        atelectasis: {
+            label: 'Atelectasis', sub: 'Alveolar collapse',
+            type: 'obstructive', x: 350, y: 460
+        },
+        pneumonia: {
+            label: 'Pneumonia', sub: 'CAP, HAP, VAP, HCAP',
+            type: 'infection', x: 600, y: 460
+        },
+        acute_rf: {
+            label: 'Acute Respiratory\nFailure', sub: 'PaO\u2082 <60, PaCO\u2082 >50',
+            type: 'acute', x: 880, y: 460
+        },
+        pe: {
+            label: 'Pulmonary\nEmbolism', sub: 'PA obstruction',
+            type: 'vascular', x: 1150, y: 460
+        },
+        lung_cancer: {
+            label: 'Lung Cancer', sub: 'Leading cause of cancer death',
+            type: 'acute', x: 1430, y: 460
+        },
+        osa: {
+            label: 'OSA', sub: 'Airway collapse during sleep',
+            type: 'upper', x: 1930, y: 460
+        },
+        pneumothorax: {
+            label: 'Pneumothorax', sub: 'Air in pleural space',
+            type: 'trauma', x: 2280, y: 460
+        },
+
+        // TIER 4 — Specific subtypes
+        emphysema: {
+            label: 'Emphysema', sub: 'Type A "Pink Puffer"',
+            type: 'obstructive', x: 30, y: 700
+        },
+        chronic_bronchitis: {
+            label: 'Chronic\nBronchitis', sub: 'Type B "Blue Bloater"',
+            type: 'obstructive', x: 250, y: 700
+        },
+        asthma: {
+            label: 'Asthma', sub: 'Reversible bronchoconstriction',
+            type: 'obstructive', x: 470, y: 700
+        },
+        cf: {
+            label: 'Cystic Fibrosis', sub: 'Autosomal recessive',
+            type: 'obstructive', x: 690, y: 700
+        },
+        ards: {
+            label: 'ARDS', sub: 'Refractory hypoxemia',
+            type: 'acute', x: 920, y: 700
+        },
+        pulm_htn: {
+            label: 'Pulmonary\nHypertension', sub: '\u2191 Pulmonary artery pressure',
+            type: 'vascular', x: 1150, y: 700
+        },
+        covid: {
+            label: 'COVID-19', sub: 'SARS-CoV-2 pneumonia',
+            type: 'infection', x: 1380, y: 700
+        },
+        laryngeal_ca: {
+            label: 'Laryngeal\nCancer', sub: 'Laryngectomy, voice rehab',
+            type: 'upper', x: 1930, y: 700
+        },
+        chest_tubes: {
+            label: 'Chest Drainage\nSystems', sub: 'Water seal & dry suction',
+            type: 'trauma', x: 2280, y: 700
+        },
+
+        // TIER 5 — Complications, treatments
+        cor_pulmonale: {
+            label: 'Cor Pulmonale', sub: 'Right-sided heart failure',
+            type: 'complication', x: 30, y: 950
+        },
+        bronchodilators: {
+            label: 'Bronchodilators', sub: 'SABA, LABA, anticholinergics',
+            type: 'airway', x: 310, y: 950
+        },
+        status_asthmaticus: {
+            label: 'Status\nAsthmaticus', sub: 'Life-threatening bronchospasm',
+            type: 'acute', x: 560, y: 950
+        },
+        mech_vent: {
+            label: 'Mechanical\nVentilation', sub: 'AC, SIMV, PEEP, CPAP',
+            type: 'airway', x: 920, y: 950
+        },
+        prone_positioning: {
+            label: 'Prone\nPositioning', sub: 'Improves V/Q matching',
+            type: 'airway', x: 1380, y: 950
+        },
+
+        // TIER 6 — Protocols, bundles
+        vap_bundle: {
+            label: 'VAP Prevention\nBundle', sub: 'HOB, sedation vacations, oral care',
+            type: 'airway', x: 780, y: 1180
+        },
+        abcdef_bundle: {
+            label: 'ABCDEF\nBundle', sub: 'ICU liberation protocol',
+            type: 'airway', x: 1060, y: 1180
+        },
+        icough: {
+            label: 'ICOUGH\nProtocol', sub: 'Atelectasis prevention',
+            type: 'airway', x: 350, y: 1180
+        }
+    };
+
+    // Edges: [from, to, label, dashed?]
+    const edges = [
+        // Central hub connections
+        ['central', 'gas_exchange', '', false],
+        ['central', 'assessment', '', false],
+        ['central', 'abgs', '', false],
+        ['central', 'o2_therapy', '', false],
+        ['central', 'airway_mgmt', '', false],
+        ['central', 'upper_resp', '', false],
+        ['central', 'chest_trauma', '', false],
+
+        // Tier 2 \u2192 Tier 3
+        ['gas_exchange', 'copd', 'impaired in', false],
+        ['gas_exchange', 'atelectasis', 'reduced by', false],
+        ['assessment', 'pneumonia', 'guides dx', false],
+        ['abgs', 'acute_rf', 'defines criteria', false],
+        ['o2_therapy', 'lung_cancer', 'post-surgical', false],
+        ['chest_trauma', 'pneumothorax', 'causes', false],
+        ['upper_resp', 'osa', 'includes', false],
+        ['upper_resp', 'laryngeal_ca', 'includes', false],
+
+        // COPD cluster
+        ['copd', 'emphysema', 'Type A', false],
+        ['copd', 'chronic_bronchitis', 'Type B', false],
+        ['copd', 'bronchodilators', 'treated with', false],
+        ['emphysema', 'cor_pulmonale', 'right-sided HF', false],
+
+        // Asthma cluster
+        ['asthma', 'status_asthmaticus', 'refractory', false],
+        ['asthma', 'bronchodilators', 'SABA rescue', false],
+
+        // Obstructive branch connections
+        ['atelectasis', 'icough', 'prevented by', false],
+        ['cf', 'bronchodilators', 'treated with', false],
+
+        // Pneumonia \u2192 ARDS \u2192 Acute RF chain
+        ['pneumonia', 'ards', 'can progress to', false],
+        ['ards', 'acute_rf', 'causes', false],
+        ['ards', 'prone_positioning', 'managed with', false],
+
+        // PE \u2192 Pulmonary HTN chain
+        ['pe', 'pulm_htn', 'can cause', false],
+        ['pulm_htn', 'cor_pulmonale', 'leads to', false],
+
+        // COVID cluster
+        ['covid', 'ards', 'common cause', false],
+        ['covid', 'prone_positioning', '12-16 hrs/day', false],
+
+        // Acute RF \u2192 Mechanical Ventilation
+        ['acute_rf', 'mech_vent', 'requires', false],
+        ['mech_vent', 'vap_bundle', 'prevents VAP', false],
+        ['mech_vent', 'abcdef_bundle', 'ICU liberation', false],
+
+        // Trauma cluster
+        ['chest_trauma', 'chest_tubes', 'treated with', false],
+        ['pneumothorax', 'chest_tubes', 'requires', false],
+
+        // Cross-links (dashed)
+        ['copd', 'o2_therapy', 'low-flow caution', true],
+        ['copd', 'asthma', 'both obstructive', true],
+        ['pe', 'acute_rf', 'can cause', true],
+        ['ards', 'mech_vent', 'high PEEP', true],
+        ['gas_exchange', 'ards', 'destroyed in', true],
+        ['gas_exchange', 'pe', 'dead space', true],
+        ['pneumothorax', 'acute_rf', 'can cause', true],
+        ['status_asthmaticus', 'mech_vent', 'may require', true],
+        ['vap_bundle', 'pneumonia', 'prevents VAP', true],
+        ['assessment', 'abgs', 'confirms with', true],
+        ['o2_therapy', 'ards', 'toxicity risk', true],
+        ['airway_mgmt', 'mech_vent', 'includes', true],
+        ['covid', 'mech_vent', 'often requires', true],
+        ['lung_cancer', 'airway_mgmt', 'post-surgical', true],
+        ['cf', 'pneumonia', 'frequent PNA', true],
+        ['cor_pulmonale', 'copd', 'complication of', true],
+        ['atelectasis', 'pneumonia', 'risk factor', true],
+        ['lung_cancer', 'chest_tubes', 'post-lobectomy', true],
+        ['pulm_htn', 'copd', 'caused by', true],
+        ['icough', 'vap_bundle', 'overlapping goals', true]
+    ];
+
+    // ===== NODE DETAIL CONTENT =====
+    const nodeInfo = {
+        central: {
+            title: 'Oxygenation & Gas Exchange',
+            content: `
+                <h3>Central Concept</h3>
+                <p>Oxygenation is the process of supplying O\u2082 to cells and removing CO\u2082 via the cardiopulmonary system. It depends on three linked processes: <strong>ventilation</strong> (moving air), <strong>diffusion</strong> (gas crossing the alveolar-capillary membrane), and <strong>perfusion</strong> (blood delivering O\u2082 to tissues).</p>
+                <h3>Key Themes (Ch 17-20)</h3>
+                <ul>
+                    <li><strong>V/Q matching</strong> \u2014 ventilation and perfusion must be balanced for gas exchange</li>
+                    <li><strong>Obstructive vs restrictive</strong> \u2014 two major categories of lung disease</li>
+                    <li><strong>ABGs</strong> \u2014 the definitive window into oxygenation and acid-base status</li>
+                    <li><strong>Airway management</strong> \u2014 from nasal cannula to mechanical ventilation</li>
+                    <li><strong>Assessment</strong> \u2014 breath sounds, patterns, and physical findings guide every decision</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Oxygenation and ventilation are NOT the same thing. SpO\u2082 tells you about oxygenation; ETCO\u2082 and PaCO\u2082 tell you about ventilation. You can have one without the other."
+                </div>
+            `
+        },
+        gas_exchange: {
+            title: 'Gas Exchange & V/Q Ratio',
+            content: `
+                <h3>How Gas Exchange Works</h3>
+                <p>O\u2082 diffuses from alveoli into pulmonary capillaries; CO\u2082 diffuses in the opposite direction. This requires intact alveolar-capillary membranes and adequate blood flow.</p>
+                <h3>V/Q Ratio</h3>
+                <ul>
+                    <li><strong>Normal V/Q</strong> \u2014 ventilation matches perfusion (~0.8)</li>
+                    <li><strong>Low V/Q (Shunt)</strong> \u2014 perfusion > ventilation; blood bypasses non-ventilated alveoli. Causes: pneumonia, atelectasis, tumor, mucus plug</li>
+                    <li><strong>High V/Q (Dead Space)</strong> \u2014 ventilation > perfusion; alveoli ventilated but no blood supply. Causes: PE, pulmonary infarction, cardiogenic shock</li>
+                    <li><strong>Silent Unit</strong> \u2014 no ventilation AND no perfusion. Causes: pneumothorax, severe ARDS</li>
+                </ul>
+                <h3>Respiratory Control</h3>
+                <ul>
+                    <li><strong>Medulla oblongata & pons</strong> control rate and depth</li>
+                    <li><strong>Central chemoreceptors</strong> (medulla): respond to pH changes in CSF</li>
+                    <li><strong>Peripheral chemoreceptors</strong> (aortic arch + carotids): respond first to \u2193PaO\u2082, then PaCO\u2082 and pH</li>
+                    <li><strong>Hering-Breuer reflex</strong>: prevents lung overdistension</li>
+                </ul>
+                <h3>Compliance</h3>
+                <ul>
+                    <li><strong>Increased</strong> (overdistended, lost recoil) \u2192 emphysema</li>
+                    <li><strong>Decreased</strong> (stiff lungs) \u2192 ARDS, pulmonary edema, fibrosis, pneumothorax</li>
+                </ul>
+                <h3>Oxyhemoglobin Dissociation Curve</h3>
+                <ul>
+                    <li>PaO\u2082 >70: flat/safe zone \u2014 saturation barely changes</li>
+                    <li><strong>PaO\u2082 <60: steep slope</strong> \u2014 small drops = big saturation drops</li>
+                    <li><strong>Right shift</strong> (release O\u2082): \u2191CO\u2082, acidosis, \u2191temp, \u21912,3-DPG (mnemonic: CADET face Right)</li>
+                    <li><strong>Left shift</strong> (hold O\u2082 tighter): \u2193CO\u2082, alkalosis, \u2193temp, CO poisoning</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Shunt = main cause of hypoxia after thoracic/abdominal surgery. Severe hypoxia occurs when shunt exceeds 20%. Supplemental O\u2082 may NOT correct shunting\u2014the blood literally bypasses the alveoli.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> SpO\u2082 of 90% = PaO\u2082 of ~60 mmHg. Below that, you're on the steep slope and deterioration accelerates. This is the critical threshold you must know.
+                </div>
+            `
+        },
+        assessment: {
+            title: 'Respiratory Assessment',
+            content: `
+                <h3>Key Symptoms</h3>
+                <ul>
+                    <li><strong>Dyspnea</strong> \u2014 subjective; predictor of adverse outcomes</li>
+                    <li><strong>Orthopnea</strong> \u2014 SOB when flat; measured by pillows (2, 3, or 4)</li>
+                    <li><strong>Stridor</strong> \u2014 high-pitched inspiratory sound = <strong>immediate intervention</strong></li>
+                    <li><strong>Hemoptysis</strong> \u2014 bright red, frothy = lung; dark, coffee-ground = stomach</li>
+                </ul>
+                <h3>Breath Sounds</h3>
+                <ul>
+                    <li><strong>Crackles</strong> \u2014 fluid in airways/alveoli; fine (fibrosis) vs coarse (COPD)</li>
+                    <li><strong>Wheezes</strong> \u2014 bronchoconstriction; usually expiratory</li>
+                    <li><strong>Rhonchi</strong> \u2014 secretions; may clear with coughing</li>
+                    <li><strong>Pleural friction rub</strong> \u2014 inflammation; does NOT clear with coughing</li>
+                </ul>
+                <h3>Physical Findings</h3>
+                <ul>
+                    <li><strong>Barrel chest</strong> \u2014 overinflation \u2192 emphysema/COPD</li>
+                    <li><strong>Clubbing</strong> \u2014 chronic hypoxia (congenital heart disease, lung cancer)</li>
+                    <li><strong>Cyanosis</strong> \u2014 LATE sign; unreliable in anemia or dark skin. Requires \u22655 g/dL unoxygenated Hgb</li>
+                    <li><strong>Tactile fremitus</strong> \u2014 \u2191 in pneumonia (consolidation), \u2193 in emphysema (air-filled)</li>
+                </ul>
+                <h3>Cough Timing Clues</h3>
+                <ul>
+                    <li>Morning \u2192 bronchitis</li>
+                    <li>Night \u2192 left-sided HF or asthma</li>
+                    <li>After food \u2192 aspiration</li>
+                    <li>Dry, irritating \u2192 URI or <strong>ACE inhibitor</strong> side effect</li>
+                </ul>
+                <h3>Voice Sounds (Consolidation)</h3>
+                <ul>
+                    <li><strong>Bronchophony</strong>: "99" heard louder than expected</li>
+                    <li><strong>Egophony</strong>: "E" heard as "A" (E-to-A change)</li>
+                    <li><strong>Whispered pectoriloquy</strong>: whisper heard distinctly</li>
+                </ul>
+                <h3>Breathing Patterns</h3>
+                <ul>
+                    <li><strong>Kussmaul</strong>: deep, labored, \u2191rate+depth \u2192 DKA, metabolic acidosis</li>
+                    <li><strong>Cheyne-Stokes</strong>: crescendo-decrescendo + apnea \u2192 HF, brain damage</li>
+                    <li><strong>Biot\u2019s (Ataxic)</strong>: 3-4 breaths then apnea \u2192 drug OD, medulla injury</li>
+                    <li><strong>Bradypnea</strong> (<10/min): \u2191ICP, drug OD | <strong>Tachypnea</strong>: PNA, PE, pain</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Trachea shifts TOWARD atelectasis/collapse (pulling) but AWAY from effusion/pneumothorax (pushing). This single concept shows up repeatedly on exams.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> ETCO\u2082 is a more accurate predictor of respiratory status than SpO\u2082. SpO\u2082 = oxygenation; ETCO\u2082 = ventilation. ETCO\u2082 detects respiratory depression BEFORE clinical observation.
+                </div>
+            `
+        },
+        abgs: {
+            title: 'ABG Interpretation',
+            content: `
+                <h3>Normal Values</h3>
+                <ul>
+                    <li>pH: 7.35\u20137.45</li>
+                    <li>PaCO\u2082: 35\u201345 mmHg</li>
+                    <li>HCO\u2083: 22\u201326 mEq/L</li>
+                    <li>PaO\u2082: 80\u2013100 mmHg (>80)</li>
+                    <li>SaO\u2082: 95\u201398%</li>
+                    <li>Base excess/deficit: \u00b12 mEq/L</li>
+                </ul>
+                <h3>ROME Method</h3>
+                <ul>
+                    <li><strong>R</strong>espiratory = <strong>O</strong>pposite (pH and PaCO\u2082 move in opposite directions)</li>
+                    <li><strong>M</strong>etabolic = <strong>E</strong>qual (pH and HCO\u2083 move in the same direction)</li>
+                </ul>
+                <h3>Compensation</h3>
+                <ul>
+                    <li><strong>Uncompensated</strong>: only one system abnormal (CO\u2082 or HCO\u2083)</li>
+                    <li><strong>Partially compensated</strong>: NOTHING normal (all abnormal, both trying to fix)</li>
+                    <li><strong>Fully compensated</strong>: pH returns to normal; use 7.40 as dividing line for primary disorder</li>
+                </ul>
+                <h3>ETCO\u2082 (Capnography)</h3>
+                <ul>
+                    <li>Normal: 35\u201345 mmHg (mirrors PaCO\u2082)</li>
+                    <li>More accurate than SpO\u2082 for detecting respiratory compromise early</li>
+                    <li>Detects depression BEFORE clinical observation</li>
+                    <li>Hyperventilation: RR \u2191, ETCO\u2082 \u2193 (blowing off CO\u2082)</li>
+                    <li>Hypoventilation: RR \u2193, ETCO\u2082 \u2191 (retaining CO\u2082)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> PaO\u2082 < 80 = hypoxemia. PaO\u2082 < 60 = acute respiratory failure criteria. Remember: the oxyhemoglobin curve is flat above 60 mmHg but drops steeply below it\u2014small PaO\u2082 changes below 60 cause huge saturation drops.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Partially compensated = NOTHING is normal. This is the trickiest ABG to interpret. If pH, CO\u2082, and HCO\u2083 are all abnormal, both systems are working to fix the problem.
+                </div>
+            `
+        },
+        o2_therapy: {
+            title: 'O\u2082 Therapy & Devices',
+            content: `
+                <h3>Key Principle</h3>
+                <p>O\u2082 is a medication\u2014use the lowest amount necessary. High-flow O\u2082 in COPD patients depresses hypoxic respiratory drive.</p>
+                <h3>Low-Flow Devices</h3>
+                <ul>
+                    <li><strong>Nasal Cannula</strong> \u2014 1\u20136 L/min, FiO\u2082 24\u201344%. Comfortable, allows eating/talking</li>
+                    <li><strong>Simple Face Mask</strong> \u2014 6\u201310 L/min, FiO\u2082 40\u201360%. Must remove to eat</li>
+                </ul>
+                <h3>High-Flow Devices</h3>
+                <ul>
+                    <li><strong>Venturi Mask</strong> \u2014 precise FiO\u2082 (24\u201340%). Best for COPD (controlled delivery)</li>
+                    <li><strong>HFNC</strong> \u2014 up to 60 L/min, FiO\u2082 up to 100%. Used extensively in COVID. <strong>Requires airborne precautions</strong> (aerosolizing)</li>
+                </ul>
+                <h3>O\u2082 Toxicity</h3>
+                <p>Prolonged high FiO\u2082 causes lung damage similar to ARDS. Monitor for signs and titrate down when possible.</p>
+                <h3>Hypoxemia vs Hypoxia</h3>
+                <ul>
+                    <li><strong>Hypoxemia</strong>: decreased arterial O\u2082 (PaO\u2082 <60). Manifests as agitation, confusion, \u2191BP, tachycardia</li>
+                    <li><strong>Hypoxia</strong>: decreased O\u2082 delivery to tissues. CNS changes appear early</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> COPD patients: maintain SpO\u2082 >90% with lowest effective flow. High O\u2082 can suppress their respiratory drive (hypercapnic drive). Venturi mask = best choice for precise, controlled delivery. No smoking with home O\u2082\u2014fire and explosion risk.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Pulse oximetry is NOT accurate in: hypothermia, sepsis, hemodynamic instability, nail polish, dark skin pigment. It cannot detect hyperoxemia or measure ventilation directly.
+                </div>
+            `
+        },
+        airway_mgmt: {
+            title: 'Airway Management',
+            content: `
+                <h3>Endotracheal Tube (ETT)</h3>
+                <ul>
+                    <li>Oral route more common, less traumatic than nasal</li>
+                    <li>Positioned <strong>2 cm above carina</strong>; confirmed by CXR</li>
+                    <li>Cuff inflated to prevent air leak</li>
+                    <li><strong>14\u201321 days max</strong> \u2192 then convert to tracheostomy</li>
+                </ul>
+                <h3>Tracheostomy</h3>
+                <ul>
+                    <li>Opening between <strong>2nd and 3rd tracheal rings</strong></li>
+                    <li>High cuff pressure \u2192 bleeding, ischemia, necrosis</li>
+                    <li>Low cuff pressure \u2192 aspiration risk</li>
+                    <li>Keep extra trach set + obturator at bedside</li>
+                </ul>
+                <h3>Suctioning</h3>
+                <ul>
+                    <li>Increase O\u2082 to <strong>100% before suctioning</strong></li>
+                    <li><strong>No longer than 10 seconds</strong></li>
+                    <li>Inline suction maintains sterility</li>
+                </ul>
+                <h3>Bedside Safety Equipment</h3>
+                <ul>
+                    <li>Ambu-bag with facemask</li>
+                    <li>Suction (Yankauer) + O\u2082 flow meter</li>
+                    <li>Measure ETT markings at start of shift</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> After extubation, watch for stridor (laryngeal edema) and increasing work of breathing. Keep the patient NPO until swallow evaluation confirms safety.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> ETT \u2192 trach conversion at 14-21 days. Suctioning: no longer than 10 seconds, increase O\u2082 to 100% first. These specific numbers are heavily tested.
+                </div>
+            `
+        },
+        copd: {
+            title: 'COPD \u2014 Chronic Obstructive Pulmonary Disease',
+            content: `
+                <h3>Overview</h3>
+                <p>Slowly progressive disease with reduced airflow and impaired gas exchange. Two main types: emphysema (Type A) and chronic bronchitis (Type B). Most patients have features of both.</p>
+                <h3>Risk Factors</h3>
+                <ul>
+                    <li><strong>Tobacco smoke (80\u201390%)</strong> of cases</li>
+                    <li>Secondhand smoke, occupational exposure, air pollution</li>
+                    <li><strong>Alpha-1 antitrypsin deficiency</strong> (genetic)</li>
+                </ul>
+                <h3>Management Priorities</h3>
+                <ul>
+                    <li><strong>Smoking cessation</strong> \u2014 single most important intervention</li>
+                    <li>Bronchodilators for stable COPD</li>
+                    <li>Inhaled corticosteroids (do NOT slow progression)</li>
+                    <li><strong>Annual flu vaccine</strong> (heavily tested)</li>
+                    <li>O\u2082: maintain SpO\u2082 >90%; avoid high-flow</li>
+                </ul>
+                <h3>Obstructive vs Restrictive Pattern</h3>
+                <ul>
+                    <li><strong>Obstructive</strong> = air trapped (can't get out) \u2192 RV, FRC, TLC all \u2191</li>
+                    <li><strong>Restrictive</strong> = lungs can't expand (can't get in) \u2192 VC, IC, TLC all \u2193</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Inhaled corticosteroids improve symptoms but do NOT slow disease progression. Long-term oral steroids \u2192 muscle weakness, which can worsen respiratory failure. No smoking with home O\u2082\u2014fire and explosion risk.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> VC <10 mL/kg = unable to sustain spontaneous ventilation. This threshold is critical for determining when a patient needs mechanical ventilatory support.
+                </div>
+            `
+        },
+        atelectasis: {
+            title: 'Atelectasis',
+            content: `
+                <h3>Definition</h3>
+                <p>Collapse of alveoli\u2014either acute or chronic. <strong>Acute atelectasis is most common post-operatively.</strong></p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>Obstructive</strong>: blockage prevents air from entering alveoli</li>
+                    <li><strong>Nonobstructive</strong>: reduced ventilation</li>
+                    <li><strong>External pressure</strong>: pleural effusion, pneumothorax, hemothorax</li>
+                </ul>
+                <h3>Manifestations</h3>
+                <ul>
+                    <li>SOB, cough, sputum production</li>
+                    <li>Tachycardia, tachypnea, pleural pain</li>
+                    <li>Diminished breath sounds, crackles</li>
+                    <li>Dull percussion, trachea shifts TOWARD affected side</li>
+                </ul>
+                <h3>Prevention (ICOUGH)</h3>
+                <ul>
+                    <li><strong>I</strong>: Incentive spirometry</li>
+                    <li><strong>C</strong>: Coughing & deep breathing</li>
+                    <li><strong>O</strong>: Oral care</li>
+                    <li><strong>U</strong>: Understanding (patient education)</li>
+                    <li><strong>G</strong>: Get OOB to chair \u00d73/day</li>
+                    <li><strong>H</strong>: HOB >30\u00b0</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Atelectasis: trachea shifts TOWARD the collapsed side (pulling). Pneumothorax/effusion: trachea shifts AWAY (pushing). Atelectasis is the #1 post-op pulmonary complication.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Incentive spirometry: semi-Fowler position, diaphragmatic breathing, 10 breaths per session, repeat each waking hour. Splint the incision when coughing post-op.
+                </div>
+            `
+        },
+        pneumonia: {
+            title: 'Pneumonia',
+            content: `
+                <h3>Classification</h3>
+                <ul>
+                    <li><strong>CAP</strong> \u2014 community-acquired or <48h after admission</li>
+                    <li><strong>HAP</strong> \u2014 \u226548h after admission</li>
+                    <li><strong>VAP</strong> \u2014 \u226548h after ETT placement (highest mortality)</li>
+                    <li><strong>HCAP</strong> \u2014 recent healthcare contact (SNF, HD, wound care)</li>
+                </ul>
+                <h3>Clinical Manifestations</h3>
+                <ul>
+                    <li>Sudden chills, fever, pleuritic chest pain</li>
+                    <li>Tachypnea, SOB, accessory muscle use</li>
+                    <li>Sputum: purulent (bacterial), thin mucoid (viral)</li>
+                </ul>
+                <h3>Risk Factors</h3>
+                <ul>
+                    <li>DM, HF, alcoholism, COPD, CF, immobility</li>
+                    <li><strong>AIDS \u2192 Pneumocystis jirovecii (PCP)</strong></li>
+                    <li>Depressed cough reflex, aspiration risk</li>
+                </ul>
+                <h3>Prevention</h3>
+                <p>Pneumonia vaccine: adults >65 (PCV13 + PPSV23, one year apart). Annual flu vaccine for all COPD patients.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Assessment findings: dull percussion, bronchial breath sounds over affected area, increased fremitus, bronchophony, egophony ("E-to-A change"), whispered pectoriloquy. All indicate consolidation.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> VAP = \u226548h after ETT placement. Prevention: VAP bundle (HOB 30-45\u00b0, sedation vacations, PUD prophylaxis, DVT prophylaxis, oral care with chlorhexidine 0.12%).
+                </div>
+            `
+        },
+        acute_rf: {
+            title: 'Acute Respiratory Failure',
+            content: `
+                <h3>Diagnostic Criteria (ABG-defined)</h3>
+                <ul>
+                    <li>PaO\u2082 <strong><60 mmHg</strong></li>
+                    <li>PaCO\u2082 <strong>>50 mmHg</strong></li>
+                    <li>pH <strong><7.35</strong></li>
+                </ul>
+                <h3>Common Causes</h3>
+                <ul>
+                    <li>Drug overdose, head trauma, OSA</li>
+                    <li>Neuromuscular: Guillain-Barr\u00e9, ALS, spinal cord trauma</li>
+                    <li>Oxygenation failures: ARDS, HF, COPD exacerbation, PE</li>
+                    <li>Post-surgical: anesthesia, sedation</li>
+                </ul>
+                <h3>Early Signs</h3>
+                <ul>
+                    <li>Restlessness, fatigue, headache, dyspnea, tachycardia, air hunger, \u2191BP</li>
+                </ul>
+                <h3>Late Signs</h3>
+                <ul>
+                    <li>Confusion, lethargy, central cyanosis, diaphoresis</li>
+                </ul>
+                <h3>Nursing Priorities</h3>
+                <ul>
+                    <li>Assist intubation, administer sedation</li>
+                    <li>Continuous cardiac/respiratory monitoring</li>
+                    <li>Turning q2, oral care q2, SCDs</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Restlessness and agitation are EARLY signs of hypoxia\u2014not anxiety. Don't sedate a restless patient until you've ruled out hypoxia. Cyanosis is a LATE sign and may never appear in anemia.
+                </div>
+            `
+        },
+        pe: {
+            title: 'Pulmonary Embolism',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Obstruction of the pulmonary artery, usually from DVT. Creates dead space (ventilated alveoli with no perfusion). Can be blood clot, fat, air, or amniotic fluid.</p>
+                <h3>Manifestations</h3>
+                <ul>
+                    <li>Sudden SOB, chest pain (pleuritic), anxiety</li>
+                    <li>Tachycardia, cough, syncope</li>
+                    <li><strong>Death often within 1 hour of onset</strong></li>
+                </ul>
+                <h3>Diagnosis</h3>
+                <ul>
+                    <li><strong>Gold standard: MDCTA</strong> (multidetector CT pulmonary angiography)</li>
+                    <li><strong>D-Dimer</strong>: 96.2% sensitive; good for RULING OUT (not confirming)</li>
+                    <li>V/Q scan, ABG, ECG</li>
+                </ul>
+                <h3>Treatment</h3>
+                <ul>
+                    <li><strong>Prevention is key</strong>: SCDs, subQ heparin/Lovenox, ambulation</li>
+                    <li>Heparin GTT \u2192 long-term anticoagulation</li>
+                    <li>Monitor INR, aPTT, anti-Xa</li>
+                    <li><strong>IVC filter</strong> for recurrent PEs</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Sudden onset SOB + pleuritic chest pain + recent immobility/surgery = think PE. D-dimer is for ruling OUT, not ruling in. MDCTA is the gold standard to confirm. Prevention (SCDs + ambulation) is always the best answer.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> PE creates dead space ventilation (high V/Q)\u2014alveoli are ventilated but have no blood flow. This is why supplemental O\u2082 alone may not fix the hypoxemia.
+                </div>
+            `
+        },
+        lung_cancer: {
+            title: 'Lung Cancer',
+            content: `
+                <h3>Overview</h3>
+                <p><strong>Leading cause of cancer death</strong> in the US. Cigarette smoke responsible for >85% of cases. Cancer arises from a single epithelial cell \u2192 abnormal growth \u2192 malignancy.</p>
+                <h3>Two Major Categories</h3>
+                <ul>
+                    <li><strong>NSCLC (84%)</strong>: squamous cell (20%), adenocarcinoma (41%), large cell (5%). Primary surgical candidate</li>
+                    <li><strong>SCLC (13%)</strong>: grows rapidly, metastasizes extensively</li>
+                </ul>
+                <h3>Most Common Sign</h3>
+                <p>Cough or change in chronic cough (dry, persistent, no sputum). <strong>Pain is a LATE sign</strong> (may indicate bone metastasis).</p>
+                <h3>Pack-Year Calculation</h3>
+                <p>(packs/day) \u00d7 (years smoked). Example: 1 pack/day \u00d7 20 years = 20 pack-years.</p>
+                <h3>Thoracic Surgeries</h3>
+                <ul>
+                    <li><strong>Lobectomy</strong>: removal of one lobe (common for NSCLC)</li>
+                    <li><strong>Pneumonectomy</strong>: removal of entire lung</li>
+                    <li><strong>Thoracotomy</strong>: incision between ribs for access</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Most common sign of lung cancer = cough or change in cough. Pain is LATE. Right lung removal is more dangerous due to larger vascular bed. Always calculate pack-years for risk assessment.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Post-thoracic surgery: watch for arrhythmias, respiratory distress, and monitor chest tube drainage closely. Immobility, pressure injuries, and malnutrition are ongoing concerns.
+                </div>
+            `
+        },
+        upper_resp: {
+            title: 'Upper Respiratory Disorders',
+            content: `
+                <h3>Viral Rhinitis (Common Cold)</h3>
+                <p>Up to 200 viruses cause it. Virus shed 2 days before symptoms. Treatment: fluids, rest, NSAIDs.</p>
+                <h3>Pharyngitis</h3>
+                <ul>
+                    <li>Most cases viral; 15% are <strong>Group A Strep (GAS)</strong></li>
+                    <li>GAS requires antibiotics: <strong>Penicillin V \u00d7 10 days</strong></li>
+                    <li>Untreated \u2192 rheumatic fever, glomerulonephritis</li>
+                </ul>
+                <h3>Peritonsillar Abscess (Quinsy)</h3>
+                <ul>
+                    <li>Adults 20\u201340; purulent complication of tonsillitis</li>
+                    <li><strong>Trismus</strong> (can't open mouth), drooling, intense pain</li>
+                    <li>Can be life-threatening if spreads to mediastinum</li>
+                </ul>
+                <h3>Epistaxis</h3>
+                <ul>
+                    <li>Most common site: <strong>anterior septum (Kiesselbach plexus)</strong></li>
+                    <li>Sit upright, head FORWARD, pinch soft nose \u00d7 5\u201310 min</li>
+                </ul>
+                <h3>Rhinitis Medicamentosa</h3>
+                <p>Rebound congestion from topical decongestants used >3-4 days.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Full course of antibiotics for strep pharyngitis is critical to prevent rheumatic fever\u2014not just symptom relief. Rhinosinusitis complications: orbital cellulitis \u2192 loss of vision if pressure on optic nerve.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Epistaxis: head FORWARD (not back). Strep pharyngitis: Penicillin V \u00d7 10 full days. Topical decongestants: no more than 3-4 days (rebound congestion).
+                </div>
+            `
+        },
+        chest_trauma: {
+            title: 'Chest Trauma',
+            content: `
+                <h3>Blunt Trauma</h3>
+                <ul>
+                    <li>Most common cause: <strong>MVA</strong></li>
+                    <li>Results in: hypoxemia, hypovolemia, cardiac tamponade</li>
+                    <li>Assess and treat aggressively: advanced airway, restore volume</li>
+                </ul>
+                <h3>Flail Chest</h3>
+                <ul>
+                    <li><strong>\u22653 ribs fractured at \u22652 sites</strong></li>
+                    <li><strong>Paradoxical movement</strong>: inward on inhalation, outward on exhalation</li>
+                    <li>Loss of chest wall stability \u2192 impaired ventilation</li>
+                    <li>Sensitive to fluid overload; can be fatal if untreated</li>
+                </ul>
+                <h3>Penetrating Trauma</h3>
+                <ul>
+                    <li>Establish airway, assess for shock</li>
+                    <li>Large-bore IV, fluid/blood replacement</li>
+                    <li>Type and crossmatch, massive hemorrhage protocol</li>
+                </ul>
+                <h3>Subcutaneous Emphysema</h3>
+                <ul>
+                    <li>Air trapped under skin (neck, chest, face)</li>
+                    <li><strong>Crackling on palpation (crepitus)</strong></li>
+                    <li>Air self-absorbs; tracheostomy if airway threatened</li>
+                </ul>
+                <h3>Pleural Disorders</h3>
+                <ul>
+                    <li><strong>Pleurisy</strong>: sharp, stabbing pain on inspiration; lay on affected side to splint</li>
+                    <li><strong>Pleural effusion</strong>: fluid in pleural space; diminished breath sounds, dull percussion, \u2193 fremitus</li>
+                    <li><strong>Empyema</strong>: thick purulent fluid; fever, night sweats; 4-6 weeks antibiotics</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Flail chest = \u22653 ribs at \u22652 sites = paradoxical movement. If you see "segment moves inward on inspiration"\u2014that's flail chest. Sensitive to fluid overload.
+                </div>
+            `
+        },
+        emphysema: {
+            title: 'Emphysema (Type A \u2014 "Pink Puffer")',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Destruction of overdistended alveolar walls \u2192 increased dead space \u2192 no gas exchange in destroyed areas. Chronic inflammatory response from smoke/irritant exposure.</p>
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Barrel chest</strong> (chronic overinflation \u2192 \u2191AP diameter)</li>
+                    <li>Weight loss, SOB on exertion</li>
+                    <li>\u2191 Compliance (lungs overdistended, lost elastic recoil)</li>
+                    <li><strong>Almost no tactile fremitus</strong></li>
+                    <li>Hyperresonant percussion</li>
+                    <li>Diminished breath sounds</li>
+                </ul>
+                <h3>Complications</h3>
+                <ul>
+                    <li>Hypoxemia, hypercapnia, respiratory acidosis</li>
+                    <li><strong>Cor pulmonale</strong> (right-sided HF from chronic pulmonary HTN)</li>
+                    <li>Exacerbations increase in fall/winter (viral infections)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Barrel chest + weight loss + SOB on exertion + diminished breath sounds = think emphysema. "Pink puffer" = pursed-lip breathing maintains oxygenation (pink skin) despite severe disease.
+                </div>
+            `
+        },
+        chronic_bronchitis: {
+            title: 'Chronic Bronchitis (Type B \u2014 "Blue Bloater")',
+            content: `
+                <h3>Diagnostic Definition</h3>
+                <p><strong>Cough and sputum production for 3 months in 2 consecutive years.</strong> This specific definition is heavily tested.</p>
+                <h3>Pathophysiology</h3>
+                <ul>
+                    <li>Smoke/irritants inflame airways chronically</li>
+                    <li>\u2191 Mucous hypersecretion, mucous plugging</li>
+                    <li>\u2193 Ciliary function</li>
+                    <li>Thickening of bronchial walls, narrowing of lumen</li>
+                    <li>Alveoli and bronchioles become fibrosed</li>
+                </ul>
+                <h3>Key Findings</h3>
+                <ul>
+                    <li>Productive cough with increased sputum</li>
+                    <li>Rhonchi, coarse crackles</li>
+                    <li>Frequent respiratory infections</li>
+                    <li>Resonant percussion (unlike emphysema's hyperresonance)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> "3 months in 2 consecutive years" = chronic bronchitis. This definition appears almost word-for-word on exams. "Blue bloater" = cyanotic, edematous from chronic hypoxemia and right-sided HF.
+                </div>
+            `
+        },
+        asthma: {
+            title: 'Asthma',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Chronic airway inflammation \u2192 bronchial hyperresponsiveness \u2192 <strong>reversible</strong> bronchoconstriction, airway edema, and mucous production.</p>
+                <h3>Triggers</h3>
+                <ul>
+                    <li><strong>Allergies are strongest predisposing factor</strong>: dust, dander, mold, pollen, roach droppings</li>
+                    <li>Air pollution, smoke, cold air, exercise</li>
+                    <li>Often worse early morning or late at night</li>
+                </ul>
+                <h3>Exacerbation Signs</h3>
+                <ul>
+                    <li>Wheezing (usually expiratory), chest tightness, cough, SOB</li>
+                    <li>Diaphoresis, tachycardia, widened pulse pressure</li>
+                </ul>
+                <h3>Medications</h3>
+                <ul>
+                    <li><strong>SABA (rescue)</strong>: Albuterol \u2014 quick relief, smooth muscle relaxation</li>
+                    <li><strong>LABA (controller)</strong>: Salmeterol \u2014 use WITH anti-inflammatory</li>
+                    <li><strong>ICS</strong>: Fluticasone, budesonide \u2014 long-term control</li>
+                    <li>Daily <strong>Peak Flow</strong> monitoring for moderate-severe persistent</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Asthma is REVERSIBLE bronchoconstriction (vs COPD which is largely irreversible). This distinction drives treatment: bronchodilators work dramatically in asthma but only modestly in COPD.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> LABA should NEVER be used alone as monotherapy for asthma\u2014always paired with ICS. If rescue inhaler needed >2\u00d7/week, step up controller therapy.
+                </div>
+            `
+        },
+        cf: {
+            title: 'Cystic Fibrosis (CF)',
+            content: `
+                <h3>Overview</h3>
+                <p><strong>Autosomal recessive</strong> disease, most common in Caucasians. Most diagnosed at age 2; median survival late 30s.</p>
+                <h3>Pathophysiology</h3>
+                <ul>
+                    <li>Chronic inflammation and infection with impaired mucous clearance</li>
+                    <li>Productive cough, wheezing, hyperinflation of lung fields</li>
+                    <li>Thick, tenacious secretions obstruct airways</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li><strong>Airway clearance is KEY</strong>: chest PT, postural drainage</li>
+                    <li>Anti-inflammatory agents</li>
+                    <li>Long-term high-dose NSAIDs (ages 6-17) slow loss of lung function</li>
+                    <li>Chest PT: before meals (avoid vomiting), before bed, and in the morning</li>
+                </ul>
+                <h3>Nursing Priorities</h3>
+                <ul>
+                    <li>Symptom management, secretion removal</li>
+                    <li>Education on fluid intake and nutrition</li>
+                    <li>End-of-life care planning</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> CF = autosomal recessive, most common in Caucasians. Airway clearance is the key to management. Chest PT performed BEFORE meals to avoid vomiting/aspiration.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> CF patients are at high risk for Pseudomonas and Staph pneumonia. Frequent respiratory infections are a hallmark. Postural drainage: 2-3 times daily BEFORE meals.
+                </div>
+            `
+        },
+        ards: {
+            title: 'ARDS \u2014 Acute Respiratory Distress Syndrome',
+            content: `
+                <h3>The Defining Feature</h3>
+                <p><strong>Hypoxemia UNRESPONSIVE to O\u2082 regardless of increased PEEP.</strong> Severe inflammatory process causing alveolar damage and non-cardiogenic pulmonary edema.</p>
+                <h3>Pathophysiology</h3>
+                <p>Trigger \u2192 capillary membrane injury \u2192 fluid leaks into alveoli \u2192 surfactant destruction \u2192 alveolar collapse \u2192 severe V/Q mismatch \u2192 stiff lungs \u2192 refractory hypoxemia.</p>
+                <h3>Risk Factors</h3>
+                <ul>
+                    <li>Sepsis, aspiration, COVID-19, pneumonia, trauma</li>
+                    <li>DIC, massive transfusions, pancreatitis</li>
+                    <li>Prolonged high FiO\u2082 (O\u2082 toxicity)</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>Intubate; <strong>sedate AND paralyze</strong> (never stop sedation if paralyzed)</li>
+                    <li>High PEEP, low tidal volumes (lung-protective ventilation)</li>
+                    <li><strong>Prone positioning</strong> improves V/Q matching</li>
+                    <li>Nitric oxide to reduce V/Q mismatch</li>
+                    <li>Maintain SpO\u2082 >90%; frequent ABG monitoring</li>
+                </ul>
+                <h3>Mortality: 27\u201350%</h3>
+                <p>MODS with septic shock = major cause of death. CXR shows bilateral infiltrates.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> ARDS = refractory hypoxemia (doesn't improve with O\u2082). Bilateral infiltrates on CXR + NO cardiac cause = ARDS. Prone positioning: pad all bony prominences.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> ARDS looks like cardiogenic pulmonary edema on CXR but ISN'T. The distinguishing factor: ARDS has no cardiac etiology. Treatment is lung-protective ventilation, not diuretics.
+                </div>
+            `
+        },
+        pulm_htn: {
+            title: 'Pulmonary Hypertension',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>High pressure in the pulmonary artery causes the heart to work harder and weakens over time. Not evident until late progression.</p>
+                <h3>Risk Factors</h3>
+                <ul>
+                    <li>Congenital heart disease, appetite suppressants</li>
+                    <li>Stimulant medications, portal HTN, HIV</li>
+                    <li>Chronic lung disease (COPD)</li>
+                </ul>
+                <h3>Manifestations</h3>
+                <ul>
+                    <li><strong>Dyspnea is the main symptom</strong>\u2014first with exertion, then at rest</li>
+                    <li>Substernal chest pain, weakness, fatigue, syncope</li>
+                    <li>Right-sided HF signs: distended neck veins, anorexia, RUQ pain</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>Calcium channel blockers, prostanoids</li>
+                    <li>Phosphodiesterase inhibitors, diuretics</li>
+                    <li>O\u2082, anticoagulation, digoxin, exercise</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Pulmonary HTN \u2192 right ventricular strain \u2192 cor pulmonale. This is the same pathway as COPD-related right heart failure. Identifying high-risk patients (COPD, PE, congenital heart disease) is key.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Pulmonary HTN is often "silent" until late. Dyspnea on exertion progressing to dyspnea at rest should raise suspicion, especially in patients with known risk factors.
+                </div>
+            `
+        },
+        covid: {
+            title: 'COVID-19 (SARS-CoV-2)',
+            content: `
+                <h3>Transmission</h3>
+                <p>Respiratory droplets (coughing, sneezing, talking within 6 feet). Airborne during aerosol-generating procedures (intubation, suctioning). Infectious <strong>before symptom onset</strong>.</p>
+                <h3>Classifications</h3>
+                <ul>
+                    <li><strong>Mild</strong>: no or mild pneumonia</li>
+                    <li><strong>Severe</strong>: dyspnea, hypoxia, respiratory distress</li>
+                    <li><strong>Critical</strong>: respiratory failure, shock, MODS</li>
+                </ul>
+                <h3>Risk Factors</h3>
+                <p>Advanced age (>80 = highest mortality), cancer, chronic conditions, obesity, smoking, male sex. Health disparities: minorities have higher hospitalizations and deaths.</p>
+                <h3>Treatment</h3>
+                <ul>
+                    <li><strong>Remdesivir</strong>: only FDA-approved drug for hospitalized patients</li>
+                    <li><strong>Corticosteroids</strong>: limited to patients requiring supplemental O\u2082</li>
+                    <li><strong>Prone positioning</strong>: 12-16 hours/day when mechanically ventilated</li>
+                    <li><strong>HFNC</strong>: up to 60 L/min; airborne precautions (aerosolizing)</li>
+                    <li>ECMO for refractory respiratory failure</li>
+                </ul>
+                <h3>Nursing Priorities</h3>
+                <ul>
+                    <li>Keep chest tube tray at bedside (pneumothorax common with high PEEP)</li>
+                    <li>Check blood sugars q6 (tube feedings + steroids = hyperglycemia)</li>
+                    <li>Oral care q2, SCDs/anticoagulation (\u2191 clotting risk)</li>
+                    <li>PPE: standard contact/droplet + N95/PAPR for aerosol procedures</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> HFNC is aerosolizing\u2014requires airborne precautions in COVID. Prone positioning for ARDS/COVID: pad bony prominences, move ECG electrodes to back. Pneumothorax is common with high PEEP\u2014keep chest tray at bedside.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> COVID patients can deteriorate rapidly from mild to critical. Watch for: increasing O\u2082 requirements, rising respiratory rate, and decreasing SpO\u2082. "Happy hypoxia" (low SpO\u2082 without proportional distress) is a recognized phenomenon.
+                </div>
+            `
+        },
+        pneumothorax: {
+            title: 'Pneumothorax',
+            content: `
+                <h3>Definition</h3>
+                <p>Air in the pleural space causing partial or complete lung collapse.</p>
+                <h3>Tension Pneumothorax</h3>
+                <ul>
+                    <li>Air enters but is <strong>trapped</strong> \u2192 positive pressure builds</li>
+                    <li>Lung collapses; heart, great vessels, trachea deviate to <strong>UNAFFECTED</strong> side</li>
+                    <li>Compromises BOTH respiratory AND circulatory function</li>
+                    <li>\u2191 Intrathoracic pressure \u2192 \u2193 venous return \u2192 \u2193 cardiac output</li>
+                    <li>Pulse may be undetectable (PEA)</li>
+                </ul>
+                <h3>Assessment</h3>
+                <ul>
+                    <li>Hyperresonant/tympanitic percussion on affected side</li>
+                    <li>Absent breath sounds on affected side</li>
+                    <li>Tracheal deviation to unaffected side</li>
+                    <li>JVD, hypotension, tachycardia</li>
+                </ul>
+                <h3>Treatment</h3>
+                <p>Re-expand the lung: needle decompression (emergency) followed by chest tube.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Tension pneumothorax shifts structures to the UNAFFECTED side (pushing). Atelectasis shifts structures TOWARD the affected side (pulling). This push vs pull distinction is critical for exam questions.
+                </div>
+            `
+        },
+        osa: {
+            title: 'Obstructive Sleep Apnea',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Recurrent upper airway obstruction during sleep \u2192 apnea episodes (\u226510 seconds, \u22655 episodes/hour) \u2192 intermittent hypoxia and hypercapnia.</p>
+                <h3>Risk Factors</h3>
+                <ul>
+                    <li><strong>Obesity</strong> (\u2191 neck circumference, peripharyngeal fat)</li>
+                    <li>Male, post-menopausal women, older age</li>
+                    <li>All hypertensive adults should be screened</li>
+                </ul>
+                <h3>Consequences</h3>
+                <ul>
+                    <li><strong>High prevalence of HTN</strong>, high risk for MI and stroke</li>
+                    <li>Excessive daytime sleepiness, morning headaches</li>
+                    <li>Polycythemia, cor pulmonale (severe)</li>
+                </ul>
+                <h3>Diagnosis & Treatment</h3>
+                <ul>
+                    <li><strong>Polysomnography</strong> (sleep study) = definitive test</li>
+                    <li>Weight loss, avoid alcohol, positional therapy</li>
+                    <li><strong>CPAP/BiPAP</strong> = gold standard treatment</li>
+                    <li>MAD (mandibular advancement device) for mild-moderate</li>
+                    <li>Surgery: UPPP, tonsillectomy (50% effective)</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The "3 S's" of OSA: Snoring, Sleepiness, Significant-other report. Up to 90% of OSA goes undiagnosed. Screen every hypertensive patient.
+                </div>
+            `
+        },
+        cor_pulmonale: {
+            title: 'Cor Pulmonale',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Long-term pulmonary hypertension (from COPD, especially emphysema) \u2192 right ventricle works harder to pump against high pulmonary resistance \u2192 right-sided heart failure.</p>
+                <h3>Pathophysiology Chain</h3>
+                <p>Chronic hypoxemia \u2192 pulmonary vasoconstriction \u2192 pulmonary HTN \u2192 RV strain \u2192 right-sided HF</p>
+                <h3>Assessment</h3>
+                <ul>
+                    <li>Dependent (peripheral) edema</li>
+                    <li>Jugular vein distention (JVD)</li>
+                    <li>Hepatomegaly (backup into venous system)</li>
+                    <li>Weight gain from fluid retention</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Cor pulmonale is RIGHT-sided heart failure from LUNG disease. Don't confuse with left-sided HF (which causes pulmonary edema/crackles). Cor pulmonale causes peripheral edema, JVD, and hepatomegaly. This is why maintaining O\u2082 saturation >90% in COPD patients matters\u2014you're protecting the right heart.
+                </div>
+            `
+        },
+        bronchodilators: {
+            title: 'Bronchodilators & Respiratory Pharmacology',
+            content: `
+                <h3>Short-Acting Beta-2 Agonists (SABA)</h3>
+                <ul>
+                    <li><strong>Albuterol</strong>, levalbuterol, terbutaline</li>
+                    <li>Quick relief/rescue; relax bronchial smooth muscle</li>
+                    <li>Used PRN for acute bronchospasm</li>
+                </ul>
+                <h3>Long-Acting Beta-2 Agonists (LABA)</h3>
+                <ul>
+                    <li>Salmeterol, formoterol, indacaterol, olodaterol</li>
+                    <li>Controller medication; use WITH anti-inflammatory (never alone)</li>
+                </ul>
+                <h3>Anticholinergics</h3>
+                <ul>
+                    <li>Ipratropium, tiotropium, umeclidinium</li>
+                    <li>Bronchodilation via different mechanism (block vagal tone)</li>
+                </ul>
+                <h3>Inhaled Corticosteroids (ICS)</h3>
+                <ul>
+                    <li>Beclomethasone, budesonide, fluticasone</li>
+                    <li>Long-term anti-inflammatory; fewer systemic effects than oral</li>
+                    <li>Combo ICS+LABA: budesonide/formoterol, fluticasone/salmeterol</li>
+                </ul>
+                <h3>Other Key Meds</h3>
+                <ul>
+                    <li><strong>Naloxone (Narcan)</strong>: reverses opioid respiratory depression</li>
+                    <li><strong>Flumazenil (Romazicon)</strong>: reverses benzo sedation</li>
+                    <li><strong>Mg Sulfate</strong>: 2g over 20 min for status asthmaticus</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> LABA should NEVER be used alone as monotherapy for asthma\u2014always paired with ICS. Albuterol (SABA) = the rescue inhaler. If a patient needs rescue more than 2\u00d7/week, step up controller therapy.
+                </div>
+            `
+        },
+        status_asthmaticus: {
+            title: 'Status Asthmaticus',
+            content: `
+                <h3>Definition</h3>
+                <p>Severe, persistent asthma that does NOT respond to conventional therapy. A medical emergency.</p>
+                <h3>Warning Signs</h3>
+                <ul>
+                    <li>Labored breathing, wheezing, engorged neck veins</li>
+                    <li>Prolonged exhalation</li>
+                    <li><strong>If wheezing DISAPPEARS \u2192 impending respiratory failure</strong> (no air movement)</li>
+                    <li><strong>Increasing PaCO\u2082 = warning sign</strong> (patient fatiguing)</li>
+                </ul>
+                <h3>Treatment</h3>
+                <ul>
+                    <li>Continuous SABA nebulization</li>
+                    <li>Systemic corticosteroids (IV)</li>
+                    <li>Supplemental O\u2082, IVF for dehydration</li>
+                    <li><strong>Magnesium Sulfate 2g over 20 minutes</strong></li>
+                    <li>ABG monitoring; prepare for intubation if deteriorating</li>
+                </ul>
+                <h3>Nursing Priorities</h3>
+                <ul>
+                    <li>Actively assess airway and response to treatment</li>
+                    <li>Cardiac monitoring for arrhythmias</li>
+                    <li>No flowers, perfumes, smoke, or chemicals in room</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Silent chest (disappearing wheeze) in an asthmatic = EMERGENCY. It means air isn't moving at all. Rising PaCO\u2082 in asthma = the patient is tiring out and losing the ability to compensate.
+                </div>
+            `
+        },
+        mech_vent: {
+            title: 'Mechanical Ventilation',
+            content: `
+                <h3>Ventilator Modes</h3>
+                <ul>
+                    <li><strong>AC (Assist-Control)</strong> \u2014 preset TV and RR; full volume with every breath</li>
+                    <li><strong>SIMV</strong> \u2014 set breaths + spontaneous; senses exhale to avoid fighting</li>
+                    <li><strong>Pressure Support</strong> \u2014 patient-triggered; support reduced as strength improves</li>
+                    <li><strong>PEEP</strong> \u2014 prevents microatelectasis; allows lower FiO\u2082</li>
+                    <li><strong>CPAP</strong> \u2014 continuous positive pressure during spontaneous breathing</li>
+                </ul>
+                <h3>Complications</h3>
+                <ul>
+                    <li><strong>Cardiac</strong>: PEEP compresses heart \u2192 \u2193 venous return \u2192 \u2193 CO</li>
+                    <li><strong>Barotrauma/Pneumothorax</strong>: excessive pressure \u2192 lung injury</li>
+                    <li><strong>VAP</strong>: follow the VAP bundle</li>
+                    <li><strong>Delirium</strong>: use ABCDEF Bundle</li>
+                </ul>
+                <h3>Alarm Troubleshooting</h3>
+                <ul>
+                    <li><strong>Peak pressure alarm</strong>: think obstruction (mucus plug, biting tube, bronchospasm)</li>
+                    <li><strong>Low pressure alarm</strong>: think disconnection or leak</li>
+                    <li><strong>Vent malfunction</strong>: disconnect and manually ventilate with Ambu bag</li>
+                </ul>
+                <h3>Weaning Criteria</h3>
+                <ul>
+                    <li>Physiologically and hemodynamically stable</li>
+                    <li>Able to breathe spontaneously; stable ABGs</li>
+                    <li><strong>Failure signs</strong>: rising CO\u2082, \u2191HR/RR, diaphoresis, nasal flaring, accessory muscle use</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Vent alarms must ALWAYS be on. Peak pressure = obstruction. Low pressure = disconnection/leak. If the vent malfunctions\u2014disconnect and manually ventilate with Ambu bag. Vent alarms should NEVER be silenced.
+                </div>
+            `
+        },
+        prone_positioning: {
+            title: 'Prone Positioning',
+            content: `
+                <h3>Mechanism</h3>
+                <p>Improves ventilation-perfusion (V/Q) matching by redistributing blood flow and opening collapsed posterior alveoli. Gravity assists in draining secretions.</p>
+                <h3>Indications</h3>
+                <ul>
+                    <li><strong>ARDS</strong>: primary indication</li>
+                    <li><strong>COVID-19</strong>: 12-16 hours/day when mechanically ventilated</li>
+                    <li>Refractory hypoxemia unresponsive to supine ventilation</li>
+                </ul>
+                <h3>Nursing Considerations</h3>
+                <ul>
+                    <li>Pad all bony prominences</li>
+                    <li>Move ECG electrode placement to back</li>
+                    <li>Secure all lines and tubes before turning</li>
+                    <li>Eye care (corneal abrasions from chemical paralysis)</li>
+                    <li>Skin assessment with each position change</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Prone positioning is one of the few interventions proven to improve mortality in severe ARDS. The longer the patient is prone (12-16 hours), the greater the benefit. Coordinate the prone turn with the full team.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> If asked about prone positioning\u2014it's for ARDS. Pad bony prominences, protect the eyes, secure all lines. This is a team effort requiring coordinated turning.
+                </div>
+            `
+        },
+        chest_tubes: {
+            title: 'Chest Drainage Systems',
+            content: `
+                <h3>Three Types</h3>
+                <ul>
+                    <li><strong>Traditional Water Seal (Wet)</strong> \u2014 3 chambers; requires sterile fluid; intermittent bubbling = functioning</li>
+                    <li><strong>Dry Suction Water Seal</strong> \u2014 3 chambers; water-seal at 2 cm; quieter</li>
+                    <li><strong>Dry Suction (One-Way Valve)</strong> \u2014 no fluid; works if knocked over; ideal for ambulatory/emergencies</li>
+                </ul>
+                <h3>Nursing Care</h3>
+                <ul>
+                    <li>Frequent breath sound assessment</li>
+                    <li>Encourage deep breathing (incentive spirometry)</li>
+                    <li>Check for air leaks; monitor drainage amount/color</li>
+                    <li>Mobilize patient; shoulder exercises 8\u201312h post-insertion</li>
+                </ul>
+                <h3>Safety Equipment at Bedside</h3>
+                <ul>
+                    <li><strong>Vaseline gauze</strong> (occlusive dressing if tube dislodged)</li>
+                    <li><strong>Kelly clamps</strong></li>
+                    <li><strong>Sterile water</strong></li>
+                    <li>Dressing and tape</li>
+                </ul>
+                <h3>Air Leak Signs</h3>
+                <ul>
+                    <li><strong>Intermittent bubbling = NORMAL</strong> (air being removed)</li>
+                    <li><strong>CONTINUOUS bubbling = air leak in system</strong></li>
+                    <li>Subcutaneous emphysema/crepitus</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Intermittent bubbling = normal. CONTINUOUS bubbling = air leak. Chest tube safety equipment at bedside: Vaseline gauze, Kelly clamps, sterile water. This is tested as a priority question.
+                </div>
+            `
+        },
+        laryngeal_ca: {
+            title: 'Laryngeal Cancer & Laryngectomy',
+            content: `
+                <h3>Risk Factors</h3>
+                <p>Tobacco, asbestos, alcohol, paint fumes, wood dust. Most common >65 years; 4\u00d7 more common in men. Almost all are squamous cell carcinoma.</p>
+                <h3>Early Warning</h3>
+                <p><strong>Hoarseness >2 weeks</strong> = must be evaluated (tumor impedes vocal cords).</p>
+                <h3>Total Laryngectomy</h3>
+                <ul>
+                    <li>Complete removal of larynx = <strong>permanent tracheostomy</strong></li>
+                    <li>Permanent vocal loss</li>
+                    <li>NPO \u22657 days; swallow study before oral feedings</li>
+                </ul>
+                <h3>Communication Methods</h3>
+                <ul>
+                    <li><strong>TEP (tracheoesophageal puncture)</strong> with Blom-Singer valve \u2014 most natural voice</li>
+                    <li>Artificial (electric) larynx</li>
+                    <li>Esophageal speech</li>
+                </ul>
+                <h3>Post-op Complications</h3>
+                <ul>
+                    <li><strong>Frequent swallowing = sign of hemorrhage</strong></li>
+                    <li>Carotid artery rupture (apply direct pressure)</li>
+                    <li>Aspiration: HOB >30\u00b0, check residuals</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Post-laryngectomy: frequent swallowing = bleeding (not a normal finding). Mouth-to-STOMA ventilation for CPR. No swimming. Medical ID required. Cover stoma in shower.
+                </div>
+            `
+        },
+        vap_bundle: {
+            title: 'VAP Prevention Bundle',
+            content: `
+                <h3>5 Evidence-Based Elements</h3>
+                <ol>
+                    <li>HOB elevation <strong>30\u00b0\u201345\u00b0</strong></li>
+                    <li>Daily <strong>sedation vacations</strong> and readiness-to-extubate assessment</li>
+                    <li>Peptic ulcer disease prophylaxis</li>
+                    <li>DVT prophylaxis</li>
+                    <li>Daily oral care with <strong>chlorhexidine 0.12%</strong></li>
+                </ol>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Every element of the VAP bundle is independently evidence-based. The combination effect is powerful\u2014VAP rates dropped dramatically with bundle adherence. Oral care with chlorhexidine is the most commonly missed element.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> VAP = pneumonia \u226548 hours after ETT placement. Know all 5 bundle elements by heart. HOB 30-45\u00b0 and chlorhexidine oral care are the most frequently tested.
+                </div>
+            `
+        },
+        abcdef_bundle: {
+            title: 'ABCDEF Bundle (ICU Liberation)',
+            content: `
+                <h3>Components</h3>
+                <ul>
+                    <li><strong>A</strong>: Awakening and spontaneous breathing trials</li>
+                    <li><strong>B</strong>: Breathing coordination (coordinated with sedation interruption)</li>
+                    <li><strong>C</strong>: Choice of sedation/analgesia (minimize depth)</li>
+                    <li><strong>D</strong>: Delirium monitoring (CAM-ICU q2\u20134h)</li>
+                    <li><strong>E</strong>: Early mobility (responds to verbal, <60% FiO\u2082, <10 cm PEEP)</li>
+                    <li><strong>F</strong>: Family engagement and empowerment</li>
+                </ul>
+                <h3>Why It Matters</h3>
+                <p>ICU delirium is driven by sedation, immobility, and sensory deprivation. The ABCDEF bundle combats all three. Every day in bed leads to significant deconditioning.</p>
+                <h3>Geriatric Considerations</h3>
+                <ul>
+                    <li>Benzos and opioids are potentially inappropriate (Beers Criteria)</li>
+                    <li>Use patient's glasses and hearing aids</li>
+                    <li>Minimize restraints, mobilize daily</li>
+                    <li>Allow dentures once extubated</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Early mobility criteria: responds to verbal stimuli, FiO\u2082 <60%, PEEP <10 cm. If the patient meets these criteria, get them moving\u2014the evidence is overwhelming.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Know ABCDEF by heart. D = Delirium monitoring with CAM-ICU. E = Early mobility with specific criteria. These are the most commonly tested letters.
+                </div>
+            `
+        },
+        icough: {
+            title: 'ICOUGH Protocol (Atelectasis Prevention)',
+            content: `
+                <h3>Components</h3>
+                <ul>
+                    <li><strong>I</strong>: Incentive Spirometry</li>
+                    <li><strong>C</strong>: Coughing & Deep Breathing</li>
+                    <li><strong>O</strong>: Oral Care</li>
+                    <li><strong>U</strong>: Understanding (patient education)</li>
+                    <li><strong>G</strong>: Get OOB to chair \u00d73/day</li>
+                    <li><strong>H</strong>: HOB >30\u00b0</li>
+                </ul>
+                <h3>Incentive Spirometry Details</h3>
+                <ul>
+                    <li>Semi-Fowler or upright position</li>
+                    <li>Use diaphragmatic breathing</li>
+                    <li>Cough during and after each session</li>
+                    <li>Splint the incision when coughing post-op</li>
+                    <li><strong>10 breaths per session, repeat each waking hour</strong></li>
+                </ul>
+                <h3>Chest Physiotherapy</h3>
+                <ul>
+                    <li>Postural drainage: secretions drain from bronchioles to bronchi/trachea</li>
+                    <li>Bronchodilators or mucolytics before drainage improves effectiveness</li>
+                    <li>Performed <strong>2-3 times daily BEFORE meals</strong> (reduce N/V and aspiration)</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Atelectasis is the #1 post-operative pulmonary complication. ICOUGH is your prevention toolkit. The most important element is actually getting the patient OOB\u2014mobility trumps all other interventions.
+                </div>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Postural drainage: 2-3\u00d7/day BEFORE meals. Incentive spirometry: 10 breaths/session, each waking hour. These timing details are heavily tested.
+                </div>
+            `
+        }
+    };
+
+    // ===== RENDERING =====
+    const mapInner = document.getElementById('map-inner');
+    const svg = document.getElementById('connections-svg');
+
+    // Build adjacency list
+    const adjacency = {};
+    for (const id in nodes) adjacency[id] = new Set();
+    edges.forEach(([a, b]) => {
+        adjacency[a].add(b);
+        adjacency[b].add(a);
+    });
+
+    // Render nodes
+    for (const [id, data] of Object.entries(nodes)) {
+        const el = document.createElement('div');
+        el.className = `node ${data.type}`;
+        el.id = `node-${id}`;
+        el.style.left = data.x + 'px';
+        el.style.top = data.y + 'px';
+        const lines = data.label.split('\n');
+        el.innerHTML = lines.map(l => `<h3>${l}</h3>`).join('') + `<p>${data.sub}</p>`;
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activateNode(id);
+        });
+        mapInner.appendChild(el);
+    }
+
+    // Render edges
+    function getNodeCenter(id) {
+        const el = document.getElementById('node-' + id);
+        if (!el) return { x: nodes[id].x, y: nodes[id].y };
+        return {
+            x: el.offsetLeft + el.offsetWidth / 2,
+            y: el.offsetTop + el.offsetHeight / 2
+        };
+    }
+
+    function renderEdges() {
+        svg.innerHTML = '';
+        svg.setAttribute('viewBox', '0 0 2600 1500');
+        edges.forEach(([a, b, label, dashed]) => {
+            const pa = getNodeCenter(a);
+            const pb = getNodeCenter(b);
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', pa.x);
+            line.setAttribute('y1', pa.y);
+            line.setAttribute('x2', pb.x);
+            line.setAttribute('y2', pb.y);
+            line.classList.add('conn-line');
+            line.dataset.from = a;
+            line.dataset.to = b;
+            if (dashed) line.classList.add('dashed');
+            svg.appendChild(line);
+
+            if (label) {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', (pa.x + pb.x) / 2);
+                text.setAttribute('y', (pa.y + pb.y) / 2 - 6);
+                text.classList.add('conn-label');
+                text.dataset.from = a;
+                text.dataset.to = b;
+                text.textContent = label;
+                svg.appendChild(text);
+            }
+        });
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(renderEdges);
+    });
+
+    // ===== INTERACTION =====
+    let activeNodeId = null;
+
+    function activateNode(id) {
+        activeNodeId = id;
+        const info = nodeInfo[id];
+        if (!info) return;
+
+        document.getElementById('panel-title').textContent = info.title;
+        const connLinks = Array.from(adjacency[id]).map(cid => {
+            const n = nodes[cid];
+            const displayName = n ? n.label.replace('\n', ' ') : cid;
+            return `<span onclick="activateNode('${cid}')">${displayName}</span>`;
+        }).join('');
+        document.getElementById('panel-content').innerHTML = info.content +
+            `<div class="connection-list"><h3>Connected To:</h3>${connLinks}</div>`;
+        document.getElementById('info-panel').classList.add('visible');
+
+        const connected = adjacency[id];
+        document.querySelectorAll('.node').forEach(el => {
+            const nid = el.id.replace('node-', '');
+            el.classList.remove('active', 'connected', 'dimmed');
+            if (nid === id) el.classList.add('active');
+            else if (connected.has(nid)) el.classList.add('connected');
+            else el.classList.add('dimmed');
+        });
+
+        document.querySelectorAll('.conn-line').forEach(l => {
+            l.classList.remove('active', 'dimmed');
+            if (l.dataset.from === id || l.dataset.to === id) l.classList.add('active');
+            else l.classList.add('dimmed');
+        });
+        document.querySelectorAll('.conn-label').forEach(t => {
+            t.classList.remove('active', 'dimmed');
+            if (t.dataset.from === id || t.dataset.to === id) t.classList.add('active');
+            else t.classList.add('dimmed');
+        });
+    }
+
+    function closePanel() {
+        document.getElementById('info-panel').classList.remove('visible');
+        activeNodeId = null;
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('active', 'connected', 'dimmed'));
+        document.querySelectorAll('.conn-line').forEach(l => l.classList.remove('active', 'dimmed'));
+        document.querySelectorAll('.conn-label').forEach(t => t.classList.remove('active', 'dimmed'));
+    }
+
+    // ===== PAN & ZOOM =====
+    const container = document.getElementById('map-container');
+    const inner = document.getElementById('map-inner');
+    let scale = 0.5;
+    let panX = -50;
+    let panY = 0;
+    let isPanning = false;
+    let startX, startY;
+
+    function applyTransform() {
+        inner.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        updateMinimap();
+    }
+
+    container.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.node') || e.target.closest('.info-panel')) return;
+        isPanning = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+        container.classList.add('grabbing');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+        isPanning = false;
+        container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.05 : 0.05;
+        const newScale = Math.min(1.5, Math.max(0.25, scale + delta));
+        const rect = container.getBoundingClientRect();
+        const cx = e.clientX - rect.left;
+        const cy = e.clientY - rect.top;
+        panX = cx - (cx - panX) * (newScale / scale);
+        panY = cy - (cy - panY) * (newScale / scale);
+        scale = newScale;
+        applyTransform();
+    }, { passive: false });
+
+    function zoomIn() { scale = Math.min(1.5, scale + 0.1); applyTransform(); }
+    function zoomOut() { scale = Math.max(0.25, scale - 0.1); applyTransform(); }
+    function resetView() { scale = 0.5; panX = -50; panY = 0; applyTransform(); closePanel(); }
+
+    applyTransform();
+
+    // ===== MINIMAP =====
+    const minimap = document.getElementById('minimap');
+    const minimapVP = document.getElementById('minimap-vp');
+    const mmW = 200, mmH = 120, mapW = 2600, mapH = 1500;
+
+    function renderMinimapDots() {
+        const colors = {
+            central: '#a855f7', anatomy: '#3b82f6', assessment: '#06b6d4',
+            obstructive: '#f97316', acute: '#ef4444', trauma: '#6b7280',
+            airway: '#10b981', upper: '#d97706', infection: '#ec4899',
+            complication: '#92400e', vascular: '#8b5cf6'
+        };
+        for (const [id, data] of Object.entries(nodes)) {
+            const dot = document.createElement('div');
+            dot.className = 'minimap-dot';
+            dot.style.background = colors[data.type] || '#fff';
+            dot.style.left = (data.x / mapW * mmW) + 'px';
+            dot.style.top = (data.y / mapH * mmH) + 'px';
+            minimap.appendChild(dot);
+        }
+    }
+
+    function updateMinimap() {
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        const vpLeft = (-panX / scale) / mapW * mmW;
+        const vpTop = (-panY / scale) / mapH * mmH;
+        const vpW = (cw / scale) / mapW * mmW;
+        const vpH = (ch / scale) / mapH * mmH;
+        minimapVP.style.left = Math.max(0, vpLeft) + 'px';
+        minimapVP.style.top = Math.max(0, vpTop) + 'px';
+        minimapVP.style.width = Math.min(mmW, vpW) + 'px';
+        minimapVP.style.height = Math.min(mmH, vpH) + 'px';
+    }
+
+    renderMinimapDots();
+
+    // ===== SEARCH =====
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        if (q.length < 2) {
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+            return;
+        }
+        const matches = [];
+        for (const [id, data] of Object.entries(nodes)) {
+            const text = (data.label + ' ' + data.sub).toLowerCase();
+            const rawInfo = nodeInfo[id] ? (nodeInfo[id].title + ' ' + nodeInfo[id].content) : '';
+            const infoText = rawInfo.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').toLowerCase();
+            if (text.includes(q) || infoText.includes(q)) {
+                matches.push({ id, label: data.label.replace('\n', ' '), type: data.type });
+            }
+        }
+        if (matches.length === 0) {
+            searchResults.innerHTML = '<div class="search-result-item"><span style="color:#64748b">No matches</span></div>';
+        } else {
+            searchResults.innerHTML = matches.map(m =>
+                `<div class="search-result-item" onclick="goToNode('${m.id}')">
+                    <span class="sr-title">${m.label}</span>
+                    <span class="sr-type">${m.type}</span>
+                </div>`
+            ).join('');
+        }
+        searchResults.classList.add('visible');
+
+        document.querySelectorAll('.node').forEach(el => {
+            el.classList.remove('search-match');
+            const nid = el.id.replace('node-', '');
+            if (matches.some(m => m.id === nid)) el.classList.add('search-match');
+        });
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            searchInput.blur();
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+        } else if (e.key === 'Enter') {
+            const first = searchResults.querySelector('.search-result-item');
+            if (first) first.click();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-box')) {
+            searchResults.classList.remove('visible');
+        }
+    });
+
+    function clearSearchHighlight() {
+        document.querySelectorAll('.node').forEach(el => el.classList.remove('search-match'));
+    }
+
+    function goToNode(id) {
+        searchResults.classList.remove('visible');
+        searchInput.value = '';
+        clearSearchHighlight();
+
+        const el = document.getElementById('node-' + id);
+        if (!el) return;
+        const cx = el.offsetLeft + el.offsetWidth / 2;
+        const cy = el.offsetTop + el.offsetHeight / 2;
+        panX = container.clientWidth / 2 - cx * scale;
+        panY = container.clientHeight / 2 - cy * scale;
+        applyTransform();
+        activateNode(id);
+    }
+
+    // ===== KEYBOARD SHORTCUTS =====
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.key === 'Escape') closePanel();
+        if (e.key === '/' || (e.key === 'f' && (e.ctrlKey || e.metaKey))) {
+            e.preventDefault();
+            searchInput.focus();
+        }
+        if (e.key === 'r' || e.key === 'R') resetView();
+    });
+
+    container.addEventListener('click', (e) => {
+        if (!e.target.closest('.node')) closePanel();
+    });
+    </script>
+</body>
+</html>

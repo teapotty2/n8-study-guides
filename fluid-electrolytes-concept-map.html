@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid &amp; Electrolytes, DKA/HHS, Renal Disorders - Interactive Concept Map</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 500;
+            position: relative;
+        }
+
+        .header-left { text-align: left; }
+        .header h1 { font-size: 1.25rem; }
+        .header p { color: #94a3b8; font-size: 0.8rem; }
+
+        .header-controls { display: flex; align-items: center; gap: 0.75rem; }
+
+        .search-box { position: relative; }
+
+        .search-box input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            padding: 0.4rem 0.75rem 0.4rem 2rem;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus { border-color: #22d3ee; }
+        .search-box input::placeholder { color: #64748b; }
+
+        .search-box::before {
+            content: '\1F50D';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-results.visible { display: block; }
+
+        .search-result-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .search-result-item:hover { background: rgba(34, 211, 238, 0.15); }
+        .search-result-item .sr-title { color: #22d3ee; }
+        .search-result-item .sr-type { color: #64748b; font-size: 0.75rem; }
+
+        .zoom-controls { display: flex; gap: 4px; }
+
+        .zoom-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #475569;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .zoom-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .map-container.grabbing { cursor: grabbing; }
+
+        .map-inner {
+            position: absolute;
+            width: 2200px;
+            height: 1300px;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .connections {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .conn-line {
+            stroke: #334155;
+            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+
+        .conn-line.dashed { stroke-dasharray: 8, 4; }
+
+        .conn-line.active {
+            stroke: #22d3ee;
+            stroke-width: 3;
+            stroke-dasharray: none;
+            filter: drop-shadow(0 0 6px rgba(34,211,238,0.5));
+        }
+
+        .conn-line.dimmed { stroke: #1e293b; stroke-width: 1; }
+
+        .conn-label {
+            fill: #64748b;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            transition: fill 0.3s;
+        }
+
+        .conn-label.active { fill: #22d3ee; }
+        .conn-label.dimmed { fill: transparent; }
+
+        /* Nodes */
+        .node {
+            position: absolute;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            text-align: center;
+            min-width: 130px;
+            max-width: 180px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .node:hover { transform: scale(1.08); z-index: 100; }
+        .node.active { transform: scale(1.12); z-index: 100; box-shadow: 0 0 30px rgba(34,211,238,0.4); }
+        .node.connected { transform: scale(1.05); z-index: 90; box-shadow: 0 0 20px rgba(34,211,238,0.2); }
+        .node.dimmed { opacity: 0.25; transform: scale(0.95); }
+        .node.search-match { box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); z-index: 110; }
+
+        .node h3 { font-size: 0.9rem; margin-bottom: 0.15rem; line-height: 1.2; }
+        .node p { font-size: 0.7rem; opacity: 0.8; line-height: 1.3; }
+
+        /* Node types — domain-specific for Fluid/Electrolytes/DKA/Renal */
+        .node.central { background: linear-gradient(135deg, #7c3aed, #a855f7); border: 3px solid #c4b5fd; min-width: 180px; }
+        .node.metabolic { background: linear-gradient(135deg, #2563eb, #3b82f6); border: 2px solid #93c5fd; }
+        .node.emergency { background: linear-gradient(135deg, #dc2626, #ef4444); border: 2px solid #fca5a5; }
+        .node.renal { background: linear-gradient(135deg, #0891b2, #06b6d4); border: 2px solid #67e8f9; }
+        .node.treatment { background: linear-gradient(135deg, #059669, #10b981); border: 2px solid #6ee7b7; }
+        .node.electrolyte { background: linear-gradient(135deg, #ea580c, #f97316); border: 2px solid #fdba74; }
+        .node.complication { background: linear-gradient(135deg, #78350f, #92400e); border: 2px solid #d97706; }
+        .node.pharm { background: linear-gradient(135deg, #be185d, #ec4899); border: 2px solid #f9a8d4; }
+        .node.surgical { background: linear-gradient(135deg, #4b5563, #6b7280); border: 2px solid #9ca3af; }
+        .node.assessment { background: linear-gradient(135deg, #b45309, #d97706); border: 2px solid #fbbf24; }
+
+        /* Info panel */
+        .info-panel {
+            position: fixed;
+            right: -400px;
+            top: 52px;
+            width: 380px;
+            background: rgba(15, 23, 42, 0.97);
+            border-left: 2px solid #475569;
+            padding: 1.5rem;
+            z-index: 1000;
+            height: calc(100vh - 52px);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+        }
+
+        .info-panel.visible { right: 0; }
+
+        .info-panel .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none; border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .info-panel .close-btn:hover { color: white; }
+        .info-panel h2 { color: #22d3ee; margin-bottom: 1rem; padding-right: 2rem; font-size: 1.2rem; }
+        .info-panel h3 { color: #f59e0b; margin: 1rem 0 0.5rem 0; font-size: 0.9rem; }
+        .info-panel p { color: #e2e8f0; font-size: 0.9rem; line-height: 1.5; }
+        .info-panel ul, .info-panel ol { margin-left: 1.25rem; color: #e2e8f0; }
+        .info-panel li { margin-bottom: 0.4rem; font-size: 0.88rem; line-height: 1.4; }
+
+        .info-panel .exam-trap {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 4px solid #ef4444;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .clinical-pearl {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 4px solid #22d3ee;
+            padding: 0.75rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+        }
+
+        .info-panel .connection-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #475569;
+        }
+
+        .info-panel .connection-list span {
+            display: inline-block;
+            background: #334155;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .info-panel .connection-list span:hover { background: #22d3ee; color: #0f172a; }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            left: 12px; bottom: 12px;
+            background: rgba(15, 23, 42, 0.92);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            z-index: 500;
+            border: 1px solid #334155;
+        }
+
+        .legend h4 { margin-bottom: 0.4rem; color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1rem; }
+
+        .legend-item { display: flex; align-items: center; font-size: 0.7rem; color: #94a3b8; }
+
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; flex-shrink: 0; }
+
+        .minimap {
+            position: fixed;
+            right: 12px; bottom: 12px;
+            width: 180px; height: 110px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            z-index: 500;
+            overflow: hidden;
+        }
+
+        .minimap-viewport {
+            position: absolute;
+            border: 2px solid #22d3ee;
+            border-radius: 2px;
+            background: rgba(34, 211, 238, 0.08);
+            pointer-events: none;
+        }
+
+        .minimap-dot { position: absolute; width: 4px; height: 4px; border-radius: 50%; }
+
+        .kb-hint {
+            position: fixed;
+            left: 12px; top: 64px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            z-index: 500;
+            border: 1px solid #334155;
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .kb-hint kbd {
+            background: #334155;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            color: #94a3b8;
+            font-family: inherit;
+        }
+
+        .info-panel::-webkit-scrollbar { width: 6px; }
+        .info-panel::-webkit-scrollbar-track { background: transparent; }
+        .info-panel::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1>Fluid &amp; Electrolytes, DKA/HHS, Renal Disorders - Concept Map</h1>
+            <p>Click nodes to explore | Drag to pan | Scroll to zoom</p>
+        </div>
+        <div class="header-controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search concepts..." autocomplete="off"/>
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">&minus;</button>
+                <button class="zoom-btn" onclick="resetView()" title="Reset view">&#8634;</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-container" id="map-container">
+        <div class="map-inner" id="map-inner">
+            <svg class="connections" id="connections-svg"></svg>
+        </div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+        <button class="close-btn" onclick="closePanel()">&times;</button>
+        <h2 id="panel-title"></h2>
+        <div id="panel-content"></div>
+    </div>
+
+    <div class="legend">
+        <h4>Node Types</h4>
+        <div style="display:flex;gap:1rem;margin-bottom:0.4rem;font-size:0.7rem;color:#94a3b8;">
+            <span><span style="display:inline-block;width:20px;height:2px;background:#334155;vertical-align:middle;margin-right:4px;"></span>Direct</span>
+            <span><span style="display:inline-block;width:20px;height:0;border-top:2px dashed #334155;vertical-align:middle;margin-right:4px;"></span>Cross-link</span>
+        </div>
+        <div class="legend-grid">
+            <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div>Central</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>Metabolic/DM</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Emergency</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div>Renal</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Treatment</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Electrolyte</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#92400e;"></div>Complication</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ec4899;"></div>Pharmacology</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6b7280;"></div>Surgical</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d97706;"></div>Assessment</div>
+        </div>
+    </div>
+
+    <div class="kb-hint">
+        <kbd>Esc</kbd> close panel &nbsp; <kbd>/</kbd> search &nbsp; <kbd>R</kbd> reset view
+    </div>
+
+    <div class="minimap" id="minimap">
+        <div class="minimap-viewport" id="minimap-vp"></div>
+    </div>
+
+    <script>
+    // ===== DATA =====
+    const nodes = {
+        // TIER 1 — Central hub
+        central: {
+            label: 'DIABETES, FLUIDS\n& RENAL', sub: 'The Diabetes-to-Dialysis Continuum',
+            type: 'central', x: 950, y: 50
+        },
+
+        // TIER 2 — Six core branches
+        dm_foundations: {
+            label: 'Diabetes\nFoundations', sub: 'Type 1, Type 2, classification',
+            type: 'metabolic', x: 80, y: 230
+        },
+        insulin_therapy: {
+            label: 'Insulin &\nPharmacology', sub: 'Insulin types, oral agents',
+            type: 'pharm', x: 400, y: 230
+        },
+        acute_complications: {
+            label: 'Acute DM\nEmergencies', sub: 'Hypo, DKA, HHS',
+            type: 'emergency', x: 750, y: 230
+        },
+        chronic_complications: {
+            label: 'Chronic DM\nComplications', sub: 'Micro & macrovascular',
+            type: 'complication', x: 1100, y: 230
+        },
+        kidney_disease: {
+            label: 'Kidney\nDisease', sub: 'AKI, CKD, ESKD',
+            type: 'renal', x: 1450, y: 230
+        },
+        rrt: {
+            label: 'Renal Replacement\nTherapy', sub: 'HD, PD, CRRT, Transplant',
+            type: 'treatment', x: 1850, y: 230
+        },
+
+        // TIER 3 — Disease/condition hubs
+        hypoglycemia: {
+            label: 'Hypoglycemia', sub: 'BG < 70 mg/dL',
+            type: 'emergency', x: 550, y: 440
+        },
+        dka: {
+            label: 'DKA', sub: 'Ketotic, acidotic, Type 1',
+            type: 'emergency', x: 800, y: 440
+        },
+        hhs: {
+            label: 'HHS', sub: 'Hyperosmolar, Type 2',
+            type: 'emergency', x: 1050, y: 440
+        },
+        aki: {
+            label: 'AKI', sub: 'Prerenal, intrarenal, postrenal',
+            type: 'renal', x: 1300, y: 440
+        },
+        ckd: {
+            label: 'CKD / ESKD', sub: 'Progressive, irreversible',
+            type: 'renal', x: 1550, y: 440
+        },
+        retinopathy: {
+            label: 'Retinopathy', sub: 'Microvascular eye damage',
+            type: 'complication', x: 1100, y: 440
+        },
+        nephropathy: {
+            label: 'Diabetic\nNephropathy', sub: 'Microalbuminuria \u2192 ESKD',
+            type: 'complication', x: 200, y: 440
+        },
+        neuropathy: {
+            label: 'Neuropathy', sub: 'Peripheral & autonomic',
+            type: 'complication', x: 80, y: 650
+        },
+
+        // TIER 4 — Specific subtypes & treatments
+        hyperkalemia: {
+            label: 'Hyperkalemia', sub: 'Most dangerous electrolyte',
+            type: 'electrolyte', x: 1300, y: 650
+        },
+        k_treatment: {
+            label: 'K+ Emergency\nTreatment', sub: 'Ca gluconate, insulin+D50',
+            type: 'treatment', x: 1300, y: 860
+        },
+        hemodialysis: {
+            label: 'Hemodialysis', sub: 'AV fistula, 3x/week',
+            type: 'treatment', x: 1650, y: 650
+        },
+        peritoneal_dialysis: {
+            label: 'Peritoneal\nDialysis', sub: 'CAPD, CCPD',
+            type: 'treatment', x: 1900, y: 650
+        },
+        crrt: {
+            label: 'CRRT', sub: 'ICU, hemodynamically unstable',
+            type: 'treatment', x: 2050, y: 650
+        },
+        transplant: {
+            label: 'Kidney\nTransplant', sub: 'Living or deceased donor',
+            type: 'surgical', x: 1800, y: 860
+        },
+        oral_agents: {
+            label: 'Oral &\nNon-Insulin', sub: 'Metformin, sulfonylureas, SGLT2i',
+            type: 'pharm', x: 300, y: 650
+        },
+        insulin_types: {
+            label: 'Insulin\nTypes', sub: 'Rapid, short, intermediate, long',
+            type: 'pharm', x: 500, y: 650
+        },
+        morning_hyperglycemia: {
+            label: 'Morning\nHyperglycemia', sub: 'Dawn, Somogyi, waning',
+            type: 'assessment', x: 500, y: 860
+        },
+
+        // TIER 5 — Complications, protocols
+        av_fistula: {
+            label: 'AV Fistula\nProtection', sub: 'No BP, no draws, thrill/bruit',
+            type: 'assessment', x: 1650, y: 860
+        },
+        peritonitis: {
+            label: 'Peritonitis', sub: 'Cloudy effluent = first sign',
+            type: 'emergency', x: 1950, y: 860
+        },
+        rejection: {
+            label: 'Transplant\nRejection', sub: 'Hyperacute, acute, chronic',
+            type: 'emergency', x: 1800, y: 1060
+        },
+        immunosuppressants: {
+            label: 'Immuno-\nsuppressants', sub: 'Tacrolimus, cyclosporine, lifelong',
+            type: 'pharm', x: 2000, y: 1060
+        },
+        renal_osteodystrophy: {
+            label: 'Renal\nOsteodystrophy', sub: '\u2191Phos \u2192 \u2193Ca \u2192 \u2191PTH \u2192 weak bones',
+            type: 'complication', x: 1500, y: 860
+        },
+        dka_treatment: {
+            label: 'DKA/HHS\nTreatment', sub: 'Fluids FIRST, then insulin, K+',
+            type: 'treatment', x: 900, y: 650
+        },
+        foot_care: {
+            label: 'Diabetic\nFoot Care', sub: 'Daily inspection, no barefoot',
+            type: 'assessment', x: 80, y: 860
+        },
+        continuum: {
+            label: 'DM \u2192 Kidney\nContinuum', sub: 'Prevention points',
+            type: 'central', x: 950, y: 1060
+        }
+    };
+
+    // Edges: [from, to, label, dashed?]
+    const edges = [
+        // Central hub connections
+        ['central', 'dm_foundations', '', false],
+        ['central', 'insulin_therapy', '', false],
+        ['central', 'acute_complications', '', false],
+        ['central', 'chronic_complications', '', false],
+        ['central', 'kidney_disease', '', false],
+        ['central', 'rrt', '', false],
+
+        // Tier 2 \u2192 Tier 3
+        ['acute_complications', 'hypoglycemia', 'too much insulin', false],
+        ['acute_complications', 'dka', 'absent insulin', false],
+        ['acute_complications', 'hhs', 'insufficient insulin', false],
+        ['chronic_complications', 'retinopathy', 'microvascular', false],
+        ['chronic_complications', 'nephropathy', 'earliest: microalbuminuria', false],
+        ['kidney_disease', 'aki', 'sudden onset', false],
+        ['kidney_disease', 'ckd', 'progressive', false],
+
+        // DM foundations \u2192 subtopics
+        ['dm_foundations', 'nephropathy', 'leads to', false],
+        ['insulin_therapy', 'oral_agents', 'Type 2', false],
+        ['insulin_therapy', 'insulin_types', 'all types', false],
+
+        // Treatment chains
+        ['dka', 'dka_treatment', 'protocol', false],
+        ['hhs', 'dka_treatment', 'fluids first', false],
+        ['insulin_types', 'morning_hyperglycemia', '3 AM check', false],
+
+        // Neuropathy cluster
+        ['chronic_complications', 'neuropathy', 'microvascular', false],
+        ['nephropathy', 'neuropathy', 'both microvascular', true],
+        ['neuropathy', 'foot_care', 'prevents ulcers', false],
+
+        // Kidney disease \u2192 complications
+        ['ckd', 'hyperkalemia', 'cannot excrete K+', false],
+        ['hyperkalemia', 'k_treatment', 'emergency protocol', false],
+        ['ckd', 'renal_osteodystrophy', '\u2191Phos cascade', false],
+
+        // RRT \u2192 modalities
+        ['rrt', 'hemodialysis', 'intermittent', false],
+        ['rrt', 'peritoneal_dialysis', 'continuous', false],
+        ['rrt', 'crrt', 'ICU unstable', false],
+        ['rrt', 'transplant', 'definitive', false],
+
+        // Dialysis specifics
+        ['hemodialysis', 'av_fistula', 'vascular access', false],
+        ['peritoneal_dialysis', 'peritonitis', 'major complication', false],
+
+        // Transplant chain
+        ['transplant', 'rejection', 'immune response', false],
+        ['transplant', 'immunosuppressants', 'lifelong', false],
+        ['rejection', 'immunosuppressants', 'treated with', false],
+
+        // Nephropathy to CKD link
+        ['nephropathy', 'ckd', '#1 cause of ESKD', false],
+
+        // Continuum connections
+        ['continuum', 'nephropathy', 'prevention', true],
+        ['continuum', 'ckd', 'progression', true],
+
+        // Cross-links (dashed)
+        ['dka', 'hyperkalemia', 'K+ shifts in acidosis', true],
+        ['dka_treatment', 'hyperkalemia', 'monitor K+ closely', true],
+        ['aki', 'hyperkalemia', 'can cause', true],
+        ['aki', 'ckd', 'may progress to', true],
+        ['ckd', 'hemodialysis', 'Stage 5', true],
+        ['oral_agents', 'aki', 'metformin hold', true],
+        ['hypoglycemia', 'insulin_types', 'too much/wrong timing', true],
+        ['dm_foundations', 'continuum', 'uncontrolled DM', true],
+        ['av_fistula', 'hemodialysis', 'lifeline', true],
+        ['renal_osteodystrophy', 'ckd', 'bone disease', true]
+    ];
+
+    // ===== NODE DETAIL CONTENT =====
+    const nodeInfo = {
+        central: {
+            title: 'Diabetes, Fluids & Renal Disorders',
+            content: `
+                <h3>Central Concept</h3>
+                <p>This map traces the diabetes-to-dialysis continuum: uncontrolled diabetes \u2192 microvascular damage \u2192 nephropathy \u2192 CKD \u2192 ESKD \u2192 dialysis or transplant. Every nursing intervention aimed at glycemic control is simultaneously protecting the kidneys.</p>
+                <h3>Key Themes</h3>
+                <ul>
+                    <li><strong>Acute DM emergencies</strong> \u2014 Hypoglycemia, DKA, HHS: differentiation determines survival</li>
+                    <li><strong>Chronic complications</strong> \u2014 Micro/macrovascular damage accumulates over years</li>
+                    <li><strong>Kidney failure</strong> \u2014 AKI (reversible) vs CKD (irreversible)</li>
+                    <li><strong>Renal replacement</strong> \u2014 HD, PD, CRRT, transplant: none are cures</li>
+                    <li><strong>Electrolyte emergencies</strong> \u2014 Hyperkalemia is the electrolyte most likely to kill</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Diabetes is the #1 cause of ESKD. Hypertension is #2. Both are modifiable. The earliest detectable sign of diabetic nephropathy is microalbuminuria, and ACE inhibitors can slow progression at this stage.
+                </div>
+            `
+        },
+        dm_foundations: {
+            title: 'Diabetes Mellitus: Foundations',
+            content: `
+                <h3>Classification</h3>
+                <ul>
+                    <li><strong>Type 1</strong> \u2014 Beta-cell destruction (autoimmune) \u2192 absolute insulin deficiency. Insulin-dependent for life. Prone to DKA</li>
+                    <li><strong>Type 2</strong> \u2014 Insulin resistance + progressive beta-cell dysfunction. 95% of adult DM. Prone to HHS</li>
+                    <li><strong>LADA</strong> \u2014 Autoimmune, adult onset, often misclassified as Type 2</li>
+                    <li><strong>Gestational</strong> \u2014 Placental hormones \u2192 insulin resistance. Signals future Type 2 risk</li>
+                </ul>
+                <h3>Diagnostic Criteria</h3>
+                <ul>
+                    <li>FPG \u2265 126 mg/dL (fasting \u2265 8h)</li>
+                    <li>Random glucose \u2265 200 mg/dL with symptoms</li>
+                    <li>2-hour OGTT \u2265 200 mg/dL</li>
+                    <li>HgbA1C \u2265 6.5% (reflects 2\u20133 month average)</li>
+                </ul>
+                <h3>Management Pillars</h3>
+                <p>Nutritional therapy, exercise, glucose monitoring, pharmacologic therapy, and education. ADA target: A1C < 7%.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> All diagnostic results must be confirmed by repeat testing on a different day, UNLESS the patient presents with unequivocal hyperglycemia and acute metabolic decompensation.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> COVID-19 and diabetes have a dangerous bidirectional relationship. Diabetic patients with COVID have significantly higher rates of intubation and death, and severe COVID can trigger new-onset diabetes.
+                </div>
+            `
+        },
+        insulin_therapy: {
+            title: 'Insulin & Pharmacology',
+            content: `
+                <h3>What Insulin Does</h3>
+                <p>Insulin is the master regulatory hormone. It transports glucose into cells, stimulates glycogen storage, stops hepatic glucose release, promotes fat storage, and accelerates amino acid transport. When absent, ALL these functions fail simultaneously.</p>
+                <h3>Key Safety Rules</h3>
+                <ul>
+                    <li><strong>Regular insulin is the ONLY insulin for IV use</strong> (DKA drips)</li>
+                    <li><strong>Long-acting (glargine)</strong> \u2014 pH 4, cannot mix with other insulins</li>
+                    <li><strong>NPH</strong> \u2014 Only cloudy insulin. Roll gently, never shake</li>
+                    <li>Site rotation prevents lipodystrophy</li>
+                    <li>Return demonstration = gold standard for verifying technique</li>
+                </ul>
+                <h3>Complications of Therapy</h3>
+                <ul>
+                    <li>Hypoglycemia (most dangerous)</li>
+                    <li>Lipodystrophy (from repeated same-site injection)</li>
+                    <li>Local/systemic allergic reactions</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Never give any insulin type IV except Regular. In DKA, a continuous Regular insulin drip is standard. Flush tubing first (insulin adheres to plastic).
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> When assessing patient readiness for DM self-management education, check readiness to learn BEFORE launching into teaching. Prioritize "survival skills" first: recognizing hypo/hyperglycemia, when to call for help, basic med administration.
+                </div>
+            `
+        },
+        insulin_types: {
+            title: 'Insulin Types & Time Course',
+            content: `
+                <h3>Categories</h3>
+                <ul>
+                    <li><strong>Rapid-acting</strong> (Lispro, Aspart, Glulisine) \u2014 Onset 5\u201315 min, peak 30 min\u20131h, duration 3\u20135h. Give immediately before/with meals</li>
+                    <li><strong>Short-acting</strong> (Regular/Humulin R) \u2014 Onset 30\u201360 min, peak 2\u20133h, duration 4\u20136h. ONLY IV insulin. Give 15\u201330 min before meals</li>
+                    <li><strong>Intermediate</strong> (NPH) \u2014 Onset 1\u20131.5h, peak 4\u201312h, duration up to 24h. Cloudy. Roll gently</li>
+                    <li><strong>Long-acting</strong> (Glargine, Detemir) \u2014 Onset 3\u20136h, NO PEAK, duration 24h. "Peakless." Cannot mix</li>
+                    <li><strong>Inhaled</strong> (Afrezza) \u2014 Onset <15 min, peak ~50 min. Requires pulmonary function testing</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Which insulin peaks? ALL except long-acting (glargine/detemir). No peak = less risk of hypoglycemia at predictable times. NPH has the widest, most unpredictable peak (4\u201312h) \u2014 highest risk for nocturnal hypoglycemia.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> "Cloudy insulin" on an exam = NPH. Clear insulin = everything else. If mixing insulins, draw up clear (Regular) BEFORE cloudy (NPH) to avoid contaminating the Regular vial.
+                </div>
+            `
+        },
+        oral_agents: {
+            title: 'Oral & Non-Insulin Agents',
+            content: `
+                <h3>Key Classes</h3>
+                <ul>
+                    <li><strong>Metformin (Biguanide)</strong> \u2014 First-line for Type 2. Inhibits hepatic glucose production. Risk: <strong>lactic acidosis</strong>. Hold 48h before/after contrast dye. Monitor BUN/Cr</li>
+                    <li><strong>Sulfonylureas</strong> (Glipizide, Glyburide) \u2014 Stimulate beta cells \u2192 more insulin. Risk: hypoglycemia. Contraindicated with sulfa allergy</li>
+                    <li><strong>Alpha-glucosidase inhibitors</strong> (Acarbose) \u2014 Delay carb absorption. Take with first bite. Treat hypo with GLUCOSE not sucrose</li>
+                    <li><strong>GLP-1 agonists</strong> (Dulaglutide, Liraglutide) \u2014 SQ injection. Weight loss benefit. Risk: pancreatitis</li>
+                    <li><strong>SGLT2 inhibitors</strong> (Canagliflozin) \u2014 Block renal glucose reabsorption \u2192 glycosuria. Risk: UTIs, genital infections</li>
+                    <li><strong>Thiazolidinediones</strong> (Pioglitazone) \u2014 Sensitize tissues to insulin. Risk: edema, weight gain, liver damage. Monitor LFTs</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Metformin + contrast dye = lactic acidosis risk. Hold 48h before AND after. Always check renal function before restarting. Beta-blockers mask hypoglycemia symptoms in patients on sulfonylureas.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> If a patient on acarbose becomes hypoglycemic, you MUST give glucose tablets \u2014 NOT juice, NOT sucrose. The drug blocks sucrose absorption, so juice won't raise blood sugar.
+                </div>
+            `
+        },
+        morning_hyperglycemia: {
+            title: 'Morning Hyperglycemia: Three Causes',
+            content: `
+                <h3>The Diagnostic Move</h3>
+                <p>Check blood glucose at bedtime, 3 AM, and upon waking. The pattern reveals the cause.</p>
+                <h3>Three Phenomena</h3>
+                <ul>
+                    <li><strong>Insulin waning</strong> \u2014 Progressive rise bedtime \u2192 morning. Evening insulin wearing off. Fix: increase evening dose or add bedtime insulin</li>
+                    <li><strong>Dawn phenomenon</strong> \u2014 Normal until ~3 AM, then rises. Nocturnal growth hormone surge. Fix: move NPH from dinnertime to bedtime</li>
+                    <li><strong>Somogyi effect</strong> \u2014 Normal \u2192 3 AM LOW \u2192 rebound HIGH. Counter-regulatory hormones respond to overnight low. Fix: DECREASE evening NPH or increase bedtime snack</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Somogyi = Swing. The treatment is LESS insulin, not more. If you increase insulin in a Somogyi patient, you worsen the overnight hypoglycemia and the rebound gets even higher. This is the most commonly missed concept on exams.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The 3 AM glucose check is the key diagnostic tool. Without it, you're guessing \u2014 and the wrong guess (more insulin for Somogyi) can be dangerous.
+                </div>
+            `
+        },
+        acute_complications: {
+            title: 'Acute Complications of Diabetes',
+            content: `
+                <h3>Three Emergencies</h3>
+                <p>Hypoglycemia, DKA, and HHS are the most immediately life-threatening complications. Differentiating between them and initiating correct treatment is non-negotiable.</p>
+                <h3>Quick Differentiation</h3>
+                <ul>
+                    <li><strong>Hypoglycemia</strong> \u2014 BG < 70. Too much insulin, too little food, too much exercise</li>
+                    <li><strong>DKA</strong> \u2014 Type 1, rapid onset, BG 250\u2013800+, pH < 7.3, ketones present, Kussmaul breathing, fruity breath</li>
+                    <li><strong>HHS</strong> \u2014 Type 2 (older adults), slow onset, BG 600\u20131200+, pH normal, no ketones, altered mental status</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> DKA mortality < 1%. HHS mortality 5\u201316%. Why the difference? DKA presents early (GI symptoms are impossible to ignore). HHS is insidious \u2014 patients present later with profound dehydration.
+                </div>
+            `
+        },
+        hypoglycemia: {
+            title: 'Hypoglycemia',
+            content: `
+                <h3>Severity Progression</h3>
+                <ul>
+                    <li><strong>Mild (54\u201370)</strong> \u2014 Sweating, tremor, tachycardia, hunger (adrenergic symptoms)</li>
+                    <li><strong>Moderate (< 54)</strong> \u2014 Confusion, headache, slurred speech, drowsiness (neuroglycopenia)</li>
+                    <li><strong>Severe (well below 54)</strong> \u2014 Seizures, LOC, death (cerebral glucose deprivation)</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li><strong>Conscious (Rule of 15):</strong> 15\u201320g fast-acting carbs (3\u20134 glucose tablets or 4\u20136 oz juice). Recheck in 15 min. Repeat if still < 70. Then protein + complex carb snack</li>
+                    <li><strong>Unconscious (hospital):</strong> IV push 25\u201350 mL D50W</li>
+                    <li><strong>Unconscious (community):</strong> SQ or IM glucagon 1 mg. Position on side (aspiration risk)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> NEVER put juice in an unconscious patient's mouth \u2014 aspiration risk is immediate and lethal. Conscious = Carbs. Unconscious = D50 (hospital) or Glucagon (community).
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Patients with autonomic neuropathy lose adrenergic warning signs (no sweating, no tremor). They go straight from "fine" to confused/unconscious. This is hypoglycemic unawareness \u2014 these patients need tighter monitoring.
+                </div>
+            `
+        },
+        dka: {
+            title: 'Diabetic Ketoacidosis (DKA)',
+            content: `
+                <h3>The Cascade</h3>
+                <p>Absent insulin \u2192 glucose can't enter cells + gluconeogenesis \u2191 \u2192 <strong>HYPERGLYCEMIA</strong> (250\u2013800+). Simultaneously, lipolysis \u2192 FFA \u2192 liver converts to <strong>KETONES</strong> \u2192 <strong>METABOLIC ACIDOSIS</strong> (pH 6.8\u20137.3). Hyperglycemia causes osmotic diuresis \u2192 loss of 6\u20137L water + 400\u2013500 mEq Na+/K+ in 24h \u2192 <strong>SEVERE DEHYDRATION</strong>.</p>
+                <h3>Assessment Findings</h3>
+                <ul>
+                    <li>BG 250\u2013800+ mg/dL</li>
+                    <li>pH 6.8\u20137.3 | Bicarb 0\u201315 mEq/L</li>
+                    <li>Elevated anion gap (> 12)</li>
+                    <li>Kussmaul respirations (deep, rapid) + fruity/acetone breath</li>
+                    <li>N/V, abdominal pain (GI symptoms = hallmark)</li>
+                    <li>Serum/urine ketones present</li>
+                    <li>K+ variable \u2014 may look normal despite total body depletion</li>
+                </ul>
+                <h3>Precipitants</h3>
+                <p>Missed insulin, illness/infection, undiagnosed diabetes.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> THE POTASSIUM TRAP: Serum K+ may appear normal or HIGH on admission (acidosis drives K+ out of cells). But total body K+ is DEPLETED. As you correct acidosis, K+ shifts back into cells and serum levels plummet. Replace K+ even if levels appear normal. Withhold ONLY if hyperkalemic or anuric.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Pseudohyponatremia in DKA: hyperglycemia pulls water from ICF \u2192 dilutes serum Na+. Corrected Na+ = Measured Na+ + [1.6 \u00d7 (Glucose - 100) / 100].
+                </div>
+            `
+        },
+        hhs: {
+            title: 'Hyperglycemic Hyperosmolar Syndrome (HHS)',
+            content: `
+                <h3>Pathophysiology</h3>
+                <p>Enough insulin to prevent ketosis, but NOT enough to prevent hyperglycemia. Insidious osmotic diuresis plays out over days to weeks \u2192 profound dehydration + dangerous hyperosmolality + neurologic deterioration.</p>
+                <h3>Key Features</h3>
+                <ul>
+                    <li>BG 600\u20131200+ mg/dL</li>
+                    <li>Serum osmolality > 320 mOsm/L</li>
+                    <li>pH <strong>NORMAL</strong> (no acidosis)</li>
+                    <li>Ketones absent or minimal</li>
+                    <li><strong>Altered mental status is the HALLMARK</strong> (confusion, seizures, coma)</li>
+                    <li><strong>Mortality: 5\u201316%</strong> (vs < 1% for DKA)</li>
+                </ul>
+                <h3>Treatment</h3>
+                <p>Fluid replacement is THE FIRST PRIORITY \u2014 the extreme dehydration is more dangerous than the hyperglycemia. Insulin plays a less central role than in DKA.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> DKA = Dry, Ketotic, Acidotic (young Type 1, rapid, fruity breath). HHS = High sugar, Hyperosmolar, Sneaky (older Type 2, slow, altered mental status). No Kussmaul in HHS. No fruity breath in HHS.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> HHS patients are typically older with more comorbidities, and the insidious onset means they present with profound dehydration that is harder to reverse. Speed of recognition determines survival in both DKA and HHS.
+                </div>
+            `
+        },
+        dka_treatment: {
+            title: 'DKA/HHS Treatment Protocol',
+            content: `
+                <h3>Treatment Priorities (in order)</h3>
+                <ol>
+                    <li><strong>Rehydration FIRST</strong> \u2014 NS 500\u20131000 mL/hr for 2\u20134h, then 0.45% NS. Total 6\u201310L may be needed. When BG reaches 250\u2013300, switch to D5W</li>
+                    <li><strong>IV Regular Insulin</strong> \u2014 Continuous drip ~5 units/hr. Flush tubing first. Monitor BG hourly. Do NOT stop drip until SQ insulin started</li>
+                    <li><strong>Electrolyte Replacement</strong> \u2014 K+ replacement up to 40 mEq/hr. ECG monitoring q2\u20134h for first 8h. Monitor Na+, K+, Cl-, Ca, Mg, Phos, BUN, Cr q6h</li>
+                    <li><strong>Reverse Acidosis</strong> \u2014 Insulin itself reverses acidosis (stops ketone production). Bicarb generally AVOIDED (precipitates further K+ drops)</li>
+                </ol>
+                <h3>Monitoring Priorities</h3>
+                <p>BG, renal function, urine output, ECG, electrolytes, VS, lung sounds (fluid overload risk). Caution in HF/renal patients \u2014 aggressive fluids can cause pulmonary edema.</p>
+                <h3>Sick Day Rules</h3>
+                <ul>
+                    <li><strong>NEVER eliminate insulin</strong> when ill \u2014 stress hormones raise BG even without eating</li>
+                    <li>Test BG every 3\u20134 hours, urine ketones if BG > 300</li>
+                    <li>Supplemental fluids every hour</li>
+                    <li>Call provider if BG > 300 \u00d7 2 readings, positive ketones, unable to keep fluids down</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> The most common fatal mistake patients make: skipping insulin because "I'm not eating." Stress hormones from illness raise BG even without food. Insulin is still needed. This concept is tested from multiple angles.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> BG often corrects before acidosis does. The insulin drip may need to continue 12\u201324h until bicarb \u2265 15\u201318 mEq/L, even after glucose normalizes. That's why you add dextrose to the IV when BG hits 250\u2013300.
+                </div>
+            `
+        },
+        chronic_complications: {
+            title: 'Chronic Complications of Diabetes',
+            content: `
+                <h3>Two Pathways of Damage</h3>
+                <ul>
+                    <li><strong>Macrovascular</strong> \u2014 Accelerated atherosclerosis \u2192 CAD/MI, stroke, PVD. CVD is the #1 cause of death in DM</li>
+                    <li><strong>Microvascular</strong> \u2014 Retinopathy, nephropathy, neuropathy. Damage accumulates with chronic hyperglycemia</li>
+                </ul>
+                <h3>Prevention</h3>
+                <p>A1C < 7% is the threshold below which complication risk drops significantly. Tight glycemic control + BP management + lipid control + smoking cessation + antiplatelet therapy.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Every nursing intervention aimed at glycemic control, blood pressure management, and medication adherence is simultaneously protecting the kidneys, eyes, and nerves. The connections are not separate topics \u2014 they're one continuous pathophysiologic story.
+                </div>
+            `
+        },
+        retinopathy: {
+            title: 'Diabetic Retinopathy',
+            content: `
+                <h3>Progression</h3>
+                <p>Nonproliferative (background) \u2192 preproliferative \u2192 proliferative. Microaneurysms and retinal hemorrhages lead to progressive vision loss.</p>
+                <h3>Nursing Priorities</h3>
+                <ul>
+                    <li>Annual dilated eye exams \u2014 essential for early detection</li>
+                    <li>Laser photocoagulation can slow progression</li>
+                    <li>Tight glycemic control is the best prevention</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Annual dilated eye exams are recommended for ALL diabetic patients, not just those with symptoms. Retinopathy can be advanced before the patient notices vision changes.
+                </div>
+            `
+        },
+        nephropathy: {
+            title: 'Diabetic Nephropathy',
+            content: `
+                <h3>The Bridge Between DM and Kidney Failure</h3>
+                <p>Diabetes is the #1 cause of ESKD. The earliest detectable sign is <strong>microalbuminuria</strong> (> 30 mg/24h on two consecutive tests).</p>
+                <h3>Prevention & Treatment</h3>
+                <ul>
+                    <li><strong>ACE inhibitors</strong> are first-line \u2014 slow progression independent of BP effects</li>
+                    <li>Tight glycemic control (A1C < 7%)</li>
+                    <li>Blood pressure management</li>
+                    <li>Avoid nephrotoxic drugs</li>
+                </ul>
+                <h3>Progression</h3>
+                <p>Uncontrolled nephropathy \u2192 CKD stages 1\u20135 \u2192 ESKD \u2192 dialysis or transplant.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Microalbuminuria is the earliest detectable sign. If a question asks about early diabetic kidney disease intervention, the answer is ACE inhibitors \u2014 they protect the kidney beyond just lowering blood pressure.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> When you're teaching a newly diagnosed diabetic about A1C goals, you're potentially preventing a future life on dialysis. The connection between that teaching moment and ESKD prevention is direct.
+                </div>
+            `
+        },
+        neuropathy: {
+            title: 'Diabetic Neuropathy',
+            content: `
+                <h3>Peripheral Neuropathy</h3>
+                <p>Characteristic progression: paresthesias/burning \u2192 numbness \u2192 unsteady gait \u2192 Charcot joints (structural destruction from repeated undetected trauma).</p>
+                <ul>
+                    <li>Monofilament testing assesses loss of protective sensation</li>
+                    <li>Earliest symptom: tingling in the feet</li>
+                </ul>
+                <h3>Autonomic Neuropathy</h3>
+                <ul>
+                    <li>Fixed tachycardia, orthostatic hypotension</li>
+                    <li><strong>Gastroparesis</strong> \u2014 delayed gastric emptying makes glucose control unpredictable</li>
+                    <li>Neurogenic bladder, erectile dysfunction</li>
+                    <li><strong>Hypoglycemic unawareness</strong> \u2014 no adrenergic warning signs</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Autonomic neuropathy causes hypoglycemic unawareness \u2014 the patient skips the sweating/tremor/tachycardia phase and goes straight to confusion/unconsciousness. These patients need more frequent glucose monitoring.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The foot ulceration cascade: minor injury \u2192 not detected (absent sensation) \u2192 progresses to infection \u2192 may lead to amputation. Prevention through patient education is where nursing makes the biggest impact.
+                </div>
+            `
+        },
+        foot_care: {
+            title: 'Diabetic Foot Care',
+            content: `
+                <h3>Patient Education Essentials</h3>
+                <ul>
+                    <li>Inspect feet <strong>daily</strong> (use mirror for soles)</li>
+                    <li>Never walk barefoot</li>
+                    <li>No heating pads or hot water bottles on feet (cannot feel burns)</li>
+                    <li>Wear properly fitting shoes</li>
+                    <li>Trim nails straight across</li>
+                    <li>Report any cuts, blisters, or color changes immediately</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> "Which teaching is most important for a patient with peripheral neuropathy?" \u2014 Daily foot inspection. The patient can't feel injuries, so visual inspection replaces the protective sensation they've lost.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The #1 reason diabetic foot ulcers progress to amputation is that the patient didn't notice the injury. Education is literally limb-saving.
+                </div>
+            `
+        },
+        kidney_disease: {
+            title: 'Kidney Disease Foundations',
+            content: `
+                <h3>Why Kidneys Matter</h3>
+                <p>The kidneys regulate fluid, electrolytes, acid-base balance, blood pressure, and RBC production. When they fail, every body system is affected.</p>
+                <h3>Critical Distinction</h3>
+                <ul>
+                    <li><strong>AKI is reversible</strong> (if caught early and cause addressed)</li>
+                    <li><strong>CKD/ESKD is progressive and irreversible</strong></li>
+                </ul>
+                <h3>Top Causes of CKD</h3>
+                <p>Diabetes (#1) and hypertension (#2) together account for the majority. Both are modifiable.</p>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The two most common causes of kidney failure are the two most common chronic diseases you'll manage in primary care. Every time you help a patient control their A1C or blood pressure, you're protecting their kidneys.
+                </div>
+            `
+        },
+        rrt: {
+            title: 'Renal Replacement Therapy',
+            content: `
+                <h3>Three Modalities \u2014 None Are Cures</h3>
+                <p>When kidneys can no longer sustain life, RRT takes over. The goal: remove waste, excess fluid, and restore electrolyte balance. All three are life support, not treatment.</p>
+                <h3>Modality Comparison</h3>
+                <ul>
+                    <li><strong>Hemodialysis</strong> \u2014 Intermittent (3\u00d7/week, 3\u20134h). Uses AV fistula/graft/catheter. Rapid fluid shifts \u2192 hypotension risk</li>
+                    <li><strong>Peritoneal Dialysis</strong> \u2014 Continuous (CAPD/CCPD). Uses peritoneal membrane. Patient-independent. Major risk: peritonitis</li>
+                    <li><strong>CRRT</strong> \u2014 Continuous, ICU only. For hemodynamically unstable patients who can't tolerate HD</li>
+                </ul>
+                <h3>Transplantation</h3>
+                <p>Treatment of choice for selected ESKD patients. Living donor kidneys function immediately; deceased donor may take 2\u20133 weeks. Requires lifelong immunosuppression. 1-year graft survival: 90\u201395%.</p>
+                <h3>Hospitalized Dialysis Patient</h3>
+                <ul>
+                    <li>Protect vascular access (thrill/bruit every shift)</li>
+                    <li>IV fluids as slowly as possible (can't excrete water)</li>
+                    <li>Hold antihypertensives BEFORE dialysis, give AFTER</li>
+                    <li>Watch for pericarditis \u2192 effusion \u2192 tamponade progression</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> AV fistula is the preferred long-term access (lowest infection risk, longest patency). HD catheter has the HIGHEST infection risk and should be temporary. If a question asks about "best" access \u2192 fistula.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> None of these modalities cure kidney disease. They are life support. The nursing expertise required only intensifies once a patient reaches RRT \u2014 every medication, every IV fluid, every dietary choice carries higher stakes.
+                </div>
+            `
+        },
+        aki: {
+            title: 'Acute Kidney Injury (AKI)',
+            content: `
+                <h3>Three Categories</h3>
+                <ul>
+                    <li><strong>Prerenal</strong> \u2014 Decreased blood flow (hypovolemia, HF, sepsis, burns). BUN:Cr > 20:1</li>
+                    <li><strong>Intrarenal</strong> \u2014 Direct kidney damage (nephrotoxic drugs, contrast dye, rhabdomyolysis, glomerulonephritis). Renal tubular casts in urine</li>
+                    <li><strong>Postrenal</strong> \u2014 Obstruction (BPH, kidney stones, tumors). Hydronephrosis on imaging</li>
+                </ul>
+                <h3>Four Phases</h3>
+                <ol>
+                    <li><strong>Initiation</strong> \u2014 Hours to days. Prevention still possible</li>
+                    <li><strong>Oliguria</strong> \u2014 UO < 400 mL/day, rising BUN/Cr, hyperkalemia. 10\u201314 days (longer = worse prognosis)</li>
+                    <li><strong>Diuresis</strong> \u2014 UO increases (1\u20134.5 L/day). DANGER: dehydration and hypokalemia</li>
+                    <li><strong>Recovery</strong> \u2014 3\u201312 months. May have permanent \u2193GFR</li>
+                </ol>
+                <h3>Prevention</h3>
+                <ul>
+                    <li>Pre-procedure IV hydration for contrast dye</li>
+                    <li>Monitor aminoglycoside/vancomycin levels</li>
+                    <li>Avoid NSAIDs in renal impairment</li>
+                    <li>N-acetylcysteine (Mucomyst) before contrast</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> The DIURESIS phase is counterintuitive and heavily tested. Kidneys are recovering but can't concentrate urine \u2192 output hits 4.5 L/day. The danger is now DEHYDRATION and electrolyte loss \u2014 the exact opposite of the oliguric phase.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Burns cause prerenal AKI (hypoperfusion). Aminoglycosides cause intrarenal AKI (direct tubular toxicity). Understanding the "why" helps you predict, prevent, and prioritize.
+                </div>
+            `
+        },
+        ckd: {
+            title: 'Chronic Kidney Disease & ESKD',
+            content: `
+                <h3>CKD Stages</h3>
+                <ul>
+                    <li><strong>Stage 1</strong> (GFR > 90) \u2014 Damage but normal function. Slow progression</li>
+                    <li><strong>Stage 2</strong> (60\u201389) \u2014 Mild decrease. Manage comorbidities</li>
+                    <li><strong>Stage 3</strong> (30\u201359) \u2014 Complications begin (anemia, bone disease)</li>
+                    <li><strong>Stage 4</strong> (15\u201329) \u2014 Prepare for RRT, plan vascular access</li>
+                    <li><strong>Stage 5</strong> (< 15) \u2014 ESKD. Dialysis or transplant required</li>
+                </ul>
+                <h3>Systemic Effects of ESKD</h3>
+                <ul>
+                    <li><strong>Fluid</strong> \u2014 Edema, HTN, HF (Na+/water retention)</li>
+                    <li><strong>K+</strong> \u2014 Hyperkalemia \u2192 cardiac arrest</li>
+                    <li><strong>Acid-base</strong> \u2014 Metabolic acidosis (can't excrete H+)</li>
+                    <li><strong>Hematologic</strong> \u2014 Anemia (\u2193EPO), bleeding (\u2193platelet function)</li>
+                    <li><strong>CV</strong> \u2014 HTN, HF, pericarditis, atherosclerosis</li>
+                    <li><strong>Neuro</strong> \u2014 Lethargy, seizures, restless legs</li>
+                    <li><strong>GI</strong> \u2014 Uremic fetor, stomatitis, anorexia</li>
+                    <li><strong>Skin</strong> \u2014 Pruritus, uremic frost, yellowish-gray pallor</li>
+                    <li><strong>Bone</strong> \u2014 Renal osteodystrophy (see separate node)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Anemia in CKD is treated with EPO (epoetin alfa) with target Hgb 10\u201311.5 g/dL. Higher targets increase thrombosis risk. IV iron is usually needed concurrently. Monitor for HTN and vascular access thrombosis.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The pericarditis \u2192 effusion \u2192 tamponade progression: friction rub = pericarditis. Friction rub DISAPPEARS = effusion (fluid muffles the rubbing). Muffled sounds + hypotension + JVD = tamponade = EMERGENCY.
+                </div>
+            `
+        },
+        hyperkalemia: {
+            title: 'Hyperkalemia \u2014 The Most Dangerous Electrolyte',
+            content: `
+                <h3>Why It Kills</h3>
+                <p>Kidneys normally excrete 80% of K+. In renal failure, K+ accumulates rapidly. Combined with metabolic acidosis (shifts K+ out of cells), dietary indiscretion, and certain medications, serum K+ can reach lethal levels quickly.</p>
+                <h3>ECG Progression</h3>
+                <ul>
+                    <li><strong>Mild (5.5\u20136.0)</strong> \u2014 Tall, peaked T waves (earliest sign)</li>
+                    <li><strong>Moderate (6.0\u20137.0)</strong> \u2014 Flat P waves, prolonged PR</li>
+                    <li><strong>Severe (7.0\u20138.0)</strong> \u2014 Widened QRS</li>
+                    <li><strong>Critical (> 8.0)</strong> \u2014 Sine wave \u2192 V-fib \u2192 CARDIAC ARREST</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Tall, peaked T waves = think hyperkalemia IMMEDIATELY. This is the most tested ECG finding in nursing exams. If you see peaked T waves + renal history, start thinking about the emergency protocol.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Calcium gluconate is always FIRST in hyperkalemic emergency \u2014 not because it lowers K+ (it doesn't), but because it stabilizes the myocardium against fatal dysrhythmias. You're buying time for the other treatments to work. Think of it as a cardiac shield.
+                </div>
+            `
+        },
+        k_treatment: {
+            title: 'Hyperkalemia Emergency Treatment',
+            content: `
+                <h3>Treatment Protocol (in order of urgency)</h3>
+                <ol>
+                    <li><strong>Calcium gluconate IV</strong> \u2014 Stabilizes cardiac membrane. Onset: minutes. Does NOT lower K+. Buys time</li>
+                    <li><strong>Regular insulin + D50</strong> \u2014 Drives K+ into cells. Onset: ~30 min. Monitor for hypoglycemia</li>
+                    <li><strong>Sodium bicarbonate IV</strong> \u2014 Alkalinizes serum, drives K+ into cells. Onset: ~30 min</li>
+                    <li><strong>Nebulized albuterol</strong> \u2014 Beta-2 stimulation drives K+ into cells. Adjunct</li>
+                    <li><strong>Kayexalate</strong> \u2014 Cation exchange resin removes K+ via GI tract. Onset: hours. Can cause constipation/fecal impaction</li>
+                    <li><strong>Dialysis</strong> \u2014 Definitive K+ removal. Most effective long-term</li>
+                </ol>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Calcium gluconate = FIRST intervention. Insulin+D50 = drives K+ into cells (temporary). Kayexalate = actually removes K+ from body (slow). Dialysis = definitive. Know the mechanism AND onset for each.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Insulin+glucose and bicarb are temporary measures \u2014 they shift K+ into cells but don't remove it from the body. The K+ will shift back out eventually. Kayexalate or dialysis actually removes it.
+                </div>
+            `
+        },
+        renal_osteodystrophy: {
+            title: 'Renal Osteodystrophy',
+            content: `
+                <h3>The Cascade</h3>
+                <p><strong>Phosphorus UP \u2192 Calcium DOWN \u2192 Vitamin D DOWN \u2192 PTH UP \u2192 Bones WEAKEN.</strong></p>
+                <ul>
+                    <li>Failed kidneys can't excrete phosphorus \u2192 accumulates</li>
+                    <li>High phosphorus binds calcium (drops serum Ca)</li>
+                    <li>Kidneys can't convert vitamin D to active form (calcitriol) \u2192 Ca absorption from gut drops further</li>
+                    <li>Parathyroid glands respond by secreting more PTH</li>
+                    <li>PTH leaches calcium from bones \u2192 brittle, fracture-prone bones</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li>Phosphate binders (take with meals)</li>
+                    <li>Active vitamin D (calcitriol)</li>
+                    <li>Calcium supplementation</li>
+                    <li>Low-phosphorus diet</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> The cascade is tested as a sequence question: "What happens first when kidneys fail?" \u2192 Phosphorus retention. Then calcium drops. Then PTH rises. Then bones weaken. Know the ORDER.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Phosphate binders must be taken WITH meals to bind dietary phosphorus in the gut. Taking them between meals is useless. This is the most common patient error.
+                </div>
+            `
+        },
+        hemodialysis: {
+            title: 'Hemodialysis',
+            content: `
+                <h3>Principles</h3>
+                <ul>
+                    <li><strong>Diffusion</strong> \u2014 Solutes move from high (blood) to low (dialysate) concentration</li>
+                    <li><strong>Osmosis</strong> \u2014 Water moves from low to high solute concentration</li>
+                    <li><strong>Ultrafiltration</strong> \u2014 Hydrostatic pressure pushes excess water across membrane</li>
+                </ul>
+                <p>Schedule: 3\u00d7/week, 3\u20134 hours/session. Countercurrent flow maximizes efficiency.</p>
+                <h3>Vascular Access</h3>
+                <ul>
+                    <li><strong>AV Fistula (AVF)</strong> \u2014 Preferred. Lowest infection/thrombosis. 3\u20136 month maturation</li>
+                    <li><strong>AV Graft (AVG)</strong> \u2014 Synthetic tube. Usable in 2\u20133 weeks. Higher infection risk</li>
+                    <li><strong>HD Catheter</strong> \u2014 Immediate use. HIGHEST infection risk. Should be temporary</li>
+                </ul>
+                <h3>Complications</h3>
+                <ul>
+                    <li><strong>Hypotension</strong> (most common) \u2014 Rapid fluid removal. Lower HOB, NS bolus</li>
+                    <li><strong>Disequilibrium syndrome</strong> \u2014 Rapid BUN drop \u2192 cerebral edema. Headache, seizures. Slow rate for first treatment</li>
+                    <li><strong>Air embolism</strong> \u2014 Clamp tubing, position LEFT side with head DOWN</li>
+                    <li><strong>Muscle cramps</strong> \u2014 Rapid fluid/electrolyte shifts</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Hold antihypertensives BEFORE dialysis, give AFTER. Rationale: dialysis removes fluid (lowers BP). Antihypertensive + fluid removal = dangerous hypotension. This timing question appears frequently.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Disequilibrium syndrome is more common with the first treatment or when BUN is very high. The brain's urea levels drop slower than the blood's, creating an osmotic gradient that pulls water into brain tissue. Prevention: shorter, gentler initial sessions.
+                </div>
+            `
+        },
+        av_fistula: {
+            title: 'AV Fistula Protection',
+            content: `
+                <h3>The NON-NEGOTIABLE Rules</h3>
+                <ul>
+                    <li><strong>NO blood pressure</strong> on the access arm</li>
+                    <li><strong>NO venipuncture or blood draws</strong> on the access arm</li>
+                    <li><strong>NO IV starts</strong> on the access arm</li>
+                    <li><strong>NO constrictive clothing or jewelry</strong> on the access arm</li>
+                </ul>
+                <h3>Assessment</h3>
+                <ul>
+                    <li><strong>Thrill</strong> (palpable vibration) and <strong>bruit</strong> (audible whooshing) confirm patency</li>
+                    <li>Absent thrill/bruit = clotted \u2192 EMERGENCY</li>
+                </ul>
+                <h3>Patient Teaching</h3>
+                <ul>
+                    <li>Elevate arm, do not sleep on access arm</li>
+                    <li>Carry ID identifying the access</li>
+                    <li>Report signs of infection, decreased thrill/bruit, swelling, pain</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> "The nurse observes a phlebotomist preparing to draw blood from the patient's fistula arm. What is the priority action?" \u2014 STOP the blood draw immediately. The fistula is the patient's lifeline. This is a priority/delegation question staple.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> When you're protecting an AV fistula from a well-meaning phlebotomist, you're protecting that patient's literal lifeline. Loss of the fistula means catheter placement (highest infection risk) while waiting months for a new one to mature.
+                </div>
+            `
+        },
+        peritoneal_dialysis: {
+            title: 'Peritoneal Dialysis',
+            content: `
+                <h3>How It Works</h3>
+                <p>Uses the peritoneal membrane (~22,000 cm\u00b2) as a natural dialysis membrane. Sterile dialysate infused \u2192 dwells \u2192 drains by gravity.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>CAPD</strong> \u2014 4\u20135 manual exchanges/day. Patient-independent. No machine</li>
+                    <li><strong>CCPD</strong> \u2014 Automated cycler overnight. Frees daytime hours</li>
+                </ul>
+                <h3>Dialysate</h3>
+                <p>Dextrose concentrations: 1.5%, 2.5%, 4.25%. Higher = more fluid removal but damages membrane over time.</p>
+                <h3>Infection Control</h3>
+                <ul>
+                    <li>Strict hand hygiene before every exchange</li>
+                    <li>Mask and hair bonnet during exchanges</li>
+                    <li>No visitors during exchange; door closed</li>
+                    <li>Sterile cap on catheter during dwell</li>
+                </ul>
+                <h3>Poor Drainage?</h3>
+                <p>First action: <strong>reposition the patient</strong> (roll to other side). Constipation is a common cause.</p>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> If drainage is insufficient, the FIRST nursing action is to reposition the patient \u2014 not call the physician. Constipation pressing on the catheter is the most common cause.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> PD patients lose protein in the dialysate, leading to hypoalbuminemia. Nutritional assessment is critical. Also watch for hernias from increased intra-abdominal pressure.
+                </div>
+            `
+        },
+        peritonitis: {
+            title: 'Peritonitis \u2014 Critical PD Complication',
+            content: `
+                <h3>Recognition</h3>
+                <p><strong>FIRST sign: CLOUDY DIALYSATE EFFLUENT.</strong> Normal effluent is clear and pale yellow. Cloudy = peritonitis until proven otherwise.</p>
+                <h3>Other Signs</h3>
+                <ul>
+                    <li>Diffuse abdominal pain with rebound tenderness</li>
+                    <li>Fever, nausea, general malaise</li>
+                    <li>Severe cases: hypotension and shock</li>
+                </ul>
+                <h3>Management</h3>
+                <ul>
+                    <li><strong>Culture the effluent FIRST</strong>, then start antibiotics</li>
+                    <li>Intraperitoneal (IP) antibiotics added to dialysate + systemic antibiotics</li>
+                    <li>Continue dialysis during treatment</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Cloudy effluent = peritonitis. This is a one-answer recognition question. If you see "the nurse notes cloudy dialysate drainage," the priority is to culture it and notify the provider. Normal effluent = clear.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Most peritonitis cases are caused by contamination during catheter connections/disconnections. Meticulous sterile technique during exchanges is the primary prevention strategy.
+                </div>
+            `
+        },
+        crrt: {
+            title: 'Continuous Renal Replacement Therapy (CRRT)',
+            content: `
+                <h3>When It's Used</h3>
+                <p>ICU patients who are hemodynamically unstable and cannot tolerate the rapid fluid/solute shifts of conventional hemodialysis. Runs continuously over 24+ hours.</p>
+                <h3>Types</h3>
+                <ul>
+                    <li><strong>CVVH</strong> \u2014 Fluid removal (ultrafiltration)</li>
+                    <li><strong>CVVHD</strong> \u2014 Solute + fluid removal</li>
+                    <li><strong>CVVHDF</strong> \u2014 Combined filtration + dialysis</li>
+                </ul>
+                <h3>Nursing Considerations</h3>
+                <ul>
+                    <li>Continuous anticoagulation (heparin or citrate)</li>
+                    <li>Hourly I&O monitoring</li>
+                    <li>Frequent vital signs</li>
+                    <li>Access site monitoring</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> CRRT vs HD: CRRT = slow and continuous (hemodynamically unstable patients). HD = intermittent and faster (stable patients). If the question says "hypotensive" or "hemodynamically unstable" \u2192 CRRT.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> CRRT requires 1:1 nursing care. The continuous nature means constant monitoring of fluid balance, anticoagulation, and machine function. It's one of the most nursing-intensive ICU therapies.
+                </div>
+            `
+        },
+        transplant: {
+            title: 'Kidney Transplantation',
+            content: `
+                <h3>Key Facts</h3>
+                <ul>
+                    <li>Treatment of choice for selected ESKD patients, but NOT a cure</li>
+                    <li>Elective procedure \u2014 patient should be in best possible condition</li>
+                    <li>Placed in iliac fossa (anterior). Native kidneys usually NOT removed</li>
+                    <li>Living donor kidneys function immediately; deceased donor may take 2\u20133 weeks (ATN)</li>
+                    <li>1-year graft survival: 90\u201395%</li>
+                </ul>
+                <h3>Contraindications</h3>
+                <ul>
+                    <li>Recent malignancy, active infection (HIV, Hep B/C)</li>
+                    <li>Severe irreversible extrarenal disease</li>
+                    <li>BMI > 35, active substance use</li>
+                    <li>History of nonadherence</li>
+                </ul>
+                <h3>Post-Op Monitoring</h3>
+                <ul>
+                    <li>Urine output measured HOURLY</li>
+                    <li>IV fluids based on urine volume and electrolytes</li>
+                    <li>No fresh flowers in transplant unit (infection risk)</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> The living organ donor often experiences MORE pain than the recipient and requires more analgesia. This is a common knowledge gap tested on exams. Both donor and recipient need equal nursing attention.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> History of nonadherence is a contraindication because immunosuppression is lifelong. Missing even a few doses can trigger rejection. This isn't judgment \u2014 it's protecting the patient (and the scarce organ) from a foreseeable bad outcome.
+                </div>
+            `
+        },
+        rejection: {
+            title: 'Transplant Rejection',
+            content: `
+                <h3>Three Types</h3>
+                <ul>
+                    <li><strong>Hyperacute</strong> \u2014 Within 24 hours. Antibody-mediated. Immediate organ removal required</li>
+                    <li><strong>Acute</strong> \u2014 3\u201314 days (up to weeks). T-cell mediated. Signs: rising creatinine (may be ONLY sign on cyclosporine), fever, graft tenderness, oliguria. Treated with increased immunosuppression</li>
+                    <li><strong>Chronic</strong> \u2014 Months to years. Progressive fibrosis. May require return to dialysis</li>
+                </ul>
+                <h3>Detection</h3>
+                <ul>
+                    <li>Ultrasound (hydronephrosis)</li>
+                    <li><strong>Percutaneous renal biopsy</strong> (most reliable)</li>
+                    <li>Nuclear medicine studies</li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> In patients on cyclosporine, the ONLY sign of acute rejection may be a rising serum creatinine. Classic symptoms (fever, tenderness) may be masked by the drug. This is why lab monitoring is non-negotiable.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> Treatable rejection episodes during the first year are not uncommon. Early detection through monitoring is key \u2014 acute rejection caught early responds well to increased immunosuppression.
+                </div>
+            `
+        },
+        immunosuppressants: {
+            title: 'Immunosuppressant Medications',
+            content: `
+                <h3>Key Agents</h3>
+                <ul>
+                    <li><strong>Tacrolimus</strong> \u2014 Calcineurin inhibitor. Monitor for nephrotoxicity, hyperkalemia, neurotoxicity (tremors). Drug level monitoring</li>
+                    <li><strong>Cyclosporine</strong> \u2014 Calcineurin inhibitor. Nephrotoxicity, hirsutism, gingival hyperplasia. <strong>AVOID GRAPEFRUIT</strong>. Same time daily with food</li>
+                    <li><strong>Sirolimus</strong> \u2014 mTOR inhibitor. Give 4 hours AFTER cyclosporine. Limit sun exposure</li>
+                    <li><strong>Mycophenolate</strong> \u2014 Antiproliferative. GI upset. Do NOT crush capsules. Baseline CBC</li>
+                    <li><strong>Corticosteroids</strong> \u2014 Long-term risks: Cushing, diabetes, osteoporosis, cataracts, GI bleeding</li>
+                </ul>
+                <h3>Lifelong Consequences</h3>
+                <ul>
+                    <li>Nephrotoxicity (ironic but real \u2014 drugs protecting transplant can damage it)</li>
+                    <li>Increased cancer risk \u2192 lifelong screening</li>
+                    <li>CVD is #1 cause of post-transplant morbidity/mortality</li>
+                    <li><strong>No live vaccines</strong></li>
+                </ul>
+                <div class="exam-trap">
+                    <strong>EXAM TRAP:</strong> Grapefruit inhibits CYP3A4 \u2192 raises cyclosporine/tacrolimus levels to toxic ranges. Transplant patients must avoid ALL grapefruit products for life. This is a classic pharmacology question.
+                </div>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> The immunosuppression balancing act: too much = infection and cancer risk. Too little = rejection. There is no "perfect" dose \u2014 it's constant monitoring and adjustment. Educate patients that missing doses is as dangerous as overdosing.
+                </div>
+            `
+        },
+        continuum: {
+            title: 'The Diabetes \u2192 Kidney Failure Continuum',
+            content: `
+                <h3>The Full Story</h3>
+                <p>Uncontrolled Diabetes \u2192 Microvascular Damage \u2192 Nephropathy \u2192 Progressive CKD (Stages 1\u20135) \u2192 ESKD (GFR < 15) \u2192 Dialysis or Transplant (lifelong).</p>
+                <h3>Prevention Points (Where Nurses Make the Biggest Impact)</h3>
+                <ul>
+                    <li>A1C < 7%</li>
+                    <li>Blood pressure control</li>
+                    <li>ACE inhibitors for microalbuminuria</li>
+                    <li>Avoid nephrotoxins</li>
+                    <li>Patient education at every encounter</li>
+                </ul>
+                <div class="clinical-pearl">
+                    <strong>Clinical Pearl:</strong> When you're teaching a newly diagnosed diabetic about A1C goals and foot care, you're not just managing diabetes. You're potentially preventing a future life on dialysis. Every piece of this material connects to every other piece. The better you understand those connections, the better you'll think clinically.
+                </div>
+            `
+        }
+    };
+
+    // ===== RENDERING =====
+    const mapInner = document.getElementById('map-inner');
+    const svg = document.getElementById('connections-svg');
+
+    // Build adjacency list
+    const adjacency = {};
+    for (const id in nodes) adjacency[id] = new Set();
+    edges.forEach(([a, b]) => {
+        adjacency[a].add(b);
+        adjacency[b].add(a);
+    });
+
+    // Render nodes
+    for (const [id, data] of Object.entries(nodes)) {
+        const el = document.createElement('div');
+        el.className = `node ${data.type}`;
+        el.id = `node-${id}`;
+        el.style.left = data.x + 'px';
+        el.style.top = data.y + 'px';
+        const lines = data.label.split('\n');
+        el.innerHTML = lines.map(l => `<h3>${l}</h3>`).join('') + `<p>${data.sub}</p>`;
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            activateNode(id);
+        });
+        mapInner.appendChild(el);
+    }
+
+    // Render edges
+    function getNodeCenter(id) {
+        const el = document.getElementById('node-' + id);
+        if (!el) return { x: nodes[id].x, y: nodes[id].y };
+        return {
+            x: el.offsetLeft + el.offsetWidth / 2,
+            y: el.offsetTop + el.offsetHeight / 2
+        };
+    }
+
+    function renderEdges() {
+        svg.innerHTML = '';
+        svg.setAttribute('viewBox', '0 0 2200 1300');
+        edges.forEach(([a, b, label, dashed]) => {
+            const pa = getNodeCenter(a);
+            const pb = getNodeCenter(b);
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', pa.x);
+            line.setAttribute('y1', pa.y);
+            line.setAttribute('x2', pb.x);
+            line.setAttribute('y2', pb.y);
+            line.classList.add('conn-line');
+            line.dataset.from = a;
+            line.dataset.to = b;
+            if (dashed) line.classList.add('dashed');
+            svg.appendChild(line);
+
+            if (label) {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', (pa.x + pb.x) / 2);
+                text.setAttribute('y', (pa.y + pb.y) / 2 - 6);
+                text.classList.add('conn-label');
+                text.dataset.from = a;
+                text.dataset.to = b;
+                text.textContent = label;
+                svg.appendChild(text);
+            }
+        });
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(renderEdges);
+    });
+
+    // ===== INTERACTION =====
+    let activeNodeId = null;
+
+    function activateNode(id) {
+        activeNodeId = id;
+        const info = nodeInfo[id];
+        if (!info) return;
+
+        document.getElementById('panel-title').textContent = info.title;
+        const connLinks = Array.from(adjacency[id]).map(cid => {
+            const n = nodes[cid];
+            const displayName = n ? n.label.replace('\n', ' ') : cid;
+            return `<span onclick="activateNode('${cid}')">${displayName}</span>`;
+        }).join('');
+        document.getElementById('panel-content').innerHTML = info.content +
+            `<div class="connection-list"><h3>Connected To:</h3>${connLinks}</div>`;
+        document.getElementById('info-panel').classList.add('visible');
+
+        const connected = adjacency[id];
+        document.querySelectorAll('.node').forEach(el => {
+            const nid = el.id.replace('node-', '');
+            el.classList.remove('active', 'connected', 'dimmed');
+            if (nid === id) el.classList.add('active');
+            else if (connected.has(nid)) el.classList.add('connected');
+            else el.classList.add('dimmed');
+        });
+
+        document.querySelectorAll('.conn-line').forEach(l => {
+            l.classList.remove('active', 'dimmed');
+            if (l.dataset.from === id || l.dataset.to === id) l.classList.add('active');
+            else l.classList.add('dimmed');
+        });
+        document.querySelectorAll('.conn-label').forEach(t => {
+            t.classList.remove('active', 'dimmed');
+            if (t.dataset.from === id || t.dataset.to === id) t.classList.add('active');
+            else t.classList.add('dimmed');
+        });
+    }
+
+    function closePanel() {
+        document.getElementById('info-panel').classList.remove('visible');
+        activeNodeId = null;
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('active', 'connected', 'dimmed'));
+        document.querySelectorAll('.conn-line').forEach(l => l.classList.remove('active', 'dimmed'));
+        document.querySelectorAll('.conn-label').forEach(t => t.classList.remove('active', 'dimmed'));
+    }
+
+    // ===== PAN & ZOOM =====
+    const container = document.getElementById('map-container');
+    const inner = document.getElementById('map-inner');
+    let scale = 0.55;
+    let panX = -50;
+    let panY = 0;
+    let isPanning = false;
+    let startX, startY;
+
+    function applyTransform() {
+        inner.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        updateMinimap();
+    }
+
+    container.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.node') || e.target.closest('.info-panel')) return;
+        isPanning = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+        container.classList.add('grabbing');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+        isPanning = false;
+        container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.05 : 0.05;
+        const newScale = Math.min(1.5, Math.max(0.3, scale + delta));
+        const rect = container.getBoundingClientRect();
+        const cx = e.clientX - rect.left;
+        const cy = e.clientY - rect.top;
+        panX = cx - (cx - panX) * (newScale / scale);
+        panY = cy - (cy - panY) * (newScale / scale);
+        scale = newScale;
+        applyTransform();
+    }, { passive: false });
+
+    function zoomIn() { scale = Math.min(1.5, scale + 0.1); applyTransform(); }
+    function zoomOut() { scale = Math.max(0.3, scale - 0.1); applyTransform(); }
+    function resetView() { scale = 0.55; panX = -50; panY = 0; applyTransform(); closePanel(); }
+
+    applyTransform();
+
+    // ===== MINIMAP =====
+    const minimap = document.getElementById('minimap');
+    const minimapVP = document.getElementById('minimap-vp');
+    const mmW = 180, mmH = 110, mapW = 2200, mapH = 1300;
+
+    function renderMinimapDots() {
+        const colors = {
+            central: '#a855f7', metabolic: '#3b82f6', emergency: '#ef4444',
+            renal: '#06b6d4', treatment: '#10b981', electrolyte: '#f97316',
+            complication: '#92400e', pharm: '#ec4899', surgical: '#6b7280',
+            assessment: '#d97706'
+        };
+        for (const [id, data] of Object.entries(nodes)) {
+            const dot = document.createElement('div');
+            dot.className = 'minimap-dot';
+            dot.style.background = colors[data.type] || '#fff';
+            dot.style.left = (data.x / mapW * mmW) + 'px';
+            dot.style.top = (data.y / mapH * mmH) + 'px';
+            minimap.appendChild(dot);
+        }
+    }
+
+    function updateMinimap() {
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        const vpLeft = (-panX / scale) / mapW * mmW;
+        const vpTop = (-panY / scale) / mapH * mmH;
+        const vpW = (cw / scale) / mapW * mmW;
+        const vpH = (ch / scale) / mapH * mmH;
+        minimapVP.style.left = Math.max(0, vpLeft) + 'px';
+        minimapVP.style.top = Math.max(0, vpTop) + 'px';
+        minimapVP.style.width = Math.min(mmW, vpW) + 'px';
+        minimapVP.style.height = Math.min(mmH, vpH) + 'px';
+    }
+
+    renderMinimapDots();
+
+    // ===== SEARCH =====
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        if (q.length < 2) {
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+            return;
+        }
+        const matches = [];
+        for (const [id, data] of Object.entries(nodes)) {
+            const text = (data.label + ' ' + data.sub).toLowerCase();
+            const rawInfo = nodeInfo[id] ? (nodeInfo[id].title + ' ' + nodeInfo[id].content) : '';
+            const infoText = rawInfo.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').toLowerCase();
+            if (text.includes(q) || infoText.includes(q)) {
+                matches.push({ id, label: data.label.replace('\n', ' '), type: data.type });
+            }
+        }
+        if (matches.length === 0) {
+            searchResults.innerHTML = '<div class="search-result-item"><span style="color:#64748b">No matches</span></div>';
+        } else {
+            searchResults.innerHTML = matches.map(m =>
+                `<div class="search-result-item" onclick="goToNode('${m.id}')">
+                    <span class="sr-title">${m.label}</span>
+                    <span class="sr-type">${m.type}</span>
+                </div>`
+            ).join('');
+        }
+        searchResults.classList.add('visible');
+
+        document.querySelectorAll('.node').forEach(el => {
+            el.classList.remove('search-match');
+            const nid = el.id.replace('node-', '');
+            if (matches.some(m => m.id === nid)) el.classList.add('search-match');
+        });
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            searchInput.blur();
+            searchResults.classList.remove('visible');
+            clearSearchHighlight();
+        } else if (e.key === 'Enter') {
+            const first = searchResults.querySelector('.search-result-item');
+            if (first) first.click();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-box')) {
+            searchResults.classList.remove('visible');
+        }
+    });
+
+    function clearSearchHighlight() {
+        document.querySelectorAll('.node').forEach(el => el.classList.remove('search-match'));
+    }
+
+    function goToNode(id) {
+        searchResults.classList.remove('visible');
+        searchInput.value = '';
+        clearSearchHighlight();
+
+        const el = document.getElementById('node-' + id);
+        if (!el) return;
+        const cx = el.offsetLeft + el.offsetWidth / 2;
+        const cy = el.offsetTop + el.offsetHeight / 2;
+        panX = container.clientWidth / 2 - cx * scale;
+        panY = container.clientHeight / 2 - cy * scale;
+        applyTransform();
+        activateNode(id);
+    }
+
+    // ===== KEYBOARD SHORTCUTS =====
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.key === 'Escape') closePanel();
+        if (e.key === '/' || (e.key === 'f' && (e.ctrlKey || e.metaKey))) {
+            e.preventDefault();
+            searchInput.focus();
+        }
+        if (e.key === 'r' || e.key === 'R') resetView();
+    });
+
+    container.addEventListener('click', (e) => {
+        if (!e.target.closest('.node')) closePanel();
+    });
+    </script>
+</body>
+</html>

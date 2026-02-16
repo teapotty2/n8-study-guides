@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-System Complication Connector — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+.mode-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.mode-btn.active {
+  background: var(--cardiac);
+  color: white;
+}
+
+.mode-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.9em;
+  box-shadow: var(--shadow);
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); border-color: var(--fluid); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+/* ─── CASCADE CARDS ─── */
+.cascades-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.cascade-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.cascade-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--cardiac);
+}
+
+.cascade-card.expanded {
+  grid-column: 1 / -1;
+}
+
+.cascade-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.cascade-title {
+  font-size: 1.1em;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.cascade-concept {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+}
+
+.concept-cardiac { background: var(--cardiac-bg); color: var(--cardiac); }
+.concept-fluid { background: var(--fluid-bg); color: var(--fluid); }
+.concept-oxy { background: var(--oxy-bg); color: var(--oxy); }
+.concept-neuro { background: var(--neuro-bg); color: var(--neuro); }
+.concept-emergency { background: var(--emergency-bg); color: var(--emergency); }
+
+.expand-btn {
+  background: var(--surface);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expand-btn:hover { background: var(--surface-hover); }
+
+.cascade-link-btn {
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.cascade-link-btn:hover {
+  background: var(--cardiac);
+  color: white;
+  border-color: var(--cardiac);
+}
+
+/* ─── CASCADE FLOW VISUALIZATION ─── */
+.cascade-flow {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.cascade-card.expanded .cascade-flow {
+  display: block;
+}
+
+.flow-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.node {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9em;
+  text-align: center;
+  flex: 1;
+  min-width: 120px;
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.node.stage1 { background: var(--cardiac); }
+.node.stage2 { background: var(--fluid); }
+.node.stage3 { background: var(--oxy); }
+.node.stage4 { background: var(--emergency); }
+.node.stage5 { background: var(--neuro); }
+
+.arrow {
+  font-size: 1.2em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.break-point {
+  padding: 10px 14px;
+  background: var(--oxy-bg);
+  border-left: 3px solid var(--oxy);
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--text);
+  margin-left: 12px;
+}
+
+.break-label {
+  font-weight: 700;
+  color: var(--oxy);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+
+.break-text {
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.nursing-interventions {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.interventions-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cardiac);
+  margin-bottom: 8px;
+}
+
+.intervention-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.intervention-item {
+  padding: 8px 12px;
+  background: var(--card);
+  border-left: 2px solid var(--oxy);
+  border-radius: 4px;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+/* ─── QUIZ MODE ─── */
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.quiz-container.active { display: block; }
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.quiz-header h2 { font-size: 1.6em; font-weight: 800; margin-bottom: 8px; }
+.quiz-progress {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.progress-bar-bg {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--cardiac);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.quiz-scenario {
+  background: var(--surface);
+  border-left: 4px solid var(--fluid);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.scenario-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.scenario-text {
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.quiz-stats {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.quiz-stats h3 {
+  font-size: 1.05em;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  background: var(--card);
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+  border-top: 3px solid var(--cardiac);
+}
+
+.stat-number {
+  font-size: 1.8em;
+  font-weight: 800;
+  color: var(--cardiac);
+}
+
+.stat-label {
+  font-size: 0.75em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.option-btn {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95em;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-align: left;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: var(--card);
+  border-color: var(--cardiac);
+  box-shadow: var(--shadow);
+}
+
+.option-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.option-btn.selected {
+  background: var(--cardiac);
+  color: white;
+  border-color: var(--cardiac);
+}
+
+.option-btn.correct {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.option-btn.incorrect {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.feedback {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: none;
+  border-left: 4px solid;
+}
+
+.feedback.show { display: block; }
+
+.feedback.correct {
+  border-left-color: var(--success);
+  background: rgba(39,174,96,0.1);
+}
+
+.feedback.incorrect {
+  border-left-color: var(--danger);
+  background: rgba(231,76,60,0.1);
+}
+
+.feedback-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feedback.correct .feedback-title { color: var(--success); }
+.feedback.incorrect .feedback-title { color: var(--danger); }
+
+.feedback-text {
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.next-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1em;
+  transition: all 0.2s;
+}
+
+.next-btn:hover { background: #c0392b; transform: translateY(-2px); }
+.next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .search-bar { width: 100%; }
+
+  .mode-toggle {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .cascades-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cascade-card.expanded {
+    grid-column: 1;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .quiz-container {
+    margin: 0;
+    padding: 20px;
+    border-radius: 0;
+  }
+
+  .flow-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .node {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+    margin: -4px 0 -4px 12px;
+  }
+
+  .cascade-link-btn {
+    padding: 4px 8px;
+    font-size: 0.7em;
+  }
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state p {
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+/* ─── PRINT FRIENDLY ─── */
+@media print {
+  .controls, .header-btn, .mode-toggle, .expand-btn, .quiz-container {
+    display: none !important;
+  }
+
+  .cascade-card {
+    page-break-inside: avoid;
+    border: 1px solid var(--border);
+  }
+
+  .cascade-flow {
+    display: block !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Cross-System Complication Connector</h1>
+      <p class="subtitle">N8 Final Exam Prep — Map cascade pathways & break complications with targeted nursing interventions</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="switchMode('browse')">Browse Cascades</button>
+      <button class="mode-btn" onclick="switchMode('forward-quiz')">Forward Quiz (Predict Next)</button>
+      <button class="mode-btn" onclick="switchMode('reverse-quiz')">Reverse Quiz (What Breaks First?)</button>
+      <button class="mode-btn" onclick="switchMode('intervention-quiz')">Intervention Quiz</button>
+    </div>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search cascades by condition or system..." onkeyup="filterCascades()">
+
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="toggleExamFilter('all')">All Exams</button>
+      <button class="filter-btn" onclick="toggleExamFilter('exam1')">Exam 1 (Cardiac)</button>
+      <button class="filter-btn" onclick="toggleExamFilter('exam2')">Exam 2 (Oxy)</button>
+      <button class="filter-btn" onclick="toggleExamFilter('exam3')">Exam 3 (Neuro)</button>
+    </div>
+
+    <div class="filter-group">
+      <button class="filter-btn" onclick="toggleConceptFilter('cardiac')">Cardiac</button>
+      <button class="filter-btn" onclick="toggleConceptFilter('fluid')">Fluid & Electrolytes</button>
+      <button class="filter-btn" onclick="toggleConceptFilter('oxy')">Oxygenation</button>
+      <button class="filter-btn" onclick="toggleConceptFilter('neuro')">Neuro</button>
+      <button class="filter-btn" onclick="toggleConceptFilter('emergency')">Emergency</button>
+    </div>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <!-- BROWSE MODE -->
+  <div id="browseMode" class="browse-mode">
+    <div class="cascades-container" id="cascadesContainer"></div>
+  </div>
+
+  <!-- QUIZ MODES -->
+  <div id="quizMode" class="quiz-container">
+    <div class="quiz-header">
+      <h2 id="quizTitle">Forward Quiz: Predict Next Complication</h2>
+      <p class="quiz-progress"><span id="quizCurrent">1</span> / <span id="quizTotal">10</span></p>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="quizProgressBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-stats">
+      <h3>Your Stats</h3>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-number" id="statCorrect">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statIncorrect">0</div>
+          <div class="stat-label">Incorrect</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="statAccuracy">--</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-scenario" id="quizScenario"></div>
+
+    <div class="quiz-options" id="quizOptions"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+  </div>
+</div>
+
+<div class="footer">
+  Cross-System Complication Connector | N8 NCLEX-RN Intensive | Final Exam Prep | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+
+// ─── CASCADE DATA (11 total) ───
+const cascades = [
+  {
+    id: 1,
+    title: 'HF → Pulmonary Edema → Renal Hypoperfusion → Electrolyte Imbalances',
+    concept: 'cardiac',
+    exams: ['exam1', 'final'],
+    stages: [
+      { name: 'Heart Failure', color: 'stage1' },
+      { name: 'Fluid Overload', color: 'stage2' },
+      { name: 'Pulmonary Edema', color: 'stage3' },
+      { name: 'Renal Hypoperfusion', color: 'stage2' },
+      { name: 'Electrolyte Imbalances', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Daily weights, strict I&O monitoring, recognize ↑2-3 lbs/day as early sign' },
+      { stage: 1, intervention: 'Diuretics (furosemide), position upright, O2 if SpO2 <94%, restrict fluids/sodium' },
+      { stage: 2, intervention: 'Monitor for crackles, use BiPAP if needed, assess respiratory distress' },
+      { stage: 3, intervention: 'Monitor urine output (goal >0.5 mL/kg/hr), assess perfusion status' },
+      { stage: 4, intervention: 'Check electrolytes regularly, monitor K+/Na+, hold diuretics if Cr rising' }
+    ],
+    pathophys: 'Failing heart cannot eject adequately → systemic fluid backs up into lungs → impaired gas exchange + decreased renal perfusion → inability to excrete Na+/H2O + loss of K+ from diuretics → life-threatening electrolyte shifts.',
+    clinicalClue: 'Look for: weight gain, dyspnea, crackles on auscultation, ↑JVD, orthopnea, PND.'
+  },
+  {
+    id: 2,
+    title: 'Sepsis → Distributive Shock → ARDS → DIC → Multi-Organ Failure',
+    concept: 'emergency',
+    exams: ['exam2', 'final'],
+    stages: [
+      { name: 'Sepsis/SIRS', color: 'stage1' },
+      { name: 'Distributive Shock', color: 'stage2' },
+      { name: 'ARDS', color: 'stage3' },
+      { name: 'DIC', color: 'stage4' },
+      { name: 'Multi-Organ Failure', color: 'stage5' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Early recognition: fever + tachycardia + RR >20 + ↓BP = qSOFA positive. Get blood cultures BEFORE antibiotics.' },
+      { stage: 1, intervention: 'Fluid resuscitation (30 mL/kg NS), lactate monitoring (<2 mmol/L goal), vasopressors if MAP <65 after fluids' },
+      { stage: 2, intervention: 'Low tidal volume ventilation (6 mL/kg), maintain Pplat <30 cmH2O, lung-protective strategy' },
+      { stage: 3, intervention: 'Check PT/INR/fibrinogen/D-dimer q6h, monitor for bleeding, transfuse if fibrinogen <100' },
+      { stage: 4, intervention: 'Organ support: pressors, mechanical ventilation, continuous RRT, sedation, strict glucose control' }
+    ],
+    pathophys: 'Infection triggers systemic inflammatory cascade → vasodilation (↓BP) + capillary leak (↓intravascular volume) → tissue hypoxia → alveolar damage (ARDS) + platelet/clotting factor consumption (DIC) → sequential organ dysfunction.',
+    clinicalClue: 'Watch for: fever, tachycardia, tachypnea, hypotension (may be late sign), ↑lactate, petechiae/purpura (meningococcemia), bleeding from multiple sites.'
+  },
+  {
+    id: 3,
+    title: 'Stroke → Dysphagia → Aspiration → Pneumonia',
+    concept: 'oxy',
+    exams: ['exam2', 'final'],
+    stages: [
+      { name: 'Acute Stroke', color: 'stage1' },
+      { name: 'Dysphagia', color: 'stage2' },
+      { name: 'Aspiration Risk', color: 'stage3' },
+      { name: 'Aspiration Pneumonia', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'NIHSS assessment, imaging to rule out hemorrhage, monitor neuro q1h' },
+      { stage: 1, intervention: 'FORMAL swallow assessment (SLP) BEFORE any PO. Speech therapy consult mandatory.' },
+      { stage: 2, intervention: 'NPO until cleared by SLP. Elevate HOB 30°, keep suctioning equipment at bedside.' },
+      { stage: 3, intervention: 'Monitor for fever, cough, sputum changes. CXR if any respiratory symptoms. Antibiotics if pneumonia suspected.' }
+    ],
+    pathophys: 'Stroke damages swallowing center (bulbar dysfunction) or motor planning → loss of protective airway reflexes → food/secretions enter lungs → inflammatory response → infection.',
+    clinicalClue: 'Red flags: cough during/after eating, voice changes ("wet voice"), drooling, difficulty managing secretions. Never assume NPO lightly post-stroke.'
+  },
+  {
+    id: 4,
+    title: 'Burns → Fluid Shifts → Hypovolemic Shock → Renal Failure → Sepsis',
+    concept: 'emergency',
+    exams: ['exam2', 'final'],
+    stages: [
+      { name: 'Burn Injury', color: 'stage1' },
+      { name: 'Fluid Shifts (3rd spacing)', color: 'stage2' },
+      { name: 'Hypovolemic Shock', color: 'stage3' },
+      { name: 'Acute Kidney Injury', color: 'stage4' },
+      { name: 'Sepsis/Infection', color: 'stage5' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Apply Parkland formula ASAP: (TBSA% × body wt in kg × 4 mL) = total LR over 24hrs (give HALF in first 8hrs). ↑ if inhalation injury.' },
+      { stage: 1, intervention: 'Large-bore IV × 2, aggressive fluid resuscitation, avoid hypervolemia (monitor CVP, JVD)' },
+      { stage: 2, intervention: 'Monitor UO closely: 0.5-1 mL/kg/hr (goal for burns). If UO falling → increase fluids, check Hgb (myoglobinuria risk).' },
+      { stage: 3, intervention: 'Urinary catheter for accurate I&O, check urine color (red/cola-colored = rhabdomyolysis). Na-bicarb infusion if myoglobin present.' },
+      { stage: 4, intervention: 'Wound care (debridement, topical ABx), tetanus prophylaxis, early nutrition, watch for sepsis (fever, leukocytosis)' }
+    ],
+    pathophys: 'Thermal injury → massive inflammation → capillary permeability ↑ → fluid shifts OUT of intravascular space into interstitium (3rd spacing) → hypovolemia + myoglobinuria (rhabdo from muscle necrosis) → acute tubular necrosis (ATN) → renal failure. Damaged skin barrier → infection risk.',
+    clinicalClue: 'Progressive: severe pain, edema that doesnt pit (compartment syndrome risk), dark urine (myoglobin), oliguria despite fluids = critical sign.'
+  },
+  {
+    id: 5,
+    title: 'Hyperkalemia → Peaked T Waves → Arrhythmias → Cardiac Arrest',
+    concept: 'cardiac',
+    exams: ['exam1', 'final'],
+    stages: [
+      { name: 'Hyperkalemia (K+ >5.5)', color: 'stage1' },
+      { name: 'ECG Changes (Peaked T waves)', color: 'stage2' },
+      { name: 'Dysrhythmias', color: 'stage3' },
+      { name: 'Cardiac Arrest', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Check K+ if ↑Cr, oliguria, on ACE/ARB/spiro combo, rhabdo. Stat 12-lead ECG.' },
+      { stage: 1, intervention: 'ECG shows peaked T waves (may be only sign in mild hyperkalemia). If peaked T waves present → treat immediately.' },
+      { stage: 2, intervention: 'Calcium gluconate 10mL 10% IV (membrane stabilizer - gives 15-30 min buffer before K+-lowering meds work). Then: insulin 10u + dextrose 25g IV, or albuterol neb.' },
+      { stage: 3, intervention: 'Kayexalate (sodium polystyrene) or patiromer PO/PR (removes K+ via GI). Dialysis if renal failure + severe hyperkalemia.' }
+    ],
+    pathophys: 'Excess extracellular K+ → resting membrane potential less negative → spontaneous depolarization of cardiac tissue → abnormal conduction → reentrant circuits → VT/VF.',
+    clinicalClue: 'Often asymptomatic until ECG changes appear! Must check K+ in high-risk patients. Peaked T-waves are OMINOUS sign → treat aggressively.'
+  },
+  {
+    id: 6,
+    title: 'DKA → Dehydration → Electrolyte Shifts → Cardiac Arrhythmias',
+    concept: 'fluid',
+    exams: ['exam1', 'exam3', 'final'],
+    stages: [
+      { name: 'DKA (Ketosis + Acidosis)', color: 'stage1' },
+      { name: 'Severe Dehydration', color: 'stage2' },
+      { name: 'Electrolyte Depletion', color: 'stage3' },
+      { name: 'Arrhythmias', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Check glucose, ABG (pH <7.35, HCO3 <18), β-hydroxybutyrate. Ketones in urine.' },
+      { stage: 1, intervention: 'START FLUIDS FIRST (0.9% NS), NOT insulin. 1-1.5 L first hour if no CHF. Correct hypovolemia before insulin.' },
+      { stage: 2, intervention: 'Insulin drip AFTER fluids started: 0.1 u/kg/hr IV (NOT SQ in DKA). Monitor glucose hourly.' },
+      { stage: 3, intervention: 'Check K+ immediately (may be high due to acidosis, but total body K+ depleted). When K+ drops <5.3 → START K+ replacement (40 mEq/L IVF). Risk of hypokalemia + arrhythmias.' }
+    ],
+    pathophys: 'Insulin deficiency → hyperglycemia + lipolysis → ketoacids accumulate (β-OHB) → severe metabolic acidosis (pH 6.8-7.2) → hyperventilation ("Kussmaul breathing") + osmotic diuresis from hyperglycemia → massive volume depletion + total body K+/Mg2+/PO4 loss (though serum K+ initially HIGH due to acidosis-driven shift).',
+    clinicalClue: 'Fruity breath (acetone), Kussmaul respirations, abdominal pain, altered mental status, severe dehydration. CRITICAL: K+ is deceptive (appears high in acidosis but cells are depleted) — must replace once K+ normalizes.'
+  },
+  {
+    id: 7,
+    title: 'Status Epilepticus → Rhabdomyolysis → ATN → Acute Kidney Injury',
+    concept: 'neuro',
+    exams: ['exam3', 'final'],
+    stages: [
+      { name: 'Status Epilepticus', color: 'stage1' },
+      { name: 'Rhabdomyolysis', color: 'stage2' },
+      { name: 'Myoglobinuria/ATN', color: 'stage3' },
+      { name: 'Acute Kidney Injury', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Lorazepam (Ativan) 2 mg IV push immediately (1st-line for status). Fosphenytoin or levetiracetam for maintenance.' },
+      { stage: 1, intervention: 'Protect airway (intubate if not responsive), monitor for hyperthermia (continuous seizure activity generates heat).' },
+      { stage: 2, intervention: 'Check CK IMMEDIATELY (may be >5000). Urine myoglobin. Start aggressive IV hydration (NS, not dextrose — avoid hyperglycemia).' },
+      { stage: 3, intervention: 'Goal UO >200-300 mL/hr (2-3× normal) to flush myoglobin through kidneys. Monitor urine color (dark/cola = ongoing rhabdo). Na-bicarb to alkalinize urine (myoglobin soluble in alkaline urine).' }
+    ],
+    pathophys: 'Prolonged muscle contractions (seizures) → extreme heat + metabolic demand → myocyte necrosis → release of myoglobin + other intracellular contents → myoglobinuria (red/dark urine) → myoglobin precipitates in renal tubules → tubular obstruction → ATN + AKI.',
+    clinicalClue: 'After stopping seizures, watch for dark urine over next 12-24 hrs. Very high CK (>10,000) = severe rhabdo. Must hydrate aggressively or face dialysis.'
+  },
+  {
+    id: 8,
+    title: 'Heat Stroke → Rhabdomyolysis → DIC → Multi-Organ Failure',
+    concept: 'emergency',
+    exams: ['exam2', 'final'],
+    stages: [
+      { name: 'Heat Stroke (Core Temp >40°C)', color: 'stage1' },
+      { name: 'Rhabdomyolysis', color: 'stage2' },
+      { name: 'DIC (coagulopathy)', color: 'stage3' },
+      { name: 'Multi-Organ Failure', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Cool IMMEDIATELY to 39.2°C within 1 hour (ice packs, cool IV fluids, evaporative cooling). STOP cooling at 38°C (overshoot rebound hypothermia).' },
+      { stage: 1, intervention: 'Aggressive IV fluids (NS), Foley catheter for UO monitoring (goal >200 mL/hr), monitor for complications.' },
+      { stage: 2, intervention: 'Check CK, urine myoglobin, continue hydration. Alkalinize urine (Na-bicarb) to prevent myoglobin precipitation.' },
+      { stage: 3, intervention: 'Coagulation panel (PT/INR/fibrinogen), transfuse FFP if DIC criteria met, monitor for bleeding.' }
+    ],
+    pathophys: 'Extreme heat → direct thermal damage to cells + massive inflammation → rhabdomyolysis + release of tissue factor → widespread clotting (DIC) + consumption of platelets/clotting factors → bleeding + thrombosis + organ dysfunction.',
+    clinicalClue: 'Environmental exposure + high core temperature (often >41°C) + altered mental status (classic triad). Skin may be hot and DRY (vs heat exhaustion = wet). DIC develops FAST — watch PT/platelets closely.'
+  },
+  {
+    id: 9,
+    title: 'Mechanical Ventilation → Barotrauma → Pneumothorax → Tension Pneumo → Obstructive Shock',
+    concept: 'oxy',
+    exams: ['exam2', 'final'],
+    stages: [
+      { name: 'High Ventilator Pressure', color: 'stage1' },
+      { name: 'Alveolar Rupture (Barotrauma)', color: 'stage2' },
+      { name: 'Pneumothorax', color: 'stage3' },
+      { name: 'Tension Pneumothorax', color: 'stage4' },
+      { name: 'Obstructive Shock', color: 'stage5' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Monitor peak inspiratory pressures (Ppeak, goal <30 cmH2O). Use low tidal volume ventilation: 6 mL/kg (not 10-12). Permissive hypercapnia acceptable (pH >7.15).' },
+      { stage: 1, intervention: 'If Ppeak rising → check for obstruction (kinked tube, secretions, tube position), reduce TV, assess compliance.' },
+      { stage: 2, intervention: 'LISTEN for bilateral equal breath sounds. If unilateral absence + respiratory distress → GET STAT CXR (pneumothorax).' },
+      { stage: 3, intervention: 'Tension pneumo = EMERGENCY: JVD + hypotension + unilateral absent breath sounds + tracheal deviation = needle decompression (14-16G in 2nd ICS at midclavicular line, then chest tube).' }
+    ],
+    pathophys: 'High airway pressure + low lung compliance (ARDS, stiff lungs) → alveolar overdistension → rupture → air escapes into pleural space. If air cannot escape (tension) → mediastinal shift → impaired venous return → obstructive shock.',
+    clinicalClue: 'Sudden deterioration during ventilation: ↑Ppeak, ↓SpO2, ↓BP, unequal breath sounds. Tension pneumo is LETHAL if not immediately decompressed. Know the needle decompression landmarks.'
+  },
+  {
+    id: 10,
+    title: 'Pericarditis → Pericardial Effusion → Cardiac Tamponade → Obstructive Shock',
+    concept: 'cardiac',
+    exams: ['exam1', 'final'],
+    stages: [
+      { name: 'Pericarditis (inflammation)', color: 'stage1' },
+      { name: 'Pericardial Effusion', color: 'stage2' },
+      { name: 'Cardiac Tamponade', color: 'stage3' },
+      { name: 'Obstructive Shock', color: 'stage4' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Chest pain (sharp, positional, worse with deep breathing/lying flat, improves leaning forward). EKG: diffuse ST elevation. Check troponin, ESR.' },
+      { stage: 1, intervention: 'Echocardiogram to measure effusion size. Monitor for tamponade signs. NSAIDs or colchicine (avoid steroids unless autoimmune/pericarditis).' },
+      { stage: 2, intervention: 'Beck\'s Triad: muffled heart sounds + JVD + hypotension = TAMPONADE. Pulsus paradoxus (↓SBP >10 mmHg on inspiration) is classic.' },
+      { stage: 3, intervention: 'PREPARE for pericardiocentesis (needle drainage). This is LIFE-SAVING. Monitor hemodynamics closely pre/post procedure.' }
+    ],
+    pathophys: 'Inflammation of pericardial sac → fluid accumulates → as volume increases, intrapericardial pressure rises → compresses right atrium/ventricle → impaired ventricular filling → ↓preload → ↓cardiac output → obstructive shock.',
+    clinicalClue: 'Pleuritic chest pain + muffled heart sounds + hypotension = suspect tamponade. Echo is diagnostic. Pulsus paradoxus is SPECIFIC sign.'
+  },
+  {
+    id: 11,
+    title: 'Post-Craniotomy → Cerebral Edema → Increased ICP → Herniation → Brain Death',
+    concept: 'neuro',
+    exams: ['exam3', 'final'],
+    stages: [
+      { name: 'Craniotomy/Surgical Trauma', color: 'stage1' },
+      { name: 'Cerebral Edema', color: 'stage2' },
+      { name: 'Increased Intracranial Pressure', color: 'stage3' },
+      { name: 'Brain Herniation', color: 'stage4' },
+      { name: 'Brain Death', color: 'stage5' }
+    ],
+    breakPoints: [
+      { stage: 0, intervention: 'Neuro checks every 1 hour (GCS, pupil reactivity, motor/sensory). HOB 30°, head midline (prevent jugular compression → ↑ ICP).' },
+      { stage: 1, intervention: 'Monitor for edema: headache, confusion, restlessness, vomiting. CT head if deterioration. Keep normothermia (fever ↑ ICP).' },
+      { stage: 2, intervention: 'ICP monitoring if severe. Manage ICP: maintain CPP >60 mmHg. Mannitol 0.5-1 g/kg IV (osmotic diuretic) or 3% hypertonic saline.' },
+      { stage: 3, intervention: 'CRITICAL: Avoid ICP spikes (no coughing/straining/suctioning if avoidable, gentle handling, analgesics). Signs of herniation: blown pupil, decorticate/decerebrate posturing = imminent death.' }
+    ],
+    pathophys: 'Surgical manipulation + ischemia from retraction → cerebral inflammation → vasogenic edema (fluid in interstitium) → ↑brain volume → ↑ ICP (Monro-Kellie doctrine: cranium is fixed, so ↑brain volume → ↑pressure) → herniation (brain tissue forced out of cranium) → brainstem death.',
+    clinicalClue: 'Post-op deterioration in consciousness, headache, unequal pupils (classic sign of uncal herniation). CPP = MAP - ICP: if ICP >30 and MAP normal → CPP fails → ischemia. Monitor continuously.'
+  }
+];
+
+let currentMode = 'browse';
+let currentQuizIndex = 0;
+let quizCorrect = 0;
+let quizIncorrect = 0;
+let activeExamFilters = new Set(['all']);
+let activeConceptFilters = new Set();
+let expandedCascadeId = null;
+
+// ─── QUIZ DATA ───
+const forwardQuizzes = [
+  { cascade: 0, stage: 0, question: 'A patient with heart failure presents with sudden weight gain of 3 lbs overnight and dyspnea. What is the NEXT likely complication in the cascade?', options: ['Pulmonary Edema', 'Stroke', 'Sepsis', 'Renal Failure'], answer: 0 },
+  { cascade: 1, stage: 0, question: 'A septic patient has fever (39.2°C), HR 110, RR 24, BP 88/52. What develops NEXT if fluids/vasopressors not started?', options: ['DIC', 'Distributive Shock', 'Myocardial Infarction', 'Pneumonia'], answer: 1 },
+  { cascade: 2, stage: 1, question: 'Post-stroke patient has weak swallow and coughs during water intake. What is the NEXT risk?', options: ['Aspiration', 'Hyperglycemia', 'Cardiac Arrhythmia', 'Intracranial Hemorrhage'], answer: 0 },
+  { cascade: 3, stage: 2, question: 'Severely burned patient (40% TBSA) has been resuscitated but UO is only 0.2 mL/kg/hr despite adequate fluids. What complication should you suspect?', options: ['Rhabdomyolysis', 'Sepsis', 'Hyperkalemia', 'Respiratory Distress'], answer: 0 },
+  { cascade: 4, stage: 1, question: 'A patient has K+ 6.8 and ECG shows peaked T-waves. What is the IMMEDIATE next step?', options: ['Give insulin + dextrose', 'Give calcium gluconate', 'Monitor closely', 'Start dialysis'], answer: 1 },
+  { cascade: 5, stage: 2, question: 'DKA patient is on insulin infusion. After 2 hours, serum K+ drops from 5.2 to 4.1. What is the NEXT intervention?', options: ['Stop insulin', 'Start K+ replacement', 'Increase insulin', 'Give sodium bicarbonate'], answer: 1 },
+  { cascade: 6, stage: 1, question: 'Status epilepticus patient had seizures for 40 minutes. After seizure control, you note dark red urine. What complication is developing?', options: ['Hepatic Failure', 'Rhabdomyolysis', 'Sepsis', 'Stroke'], answer: 1 },
+  { cascade: 7, stage: 1, question: 'A heat stroke victim was cooled to 39.2°C. Labs show CK >8000, urine myoglobin positive. What is the NEXT priority?', options: ['Aggressive fluid resuscitation', 'Antibiotics', 'Cooling continued', 'Blood transfusion'], answer: 0 },
+  { cascade: 8, stage: 1, question: 'Ventilated patient has peak pressure 35 cmH2O, SpO2 drops to 88%, unilateral breath sounds absent. What is developing?', options: ['Pulmonary Embolism', 'Pneumothorax', 'Atelectasis', 'Pneumonia'], answer: 1 },
+  { cascade: 9, stage: 1, question: 'Patient post-cardiac surgery has muffled heart sounds, JVD, BP 85/55. What is the likely complication?', options: ['Myocardial Infarction', 'Cardiac Tamponade', 'Arrhythmia', 'Pneumonia'], answer: 1 }
+];
+
+const reverseQuizzes = [
+  { cascade: 0, symptoms: 'Weight gain + dyspnea + crackles on auscultation', condition: 'Heart Failure', wrongOptions: ['Sepsis', 'Stroke', 'Pneumonia'] },
+  { cascade: 1, symptoms: 'Fever + tachycardia + ↓BP + ↑lactate', condition: 'Sepsis/Distributive Shock', wrongOptions: ['Cardiogenic Shock', 'Hemorrhagic Shock', 'Anaphylaxis'] },
+  { cascade: 2, symptoms: 'Weakness, cough with swallowing, "wet voice"', condition: 'Stroke with Dysphagia', wrongOptions: ['Pneumonia', 'Asthma', 'Anaphylaxis'] },
+  { cascade: 3, symptoms: 'Severe burns + massive edema + dark urine + oliguria', condition: 'Burn-induced Rhabdomyolysis/AKI', wrongOptions: ['DKA', 'Septic Shock', 'Hemorrhage'] },
+  { cascade: 4, symptoms: 'Peaked T-waves on ECG + K+ >6.0 + muscle weakness', condition: 'Hyperkalemia', wrongOptions: ['Hypokalemia', 'Hypercalcemia', 'Hypernatremia'] },
+  { cascade: 5, symptoms: 'Fruity breath + Kussmaul respirations + abdominal pain + severe dehydration', condition: 'Diabetic Ketoacidosis', wrongOptions: ['Hypoglycemia', 'Hyperglycemia', 'Acute Coronary Syndrome'] },
+  { cascade: 6, symptoms: 'Prolonged seizures + muscle rigidity + very dark urine + ↑CK', condition: 'Status Epilepticus with Rhabdomyolysis', wrongOptions: ['Heat Stroke', 'Sepsis', 'Intracranial Hemorrhage'] },
+  { cascade: 7, symptoms: 'Core temp >41°C + confusion + hot dry skin + ↑CK', condition: 'Heat Stroke', wrongOptions: ['Heat Exhaustion', 'Sepsis', 'Malignant Hyperthermia'] },
+  { cascade: 8, symptoms: 'High peak pressures + unilateral absent breath sounds + ↓SpO2 + hypotension', condition: 'Tension Pneumothorax', wrongOptions: ['Atelectasis', 'Pulmonary Edema', 'Aspiration'] },
+  { cascade: 9, symptoms: 'Muffled heart sounds + JVD + hypotension + pulsus paradoxus', condition: 'Cardiac Tamponade', wrongOptions: ['Myocardial Infarction', 'Pericarditis', 'Pulmonary Embolism'] }
+];
+
+const interventionQuizzes = [
+  { cascade: 0, stage: 2, question: 'What is the primary nursing action to break the HF → Pulmonary Edema link?', options: ['Bed rest', 'Position upright, administer O2 and diuretics, monitor I&O', 'High sodium diet', 'Restrict all fluids'], answer: 1 },
+  { cascade: 1, stage: 0, question: 'What is the FIRST nursing action in suspected sepsis before antibiotics?', options: ['Start blood cultures', 'Initiate fluid resuscitation', 'Administer vasopressors', 'Give antibiotics immediately'], answer: 0 },
+  { cascade: 2, stage: 1, question: 'To prevent aspiration in a post-stroke patient, what must happen BEFORE any PO intake?', options: ['Doctor approval only', 'SLP swallow assessment', 'NPO 6 hours', 'Start nasogastric feeding'], answer: 1 },
+  { cascade: 3, stage: 0, question: 'The Parkland formula is used to guide fluid resuscitation in burns. What is the calculation?', options: ['1 L per hour', '(TBSA% × kg body weight × 4 mL) given over 24 hours', '2 L of LR only', 'Based on urine output only'], answer: 1 },
+  { cascade: 4, stage: 1, question: 'A hyperkalemic patient with peaked T-waves needs membrane stabilization. What drug is given FIRST?', options: ['Insulin', 'Calcium gluconate', 'Kayexalate', 'Dialysis'], answer: 1 },
+  { cascade: 5, stage: 0, question: 'In DKA, what should be given FIRST before insulin?', options: ['Insulin immediately', 'Normal saline fluid resuscitation', 'Sodium bicarbonate', 'Potassium replacement'], answer: 1 },
+  { cascade: 6, stage: 0, question: 'What is the FIRST-LINE drug for status epilepticus?', options: ['Fosphenytoin', 'Lorazepam (Ativan) 2 mg IV', 'Levetiracetam', 'Phenobarbital'], answer: 1 },
+  { cascade: 7, stage: 0, question: 'In heat stroke, cooling must be achieved within what timeframe and to what temperature?', options: ['2 hours to 35°C', '1 hour to 39.2°C, then stop at 38°C', '4 hours to 37°C', 'Cool until patient conscious'], answer: 1 },
+  { cascade: 8, stage: 0, question: 'To prevent barotrauma during mechanical ventilation, what tidal volume should be targeted?', options: ['10-12 mL/kg', '6 mL/kg with Ppeak <30 cmH2O', '15 mL/kg to maximize oxygenation', 'Tidal volume doesn\'t matter'], answer: 1 },
+  { cascade: 9, stage: 2, question: 'Tamponade is suspected. What is the definitive treatment?', options: ['Increase preload with fluids', 'Pericardiocentesis (needle drainage)', 'Diuretics', 'Vasodilators'], answer: 1 }
+];
+
+// ─── INITIALIZE ───
+function init() {
+  applyTheme();
+  renderCascades();
+  updateFilterButtons();
+}
+
+// ─── DARK MODE ───
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('n8hub_darkmode', newTheme);
+  document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// ─── MODE SWITCHING ───
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.mode-btn[onclick="switchMode('${mode}')"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  if (mode === 'browse') {
+    document.getElementById('browseMode').style.display = 'block';
+    document.getElementById('quizMode').classList.remove('active');
+  } else {
+    document.getElementById('browseMode').style.display = 'none';
+    document.getElementById('quizMode').classList.add('active');
+    initQuiz(mode);
+  }
+}
+
+// ─── CASCADE RENDERING ───
+function renderCascades() {
+  const container = document.getElementById('cascadesContainer');
+  container.innerHTML = '';
+
+  const filtered = getFilteredCascades();
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><p>No cascades match your filters. Try different selections.</p></div>';
+    return;
+  }
+
+  filtered.forEach(cascade => {
+    const card = createCascadeCard(cascade);
+    container.appendChild(card);
+  });
+}
+
+function createCascadeCard(cascade) {
+  const card = document.createElement('div');
+  card.className = 'cascade-card';
+  if (expandedCascadeId === cascade.id) card.classList.add('expanded');
+  card.dataset.cascadeId = cascade.id;
+
+  card.innerHTML = `
+    <div class="cascade-header" onclick="toggleExpand(${cascade.id})">
+      <div>
+        <div class="cascade-title">${cascade.title}</div>
+        <span class="cascade-concept concept-${cascade.concept}">${cascade.concept.toUpperCase()}</span>
+      </div>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <button class="cascade-link-btn" onclick="event.stopPropagation(); openChainMap('${cascade.concept}')" title="Open Chain Map for this concept">🔗 Chain</button>
+        <button class="cascade-link-btn" onclick="event.stopPropagation(); openShockSimulator()" title="Explore shock pathways">⚡ Shock</button>
+        <div class="expand-btn">▶</div>
+      </div>
+    </div>
+
+    <div class="cascade-flow">
+      <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 12px;"><strong>Pathophysiology:</strong> ${cascade.pathophys}</p>
+      <p style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 16px;"><strong>Clinical Clue:</strong> ${cascade.clinicalClue}</p>
+
+      <div class="flow-diagram">
+        ${cascade.stages.map((stage, idx) => `
+          <div class="flow-row">
+            ${idx > 0 ? '<div class="arrow">→</div>' : ''}
+            <div class="node ${stage.color}">${stage.name}</div>
+            <div class="break-point">
+              <div class="break-label">Break Point ${idx + 1}</div>
+              <div class="break-text">${cascade.breakPoints[idx].intervention}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="nursing-interventions">
+        <div class="interventions-label">All Break Points Summary</div>
+        <div class="intervention-list">
+          ${cascade.breakPoints.map((bp, idx) => `
+            <div class="intervention-item"><strong>Stage ${idx + 1}:</strong> ${bp.intervention}</div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  return card;
+}
+
+function toggleExpand(cascadeId) {
+  if (expandedCascadeId === cascadeId) {
+    expandedCascadeId = null;
+  } else {
+    expandedCascadeId = cascadeId;
+  }
+  renderCascades();
+}
+
+// ─── FILTERING ───
+function getFilteredCascades() {
+  let filtered = cascades;
+
+  // Search filter
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  if (searchTerm) {
+    filtered = filtered.filter(c => c.title.toLowerCase().includes(searchTerm));
+  }
+
+  // Exam filters
+  if (!activeExamFilters.has('all')) {
+    filtered = filtered.filter(c => c.exams.some(e => activeExamFilters.has(e)));
+  }
+
+  // Concept filters
+  if (activeConceptFilters.size > 0) {
+    filtered = filtered.filter(c => activeConceptFilters.has(c.concept));
+  }
+
+  return filtered;
+}
+
+function filterCascades() {
+  if (currentMode === 'browse') renderCascades();
+}
+
+function toggleExamFilter(filter) {
+  if (filter === 'all') {
+    activeExamFilters.clear();
+    activeExamFilters.add('all');
+  } else {
+    activeExamFilters.delete('all');
+    if (activeExamFilters.has(filter)) {
+      activeExamFilters.delete(filter);
+    } else {
+      activeExamFilters.add(filter);
+    }
+    if (activeExamFilters.size === 0) {
+      activeExamFilters.add('all');
+    }
+  }
+  updateFilterButtons();
+  filterCascades();
+}
+
+function toggleConceptFilter(concept) {
+  if (activeConceptFilters.has(concept)) {
+    activeConceptFilters.delete(concept);
+  } else {
+    activeConceptFilters.add(concept);
+  }
+  updateFilterButtons();
+  filterCascades();
+}
+
+function updateFilterButtons() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const text = btn.textContent.trim();
+    let filter = text;
+
+    if (text === 'All Exams') filter = 'all';
+    else if (text === 'Exam 1 (Cardiac)') filter = 'exam1';
+    else if (text === 'Exam 2 (Oxy)') filter = 'exam2';
+    else if (text === 'Exam 3 (Neuro)') filter = 'exam3';
+    else if (text === 'Cardiac') filter = 'cardiac';
+    else if (text === 'Fluid & Electrolytes') filter = 'fluid';
+    else if (text === 'Oxygenation') filter = 'oxy';
+    else if (text === 'Neuro') filter = 'neuro';
+    else if (text === 'Emergency') filter = 'emergency';
+
+    const isActive = filter === 'all' ? activeExamFilters.has('all') :
+                     filter.startsWith('exam') ? activeExamFilters.has(filter) :
+                     activeConceptFilters.has(filter);
+
+    if (isActive) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+// ─── QUIZ MODE ───
+function initQuiz(mode) {
+  currentQuizIndex = 0;
+  quizCorrect = 0;
+  quizIncorrect = 0;
+
+  const titles = {
+    'forward-quiz': 'Forward Quiz: Predict Next Complication',
+    'reverse-quiz': 'Reverse Quiz: Identify Starting Condition',
+    'intervention-quiz': 'Intervention Quiz: Break the Chain'
+  };
+
+  document.getElementById('quizTitle').textContent = titles[mode];
+  document.getElementById('quizTotal').textContent = mode === 'forward-quiz' ? forwardQuizzes.length :
+                                                      mode === 'reverse-quiz' ? reverseQuizzes.length :
+                                                      interventionQuizzes.length;
+
+  showQuizQuestion(mode);
+}
+
+function showQuizQuestion(mode) {
+  if (!mode) mode = currentMode;
+
+  let question, options, answer;
+
+  if (mode === 'forward-quiz') {
+    const q = forwardQuizzes[currentQuizIndex];
+    question = q.question;
+    options = q.options;
+    answer = q.answer;
+  } else if (mode === 'reverse-quiz') {
+    const q = reverseQuizzes[currentQuizIndex];
+    question = `Given these symptoms: "${q.symptoms}", what is the PRIMARY STARTING CONDITION?`;
+    options = [q.condition, ...q.wrongOptions];
+    answer = 0;
+    // Shuffle options
+    for (let i = options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [options[i], options[j]] = [options[j], options[i]];
+      if (options[i] === q.condition) answer = i;
+    }
+  } else {
+    const q = interventionQuizzes[currentQuizIndex];
+    question = q.question;
+    options = q.options;
+    answer = q.answer;
+  }
+
+  document.getElementById('quizScenario').innerHTML = `
+    <div class="scenario-label">${mode === 'forward-quiz' ? 'Complication Progression' : mode === 'reverse-quiz' ? 'Clinical Presentation' : 'Nursing Intervention'}</div>
+    <div class="scenario-text">${question}</div>
+  `;
+
+  const optionsContainer = document.getElementById('quizOptions');
+  optionsContainer.innerHTML = '';
+  options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(idx, answer, mode);
+    optionsContainer.appendChild(btn);
+  });
+
+  document.getElementById('quizCurrent').textContent = currentQuizIndex + 1;
+  document.getElementById('quizProgressBar').style.width = ((currentQuizIndex) / (mode === 'forward-quiz' ? forwardQuizzes.length : mode === 'reverse-quiz' ? reverseQuizzes.length : interventionQuizzes.length) * 100) + '%';
+  document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  updateStats();
+}
+
+function selectAnswer(selected, answer, mode) {
+  const feedback = document.getElementById('feedback');
+  const isCorrect = selected === answer;
+
+  document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+    if (idx === answer) {
+      btn.classList.add('correct');
+    } else if (idx === selected && !isCorrect) {
+      btn.classList.add('incorrect');
+    }
+    btn.disabled = true;
+  });
+
+  if (isCorrect) {
+    quizCorrect++;
+    feedback.classList.add('show', 'correct');
+    feedback.innerHTML = `<div class="feedback-title">✓ Correct!</div>
+      <div class="feedback-text">Excellent understanding of the cascade progression and clinical decision-making.</div>`;
+  } else {
+    quizIncorrect++;
+    feedback.classList.add('show', 'incorrect');
+    feedback.innerHTML = `<div class="feedback-title">✗ Incorrect</div>
+      <div class="feedback-text">The correct answer is highlighted. Review this cascade in browse mode to deepen your understanding.</div>`;
+  }
+
+  // Track in StudyData
+  if (typeof StudyData !== 'undefined') {
+    const conceptMap = { 'forward-quiz': 'emergency-disaster', 'reverse-quiz': 'emergency-disaster', 'intervention-quiz': 'emergency-disaster' };
+    StudyData.recordResult('complication-connector', conceptMap[mode] || 'emergency-disaster', isCorrect ? 1 : 0, 1, {
+      mode: mode,
+      questionIndex: currentQuizIndex
+    });
+    StudyData.trackExposure(`complication-connector:${mode}_q${currentQuizIndex}`, isCorrect);
+  }
+
+  document.getElementById('nextBtn').style.display = 'block';
+  updateStats();
+}
+
+function nextQuestion() {
+  const mode = currentMode;
+  const maxQuestions = mode === 'forward-quiz' ? forwardQuizzes.length :
+                       mode === 'reverse-quiz' ? reverseQuizzes.length :
+                       interventionQuizzes.length;
+
+  currentQuizIndex++;
+  if (currentQuizIndex < maxQuestions) {
+    showQuizQuestion(mode);
+  } else {
+    showQuizSummary(mode);
+  }
+}
+
+function showQuizSummary(mode) {
+  const maxQuestions = mode === 'forward-quiz' ? forwardQuizzes.length :
+                       mode === 'reverse-quiz' ? reverseQuizzes.length :
+                       interventionQuizzes.length;
+  const accuracy = ((quizCorrect / maxQuestions) * 100).toFixed(0);
+
+  // Track final quiz session in StudyData
+  if (typeof StudyData !== 'undefined') {
+    const conceptMap = { 'forward-quiz': 'emergency-disaster', 'reverse-quiz': 'emergency-disaster', 'intervention-quiz': 'emergency-disaster' };
+    StudyData.recordResult('complication-connector', conceptMap[mode] || 'emergency-disaster', quizCorrect, maxQuestions, {
+      mode: mode,
+      sessionAccuracy: accuracy
+    });
+  }
+
+  document.getElementById('quizScenario').innerHTML = `
+    <div style="text-align: center;">
+      <h3 style="font-size: 1.3em; margin-bottom: 12px;">Quiz Complete!</h3>
+      <div style="font-size: 1.1em; margin: 8px 0;"><strong>${quizCorrect}/${maxQuestions}</strong> Correct</div>
+      <div style="font-size: 1.8em; font-weight: 800; color: var(--cardiac); margin: 12px 0;">${accuracy}%</div>
+    </div>
+  `;
+
+  document.getElementById('quizOptions').innerHTML = '';
+  document.getElementById('quizProgressBar').style.width = '100%';
+  document.getElementById('nextBtn').textContent = 'Back to Browse';
+  document.getElementById('nextBtn').onclick = () => {
+    currentMode = 'browse';
+    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.mode-btn')[0].classList.add('active');
+    document.getElementById('browseMode').style.display = 'block';
+    document.getElementById('quizMode').classList.remove('active');
+  };
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function updateStats() {
+  document.getElementById('statCorrect').textContent = quizCorrect;
+  document.getElementById('statIncorrect').textContent = quizIncorrect;
+  const total = quizCorrect + quizIncorrect;
+  const accuracy = total > 0 ? ((quizCorrect / total) * 100).toFixed(0) : '--';
+  document.getElementById('statAccuracy').textContent = total > 0 ? accuracy + '%' : '--';
+}
+
+// ─── CROSS-LINKS TO OTHER TOOLS ───
+function openChainMap(concept) {
+  const conceptMap = {
+    'cardiac': 'cardiac',
+    'fluid': 'fluid-electrolytes',
+    'oxy': 'oxygenation',
+    'neuro': 'cognition-sensation',
+    'emergency': 'emergency-disaster'
+  };
+  const mappedConcept = conceptMap[concept] || concept;
+  window.location.href = `chain-maps.html?concept=${mappedConcept}`;
+}
+
+function openShockSimulator() {
+  window.location.href = 'shock-simulator.html';
+}
+
+// ─── BACK TO HUB ───
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+// ─── START ───
+init();
+
+</script>
+
+</body>
+</html>

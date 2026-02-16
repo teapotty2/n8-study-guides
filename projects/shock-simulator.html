@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: Shock Simulator | Nursing N8</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --cardiac: #E74C3C;
+            --fluid: #3498DB;
+            --oxy: #27AE60;
+            --neuro: #8E44AD;
+            --emergency: #E67E22;
+            --bg-light: #F0F2F5;
+            --card-light: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-muted: #7F8C8D;
+            --border: #ECF0F1;
+            --success: #27AE60;
+            --warning: #E67E22;
+            --error: #E74C3C;
+        }
+
+        [data-theme="dark"] {
+            --bg-light: #121218;
+            --card-light: #1e1e2a;
+            --text-dark: #E0E0E0;
+            --text-muted: #A0A0A0;
+            --border: #2d2d3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Container and Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--cardiac);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #C0392B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6c7d;
+        }
+
+        .btn-back {
+            background: var(--fluid);
+            color: white;
+            font-size: 13px;
+        }
+
+        .btn-back:hover {
+            background: #2980B9;
+        }
+
+        /* Score Tracking */
+        .score-panel {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cardiac);
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Mode Selection */
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--card-light);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--cardiac);
+            color: white;
+            border-color: var(--cardiac);
+        }
+
+        .mode-btn:hover:not(.active) {
+            border-color: var(--text-muted);
+        }
+
+        /* Scenario Container */
+        .scenario-container {
+            display: none;
+        }
+
+        .scenario-container.active {
+            display: block;
+        }
+
+        .scenario-card {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scenario-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-hypovolemic {
+            background: var(--fluid);
+        }
+
+        .badge-cardiogenic {
+            background: var(--cardiac);
+        }
+
+        .badge-distributive {
+            background: var(--emergency);
+        }
+
+        .badge-obstructive {
+            background: var(--neuro);
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .step.active {
+            background: var(--cardiac);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Step Content */
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .patient-demo {
+            background: var(--border);
+            border-left: 4px solid var(--cardiac);
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .patient-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .demo-item {
+            font-size: 13px;
+        }
+
+        .demo-label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .demo-value {
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Vitals Display */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .vital {
+            background: var(--border);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .vital-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cardiac);
+            margin-bottom: 4px;
+        }
+
+        .vital-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Assessment Findings */
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .assessment-btn {
+            background: var(--card-light);
+            border: 2px solid var(--border);
+            padding: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .assessment-btn:hover {
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        .assessment-btn.selected {
+            background: var(--fluid);
+            border-color: var(--fluid);
+            color: white;
+        }
+
+        /* Classification Options */
+        .classification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .classification-btn {
+            background: var(--card-light);
+            border: 3px solid var(--border);
+            padding: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .classification-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--text-muted);
+        }
+
+        .classification-btn.pump {
+            border-color: var(--cardiac);
+        }
+
+        .classification-btn.volume {
+            border-color: var(--fluid);
+        }
+
+        .classification-btn.pipes {
+            border-color: var(--emergency);
+        }
+
+        .classification-btn.blockage {
+            border-color: var(--neuro);
+        }
+
+        /* Feedback */
+        .feedback {
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 16px;
+            border-left: 4px solid;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Summary Card */
+        .summary-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .comparison-box {
+            background: var(--border);
+            padding: 16px;
+            border-radius: 6px;
+        }
+
+        .comparison-title {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 13px;
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Hemodynamic Table */
+        .hemo-table-wrapper {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--border);
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Reference Panels */
+        .reference-panel {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .reference-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reference-title::after {
+            content: "▼";
+            transition: transform 0.2s;
+        }
+
+        .reference-title.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .reference-content {
+            display: none;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .reference-content.show {
+            display: block;
+        }
+
+        .stage {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .stage-title {
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stage-desc {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* MAP Calculator */
+        .calc-wrapper {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .calc-result {
+            background: var(--border);
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .calc-result-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cardiac);;
+            margin-bottom: 4px;
+        }
+
+        .calc-result-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav {
+            padding: 12px 20px;
+            background: var(--text-muted);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: #5a6c7d;
+            transform: translateY(-2px);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Scenario List */
+        .scenario-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-item {
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scenario-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .scenario-item.completed {
+            border-color: var(--success);
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .scenario-item-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .scenario-item-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .scenario-item-status {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .scenario-item-status.correct {
+            color: var(--success);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .scenario-header {
+                flex-direction: column;
+            }
+
+            .summary-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .assessment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .classification-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <h1>Shock Simulator</h1>
+                <p>Identify the "broken piece" and intervene</p>
+            </div>
+            <div class="header-controls">
+                <button class="btn-back" onclick="goBackToHub()">← Back to Hub</button>
+                <button class="btn-secondary" onclick="toggleTheme()">🌙 Toggle Theme</button>
+            </div>
+        </header>
+
+        <!-- Score Tracking -->
+        <div class="score-panel">
+            <div class="score-grid">
+                <div class="score-item">
+                    <div class="score-value" id="totalScore">0</div>
+                    <div class="score-label">Scenarios Completed</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="accuracyScore">0%</div>
+                    <div class="score-label">Overall Accuracy</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="hypoScore">—</div>
+                    <div class="score-label">Hypovolemic</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="cardioScore">—</div>
+                    <div class="score-label">Cardiogenic</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="distScore">—</div>
+                    <div class="score-label">Distributive</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="obScore">—</div>
+                    <div class="score-label">Obstructive</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="switchMode('practice')">Practice Mode</button>
+            <button class="mode-btn" onclick="switchMode('review')">Review Mode</button>
+            <button class="mode-btn" onclick="switchMode('list')">Scenario List</button>
+        </div>
+
+        <!-- Practice Mode -->
+        <div id="practiceMode" class="scenario-mode active">
+            <div id="scenarioContainer" class="scenario-container active">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Reference Panels -->
+            <div class="reference-panel">
+                <div class="reference-title" onclick="toggleReference(this)">
+                    Shock Classification: Hemodynamic Comparison
+                </div>
+                <div class="reference-content">
+                    <div class="hemo-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Shock Type</th>
+                                    <th>CVP</th>
+                                    <th>PCWP</th>
+                                    <th>CO</th>
+                                    <th>SVR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Hypovolemic</strong></td>
+                                    <td>↓ Low</td>
+                                    <td>↓ Low</td>
+                                    <td>↓ Low</td>
+                                    <td>↑ High</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cardiogenic</strong></td>
+                                    <td>↑ High</td>
+                                    <td>↑ High</td>
+                                    <td>↓ Low</td>
+                                    <td>↑ High</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Distributive</strong></td>
+                                    <td>↓ Low</td>
+                                    <td>↓ Low</td>
+                                    <td>↑↑ Very High (early)</td>
+                                    <td>↓ Low</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Obstructive</strong></td>
+                                    <td>↑ High</td>
+                                    <td>Variable</td>
+                                    <td>↓ Low</td>
+                                    <td>↑ High</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reference-panel">
+                <div class="reference-title" onclick="toggleReference(this)">
+                    Shock Stages Reference
+                </div>
+                <div class="reference-content">
+                    <div class="stage">
+                        <div class="stage-title">1. Compensatory Shock</div>
+                        <div class="stage-desc">
+                            Baroreceptor activation → ↑SNS → ↑HR, ↑contractility, vasoconstriction.
+                            Patient anxious, cool/clammy, tachycardia. BP may still be normal.
+                            <strong>Reversible if intervention begins now.</strong>
+                        </div>
+                    </div>
+                    <div class="stage">
+                        <div class="stage-title">2. Progressive Shock</div>
+                        <div class="stage-desc">
+                            Tissue hypoperfusion → anaerobic metabolism → lactate accumulation.
+                            Organ dysfunction appears: altered mental status, oliguria, decreased breath sounds.
+                            <strong>Still reversible, but time-sensitive.</strong>
+                        </div>
+                    </div>
+                    <div class="stage">
+                        <div class="stage-title">3. Irreversible Shock</div>
+                        <div class="stage-desc">
+                            Massive cell death, MODS (multi-organ dysfunction), DIC, death.
+                            <strong>Point of no return.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reference-panel">
+                <div class="reference-title" onclick="toggleReference(this)">
+                    MAP Calculator (Goal ≥65 mmHg)
+                </div>
+                <div class="reference-content">
+                    <div class="calc-wrapper">
+                        <div class="calc-grid">
+                            <div class="input-group">
+                                <label for="sbpInput">Systolic BP (mmHg)</label>
+                                <input type="number" id="sbpInput" placeholder="e.g., 120" onchange="calculateMAP()">
+                            </div>
+                            <div class="input-group">
+                                <label for="dbpInput">Diastolic BP (mmHg)</label>
+                                <input type="number" id="dbpInput" placeholder="e.g., 80" onchange="calculateMAP()">
+                            </div>
+                        </div>
+                        <div class="calc-result">
+                            <div class="calc-result-value" id="mapValue">—</div>
+                            <div class="calc-result-label">Mean Arterial Pressure</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Mode -->
+        <div id="reviewMode" class="scenario-mode">
+            <div id="reviewContainer">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Scenario List Mode -->
+        <div id="listMode" class="scenario-mode">
+            <div id="scenarioList" class="scenario-list">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scenario Data Structure
+        const scenarios = [
+            // HYPOVOLEMIC (Broken piece: VOLUME)
+            {
+                id: 1,
+                title: "Trauma Hemorrhage",
+                type: "hypovolemic",
+                patient: "28-year-old male, MVA",
+                cc: "Abdominal pain, rapid pulse",
+                history: "T-bone collision at high speed 20 minutes ago. Airbag deployment. No loss of consciousness. Reports severe abd pain.",
+                vitals: {
+                    hr: 128,
+                    bp: "82/54",
+                    rr: 24,
+                    temp: "36.8°C",
+                    spo2: 96,
+                    urine: "30 mL/hr"
+                },
+                assessment: [
+                    { text: "Cool, clammy skin", significant: true },
+                    { text: "Capillary refill >3 seconds", significant: true },
+                    { text: "Lactic acid 4.2", significant: true },
+                    { text: "Abdominal distension and bruising", significant: true },
+                    { text: "Alert and oriented ×3", significant: false }
+                ],
+                classification: "hypovolemic",
+                specificType: "Hemorrhagic shock (internal bleeding)",
+                firstIntervention: "Place 2 large-bore IVs, initiate 30 mL/kg NS/LR bolus, type and cross, prepare for OR, activate MTP if needed",
+                explanation: {
+                    pathophys: "Abdominal trauma → liver/spleen laceration → rapid internal blood loss → decreased circulating volume → decreased cardiac output → tissue hypoperfusion.",
+                    hemo: "↓CVP, ↓PCWP, ↓CO, ↑SVR (compensatory vasoconstriction). Early compensatory stage with tachycardia, cool skin, and increased lactate.",
+                    why: "Volume problem: patient has lost blood → less blood in the vascular system. No pump dysfunction, no vasodilation, no blockage."
+                }
+            },
+            {
+                id: 2,
+                title: "GI Bleed",
+                type: "hypovolemic",
+                patient: "67-year-old female, cirrhosis history",
+                cc: "Vomiting blood, dark/tarry stools",
+                history: "Known cirrhosis, h/o variceal bleeding. Acute vomiting of coffee-ground material ×4, melena for 2 hours.",
+                vitals: {
+                    hr: 116,
+                    bp: "90/60",
+                    rr: 22,
+                    temp: "37.1°C",
+                    spo2: 94,
+                    urine: "20 mL/hr"
+                },
+                assessment: [
+                    { text: "Hemoglobin 6.2 g/dL (very low)", significant: true },
+                    { text: "Tachycardia and weak pulses", significant: true },
+                    { text: "Pale mucous membranes", significant: true },
+                    { text: "Postural dizziness", significant: true },
+                    { text: "Normal lung sounds", significant: false }
+                ],
+                classification: "hypovolemic",
+                specificType: "Hemorrhagic shock (upper GI bleed)",
+                firstIntervention: "Large-bore IV access, NS bolus, type and cross, PRBCs ready, PPI drip (pantoprazole), GI consultation, monitor coagulation studies",
+                explanation: {
+                    pathophys: "Portal hypertension → esophageal varices rupture → rapid GI blood loss → hypovolemia → decreased perfusion.",
+                    hemo: "↓CVP, ↓PCWP, ↓CO, ↑SVR. Severe compensatory response with poor perfusion (Hgb <7).",
+                    why: "The VOLUME is the broken piece—patient is hemorrhaging and losing blood. Not a pump problem (heart is intact), no vasodilation, no blockage."
+                }
+            },
+            {
+                id: 3,
+                title: "Severe Burns",
+                type: "hypovolemic",
+                patient: "45-year-old male, house fire",
+                cc: "Extensive burns",
+                history: "House fire 1 hour ago. Trapped in kitchen for ~5 min. Singed nasal hair. Burns to face, trunk, bilateral legs.",
+                vitals: {
+                    hr: 130,
+                    bp: "78/48",
+                    rr: 28,
+                    temp: "37.5°C",
+                    spo2: 93,
+                    urine: "15 mL/hr"
+                },
+                assessment: [
+                    { text: "Estimated 40% TBSA burns (charred, blistered)", significant: true },
+                    { text: "Severe respiratory stridor from inhalation injury", significant: true },
+                    { text: "Singed nasal hairs", significant: true },
+                    { text: "Extreme tachycardia, cool skin despite fever", significant: true },
+                    { text: "Can follow commands", significant: false }
+                ],
+                classification: "hypovolemic",
+                specificType: "Hemorrhagic shock (third-spacing from burns)",
+                firstIntervention: "Two large-bore IVs, Parkland formula: 4 mL × kg × %TBSA over 24 hrs (half in first 8 hrs), Foley catheter (goal UO 0.5 mL/kg/hr), escharotomy if needed, intubation prep, burn center transfer",
+                explanation: {
+                    pathophys: "Severe heat injury → massive capillary leak → fluid shifts into interstitial space (third-spacing) → effective circulating volume loss (not actual hemorrhage, but same result) → hypovolemic shock.",
+                    hemo: "↓CVP, ↓PCWP, ↓CO, ↑SVR. Extreme hypovolemia from fluid sequestration.",
+                    why: "VOLUME problem: massive fluid loss through burnt skin into the interstitial space. The pump is fine, but there's not enough fluid in the vascular space."
+                }
+            },
+
+            // CARDIOGENIC (Broken piece: PUMP)
+            {
+                id: 4,
+                title: "Post-MI Cardiogenic Shock",
+                type: "cardiogenic",
+                patient: "72-year-old male, anterior STEMI 6 hrs ago",
+                cc: "Shortness of breath, chest pain",
+                history: "Chest pain started 6 hours ago. EKG showed ST elevation in V1-V4. Admitted, received thrombolytics. Now suddenly dyspneic.",
+                vitals: {
+                    hr: 110,
+                    bp: "78/52",
+                    rr: 26,
+                    temp: "37.0°C",
+                    spo2: 92,
+                    urine: "25 mL/hr"
+                },
+                assessment: [
+                    { text: "Bilateral crackles (rales) throughout lung fields", significant: true },
+                    { text: "S3 gallop, muffled heart sounds", significant: true },
+                    { text: "Elevated JVD", significant: true },
+                    { text: "EF 20%, BNP >1000", significant: true },
+                    { text: "Cool extremities despite warm ambient temp", significant: true }
+                ],
+                classification: "cardiogenic",
+                specificType: "Cardiogenic shock from acute MI",
+                firstIntervention: "Dobutamine or milrinone for inotropic support, cautious diuretics (furosemide), avoid additional fluids, consider IABP, continuous hemodynamic monitoring, prepare for cardiac catheterization/intervention",
+                explanation: {
+                    pathophys: "Massive anterior MI → loss of >40% of LV muscle → severely reduced contractility → inability to eject blood → backup into LA/lungs (pulmonary edema) and systemic veins (JVD).",
+                    hemo: "↑CVP, ↑PCWP (fluid backed up), ↓CO (pump can't push), ↑SVR (compensatory vasoconstriction). Cardiogenic pattern.",
+                    why: "The PUMP is broken: heart muscle is dead, so it can't contract normally. Adding fluid makes it worse (pulmonary edema). Need inotropes to help the weakened pump, not volume."
+                }
+            },
+            {
+                id: 5,
+                title: "Acute Decompensated Heart Failure",
+                type: "cardiogenic",
+                patient: "68-year-old female, EF 25% on meds",
+                cc: "Severe dyspnea, orthopnea",
+                history: "Known CHF. 10 lb weight gain over past week. Tonight: orthopnea (woke gasping for breath), pink frothy sputum, unable to lie flat.",
+                vitals: {
+                    hr: 118,
+                    bp: "82/56",
+                    rr: 32,
+                    temp: "36.9°C",
+                    spo2: 88,
+                    urine: "40 mL/hr"
+                },
+                assessment: [
+                    { text: "Pink frothy sputum (pulmonary edema)", significant: true },
+                    { text: "Crackles to apices bilaterally", significant: true },
+                    { text: "S3 gallop", significant: true },
+                    { text: "Elevated JVD, hepatomegaly", significant: true },
+                    { text: "Cyanotic lips and nail beds", significant: true }
+                ],
+                classification: "cardiogenic",
+                specificType: "Cardiogenic shock from acute decompensated HF",
+                firstIntervention: "High Fowler's position, high-flow O2, IV furosemide, NTG drip, dobutamine if needed, daily weights, I&Os, restrict fluids/sodium",
+                explanation: {
+                    pathophys: "Chronic heart failure → progressive LV dysfunction → acute decompensation (trigger: non-adherence, infection, etc.) → massive pulmonary edema → impaired gas exchange and tissue hypoperfusion.",
+                    hemo: "↑CVP, ↑PCWP (very high from fluid backup), ↓CO, ↑SVR.",
+                    why: "Pump failure: the chronically weakened heart can no longer keep up. Pink frothy sputum = fluid in the lungs from backed-up pressure. Treat with diuretics, inotropes, and preload reduction—NOT fluid administration."
+                }
+            },
+            {
+                id: 6,
+                title: "Massive PE (Massive Pulmonary Embolism)",
+                type: "cardiogenic",
+                patient: "55-year-old female, post-op day 3 hip replacement",
+                cc: "Sudden dyspnea, chest pain, syncope",
+                history: "Hip replacement 3 days ago. Mobilized yesterday. Suddenly felt chest pain and became short of breath. Syncope episode (fell).",
+                vitals: {
+                    hr: 140,
+                    bp: "70/40",
+                    rr: 32,
+                    temp: "37.2°C",
+                    spo2: 85,
+                    urine: "20 mL/hr"
+                },
+                assessment: [
+                    { text: "Sudden onset, severe dyspnea", significant: true },
+                    { text: "JVD, prominent RV heave", significant: true },
+                    { text: "Right heart strain on EKG (S1Q3T3 or sinus tachy)", significant: true },
+                    { text: "SpO2 85% despite O2", significant: true },
+                    { text: "No crackles or wheezes (key: unlike pneumonia)", significant: true }
+                ],
+                classification: "cardiogenic",
+                specificType: "Right heart failure from massive PE (or classified as obstructive by some)",
+                firstIntervention: "High-flow O2, unfractionated heparin bolus, thrombolytics (alteplase) or prepare for surgical embolectomy, continuous monitoring, IV fluids cautiously to maintain RV preload, notify interventional radiology",
+                explanation: {
+                    pathophys: "Large clot obstructs PA → RV suddenly forced to pump against high afterload → RV dilates and fails → ↓LV filling → ↓CO → shock. (Note: PE can be classified as obstructive or cardiogenic depending on context.)",
+                    hemo: "↑CVP (RV backup), ↓PCWP, ↓CO, ↑SVR. Right heart is the 'pump' that's failing.",
+                    why: "The PUMP is acutely damaged: RV can't handle the sudden pressure load. Massive thrombus is the cause, but the result is pump failure (not volume loss, not vasodilation)."
+                }
+            },
+
+            // DISTRIBUTIVE (Broken piece: PIPES — vasodilation)
+            {
+                id: 7,
+                title: "Septic Shock from UTI",
+                type: "distributive",
+                patient: "78-year-old female, nursing home resident",
+                cc: "Altered mental status, fever",
+                history: "Dementia resident. Family noticed confusion today (worse than usual). Temp 103.4°F. No focal complaints, but has h/o UTIs.",
+                vitals: {
+                    hr: 118,
+                    bp: "84/50",
+                    rr: 24,
+                    temp: "103.4°F",
+                    spo2: 96,
+                    urine: "50 mL/hr of cloudy, foul-smelling urine"
+                },
+                assessment: [
+                    { text: "Altered mental status (acute confusion)", significant: true },
+                    { text: "WBC 18,000, left shift", significant: true },
+                    { text: "Lactate 4.8 (elevated)", significant: true },
+                    { text: "Warm, flushed skin (vasodilation)", significant: true },
+                    { text: "Tachycardia, hypotension", significant: true }
+                ],
+                classification: "distributive",
+                specificType: "Septic shock from UTI (most common source in elderly)",
+                firstIntervention: "Sepsis bundle: blood cultures ×2 before antibiotics, broad-spectrum IV antibiotics within 1 hour, 30 mL/kg crystalloid bolus, norepinephrine (if MAP <65 after fluids), lactate recheck, source control (catheter change, UA culture)",
+                explanation: {
+                    pathophys: "UTI bacteria release endotoxins → systemic inflammatory response → massive vasodilation → distributive shock. SNS can't compensate forever.",
+                    hemo: "↓CVP, ↓PCWP, ↑CO (early), ↓SVR (hallmark vasodilation). Warm skin is the key clue.",
+                    why: "The PIPES are the problem: blood vessels are dilated from sepsis, so even though CO is high early, BP drops. Treat with fluids + vasopressors + antibiotics, not inotropes."
+                }
+            },
+            {
+                id: 8,
+                title: "Septic Shock from Pneumonia",
+                type: "distributive",
+                patient: "62-year-old male, diabetes, CAP",
+                cc: "Fever, cough, confusion",
+                history: "3 days of productive cough, fever. Diabetic, lives alone. Today: extreme confusion, can't remember his address.",
+                vitals: {
+                    hr: 124,
+                    bp: "76/42",
+                    rr: 28,
+                    temp: "101.8°F",
+                    spo2: 91,
+                    urine: "35 mL/hr"
+                },
+                assessment: [
+                    { text: "Altered mental status, disorientation", significant: true },
+                    { text: "WBC 22,000, lactate 5.1", significant: true },
+                    { text: "CXR with infiltrates (consolidation)", significant: true },
+                    { text: "Warm, flushed, diaphoretic", significant: true },
+                    { text: "RR 28, crackles on lung exam", significant: true }
+                ],
+                classification: "distributive",
+                specificType: "Septic shock from community-acquired pneumonia",
+                firstIntervention: "Sepsis bundle: blood cultures, sputum culture, broad-spectrum antibiotics (ceftriaxone + azithromycin + respiratory fluoroquinolone), 30 mL/kg NS bolus, norepinephrine PRN, supplemental O2, admission to ICU",
+                explanation: {
+                    pathophys: "Pneumonia → systemic spread of bacteria → inflammatory mediators → vasodilation → septic shock.",
+                    hemo: "↓CVP, ↓PCWP, ↑CO, ↓SVR. Classic distributive shock pattern with warm extremities despite hypotension.",
+                    why: "Infection causes PIPES to dilate. Don't give inotropes (CO is already high); give fluids + vasopressors + antibiotics."
+                }
+            },
+            {
+                id: 9,
+                title: "Anaphylactic Shock",
+                type: "distributive",
+                patient: "34-year-old female, allergic reaction",
+                cc: "Rash, facial swelling, difficulty breathing",
+                history: "Given IV penicillin for UTI. Within 10 minutes: generalized urticaria, facial edema, throat tightness, wheezing.",
+                vitals: {
+                    hr: 140,
+                    bp: "60/30",
+                    rr: 32,
+                    temp: "37.1°C",
+                    spo2: 88,
+                    urine: "not measured yet"
+                },
+                assessment: [
+                    { text: "Generalized urticaria and facial edema", significant: true },
+                    { text: "Stridor and wheezing (airway involvement)", significant: true },
+                    { text: "Severe hypotension", significant: true },
+                    { text: "Tachycardia", significant: true },
+                    { text: "Angioedema visible in mouth", significant: true }
+                ],
+                classification: "distributive",
+                specificType: "Anaphylactic shock (IgE-mediated, Type I hypersensitivity)",
+                firstIntervention: "EPINEPHRINE IM (0.3-0.5 mg IM immediately, can repeat q 5-15 min), high-flow O2, IV access, large-bore NS bolus, prepare for intubation, diphenhydramine IV, methylprednisolone IV, albuterol nebulized, monitor for biphasic reaction",
+                explanation: {
+                    pathophys: "Drug allergen → IgE cross-linking → mast cell/basophil degranulation → massive release of histamine/other mediators → vasodilation + bronchoconstriction → anaphylactic shock.",
+                    hemo: "↓CVP, ↓PCWP, ↑CO, ↓SVR (severe vasodilation). Combined with respiratory obstruction, life-threatening.",
+                    why: "PIPES dilate massively from allergen. Also airway is swelling (separate problem). Epinephrine is the ONLY definitive treatment—it causes vasoconstriction and bronchodilation."
+                }
+            },
+            {
+                id: 10,
+                title: "Neurogenic Shock from Spinal Cord Injury",
+                type: "distributive",
+                patient: "22-year-old male, diving accident",
+                cc: "Inability to move legs, neck pain",
+                history: "Dove into shallow end of pool. Head hit bottom. Immediate paralysis of legs and arms. Rescue team brought to ED on backboard.",
+                vitals: {
+                    hr: 48,
+                    bp: "70/40",
+                    rr: 18,
+                    temp: "36.5°C",
+                    spo2: 99,
+                    urine: "pending"
+                },
+                assessment: [
+                    { text: "Complete paralysis below C5 level (assessment confirmed loss of motor/sensation)", significant: true },
+                    { text: "Bradycardia (48 bpm) — unusual for shock!", significant: true },
+                    { text: "Warm, dry skin BELOW injury level (no sweating)", significant: true },
+                    { text: "Flaccid paralysis", significant: true },
+                    { text: "CT shows C5 fracture with cord transection", significant: true }
+                ],
+                classification: "distributive",
+                specificType: "Neurogenic shock from spinal cord injury",
+                firstIntervention: "Spinal immobilization, IV crystalloid fluids (cautiously—no large boluses like sepsis), vasopressors (phenylephrine or norepinephrine) to target MAP >65, atropine if HR drops <40, warm blankets (loss of thermoregulation), prepare for surgery/MRI",
+                explanation: {
+                    pathophys: "Spinal cord transection → loss of sympathetic outflow below injury → unopposed vagal tone (bradycardia) + vasodilation below level of injury → hypotension, but with WARM skin (not cold/clammy like hypovolemic).",
+                    hemo: "↓CVP, ↓PCWP, ↑CO (early), ↓SVR. Low HR is KEY differentiator from other shocks.",
+                    why: "Loss of SNS tone = PIPES relax below injury. But note: bradycardia (not tachycardia) + warm skin (not cool/clammy) + no obvious volume loss or pump failure. Treat with fluids + vasopressors; avoid over-aggressive fluids (spine patients are at risk for respiratory compromise)."
+                }
+            },
+
+            // OBSTRUCTIVE (Broken piece: BLOCKAGE)
+            {
+                id: 11,
+                title: "Tension Pneumothorax",
+                type: "obstructive",
+                patient: "30-year-old male, stab wound to chest",
+                cc: "Severe dyspnea, chest pain",
+                history: "Stabbed in left anterior chest during altercation. Immediately short of breath. By time of ED arrival: acute decompensation.",
+                vitals: {
+                    hr: 130,
+                    bp: "68/40",
+                    rr: 32,
+                    temp: "37.0°C",
+                    spo2: 88,
+                    urine: "30 mL/hr"
+                },
+                assessment: [
+                    { text: "Absent breath sounds on LEFT (completely silent)", significant: true },
+                    { text: "Hyperresonance on percussion LEFT", significant: true },
+                    { text: "Tracheal deviation to RIGHT (away from collapsed lung)", significant: true },
+                    { text: "JVD", significant: true },
+                    { text: "Severe dyspnea, accessory muscle use", significant: true }
+                ],
+                classification: "obstructive",
+                specificType: "Tension pneumothorax (emergency decompression needed)",
+                firstIntervention: "IMMEDIATE needle decompression: 14-16G needle, 2nd intercostal space, midclavicular line, LEFT side. Follow with high-flow O2, chest tube placement, prepare for OR, CXR to confirm",
+                explanation: {
+                    pathophys: "Penetrating chest trauma → lung parenchyma tear → air leaks into pleural space → lung collapses. As patient breathes, more air is sucked in (one-way valve effect) → accumulation of air under pressure → compression of heart and great vessels → impaired venous return → shock.",
+                    hemo: "↑CVP (from venous compression), ↓PCWP (RV can't fill properly), ↓CO, ↑SVR.",
+                    why: "BLOCKAGE: air in the chest cavity is physically compressing the heart and blocking blood return. Not volume loss, not pump failure, not vasodilation. Treat with IMMEDIATE decompression (needle), not fluids or drugs."
+                }
+            },
+            {
+                id: 12,
+                title: "Cardiac Tamponade",
+                type: "obstructive",
+                patient: "58-year-old female, pericarditis history",
+                cc: "Chest pain, shortness of breath, syncope risk",
+                history: "Week of viral prodrome. Pleuritic chest pain. Diagnosed with pericarditis, advised NSAIDs + rest. Tonight: acute dyspnea and severe hypotension.",
+                vitals: {
+                    hr: 120,
+                    bp: "72/58",
+                    rr: 26,
+                    temp: "37.8°C",
+                    spo2: 94,
+                    urine: "40 mL/hr"
+                },
+                assessment: [
+                    { text: "Beck's triad: hypotension, JVD, muffled heart sounds", significant: true },
+                    { text: "Pulsus paradoxus (BP drops >10 mmHg on inspiration)", significant: true },
+                    { text: "Narrowed pulse pressure (60-72 = 12 mmHg)", significant: true },
+                    { text: "Echo: large pericardial effusion with RA/RV diastolic collapse", significant: true },
+                    { text: "Elevated CVP with hypotension (unusual combination)", significant: true }
+                ],
+                classification: "obstructive",
+                specificType: "Cardiac tamponade (fluid in pericardium compressing heart)",
+                firstIntervention: "EMERGENCY pericardiocentesis (echo or blind), IV crystalloid bolus to maintain preload while awaiting procedure, prepare for surgical pericardial window if needed, cardiothoracic surgery consultation",
+                explanation: {
+                    pathophys: "Viral pericarditis → inflammatory fluid accumulates in pericardial sac. As fluid volume increases, it compresses the heart → ventricles can't fill → impaired venous return → shock. Key: elevated CVP (fluid is trapped) with low BP.",
+                    hemo: "↑CVP (fluid around heart blocks filling), ↓PCWP (paradoxical—RV/LV can't fill), ↓CO, ↑SVR.",
+                    why: "BLOCKAGE: fluid in the wrong place (pericardium) physically squeezes the heart. Treat by removing the fluid (pericardiocentesis), then manage the underlying cause (NSAIDs, colchicine, or steroids for pericarditis)."
+                }
+            }
+        ];
+
+        // Application State
+        let currentScenario = 0;
+        let currentStep = 0;
+        let results = {
+            '1': null, '2': null, '3': null, '4': null, '5': null, '6': null,
+            '7': null, '8': null, '9': null, '10': null, '11': null, '12': null
+        };
+        let selectedAssessments = [];
+        let selectedClassification = null;
+        let selectedType = null;
+        let selectedIntervention = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            renderScenario();
+            updateScorePanel();
+        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('n8hub_darkmode', newTheme === 'dark');
+        }
+
+        function loadTheme() {
+            const isDark = localStorage.getItem('n8hub_darkmode') === 'true';
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Navigation
+        function goBackToHub() {
+            try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+            window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+        }
+
+        function switchMode(mode) {
+            document.querySelectorAll('.scenario-mode').forEach(m => m.classList.remove('active'));
+            document.querySelector('#' + (mode === 'practice' ? 'practiceMode' : mode === 'review' ? 'reviewMode' : 'listMode')).classList.add('active');
+
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            const btn = event.target.closest('.mode-btn') || event.target;
+            btn.classList.add('active');
+
+            if (mode === 'list') {
+                renderScenarioList();
+            } else if (mode === 'review') {
+                renderReviewMode();
+            }
+        }
+
+        // Scenario Rendering
+        function renderScenario() {
+            const scenario = scenarios[currentScenario];
+            const container = document.getElementById('scenarioContainer');
+
+            let html = `
+                <div class="scenario-card">
+                    <div class="scenario-header">
+                        <div>
+                            <div class="scenario-title">${scenario.id}. ${scenario.title}</div>
+                            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">${scenario.patient}</p>
+                        </div>
+                        <span class="scenario-badge badge-${scenario.type}">${scenario.type.toUpperCase()}</span>
+                    </div>
+
+                    <div class="step-indicator">
+                        <div class="step ${currentStep >= 0 ? 'active' : ''} ${currentStep > 0 ? 'completed' : ''}">Presentation</div>
+                        <div class="step ${currentStep >= 1 ? 'active' : ''} ${currentStep > 1 ? 'completed' : ''}">Assessment</div>
+                        <div class="step ${currentStep >= 2 ? 'active' : ''} ${currentStep > 2 ? 'completed' : ''}">Classify</div>
+                        <div class="step ${currentStep >= 3 ? 'active' : ''} ${currentStep > 3 ? 'completed' : ''}">Type</div>
+                        <div class="step ${currentStep >= 4 ? 'active' : ''} ${currentStep > 4 ? 'completed' : ''}">Intervention</div>
+                        <div class="step ${currentStep >= 5 ? 'active' : ''}">Summary</div>
+                    </div>
+            `;
+
+            // Step 0: Presentation
+            if (currentStep === 0) {
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">Patient Presentation</h3>
+                        <div class="patient-demo">
+                            <div class="patient-demo-grid">
+                                <div class="demo-item">
+                                    <div class="demo-label">Chief Complaint</div>
+                                    <div class="demo-value">${scenario.cc}</div>
+                                </div>
+                                <div class="demo-item">
+                                    <div class="demo-label">History</div>
+                                    <div class="demo-value">${scenario.history}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-bottom: 12px; font-weight: 600;">Vital Signs</h4>
+                        <div class="vitals-grid">
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.hr}</div>
+                                <div class="vital-label">HR (bpm)</div>
+                            </div>
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.bp}</div>
+                                <div class="vital-label">BP (mmHg)</div>
+                            </div>
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.rr}</div>
+                                <div class="vital-label">RR (bpm)</div>
+                            </div>
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.temp}</div>
+                                <div class="vital-label">Temp</div>
+                            </div>
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.spo2}%</div>
+                                <div class="vital-label">SpO₂</div>
+                            </div>
+                            <div class="vital">
+                                <div class="vital-value">${scenario.vitals.urine}</div>
+                                <div class="vital-label">Urine Output</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Step 1: Assessment
+            else if (currentStep === 1) {
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">What do you notice? (Select the most significant findings)</h3>
+                        <div class="assessment-grid">
+                `;
+                scenario.assessment.forEach((finding, idx) => {
+                    html += `
+                        <button class="assessment-btn" onclick="selectAssessment(${idx})">
+                            ${finding.text}
+                        </button>
+                    `;
+                });
+                html += `
+                        </div>
+                        <div id="assessmentFeedback"></div>
+                    </div>
+                `;
+            }
+
+            // Step 2: Classification
+            else if (currentStep === 2) {
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">What's the "broken piece"?</h3>
+                        <div class="classification-grid">
+                            <button class="classification-btn pump" onclick="selectClassification('cardiogenic')">
+                                <div style="font-size: 24px; margin-bottom: 8px;">❤️</div>
+                                PUMP<br><small>Cardiogenic</small>
+                            </button>
+                            <button class="classification-btn volume" onclick="selectClassification('hypovolemic')">
+                                <div style="font-size: 24px; margin-bottom: 8px;">💧</div>
+                                VOLUME<br><small>Hypovolemic</small>
+                            </button>
+                            <button class="classification-btn pipes" onclick="selectClassification('distributive')">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🌊</div>
+                                PIPES<br><small>Distributive</small>
+                            </button>
+                            <button class="classification-btn blockage" onclick="selectClassification('obstructive')">
+                                <div style="font-size: 24px; margin-bottom: 8px;">🚫</div>
+                                BLOCKAGE<br><small>Obstructive</small>
+                            </button>
+                        </div>
+                        <div id="classificationFeedback"></div>
+                    </div>
+                `;
+            }
+
+            // Step 3: Specific Type
+            else if (currentStep === 3) {
+                const options = getTypeOptions(scenario.type);
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">What specific type of ${scenario.type} shock?</h3>
+                        <div class="assessment-grid">
+                `;
+                options.forEach(opt => {
+                    html += `
+                        <button class="assessment-btn" onclick="selectType('${opt}')">
+                            ${opt}
+                        </button>
+                    `;
+                });
+                html += `
+                        </div>
+                        <div id="typeFeedback"></div>
+                    </div>
+                `;
+            }
+
+            // Step 4: Intervention
+            else if (currentStep === 4) {
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">What's your FIRST intervention?</h3>
+                        <div class="assessment-grid">
+                `;
+                const interventionOptions = getInterventionOptions(scenario.type);
+                interventionOptions.forEach(opt => {
+                    html += `
+                        <button class="assessment-btn" onclick="selectIntervention('${opt}')">
+                            ${opt}
+                        </button>
+                    `;
+                });
+                html += `
+                        </div>
+                        <div id="interventionFeedback"></div>
+                    </div>
+                `;
+            }
+
+            // Step 5: Summary
+            else if (currentStep === 5) {
+                const correct = results[scenario.id] ? '✓' : '✗';
+                html += `
+                    <div class="step-content active">
+                        <h3 style="margin-bottom: 12px;">Summary: ${correct}</h3>
+                        <div class="summary-comparison">
+                            <div class="comparison-box">
+                                <div class="comparison-title">Your Path</div>
+                                <div class="comparison-item">
+                                    <strong>Classification:</strong>
+                                    <span>${selectedClassification || '—'}</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <strong>Type:</strong>
+                                    <span>${selectedType || '—'}</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <strong>Intervention:</strong>
+                                    <span>${selectedIntervention || '—'}</span>
+                                </div>
+                            </div>
+                            <div class="comparison-box">
+                                <div class="comparison-title">Correct Path</div>
+                                <div class="comparison-item">
+                                    <strong>Classification:</strong>
+                                    <span>${scenario.classification}</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <strong>Type:</strong>
+                                    <span>${scenario.specificType}</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <strong>Intervention:</strong>
+                                    <span>${scenario.firstIntervention}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 16px; background: var(--border); border-radius: 6px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Pathophysiology:</div>
+                            <p style="font-size: 13px; line-height: 1.6; margin-bottom: 12px;">${scenario.explanation.pathophys}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Hemodynamics:</div>
+                            <p style="font-size: 13px; line-height: 1.6; margin-bottom: 12px;">${scenario.explanation.hemo}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Why This Classification:</div>
+                            <p style="font-size: 13px; line-height: 1.6;">${scenario.explanation.why}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `
+                    <div class="nav-buttons">
+                        <button class="btn-nav" onclick="previousStep()" ${currentStep === 0 ? 'disabled' : ''}>← Previous</button>
+                        <button class="btn-nav" onclick="nextStep()" ${currentStep < 5 ? '' : 'disabled'}>Next →</button>
+                        ${currentStep === 5 ? `<button class="btn-primary" onclick="nextScenario()">Next Scenario →</button>` : ''}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function selectAssessment(idx) {
+            const scenario = scenarios[currentScenario];
+            const btn = event.target.closest('.assessment-btn') || event.target;
+            btn.classList.toggle('selected');
+
+            if (btn.classList.contains('selected')) {
+                selectedAssessments.push(idx);
+            } else {
+                selectedAssessments = selectedAssessments.filter(i => i !== idx);
+            }
+
+            const feedbackDiv = document.getElementById('assessmentFeedback');
+            const allSignificant = scenario.assessment.filter(a => a.significant).length;
+            const selectedSignificant = selectedAssessments.filter(i => scenario.assessment[i].significant).length;
+
+            if (selectedAssessments.length > 0) {
+                feedbackDiv.className = 'feedback show ' + (selectedSignificant >= 3 ? 'correct' : 'incorrect');
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">${selectedSignificant >= 3 ? '✓ Good selection!' : '⚠ Keep looking...'}</div>
+                    <div class="feedback-text">You've selected ${selectedSignificant}/${allSignificant} key findings. ${selectedSignificant >= 3 ? 'You\'re ready to move forward.' : 'Try to identify more critical findings.'}</div>
+                `;
+            }
+        }
+
+        function selectClassification(type) {
+            const scenario = scenarios[currentScenario];
+            selectedClassification = type;
+
+            const feedbackDiv = document.getElementById('classificationFeedback');
+            feedbackDiv.className = 'feedback show ' + (type === scenario.classification ? 'correct' : 'incorrect');
+
+            if (type === scenario.classification) {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✓ Correct! This is a ${type} shock.</div>
+                    <div class="feedback-text">${scenario.explanation.why}</div>
+                `;
+            } else {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✗ Not quite. This is actually ${scenario.classification} shock.</div>
+                    <div class="feedback-text">${scenario.explanation.why}</div>
+                `;
+            }
+        }
+
+        function selectType(type) {
+            const scenario = scenarios[currentScenario];
+            selectedType = type;
+
+            const feedbackDiv = document.getElementById('typeFeedback');
+            feedbackDiv.className = 'feedback show ' + (type === scenario.specificType ? 'correct' : 'incorrect');
+
+            if (type === scenario.specificType) {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✓ Correct!</div>
+                    <div class="feedback-text">${type}</div>
+                `;
+            } else {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✗ The correct answer is: ${scenario.specificType}</div>
+                    <div class="feedback-text">Review the pathophysiology and clinical presentation to understand why.</div>
+                `;
+            }
+        }
+
+        function selectIntervention(intervention) {
+            const scenario = scenarios[currentScenario];
+            selectedIntervention = intervention;
+
+            const feedbackDiv = document.getElementById('interventionFeedback');
+            feedbackDiv.className = 'feedback show ' + (intervention === scenario.firstIntervention ? 'correct' : 'incorrect');
+
+            if (intervention === scenario.firstIntervention) {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✓ Correct priority!</div>
+                    <div class="feedback-text">${intervention}</div>
+                `;
+            } else {
+                feedbackDiv.innerHTML = `
+                    <div class="feedback-title">✗ The correct FIRST intervention is:</div>
+                    <div class="feedback-text">${scenario.firstIntervention}</div>
+                `;
+            }
+        }
+
+        function getTypeOptions(type) {
+            const typeMap = {
+                hypovolemic: [
+                    'Hemorrhagic shock (external bleeding)',
+                    'Hemorrhagic shock (internal bleeding)',
+                    'Hypovolemic shock from third-spacing',
+                    'Hypovolemic shock from fluid loss'
+                ],
+                cardiogenic: [
+                    'Cardiogenic shock from acute MI',
+                    'Cardiogenic shock from acute decompensated HF',
+                    'Right heart failure from massive PE',
+                    'Cardiogenic shock from myocarditis'
+                ],
+                distributive: [
+                    'Septic shock from UTI',
+                    'Septic shock from pneumonia',
+                    'Septic shock from surgical site infection',
+                    'Anaphylactic shock',
+                    'Neurogenic shock from spinal cord injury'
+                ],
+                obstructive: [
+                    'Tension pneumothorax',
+                    'Massive PE',
+                    'Cardiac tamponade',
+                    'Aortic dissection with compression'
+                ]
+            };
+            return typeMap[type] || [];
+        }
+
+        function getInterventionOptions(type) {
+            const interventions = {
+                hypovolemic: [
+                    '2 large-bore IVs, 30 mL/kg NS/LR bolus, type & cross',
+                    'High-flow O2, head elevation, diuretics',
+                    'Epinephrine IM, diphenhydramine, methylprednisolone',
+                    'Needle decompression, chest tube'
+                ],
+                cardiogenic: [
+                    'Dobutamine/milrinone, cautious diuretics, avoid fluids',
+                    'Fluids, vasopressors, broad-spectrum antibiotics',
+                    'Massive fluid bolus, norepinephrine',
+                    'Epinephrine, intubation, thrombolytics'
+                ],
+                distributive: [
+                    'Blood cultures, broad-spectrum antibiotics, 30 mL/kg bolus, norepinephrine',
+                    'Epinephrine IM, O2, IV fluids, antihistamines',
+                    'IV fluids cautiously, vasopressors, warm blankets',
+                    'Needle decompression, chest tube, O2'
+                ],
+                obstructive: [
+                    'Needle decompression, high-flow O2, chest tube',
+                    'Pericardiocentesis, IV fluids, pericardial window',
+                    'Thrombolytics, heparin, high-flow O2',
+                    '30 mL/kg bolus, norepinephrine, antibiotics'
+                ]
+            };
+            return interventions[type] || [];
+        }
+
+        function nextStep() {
+            if (currentStep < 5) {
+                currentStep++;
+                renderScenario();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderScenario();
+            }
+        }
+
+        function nextScenario() {
+            // Record result
+            const scenario = scenarios[currentScenario];
+            const allCorrect = selectedClassification === scenario.classification &&
+                              selectedType === scenario.specificType &&
+                              selectedIntervention === scenario.firstIntervention;
+            results[scenario.id] = allCorrect;
+
+            // Track with StudyData if available
+            if (typeof StudyData !== 'undefined') {
+                StudyData.recordResult('shock-simulator', 'cardiac', allCorrect, 1);
+                StudyData.trackExposure(`shock-simulator:${scenario.type}`, allCorrect);
+            }
+
+            if (currentScenario < scenarios.length - 1) {
+                currentScenario++;
+                currentStep = 0;
+                selectedAssessments = [];
+                selectedClassification = null;
+                selectedType = null;
+                selectedIntervention = null;
+                renderScenario();
+                updateScorePanel();
+            } else {
+                alert('All scenarios completed!');
+                currentScenario = 0;
+                currentStep = 0;
+                renderScenario();
+            }
+        }
+
+        function updateScorePanel() {
+            const completed = Object.values(results).filter(r => r !== null).length;
+            const correct = Object.values(results).filter(r => r === true).length;
+            const accuracy = completed > 0 ? Math.round((correct / completed) * 100) : 0;
+
+            document.getElementById('totalScore').textContent = completed;
+            document.getElementById('accuracyScore').textContent = accuracy + '%';
+
+            // Calculate accuracy by type
+            const types = ['hypovolemic', 'cardiogenic', 'distributive', 'obstructive'];
+            types.forEach(type => {
+                const typeScenarios = scenarios.filter(s => s.type === type).map(s => s.id);
+                const typeCorrect = typeScenarios.filter(id => results[id] === true).length;
+                const typeCompleted = typeScenarios.filter(id => results[id] !== null).length;
+                const typeAccuracy = typeCompleted > 0 ? Math.round((typeCorrect / typeCompleted) * 100) : 0;
+                const displayText = typeCompleted > 0 ? typeAccuracy + '%' : '—';
+                document.getElementById(type === 'hypovolemic' ? 'hypoScore' : type === 'cardiogenic' ? 'cardioScore' : type === 'distributive' ? 'distScore' : 'obScore').textContent = displayText;
+            });
+        }
+
+        function renderScenarioList() {
+            const list = document.getElementById('scenarioList');
+            list.innerHTML = '';
+
+            scenarios.forEach(scenario => {
+                const completed = results[scenario.id] !== null;
+                const correct = results[scenario.id] === true;
+
+                let html = `
+                    <div class="scenario-item ${completed ? 'completed' : ''}" onclick="loadScenario(${scenario.id - 1})">
+                        <div class="scenario-item-title">${scenario.id}. ${scenario.title}</div>
+                        <span class="scenario-item-badge badge-${scenario.type}">${scenario.type.toUpperCase()}</span>
+                        <div class="scenario-item-status ${correct ? 'correct' : ''}>
+                            ${completed ? (correct ? '✓ Correct' : '✗ Incorrect') : 'Not attempted'}
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += html;
+            });
+        }
+
+        function renderReviewMode() {
+            const review = document.getElementById('reviewContainer');
+            review.innerHTML = '';
+
+            scenarios.forEach(scenario => {
+                let html = `
+                    <div class="scenario-card">
+                        <div class="scenario-header">
+                            <div>
+                                <div class="scenario-title">${scenario.id}. ${scenario.title}</div>
+                                <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">${scenario.patient}</p>
+                            </div>
+                            <span class="scenario-badge badge-${scenario.type}">${scenario.type.toUpperCase()}</span>
+                        </div>
+
+                        <div style="background: var(--border); padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Classification:</div>
+                            <p style="font-size: 13px; margin-bottom: 12px;">${scenario.classification}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Specific Type:</div>
+                            <p style="font-size: 13px; margin-bottom: 12px;">${scenario.specificType}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">First Intervention:</div>
+                            <p style="font-size: 13px; margin-bottom: 12px;">${scenario.firstIntervention}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Pathophysiology:</div>
+                            <p style="font-size: 13px; margin-bottom: 12px;">${scenario.explanation.pathophys}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Hemodynamics:</div>
+                            <p style="font-size: 13px; margin-bottom: 12px;">${scenario.explanation.hemo}</p>
+
+                            <div style="font-weight: 600; margin-bottom: 8px;">Why This Classification:</div>
+                            <p style="font-size: 13px;">${scenario.explanation.why}</p>
+                        </div>
+                    </div>
+                `;
+                review.innerHTML += html;
+            });
+        }
+
+        function loadScenario(idx) {
+            currentScenario = idx;
+            currentStep = 0;
+            selectedAssessments = [];
+            selectedClassification = null;
+            selectedType = null;
+            selectedIntervention = null;
+
+            document.querySelectorAll('.scenario-mode').forEach(m => m.classList.remove('active'));
+            document.getElementById('practiceMode').classList.add('active');
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.mode-btn')[0].classList.add('active');
+
+            renderScenario();
+        }
+
+        function toggleReference(titleEl) {
+            const content = titleEl.nextElementSibling;
+            titleEl.classList.toggle('collapsed');
+            content.classList.toggle('show');
+        }
+
+        function calculateMAP() {
+            const sbp = parseFloat(document.getElementById('sbpInput').value);
+            const dbp = parseFloat(document.getElementById('dbpInput').value);
+
+            if (sbp && dbp) {
+                const map = Math.round(dbp + (sbp - dbp) / 3);
+                const mapValue = document.getElementById('mapValue');
+                mapValue.textContent = map + ' mmHg';
+                mapValue.style.color = map >= 65 ? 'var(--success)' : 'var(--error)';
+            }
+        }
+
+        // Expose StudyData stub if needed
+        if (typeof StudyData === 'undefined') {
+            window.StudyData = {
+                recordResult: (tool, category, correct, total) => { console.log('Result recorded:', tool, category, correct, total); },
+                trackExposure: (topic, correct) => { console.log('Exposure tracked:', topic, correct); }
+            };
+        }
+    </script>
+</body>
+</html>

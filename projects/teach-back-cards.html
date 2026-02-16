@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teach-Back Prompt Cards — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.control-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+/* ─── MAIN CONTENT AREA ─── */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* ─── CARD DISPLAY ─── */
+.card-display-area {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-topic {
+  font-size: 2em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.4;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.card-topic-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+.card-topic-badge.cardiac { background: var(--cardiac-bg); color: var(--cardiac); }
+.card-topic-badge.fluid { background: var(--fluid-bg); color: var(--fluid); }
+.card-topic-badge.oxy { background: var(--oxy-bg); color: var(--oxy); }
+.card-topic-badge.neuro { background: var(--neuro-bg); color: var(--neuro); }
+.card-topic-badge.emergency { background: var(--emergency-bg); color: var(--emergency); }
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.timer-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.timer-display {
+  font-size: 1.8em;
+  font-weight: 800;
+  color: var(--cardiac);
+  min-width: 80px;
+  text-align: center;
+}
+
+.timer-display.inactive {
+  color: var(--text-muted);
+}
+
+.timer-btn {
+  padding: 8px 16px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.timer-btn:hover { background: #c0392b; transform: translateY(-2px); }
+.timer-btn.stop { background: var(--danger); }
+
+.key-points-section {
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid var(--cardiac);
+}
+
+.key-points-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.key-points-header h3 {
+  font-weight: 700;
+  font-size: 0.95em;
+  color: var(--text);
+}
+
+.reveal-btn {
+  padding: 6px 12px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.75em;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.reveal-btn:hover { background: #c0392b; }
+.reveal-btn.all-shown { opacity: 0.5; cursor: not-allowed; }
+
+.key-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.key-point {
+  padding: 10px 12px;
+  background: var(--card);
+  border-radius: 6px;
+  border-left: 3px solid var(--cardiac);
+  font-size: 0.9em;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.key-point.visible {
+  opacity: 1;
+  max-height: 100px;
+  margin-bottom: 4px;
+}
+
+.misconceptions-section {
+  background: var(--emergency-bg);
+  padding: 16px;
+  border-radius: 10px;
+  border-left: 4px solid var(--emergency);
+}
+
+.misconceptions-section h4 {
+  font-weight: 700;
+  color: var(--emergency);
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.misconception-item {
+  font-size: 0.85em;
+  color: var(--text);
+  margin-bottom: 6px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.misconception-item::before {
+  content: '⚠️';
+  position: absolute;
+  left: 0;
+}
+
+.misconception-item:last-child {
+  margin-bottom: 0;
+}
+
+.go-deeper-section {
+  background: var(--fluid-bg);
+  padding: 16px;
+  border-radius: 10px;
+  border-left: 4px solid var(--fluid);
+}
+
+.go-deeper-section a {
+  color: var(--fluid);
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 0.9em;
+}
+
+.go-deeper-section a:hover {
+  opacity: 0.8;
+}
+
+/* ─── SCORING SECTION ─── */
+.scoring-section {
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.scoring-section h3 {
+  font-size: 0.95em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.score-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.score-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.score-btn:hover {
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+}
+
+.score-btn.selected {
+  background: var(--cardiac);
+  color: white;
+  border-color: var(--cardiac);
+}
+
+.score-label {
+  font-weight: 700;
+}
+
+.score-desc {
+  font-size: 0.75em;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.progress-card h3,
+.navigation-card h3 {
+  font-size: 0.9em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--cardiac);
+  transition: width 0.3s;
+}
+
+.progress-text {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.score-history {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.score-history h4 {
+  font-size: 0.75em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.score-avg {
+  font-size: 1.4em;
+  font-weight: 800;
+  color: var(--cardiac);
+  text-align: center;
+}
+
+.score-avg-label {
+  font-size: 0.7em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.nav-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-btn.prev { grid-column: 1; }
+.nav-btn.next { grid-column: 2; }
+.nav-btn.shuffle { grid-column: 1 / -1; }
+
+.shuffle-btn {
+  background: var(--cardiac);
+  color: white;
+  border-color: var(--cardiac);
+}
+
+.shuffle-btn:hover {
+  background: #c0392b;
+}
+
+.card-counter {
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--text-muted);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .card-display-area {
+    padding: 30px;
+  }
+
+  .card-topic {
+    font-size: 1.6em;
+  }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 12px; }
+
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .card-display-area {
+    padding: 20px;
+    min-height: auto;
+  }
+
+  .card-topic {
+    font-size: 1.3em;
+    min-height: auto;
+  }
+
+  .nav-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-btn.shuffle {
+    grid-column: 1;
+  }
+}
+
+@media print {
+  .controls, .sidebar, .timer-section, .scoring-section, .nav-buttons, .header-btn {
+    display: none;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .card-display-area {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+
+  .key-point {
+    opacity: 1;
+    max-height: none;
+  }
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Teach-Back Prompt Cards</h1>
+      <p class="subtitle">N8 Deep Encoding — Explain Out Loud, Check Yourself, Self-Score</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="filterByArea('all')">All Topics</button>
+        <button class="filter-btn" onclick="filterByArea('cardiac')">Cardiac</button>
+        <button class="filter-btn" onclick="filterByArea('oxygenation')">Oxygenation</button>
+        <button class="filter-btn" onclick="filterByArea('fluid')">F&E</button>
+        <button class="filter-btn" onclick="filterByArea('neuro')">Neuro</button>
+        <button class="filter-btn" onclick="filterByArea('emergency')">Emergency</button>
+      </div>
+    </div>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <div class="main-content">
+    <div class="card-display-area">
+      <div>
+        <div id="conceptBadge" class="card-topic-badge cardiac">Cardiac</div>
+        <div class="card-topic" id="cardTopic">Loading...</div>
+      </div>
+
+      <div class="card-content">
+        <div class="timer-section">
+          <div class="timer-display" id="timerDisplay">2:00</div>
+          <button class="timer-btn" id="timerBtn" onclick="toggleTimer()">Start Timer</button>
+        </div>
+
+        <div class="key-points-section">
+          <div class="key-points-header">
+            <h3>Key Points Checklist</h3>
+            <button class="reveal-btn" id="revealBtn" onclick="revealAllKeyPoints()">Reveal All</button>
+          </div>
+          <div class="key-points-list" id="keyPointsList"></div>
+        </div>
+
+        <div class="misconceptions-section">
+          <h4>Common Misconceptions</h4>
+          <div id="misconceptionsList"></div>
+        </div>
+
+        <div class="go-deeper-section" id="goDeeper"></div>
+      </div>
+
+      <div class="scoring-section">
+        <h3>How did you explain it?</h3>
+        <div class="score-buttons" id="scoreButtons"></div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-card progress-card">
+        <h3>Session Progress</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 25</div>
+        <div class="score-history">
+          <h4>Average Score</h4>
+          <div class="score-avg" id="avgScore">--</div>
+          <div class="score-avg-label">This session</div>
+        </div>
+      </div>
+
+      <div class="sidebar-card navigation-card">
+        <h3>Navigation</h3>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" onclick="previousCard()" id="prevBtn">← Previous</button>
+          <button class="nav-btn next" onclick="nextCard()" id="nextBtn">Next →</button>
+          <button class="nav-btn shuffle-btn" onclick="shuffleCards()">Shuffle</button>
+        </div>
+        <div class="card-counter" id="cardCounter">Card 1 of 25</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 20px; font-size: 0.78em; color: var(--text-muted); margin-top: 20px;">
+  Teach-Back Prompt Cards | N8 NCLEX-RN Intensive | All 5 Concept Areas | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+// ─── CARD DATA ───
+const allCards = [
+  // CARDIAC (6)
+  {
+    id: 1,
+    topic: "Explain left-sided vs right-sided heart failure",
+    area: "cardiac",
+    keyPoints: [
+      "Left-sided HF: pulmonary congestion (crackles, dyspnea, PND), S3 gallop, orthopnea, pink frothy sputum",
+      "Right-sided HF: peripheral edema (lower extremities), hepatomegaly, JVD, ascites, RUQ tenderness",
+      "Left HF → ↑pulmonary pressure → ↑RV afterload → right HF (backward failure); right HF also from pulmonary HTN/COPD",
+      "Treatment differences: Left HF = diuretics + vasodilators (preload/afterload reduction); Right HF = careful with diuretics (need RV preload)"
+    ],
+    misconceptions: [
+      "Both sides cause same edema patterns — NO: left causes pulmonary; right causes peripheral",
+      "Right-sided HF always comes from left HF — NO: can develop independently from pulmonary HTN or COPD"
+    ],
+    goDeeper: "Link to cardiac output & perfusion guide"
+  },
+  {
+    id: 2,
+    topic: "Explain the shock continuum",
+    area: "cardiac",
+    keyPoints: [
+      "Compensatory shock: sympathetic activation (tachycardia, vasoconstriction, ↑BP, cool skin, anxious), tissue perfusion maintained",
+      "Progressive shock: compensation failing, ↓BP, ↑lactate, altered mental status, oliguria, cool/mottled skin",
+      "Irreversible shock: cellular death, organ failure, death imminent despite intervention",
+      "MAP goal ≥65 mmHg; early recognition of compensatory phase allows reversal before irreversibility"
+    ],
+    misconceptions: [
+      "Shock always means low BP — NO: compensatory shock may have normal/high BP due to vasoconstriction",
+      "You can wait to see if pt decompensates — NO: window of reversibility closes rapidly; treat immediately in compensatory phase"
+    ],
+    goDeeper: "Link to shock & hemodynamics"
+  },
+  {
+    id: 3,
+    topic: "Teach a patient about their new pacemaker",
+    area: "cardiac",
+    keyPoints: [
+      "Check pulse daily (goal >60); report if <60 or irregular beats",
+      "MRI contraindicated without special clearance; metal detectors, airport security: inform security officer of pacemaker ID card",
+      "Activity restrictions first month: avoid heavy lifting (>5 lbs), avoid raising arm >shoulder height on surgical side",
+      "Call doctor if: hiccups, chest pain, dizziness, syncope, rapid HR, signs of infection (fever, redness/drainage at site)"
+    ],
+    misconceptions: [
+      "Once placed, pacemaker never needs follow-up — NO: requires regular device checks (every 3-6 months) + battery monitoring",
+      "All magnets/metal are contraindicated — NO: most household items OK; problem is strong industrial magnets and MRI"
+    ],
+    goDeeper: "Link to pacemakers & cardiac devices"
+  },
+  {
+    id: 4,
+    topic: "Explain when to hold cardiac medications",
+    area: "cardiac",
+    keyPoints: [
+      "Beta-blockers: HOLD if HR <60 or SBP <90 (risk of bradycardia/hypotension)",
+      "Digoxin: HOLD if HR <60 (slow apical pulse x 1 min before each dose); also hold if K+ <3.5 (↑toxicity risk) or digoxin level >2.0",
+      "ACE-I/ARB: HOLD if SBP <90, K+ >5.0, or Cr ↑>30% from baseline (hyperkalemia, renal decline)",
+      "NTG: HOLD if SBP <90, HR <60 or >100, recent PDE5 inhibitor use (Viagra/Cialis—severe hypotension risk)"
+    ],
+    misconceptions: [
+      "Hold parameters are the same for all cardiac drugs — NO: each has specific parameters based on mechanism & toxicity",
+      "Low BP is the only reason to hold drugs — NO: K+, Cr, digoxin level, HR, and drug interactions all matter"
+    ],
+    goDeeper: "Link to cardiac pharmacology"
+  },
+  {
+    id: 5,
+    topic: "Explain the ACS continuum",
+    area: "cardiac",
+    keyPoints: [
+      "Stable angina: predictable chest pain with exertion, relieved by rest/NTG, no troponin elevation",
+      "Unstable angina: new-onset, increased frequency, at rest, or lower threshold; no troponin elevation",
+      "NSTEMI: chest pain + troponin elevation + no ST elevation on ECG; partial coronary occlusion",
+      "STEMI: chest pain + troponin elevation + ST elevation on ECG; complete coronary occlusion; door-to-balloon <90 min goal",
+      "MONA: Morphine, O2, Nitrates, Aspirin; troponin peaks 48-72 hrs (earlier detection with high-sensitivity assay)"
+    ],
+    misconceptions: [
+      "Troponin elevation means STEMI — NO: troponin elevated in both NSTEMI and STEMI; ECG differentiates",
+      "Unstable angina is same as stable angina — NO: unstable is progressive and higher risk for progression to MI"
+    ],
+    goDeeper: "Link to ACS pathway"
+  },
+  {
+    id: 6,
+    topic: "Explain preload vs afterload",
+    area: "cardiac",
+    keyPoints: [
+      "Preload: venous return (volume of blood returning to heart); Frank-Starling law = ↑preload → ↑stroke volume (until overstretched)",
+      "Afterload: resistance heart must overcome to eject blood (SVR, aortic/pulmonary valve resistance)",
+      "Decreased preload: ↓venous return (dehydration, hemorrhage, vasodilation)—use IV fluids or vasoconstrictors",
+      "Increased afterload: ↑resistance (hypertension, vasoconstriction, aortic stenosis)—use vasodilators (ACE-I, NTG, hydralazine)"
+    ],
+    misconceptions: [
+      "Preload and afterload are the same thing — NO: preload = input volume; afterload = output resistance",
+      "All HF treatment is diuretics — NO: depends on preload/afterload; systolic HF needs afterload reduction; diastolic needs preload optimization"
+    ],
+    goDeeper: "Link to cardiac physiology"
+  },
+
+  // OXYGENATION (5)
+  {
+    id: 7,
+    topic: "Explain mechanical ventilation modes",
+    area: "oxygenation",
+    keyPoints: [
+      "Assist/Control (A/C): ventilator delivers set tidal volume (TV) + rate OR patient-triggered breaths (all supported); used for sedated/paralyzed patients",
+      "SIMV (Synchronized Intermittent Mandatory Ventilation): set number of mandatory breaths; patient can breathe spontaneously between (partial support); facilitates weaning",
+      "Pressure Support: patient-triggered, ventilator assists to preset pressure; used for spontaneous breathing (low support), not primary mode",
+      "PEEP: maintains positive end-expiratory pressure → ↑functional residual capacity, ↓atelectasis, ↑O2 (usual 5-15 cm H2O); too much PEEP → ↓venous return, ↓CO"
+    ],
+    misconceptions: [
+      "A/C means patient controls breathing — NO: ventilator controls; patient can trigger extra breaths but all are assisted",
+      "Higher PEEP is always better — NO: too much PEEP causes barotrauma, reduces venous return, increases ICP"
+    ],
+    goDeeper: "Link to mechanical ventilation"
+  },
+  {
+    id: 8,
+    topic: "Explain the VAP prevention bundle",
+    area: "oxygenation",
+    keyPoints: [
+      "HOB 30-45°: ↓aspiration risk; check q2h (patient often slides down)",
+      "Daily sedation vacation: minimal sedation allows spontaneous breathing, allows neuro checks, facilitates weaning",
+      "PUD prophylaxis: H2 blocker or PPI (GI bleed prevention in critical illness)",
+      "DVT prophylaxis: mechanical (sequential compression devices, early mobilization) and/or pharmacologic (LMWH, etc)",
+      "Oral care with chlorhexidine: BID-QID reduces bacterial colonization, ↓VAP incidence 30-40%"
+    ],
+    misconceptions: [
+      "You need intubation for VAP — NO: VAP can occur with any device bypassing upper airway (ETT, trach, even high-flow O2 in some cases)",
+      "Sedation vacation means patient wakes up agitated — NO: adequate pain/comfort management allows awakening without agitation"
+    ],
+    goDeeper: "Link to VAP prevention"
+  },
+  {
+    id: 9,
+    topic: "Explain ARDS pathophysiology",
+    area: "oxygenation",
+    keyPoints: [
+      "Inflammatory cascade (infection, aspiration, trauma): ↑capillary permeability, fluid leaks into alveoli → alveolar edema (opaque on CXR: bilateral infiltrates)",
+      "Damage to alveolar epithelium + surfactant loss → ↑surface tension → ↑alveolar collapse (atelectasis)",
+      "Refractory hypoxemia: ↑shunt fraction, O2 alone insufficient; requires PEEP + mechanical ventilation",
+      "Treatment: identify/treat cause, low tidal volume ventilation (6 mL/kg IBW—prevents barotrauma), prone positioning improves V/Q matching, ECMO if refractory"
+    ],
+    misconceptions: [
+      "ARDS is just bad pneumonia — NO: ARDS is diffuse inflammatory lung injury with specific diagnostic criteria (P/F ratio <300)",
+      "Increasing FiO2 solves ARDS hypoxemia — NO: refractory to O2 due to shunt; need PEEP + low TV, treat underlying cause"
+    ],
+    goDeeper: "Link to ARDS"
+  },
+  {
+    id: 10,
+    topic: "Teach a COPD patient about O2 therapy",
+    area: "oxygenation",
+    keyPoints: [
+      "COPD causes hypoxic drive: CO2 NO LONGER drives breathing (chronically high); O2 is the respiratory drive — HIGH-FLOW O2 removes hypoxic drive → respiratory depression",
+      "Safe O2: 1-2 L/min nasal cannula, target pulse ox 88-92% (not 95-100%!); titrate cautiously to prevent CO2 retention, respiratory acidosis",
+      "Never exceed 2-3 L/min without monitoring ABG (risk of CO2 retention, respiratory failure)",
+      "Call 911 if: severe dyspnea, confusion, severe headache (signs of respiratory failure, hypercapnia)"
+    ],
+    misconceptions: [
+      "COPD patients need high-flow O2 like everyone else — NO: high flow removes hypoxic drive, causes CO2 retention & respiratory failure",
+      "SpO2 of 95% is optimal for COPD — NO: target 88-92% to maintain hypoxic drive while avoiding severe hypoxemia"
+    ],
+    goDeeper: "Link to COPD management"
+  },
+  {
+    id: 11,
+    topic: "Explain pneumonia types and prevention",
+    area: "oxygenation",
+    keyPoints: [
+      "CAP (Community-Acquired): Streptococcus pneumoniae, Haemophilus, atypical organisms; outpatient, oral Abx",
+      "HAP (Hospital-Acquired): develops >48h after admission; often resistant organisms (MRSA, Pseudomonas); ICU stay, invasive procedures = risk",
+      "VAP (Ventilator-Associated): in intubated patients; high mortality, resistant pathogens",
+      "Prevention: vaccines (PCV13 age ≥65 or ≤64 with risk; PPSV23 ≥65 or chronic disease); ICOUGH protocol (Incentive spirometry, Cough, Oral care, Understanding, Getting up, Head of bed)"
+    ],
+    misconceptions: [
+      "All pneumonias are treated the same way — NO: CAP empiric outpatient Abx; HAP/VAP require broader coverage + ICU care",
+      "PPSV23 vaccine replaces PCV13 — NO: PCV13 then PPSV23 (1+ year later); protects against different serotypes"
+    ],
+    goDeeper: "Link to pneumonia management"
+  },
+
+  // FLUID & ELECTROLYTES (5)
+  {
+    id: 12,
+    topic: "Explain DKA vs HHS",
+    area: "fluid",
+    keyPoints: [
+      "DKA (Type 1 typically): rapid onset, glucose 250-600, pH <7.3 (metabolic acidosis), positive serum/urine ketones, Kussmaul respirations (fruity breath)",
+      "HHS (Type 2 typically): slower onset, glucose >600, pH >7.30, minimal/no ketones, hyperosmolality, altered mental status (confusion)",
+      "DKA = more acute/life-threatening; HHS = slower, higher mortality due to dehydration + older age",
+      "Treatment order: FLUIDS FIRST (LR, NS), insulin (only after K+ ≥3.5—hypokalemia worsens with insulin), electrolytes, monitor K+ closely (shifts intracellular)"
+    ],
+    misconceptions: [
+      "DKA and HHS are the same emergency — NO: different presentations, severity, treatment nuances; HHS often missed because no dramatic acidosis",
+      "Start insulin immediately in DKA — NO: must correct hypokalemia first (if K+ <3.5, insulin drives K+ intracellular → cardiac arrhythmias)"
+    ],
+    goDeeper: "Link to DKA & HHS"
+  },
+  {
+    id: 13,
+    topic: "Explain potassium imbalances",
+    area: "fluid",
+    keyPoints: [
+      "Normal K+: 3.5-5.0 mEq/L",
+      "Hypokalemia (<3.5): causes U wave on ECG, muscle weakness, cardiac dysrhythmias (flattened T wave, prolonged QT), increased digoxin toxicity risk",
+      "Hyperkalemia (>5.0): causes peaked T wave, widened QRS, loss of P wave (ECG); cardiac dysrhythmias, muscle weakness/paralysis, cardiac arrest",
+      "Causes: diuretics (↓K+), ACE-I/ARB (↑K+), diarrhea (↓K+), aldosterone antagonists (↑K+); food sources: bananas, potatoes, orange juice (↑K+)"
+    ],
+    misconceptions: [
+      "You can judge K+ level by symptoms — NO: ECG changes are more specific; mild hypokalemia may be asymptomatic",
+      "All patients on diuretics need K+ supplements — NO: K+-sparing diuretics don't cause loss; assess labs first"
+    ],
+    goDeeper: "Link to electrolyte imbalances"
+  },
+  {
+    id: 14,
+    topic: "Explain the Parkland formula",
+    area: "fluid",
+    keyPoints: [
+      "Formula: 4 mL × body weight (kg) × %TBSA = total fluid in 24 hours",
+      "HALF given in first 8 hours; HALF given over next 16 hours (from time of burn, not admission)",
+      "Monitor urine output: goal 0.5 mL/kg/hr (adults), 1 mL/kg/hr (children <30 kg)",
+      "Use LR (normal saline alone ↑hyperchloremic acidosis); adjust rate based on UO, not just formula"
+    ],
+    misconceptions: [
+      "Parkland formula is exact — NO: it's a starting point; titrate to UO (one of most important burn assessments)",
+      "Use normal saline for large burns — NO: LR preferred; NS causes hyperchloremic metabolic acidosis"
+    ],
+    goDeeper: "Link to burn management"
+  },
+  {
+    id: 15,
+    topic: "Teach a diabetic patient about insulin management",
+    area: "fluid",
+    keyPoints: [
+      "Insulin types: rapid (lispro, aspart—15 min), short/regular (30 min), intermediate NPH (1-2 hrs), long-acting glargine/detemir (flat, all-day coverage)",
+      "Injection sites: rotate thighs, abdomen, arms, buttocks (consistent site = consistent absorption); never same spot twice in 1 month",
+      "Hypoglycemia signs: shakiness, sweating, tachycardia, anxiety, confusion; treat with 15g fast carb (juice, glucose tabs), recheck in 15 min",
+      "Sick day rules: NEVER stop insulin; increase monitoring; stay hydrated; call provider if unable to eat (use liquid sugars)"
+    ],
+    misconceptions: [
+      "Sliding scale insulin alone is safe — NO: basal-bolus (long + rapid/short) is preferred; sliding scale alone risks wide glucose swings",
+      "You can skip insulin if not eating — NO: especially dangerous in Type 1; DKA can develop; use reduced doses + liquid carbs"
+    ],
+    goDeeper: "Link to insulin management"
+  },
+  {
+    id: 16,
+    topic: "Explain fluid volume deficit vs excess",
+    area: "fluid",
+    keyPoints: [
+      "Volume deficit: ↓BP, ↑HR (tachycardia), ↑RR, dry mucous membranes, ↓skin turgor, weak pedal pulses, ↓JVD",
+      "Volume excess: ↑BP (or normal), normal/slow HR, crackles, JVD prominent, edema, ↑weight, bounding pulses",
+      "Assessment: I&O (output >input = deficit), daily weights (↓ = deficit; ↑ = excess), orthostatic vitals (↓SBP ≥20 = deficit)",
+      "Interventions: deficit = IV fluids (LR, NS); excess = restrict fluids, diuretics, elevate legs, monitor I&O"
+    ],
+    misconceptions: [
+      "Edema always means volume excess — NO: can occur with low oncotic pressure (hypoalbuminemia), lymphatic obstruction, or inflammatory states",
+      "High BP means volume excess — NO: can be from vasoconstriction (deficit compensatory response); check other signs"
+    ],
+    goDeeper: "Link to fluid balance"
+  },
+
+  // COGNITION-SENSATION (5)
+  {
+    id: 17,
+    topic: "Explain the stroke assessment pathway",
+    area: "neuro",
+    keyPoints: [
+      "Ischemic stroke (85%): blood clot blocks vessel; treat with tPA (alteplase) if <4.5 hrs from last known well; door-to-CT, door-to-needle <60 min",
+      "Hemorrhagic stroke (15%): bleeding in brain; tPA CONTRAINDICATED; manage HTN, reverse anticoagulation if on warfarin",
+      "NIH Stroke Scale: assess level, eye, visual, facial symmetry, motor (arm/leg), sensory, language, speech, neglect (0-42 score; higher = worse)",
+      "CT BEFORE tPA: rule out hemorrhage (tPA worsens bleed); stat neuro checks q15min first 24h"
+    ],
+    misconceptions: [
+      "You can tell hemorrhagic from ischemic by symptoms — NO: clinical presentation overlaps; imaging required",
+      "All strokes get tPA — NO: hemorrhage, time window >4.5h, recent surgery = contraindications"
+    ],
+    goDeeper: "Link to stroke management"
+  },
+  {
+    id: 18,
+    topic: "Explain increased ICP management",
+    area: "neuro",
+    keyPoints: [
+      "Monro-Kellie hypothesis: skull fixed compartment with brain (80%), blood (10%), CSF (10%); ↑any one → ↓others → ↑ICP",
+      "CPP = MAP - ICP; goal CPP ≥60 mmHg (maintain cerebral perfusion); if ICP ↑ → MAP must ↑",
+      "Cushing's triad: ↑BP, ↓HR, ↓RR (late sign of herniation—medical emergency)",
+      "Interventions: HOB 30° (facilitates venous drainage), avoid ICP spikes (calm pt, minimize stimulation), hyperventilation (temporary, ↓CO2 → cerebral vasoconstriction), osmotic therapy (mannitol 20%, hypertonic saline 3%)"
+    ],
+    misconceptions: [
+      "Cushing's triad always appears in elevated ICP — NO: it's a LATE, ominous sign of impending herniation",
+      "Head flat in neuro patients improves perfusion — NO: HOB 30° REDUCES ICP by improving venous drainage; flat increases ICP"
+    ],
+    goDeeper: "Link to ICP management"
+  },
+  {
+    id: 19,
+    topic: "Explain seizure management",
+    area: "neuro",
+    keyPoints: [
+      "During seizure: PROTECT from injury (side rails, move harmful objects), DO NOT restrain, DO NOT put anything in mouth (aspiration risk), turn head to side (prevent aspiration), TIME the seizure",
+      "Status epilepticus (>5 min): medical emergency; treat with lorazepam 2-4 mg IV push q10-15 min or diazepam; then phenytoin/levetiracetam load",
+      "Post-ictal: confused, fatigued, may have incontinence; stay with patient, reorient, monitor neuro status",
+      "Rhabdomyolysis risk: muscle breakdown during prolonged seizure → myoglobin in urine → acute kidney injury; monitor urine color, CK, UO"
+    ],
+    misconceptions: [
+      "Bite tongue = you must put something in mouth — NO: airway WILL clear, aspiration unlikely; restraint + object cause more harm",
+      "One seizure = epilepsy — NO: single seizure from provoked cause (infection, medication) is not epilepsy; epilepsy = recurrent unprovoked seizures"
+    ],
+    goDeeper: "Link to seizure management"
+  },
+  {
+    id: 20,
+    topic: "Explain cranial nerve assessment",
+    area: "neuro",
+    keyPoints: [
+      "CN II (optic): visual acuity, visual fields (confrontation)",
+      "CN III (oculomotor): pupil size/reactivity, extraocular movements (up/down/medial), ptosis",
+      "CN V (trigeminal): facial sensation (light touch, pain, temperature), corneal reflex",
+      "CN VII (facial): facial symmetry (smile, close eyes), taste anterior tongue",
+      "CN IX (glossopharyngeal) + CN X (vagus): gag reflex, swallow, voice/hoarseness, palatal symmetry",
+      "CN XI (accessory): shoulder shrug, head turning against resistance",
+      "Deficits: drooping, vision loss, inability to move eye, facial weakness, hoarseness = lateralizing signs (CNS lesion location)"
+    ],
+    misconceptions: [
+      "You only test cranial nerves in neuro patients — NO: part of every baseline neuro exam; changes indicate acute CNS event",
+      "Pupil asymmetry <1mm is always abnormal — NO: physiologic anisocoria present in 15-20% (one pupil naturally larger); check reactivity"
+    ],
+    goDeeper: "Link to neurological assessment"
+  },
+  {
+    id: 21,
+    topic: "Explain GCS scoring",
+    area: "neuro",
+    keyPoints: [
+      "GCS = Eye (1-4) + Verbal (1-5) + Motor (1-6) = 3-15",
+      "Score 8 = intubation threshold (airway protection)",
+      "Report BEST response: 'Patient opens eyes to pain' (not every response); avoid sedatives before neuro exam",
+      "Serial GCS: ↓2+ points = acute change, notify provider (hemorrhage, edema, etc); trending matters more than single score"
+    ],
+    misconceptions: [
+      "GCS <15 always means severe brain injury — NO: mild injury can have GCS 15; score + mechanism determines severity",
+      "You can give sedation then assess GCS — NO: destroys validity; baseline neuro status BEFORE sedatives essential"
+    ],
+    goDeeper: "Link to GCS & neuro assessment"
+  },
+
+  // EMERGENCY (4)
+  {
+    id: 22,
+    topic: "Explain triage systems",
+    area: "emergency",
+    keyPoints: [
+      "ESI 5-level (individual triage): 1=immediate (no vitals, no movement assessment), 2=emergent (high-risk situation), 3=urgent (stable but need urgent care), 4=semi-urgent (minor, can wait), 5=non-urgent (minor, stable)",
+      "Disaster triage NATO 4-color: BLACK=expectant (unsurvivable), RED=immediate (life-threat, salvageable), YELLOW=delayed (serious but stable), GREEN=minor (walking wounded)",
+      "Philosophy difference: ESI = maximize individual outcomes (treat sickest first); disaster = maximize population outcomes (save most lives, accept some losses)"
+    ],
+    misconceptions: [
+      "Triage is permanent — NO: reassess q15-30 min in ED; patient status changes, need retriage (green → red)",
+      "Disaster triage is cruel — NO: it's designed to save MOST lives under scarcity; resources limited, hard choices necessary"
+    ],
+    goDeeper: "Link to triage systems"
+  },
+  {
+    id: 23,
+    topic: "Explain the primary survey",
+    area: "emergency",
+    keyPoints: [
+      "A (Airway): open airway, check for obstruction; C-spine ASSUMED in trauma (collar, backboard) until ruled out",
+      "B (Breathing): assess ventilation, O2 sat, breath sounds; provide O2 if needed",
+      "C (Circulation): assess pulses (carotid), skin color/temp (shock vs normal), control bleeding (direct pressure); IV access, blood draw",
+      "D (Disability): AVPU (Alert, Verbal, Pain, Unresponsive), pupils, focal neuro; GCS if time",
+      "E (Exposure): undress patient completely, look for injuries, avoid hypothermia (cover after survey)"
+    ],
+    misconceptions: [
+      "C-spine clearance takes too long — NO: immobilization while doing primary survey doesn't slow process; safety first",
+      "You do complete exam before treating — NO: treat life threats immediately (airway, breathing, bleeding) while surveying"
+    ],
+    goDeeper: "Link to trauma management"
+  },
+  {
+    id: 24,
+    topic: "Explain carbon monoxide poisoning",
+    area: "emergency",
+    keyPoints: [
+      "CO binds hemoglobin 200× stronger than O2 → carboxyhemoglobin (COHb) → tissue hypoxia despite normal SpO2 (pulse ox MISLEADING, shows normal SaO2)",
+      "Symptoms: headache, confusion, weakness, syncope, cardiac arrhythmias, pulmonary edema; cherry-red skin is LATE sign (post-mortem often)",
+      "Treatment: 100% O2 immediately (nasal cannula or non-rebreather) until COHb <5%; hyperbaric O2 if severe (neuro symptoms, LOC, COHb >40%)",
+      "Don't rely on SpO2 or physical exam; COHb level definitive; consider in winter (furnaces, cars in garage, fires)"
+    ],
+    misconceptions: [
+      "SpO2 normal = no CO poisoning — WRONG: SpO2 appears normal even with high COHb; measure COHb level",
+      "Cherry-red skin means CO poisoning — NO: rarely seen; confusion, syncope, arrhythmias are earlier, more reliable signs"
+    ],
+    goDeeper: "Link to poisonings & toxidromes"
+  },
+  {
+    id: 25,
+    topic: "Explain alcohol withdrawal and CIWA",
+    area: "emergency",
+    keyPoints: [
+      "Timeline: tremors 6-24h after last drink, autonomic hyperactivity (tachycardia, HTN, diaphoresis); DTs (delirium tremens—visual/tactile hallucinations, agitation, disorientation) 48-96h",
+      "CIWA-Ar scale: assess tremor, sweating, orientation, agitation, tactile/visual/auditory hallucinations (score 0-67; ≥15 = treat with benzodiazepines)",
+      "Benzodiazepines PRN: lorazepam or diazepam PRN escalating doses per protocol; cross-taper (substitute long-acting for short-acting if patient tolerant)",
+      "Complications: seizures (5-15% untreated), dehydration, rhabdomyolysis, hypomagnesemia, hypophosphatemia; thiamine + folate supplementation"
+    ],
+    misconceptions: [
+      "Withdrawal is just shaking, not dangerous — NO: can progress to seizures, DTs, cardiac arrhythmias, death if untreated",
+      "You can taper alcohol directly — NO: use benzodiazepines (cross-react at GABA receptors), safer and more effective"
+    ],
+    goDeeper: "Link to substance use management"
+  }
+];
+
+// ─── STATE ───
+let currentIndex = 0;
+let currentFilter = 'all';
+let filteredCards = [...allCards];
+let timerInterval = null;
+let timerSeconds = 120;
+let sessionScores = {};
+let isTimerRunning = false;
+
+const scoreRubric = [
+  { score: 5, label: "5 — Nailed it", desc: "Hit all key points, could teach a patient" },
+  { score: 4, label: "4 — Mostly there", desc: "Missed 1 point, would review" },
+  { score: 3, label: "3 — Partial", desc: "Got the gist but missed important details" },
+  { score: 2, label: "2 — Struggled", desc: "Knew it but couldn't articulate it" },
+  { score: 1, label: "1 — Couldn't explain", desc: "Need to go back to basics" }
+];
+
+// ─── INITIALIZATION ───
+function init() {
+  applyTheme();
+  renderCard();
+  updateProgress();
+}
+
+// ─── DARK MODE ───
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  if (newTheme === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+    localStorage.setItem('n8hub_darkmode', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  } else {
+    html.removeAttribute('data-theme');
+    localStorage.removeItem('n8hub_darkmode');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+}
+
+// ─── FILTERING ───
+function filterByArea(area) {
+  currentFilter = area;
+  if (area === 'all') {
+    filteredCards = [...allCards];
+  } else {
+    filteredCards = allCards.filter(c => c.area === area);
+  }
+  currentIndex = 0;
+
+  // Update active filter button using data matching instead of event.target
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if ((area === 'all' && btn.textContent.includes('All')) ||
+        (area === 'cardiac' && btn.textContent.includes('Cardiac')) ||
+        (area === 'oxygenation' && btn.textContent.includes('Oxygenation')) ||
+        (area === 'fluid' && btn.textContent.includes('F&E')) ||
+        (area === 'neuro' && btn.textContent.includes('Neuro')) ||
+        (area === 'emergency' && btn.textContent.includes('Emergency'))) {
+      btn.classList.add('active');
+    }
+  });
+
+  renderCard();
+  updateProgress();
+}
+
+// ─── RENDER CARD ───
+function renderCard() {
+  if (filteredCards.length === 0) {
+    document.getElementById('cardTopic').textContent = 'No cards in this area.';
+    return;
+  }
+
+  const card = filteredCards[currentIndex];
+
+  // Badge - format area names for display
+  const badge = document.getElementById('conceptBadge');
+  const areaDisplayNames = {
+    'cardiac': 'Cardiac',
+    'oxygenation': 'Oxygenation',
+    'fluid': 'F&E',
+    'neuro': 'Neuro',
+    'emergency': 'Emergency'
+  };
+  badge.textContent = areaDisplayNames[card.area] || card.area;
+  badge.className = `card-topic-badge ${card.area}`;
+
+  // Topic
+  document.getElementById('cardTopic').textContent = card.topic;
+
+  // Reset timer
+  stopTimer();
+
+  // Key points
+  renderKeyPoints(card.keyPoints);
+
+  // Misconceptions
+  renderMisconceptions(card.misconceptions);
+
+  // Go deeper
+  renderGoDeeper(card.goDeeper);
+
+  // Score buttons
+  renderScoreButtons();
+
+  // Navigation
+  updateNavigation();
+
+  // Progress
+  updateProgress();
+}
+
+function renderKeyPoints(points) {
+  const list = document.getElementById('keyPointsList');
+  list.innerHTML = '';
+
+  points.forEach((point, idx) => {
+    const li = document.createElement('div');
+    li.className = 'key-point';
+    li.innerHTML = `<strong>Point ${idx + 1}:</strong> ${point}`;
+    list.appendChild(li);
+  });
+
+  document.getElementById('revealBtn').classList.remove('all-shown');
+  document.getElementById('revealBtn').textContent = 'Reveal All';
+}
+
+function renderMisconceptions(misconceptions) {
+  const list = document.getElementById('misconceptionsList');
+  list.innerHTML = '';
+
+  misconceptions.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'misconception-item';
+    div.textContent = m;
+    list.appendChild(div);
+  });
+}
+
+function renderGoDeeper(text) {
+  const section = document.getElementById('goDeeper');
+  section.innerHTML = `<strong>Explore More:</strong> ${text}`;
+}
+
+function renderScoreButtons() {
+  const container = document.getElementById('scoreButtons');
+  container.innerHTML = '';
+
+  scoreRubric.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'score-btn';
+    btn.innerHTML = `<div class="score-label">${item.label}</div><div class="score-desc">${item.desc}</div>`;
+    btn.onclick = () => recordScore(item.score);
+    container.appendChild(btn);
+  });
+}
+
+function recordScore(score) {
+  const card = filteredCards[currentIndex];
+  sessionScores[card.id] = score;
+
+  // Record with study-data if available
+  if (typeof StudyData !== 'undefined') {
+    StudyData.recordResult('teach-back-cards', card.area, score >= 4 ? 1 : 0, 1);
+    StudyData.trackExposure('teach-back-cards', card.id);
+  }
+
+  // Highlight selected button - find the button that matches the score
+  document.querySelectorAll('.score-btn').forEach(btn => btn.classList.remove('selected'));
+  const buttons = document.querySelectorAll('.score-btn');
+  const scoreButtons = scoreRubric.map(r => r.score);
+  const buttonIndex = scoreButtons.indexOf(score);
+  if (buttonIndex >= 0 && buttons[buttonIndex]) {
+    buttons[buttonIndex].classList.add('selected');
+  }
+
+  updateProgress();
+}
+
+function revealAllKeyPoints() {
+  const points = document.querySelectorAll('.key-point');
+  points.forEach(p => p.classList.add('visible'));
+  document.getElementById('revealBtn').classList.add('all-shown');
+  document.getElementById('revealBtn').textContent = '✓ All Revealed';
+}
+
+// ─── TIMER ───
+function toggleTimer() {
+  if (isTimerRunning) {
+    stopTimer();
+  } else {
+    startTimer();
+  }
+}
+
+function startTimer() {
+  isTimerRunning = true;
+  timerSeconds = 120;
+  document.getElementById('timerBtn').textContent = 'Stop Timer';
+  document.getElementById('timerBtn').classList.add('stop');
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+
+    if (timerSeconds <= 0) {
+      stopTimer();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timerBtn').textContent = 'Start Timer';
+  document.getElementById('timerBtn').classList.remove('stop');
+  timerSeconds = 120;
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timerSeconds / 60);
+  const secs = timerSeconds % 60;
+  document.getElementById('timerDisplay').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  document.getElementById('timerDisplay').classList.toggle('inactive', !isTimerRunning);
+}
+
+// ─── NAVIGATION ───
+function nextCard() {
+  if (currentIndex < filteredCards.length - 1) {
+    currentIndex++;
+    renderCard();
+  }
+}
+
+function previousCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+function shuffleCards() {
+  for (let i = filteredCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+  }
+  currentIndex = 0;
+  renderCard();
+}
+
+function updateNavigation() {
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  document.getElementById('nextBtn').disabled = currentIndex === filteredCards.length - 1;
+  document.getElementById('cardCounter').textContent = `Card ${currentIndex + 1} of ${filteredCards.length}`;
+}
+
+// ─── PROGRESS ───
+function updateProgress() {
+  const totalCards = filteredCards.length;
+  const scoredCards = Object.keys(sessionScores).filter(id =>
+    filteredCards.some(c => c.id === parseInt(id))
+  ).length;
+
+  const percent = (scoredCards / totalCards) * 100;
+  document.getElementById('progressFill').style.width = percent + '%';
+  document.getElementById('progressText').textContent = `${scoredCards} / ${totalCards}`;
+
+  // Average score
+  if (scoredCards > 0) {
+    const scores = Object.values(sessionScores);
+    const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1);
+    document.getElementById('avgScore').textContent = avg;
+  } else {
+    document.getElementById('avgScore').textContent = '--';
+  }
+}
+
+// ─── BACK TO HUB ───
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+// ─── START ───
+init();
+</script>
+
+</body>
+</html>

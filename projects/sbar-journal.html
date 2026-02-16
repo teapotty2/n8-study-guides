@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SBAR Scenario Journal — N8</title>
+<style>
+:root {
+  --cardiac: #E74C3C;
+  --cardiac-bg: #FDEDEC;
+  --fluid: #3498DB;
+  --fluid-bg: #EBF5FB;
+  --oxy: #27AE60;
+  --oxy-bg: #EAFAF1;
+  --neuro: #8E44AD;
+  --neuro-bg: #F4ECF7;
+  --emergency: #E67E22;
+  --emergency-bg: #FEF5E7;
+  --bg: #F0F2F5;
+  --card: #FFFFFF;
+  --text: #1a1a2e;
+  --text-muted: #7F8C8D;
+  --border: #E8ECF0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --surface: #f8f9fa;
+  --surface-hover: #eef0f3;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --danger: #E74C3C;
+}
+
+[data-theme="dark"] {
+  --bg: #121218;
+  --card: #1e1e2a;
+  --text: #e8e8f0;
+  --text-muted: #a0a0b0;
+  --border: #2d2d3d;
+  --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
+  --surface: #2a2a35;
+  --surface-hover: #35353f;
+  --cardiac-bg: #3a1f1f;
+  --fluid-bg: #1f2a3a;
+  --oxy-bg: #1f3a28;
+  --neuro-bg: #2f1f3a;
+  --emergency-bg: #3a2a1f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* ─── HEADER ─── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white;
+  padding: 28px 32px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.header-content { position: relative; z-index: 1; flex: 1; min-width: 300px; }
+.header h1 { font-size: 1.85em; font-weight: 800; margin-bottom: 6px; }
+.header .subtitle { opacity: 0.8; font-size: 0.92em; }
+
+.header-btn {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* ─── TOP CONTROLS ─── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+
+.mode-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.mode-btn.active {
+  background: var(--cardiac);
+  color: white;
+}
+
+.mode-btn:hover:not(.active) { color: var(--text); }
+
+.filter-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.filter-btn:hover { background: var(--surface); border-color: var(--fluid); }
+.filter-btn.active { background: var(--cardiac); color: white; border-color: var(--cardiac); }
+
+.dark-mode-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1em;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.dark-mode-toggle:hover { background: var(--surface); }
+
+.stats-summary {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 24px;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.stat-item-small {
+  text-align: center;
+}
+
+.stat-number-small {
+  font-size: 1.6em;
+  font-weight: 800;
+  color: var(--cardiac);
+}
+
+.stat-label-small {
+  font-size: 0.75em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+/* ─── SCENARIOS GRID ─── */
+.scenarios-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.scenario-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border-left: 5px solid var(--cardiac);
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  min-height: 650px;
+  position: relative;
+}
+
+.scenario-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.scenario-card.cardiac { border-left-color: var(--cardiac); }
+.scenario-card.oxy { border-left-color: var(--oxy); }
+.scenario-card.fluid { border-left-color: var(--fluid); }
+.scenario-card.neuro { border-left-color: var(--neuro); }
+.scenario-card.emergency { border-left-color: var(--emergency); }
+
+.scenario-header {
+  margin-bottom: 16px;
+}
+
+.scenario-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.scenario-badge.cardiac { background: var(--cardiac-bg); color: var(--cardiac); }
+.scenario-badge.oxy { background: var(--oxy-bg); color: var(--oxy); }
+.scenario-badge.fluid { background: var(--fluid-bg); color: var(--fluid); }
+.scenario-badge.neuro { background: var(--neuro-bg); color: var(--neuro); }
+.scenario-badge.emergency { background: var(--emergency-bg); color: var(--emergency); }
+
+.scenario-title {
+  font-size: 1.2em;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.scenario-subtitle {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}
+
+.scenario-setup {
+  background: var(--surface);
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.setup-label {
+  font-weight: 700;
+  color: var(--cardiac);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.vital-section {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  font-size: 0.85em;
+}
+
+.vital-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.vital-label { font-weight: 600; }
+.vital-value { color: var(--text-muted); }
+
+.sbar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+.sbar-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.sbar-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.sbar-textarea {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85em;
+  resize: vertical;
+  min-height: 50px;
+  transition: all 0.2s;
+}
+
+.sbar-textarea:focus {
+  outline: none;
+  border-color: var(--cardiac);
+  background: var(--card);
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1);
+}
+
+.sbar-textarea.locked {
+  background: var(--surface);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-reveal {
+  flex: 1;
+  padding: 10px;
+  background: var(--cardiac);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-reveal:hover { background: #c0392b; transform: translateY(-1px); }
+.btn-reveal:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-print {
+  flex: 1;
+  padding: 10px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-print:hover { background: var(--surface-hover); }
+
+.model-answer {
+  background: var(--oxy-bg);
+  border-left: 3px solid var(--oxy);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  line-height: 1.5;
+  margin-top: 8px;
+  display: none;
+}
+
+.model-answer.show { display: block; }
+
+.model-answer-label {
+  font-weight: 700;
+  color: var(--oxy);
+  margin-bottom: 4px;
+  font-size: 0.7em;
+  text-transform: uppercase;
+}
+
+.rating-section {
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.rating-label {
+  font-weight: 700;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  font-size: 1.4em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.star:hover { transform: scale(1.2); }
+.star.selected { color: var(--warning); }
+
+/* ─── PROGRESS TRACKER ─── */
+.progress-tracker {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.progress-bar-label {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.progress-bar-bg {
+  height: 8px;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--cardiac);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.78em;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* ─── UTILITIES ─── */
+.hidden { display: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  grid-column: 1 / -1;
+}
+
+/* ─── PRINT STYLES ─── */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .header, .controls, .dark-mode-toggle, .btn-print, .rating-section { display: none; }
+
+  .scenario-card {
+    page-break-inside: avoid;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 5px solid;
+    margin-bottom: 20px;
+  }
+
+  .sbar-textarea {
+    border: 1px solid #ccc;
+    background: white;
+    min-height: 60px;
+  }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .scenarios-container {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .header h1 { font-size: 1.4em; }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .mode-toggle {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .scenarios-container {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-summary {
+    justify-content: space-around;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <h1>SBAR Scenario Journal</h1>
+      <p class="subtitle">N8 Clinical Practice — Real-time Decision-Making Under Pressure</p>
+    </div>
+    <button class="header-btn" onclick="goBack()">← Back to Hub</button>
+  </div>
+
+  <div class="controls">
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="setMode('practice')">Practice</button>
+      <button class="mode-btn" onclick="setMode('timed')">Timed Mode (90s)</button>
+    </div>
+
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="filterByArea('all')">All Areas</button>
+      <button class="filter-btn" onclick="filterByArea('cardiac')">Cardiac</button>
+      <button class="filter-btn" onclick="filterByArea('oxy')">Oxygenation</button>
+      <button class="filter-btn" onclick="filterByArea('fluid')">Fluid/Electrolytes</button>
+      <button class="filter-btn" onclick="filterByArea('neuro')">Neuro</button>
+      <button class="filter-btn" onclick="filterByArea('emergency')">Emergency</button>
+    </div>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="themeToggle">🌙</button>
+  </div>
+
+  <div class="stats-summary">
+    <div class="stat-item-small">
+      <div class="stat-number-small" id="completedCount">0</div>
+      <div class="stat-label-small">Completed</div>
+    </div>
+    <div class="stat-item-small">
+      <div class="stat-number-small" id="avgRating">--</div>
+      <div class="stat-label-small">Avg Rating</div>
+    </div>
+    <div class="stat-item-small">
+      <div class="stat-number-small" id="totalScenarios">0</div>
+      <div class="stat-label-small">Scenarios</div>
+    </div>
+  </div>
+
+  <div class="progress-tracker">
+    <div class="progress-bar-label">Progress</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <div class="scenarios-container" id="scenariosContainer"></div>
+</div>
+
+<div class="footer">
+  SBAR Scenario Journal | N8 NCLEX-RN Intensive | Last updated: Feb 2025
+</div>
+
+<script src="study-data.js"></script>
+<script>
+
+// ─── SCENARIO DATA ───
+const scenarios = [
+  // CARDIAC SCENARIOS
+  {
+    id: 'cardiac-01',
+    area: 'cardiac',
+    title: 'Acute Decompensated Heart Failure',
+    patient: '68-year-old male, history of HFrEF (EF 28%)',
+    setting: 'Medical floor, 2100 hours',
+    setup: 'Patient admitted 3 days ago for HF exacerbation. Started on IV furosemide and nitroprusside. Overnight, progressive dyspnea, orthopnea worsening.',
+    vitals: {
+      'HR': '118 bpm, irregular',
+      'BP': '88/52 mmHg (was 105/65 on previous shift)',
+      'RR': '28 breaths/min, labored',
+      'O2 sat': '88% on 2L NC',
+      'Temp': '37.2°C',
+      'CVP': '9 mmHg'
+    },
+    assessment: 'Crackles bilateral lower lobes, JVD at 7cm, ankle edema 3+. Patient states "I can\'t catch my breath." Weight gain 1.8 kg since yesterday.',
+    firstAction: 'Immediately elevate HOB, place patient on high-flow O2 (non-rebreather if available), establish IV access, obtain stat labs (BNP, troponin, lactate), notify MD emergently.',
+    modelAnswer: {
+      situation: 'HFrEF patient with worsening pulmonary edema—orthopnea, crackles, dyspnea, low O2 sat (88%). BP dropping despite vasodilator therapy (88/52). HR 118 with irregular rhythm suggests compensation/possible arrhythmia.',
+      background: 'EF 28%, admitted for HF exacerbation 3 days ago. On furosemide IV and nitroprusside. Risk of cardiogenic shock if decompensation continues. Possible flash pulmonary edema given acute worsening.',
+      assessment: 'Patient deteriorating—hypoxia, hypotension, tachycardia, elevated JVD, weight gain. Pulmonary edema confirmed by exam. Possible need for higher-level care (ICU/BiPAP).',
+      recommendation: 'Notify provider STAT. Consider ICU transfer. Recommend: increase O2 to non-rebreather, elevate HOB, consider IV diuretic increase or CPAP, obtain stat labs (troponin, BNP, lactate), 12-lead ECG for arrhythmia assessment.'
+    }
+  },
+  {
+    id: 'cardiac-02',
+    area: 'cardiac',
+    title: 'New-Onset Atrial Fibrillation with RVR',
+    patient: '72-year-old female, no prior cardiac history',
+    setting: 'Orthopedic floor, post-op day 2 (TKA)',
+    setup: 'Patient underwent total knee arthroplasty yesterday morning. Post-op course smooth until now. Found by CNA with chest fluttering and palpitations.',
+    vitals: {
+      'HR': '154 bpm, irregular',
+      'BP': '118/74 mmHg',
+      'RR': '20 breaths/min',
+      'O2 sat': '96% on room air',
+      'Temp': '37.8°C',
+      'Mentation': 'Alert, anxious'
+    },
+    assessment: 'Patient alert, anxious, denies chest pain but reports "racing heart" and palpitations × 2 hours. Exam: irregularly irregular rhythm, no murmurs. 12-lead ECG shows atrial fibrillation, no ST changes. Troponin negative. Recent surgery a risk factor.',
+    firstAction: 'Obtain 12-lead ECG STAT, notify physician of new A-fib with RVR, place on continuous cardiac monitoring, establish IV, obtain labs (troponin, CBC, BMP, TSH, magnesium), NPO pending evaluation.',
+    modelAnswer: {
+      situation: 'New-onset A-fib with RVR (HR 154, irregular). Post-TKA day 2. Patient experiencing palpitations and anxiety. Hemodynamically stable (BP 118/74, O2 sat 96%).',
+      background: 'Post-operative state is risk for new A-fib. Surgery can trigger arrhythmias. No prior cardiac history. No acute chest pain or hypoxia currently.',
+      assessment: 'New A-fib with ventricular response 154 bpm. Patient symptomatic but stable. ECG confirms diagnosis. Troponin negative excludes ACS. Likely post-op A-fib (common in orthopedic surgery).',
+      recommendation: 'Notify provider. Recommend: continuous cardiac monitoring, IV access, labs (TSH, mag, troponin), consider rate control with beta-blocker or diltiazem if provider orders. Anticoagulation decision depends on duration and provider assessment. Monitor for hemodynamic instability.'
+    }
+  },
+  {
+    id: 'cardiac-03',
+    area: 'cardiac',
+    title: 'Post-PCI Chest Pain Recurrence',
+    patient: '58-year-old male, STEMI treated 4 hours ago',
+    setting: 'Acute care floor (post-cath lab)',
+    setup: 'Patient presenting to ED with chest pain 6 hours ago. STEMI confirmed on ECG (ST elevation in II, III, aVF). Emergent cardiac catheterization completed 4 hours ago. RCA stent placed. On dual antiplatelet therapy (aspirin + clopidogrel loading), heparin drip.',
+    vitals: {
+      'HR': '88 bpm, regular',
+      'BP': '124/78 mmHg',
+      'RR': '16 breaths/min',
+      'O2 sat': '97% on 2L NC',
+      'Temp': '36.9°C'
+    },
+    assessment: 'Patient reports new onset substernal chest pressure, 7/10 severity, radiating to left arm. Onset 15 minutes ago. EKG shows persistent ST elevation. Troponin trending up (6.2 ng/mL, previous 3.1). Patient anxious.',
+    firstAction: 'Notify cardiologist IMMEDIATELY—possible stent thrombosis or re-infarction. Obtain 12-lead ECG STAT, obtain stat troponin/lactate, establish/confirm IV access, consider IV nitroglycerin, have emergency equipment ready, prepare for possible re-catheterization.',
+    modelAnswer: {
+      situation: 'Post-PCI (4 hours) chest pain recurrence with 7/10 substernal pressure radiating to left arm. Rising troponin (6.2, previous 3.1). Persistent ST elevation on EKG.',
+      background: 'STEMI treated with PCI-RCA stent 4 hours ago. On dual antiplatelets and heparin. Chest pain redevelopment suggests possible stent thrombosis, which is a CARDIAC EMERGENCY.',
+      assessment: 'Acute coronary syndrome recurrence post-PCI. Rising biomarkers confirm myocardial injury. EKG unchanged but troponin escalation indicates ongoing ischemia. High risk for cardiogenic shock if untreated.',
+      recommendation: 'NOTIFY CARDIOLOGIST STAT for possible emergency re-catheterization. Recommend: stat 12-lead ECG, stat troponin/lactate/CBC, ensure dual antiplatelets on board, consider IV NTG, have resuscitation ready, prepare for possible cath lab return.'
+    }
+  },
+  {
+    id: 'cardiac-04',
+    area: 'cardiac',
+    title: 'Hypertensive Urgency with Headache',
+    patient: '52-year-old female, history of HTN (non-compliant with meds)',
+    setting: 'Urgent care walk-in',
+    setup: 'Patient reports severe headache × 4 hours, denial of medication refills due to cost. Takes lisinopril at home but missed last 2 weeks of doses.',
+    vitals: {
+      'SBP': '210 mmHg, DBP': '118 mmHg',
+      'HR': '102 bpm',
+      'RR': '18 breaths/min',
+      'O2 sat': '98% RA',
+      'Temp': '37.1°C'
+    },
+    assessment: 'Alert, experiencing severe frontal headache (9/10). No visual changes, no focal neurological deficits. No chest pain, SOB. Lungs clear. No edema. Neuro exam normal. No signs of end-organ damage on initial assessment.',
+    firstAction: 'Establish IV, notify provider, obtain stat labs (BMP, Cr, proteinuria on UA), 12-lead ECG, assess for end-organ damage (neuro exam, cardiac assessment). Assess medication access barriers. Do NOT use rapid BP-lowering agents unless target organ damage present (risk of stroke).',
+    modelAnswer: {
+      situation: 'Hypertensive urgency: BP 210/118, symptomatic (severe headache), non-adherence with antihypertensive (off lisinopril ×2 weeks).',
+      background: 'Known HTN, non-compliant due to cost. Off antihypertensive for 2 weeks. Risk factors: medication non-adherence, African American (if applicable), age.',
+      assessment: 'Hypertensive urgency (BP >180/120 with symptoms but no target organ damage on initial exam). Neuro exam normal—no stroke signs. No evidence of MI, HF, or renal crisis yet.',
+      recommendation: 'Notify provider. Do NOT rapidly lower BP (risk of stroke). Recommend: IV access, labs (BMP, Cr, UA for proteinuria), ECG, recheck neuro exam. Likely oral antihypertensive (start/restart ACE inhibitor or CCB). Address cost barriers—discuss generics, patient assistance programs. Plan for close follow-up.'
+    }
+  },
+  {
+    id: 'cardiac-05',
+    area: 'cardiac',
+    title: 'Pericardial Tamponade (Cardiac Trauma)',
+    patient: '42-year-old male, post-cardiac surgery (CABG)',
+    setting: 'ICU, post-op day 1 (CABG)',
+    setup: 'Patient underwent 3-vessel CABG yesterday. Initially stable post-op. Chest tube draining sanguineous fluid, now output slowing. Suddenly becomes hypotensive with muffled heart sounds.',
+    vitals: {
+      'SBP': '88 mmHg, DBP': '62 mmHg (was 110/70 × 2 hours ago)',
+      'HR': '132 bpm, thready',
+      'RR': '24 breaths/min, labored',
+      'O2 sat': '92% on 3L NC',
+      'CVP': '18 mmHg (elevated)',
+      'JVD': 'Markedly elevated, to angle of jaw'
+    },
+    assessment: 'Acute change: hypotension (88/62), tachycardia (132), elevated JVD, muffled heart sounds, weak peripheral pulses. Cool, pale skin. Chest tube output slowing (suggests blockage/accumulation in pericardium). Pulsus paradoxus noted (SBP drops >10 mmHg on inspiration).',
+    firstAction: 'Call code/notify surgeon STAT—suspect pericardial tamponade. Establish/secure two large-bore IVs, prepare for emergency pericardiocentesis or return to OR. Have resuscitation equipment ready. Keep patient supine. Obtain STAT portable echocardiogram if available (but do NOT delay treatment for imaging).',
+    modelAnswer: {
+      situation: 'Post-CABG sudden hypotension (88/62), tachycardia (132), elevated JVD, muffled heart sounds, pulsus paradoxus. Classic Beck\'s triad present. Chest tube output slowing.',
+      background: 'Post-CABG day 1. Pericardial effusion/bleeding can develop post-op. If effusion compromises ventricular filling (tamponade), it\'s a SURGICAL EMERGENCY.',
+      assessment: 'Pericardial tamponade: hypotension, elevated JVD, muffled heart sounds (Beck\'s triad). Pulsus paradoxus (>10 mmHg drop) confirms diagnosis. Elevated CVP (18) confirms increased intrapericardial pressure.',
+      recommendation: 'CALL SURGEON STAT for emergency intervention. Recommend: two large-bore IVs, keep supine, prepare for pericardiocentesis or re-opening at bedside. Do NOT give diuretics (will worsen preload). IV fluids may temporize but definitive treatment is drainage of pericardium.'
+    }
+  },
+
+  // OXYGENATION SCENARIOS
+  {
+    id: 'oxy-01',
+    area: 'oxy',
+    title: 'Suspected Pulmonary Embolism',
+    patient: '56-year-old female, post-op day 3 (abdominal surgery)',
+    setting: 'Surgical floor',
+    setup: 'Patient 3 days post-abdominal surgery. Immobile due to surgical site pain. CNA notes sudden onset dyspnea and anxiety while on bedrest.',
+    vitals: {
+      'HR': '126 bpm, regular',
+      'BP': '102/64 mmHg',
+      'RR': '32 breaths/min',
+      'O2 sat': '91% on room air (was 97% yesterday)',
+      'Temp': '37.3°C'
+    },
+    assessment: 'Acute onset dyspnea, tachypnea (RR 32), tachycardia. Patient anxious. Unilateral calf swelling (right) with warmth and tenderness (Homan\'s sign equivocal). Lungs clear. No chest pain, no hemoptysis. D-dimer would be elevated.',
+    firstAction: 'Place on continuous pulse oximetry and cardiac monitoring. Notify provider STAT. Obtain stat CXR (to rule out pneumothorax, etc.), stat ECG (look for sinus tachycardia, right heart strain), prepare for stat CT pulmonary angiography (CTPA). Start IV heparin if PE suspected and no contraindications. Keep patient NPO pending evaluation.',
+    modelAnswer: {
+      situation: 'Post-op day 3 sudden onset dyspnea (RR 32), hypoxia (91% RA), tachycardia (126). Right calf swelling/warmth. High risk for VTE post-surgery.',
+      background: 'Recent surgery is major VTE risk. Immobility, surgical trauma, hypercoagulability post-op. Unilateral calf signs suggest possible DVT with PE risk.',
+      assessment: 'High suspicion for PE: acute dyspnea, tachypnea, hypoxia, tachycardia post-op. Wells score or PERC criteria likely indicate need for imaging. DVT signs in lower extremity increase likelihood.',
+      recommendation: 'Notify provider immediately. Recommend: cardiac monitoring, IV access (ensure no contraindications), stat CXR, stat ECG, stat CTPA or V/Q scan. Start anticoagulation (IV heparin) if PE suspected and no bleeding contraindication. Keep NPO. Prepare for possible ICU transfer if hemodynamically unstable.'
+    }
+  },
+  {
+    id: 'oxy-02',
+    area: 'oxy',
+    title: 'Tension Pneumothorax',
+    patient: '28-year-old male, motor vehicle collision (MVC)',
+    setting: 'ED trauma bay',
+    setup: 'Patient brought to ED by EMS after high-speed MVC. Mechanism: blunt thoracic trauma. On arrival, increasingly agitated and dyspneic.',
+    vitals: {
+      'HR': '142 bpm, weak pulse',
+      'BP': '76/50 mmHg',
+      'RR': '40 breaths/min, labored',
+      'O2 sat': '84% on 100% O2',
+      'JVD': 'Massively distended',
+      'Tracheal deviation': 'Toward LEFT (away from pneumothorax)'
+    },
+    assessment: 'Acute distress: severe dyspnea, agitation progressing to altered mental status. Breath sounds ABSENT on right side. Hyperresonance on percussion right side. Trachea deviated to left. Hypotension, tachycardia. JVD maximal.',
+    firstAction: 'THIS IS A LIFE THREAT. Immediate needle decompression: 14-16G needle inserted 2nd ICS midclavicular line RIGHT SIDE. Do NOT wait for X-ray. Expect rush of air/hissing sound. After needle, prepare for chest tube placement. Establish 2 large-bore IVs, supplemental O2, prepare for rapid sequence intubation.',
+    modelAnswer: {
+      situation: 'Tension pneumothorax: absent breath sounds right, hyperresonance, tracheal deviation LEFT, hypotension (76/50), JVD, altered mental status. Classic signs.',
+      background: 'Blunt thoracic trauma (MVC). Tension pneumothorax develops when air enters pleural space, pressure builds, compresses heart and great vessels, causes cardiovascular collapse.',
+      assessment: 'Tension pneumothorax (hemodynamically unstable). This is SURGICAL EMERGENCY/CODE situation. Patient decompensating rapidly.',
+      recommendation: 'IMMEDIATE needle decompression 2nd ICS midclavicular RIGHT. Do NOT delay for imaging. After needle, prepare chest tube, 2 large-bore IVs, 100% O2, prepare for possible intubation. STAT portable CXR after needle (to confirm and for chest tube placement). Notify surgery immediately.'
+    }
+  },
+  {
+    id: 'oxy-03',
+    area: 'oxy',
+    title: 'COPD Exacerbation with Rising CO2',
+    patient: '68-year-old male, severe COPD (GOLD stage 4, FEV1 20%)',
+    setting: 'Medical floor, 0300 hours',
+    setup: 'Known COPD patient, admitted yesterday for exacerbation. On nebulized bronchodilators and IV steroids. Overnight, patient becoming increasingly somnolent and confused.',
+    vitals: {
+      'RR': '8 breaths/min (from 22 baseline)',
+      'O2 sat': '94% on 3L NC (improved from entry)',
+      'HR': '62 bpm, bradycardic',
+      'BP': '102/58 mmHg',
+      'Mentation': 'Drowsy, confused, not oriented to time',
+      'ABG': 'pH 7.28, pCO2 68 (RISING from 55), pO2 72 on 3L'
+    },
+    assessment: 'Acute change: somnolence, confusion (CO2 retention narcosis). RR dropped to 8 (respiratory depression from hypoxia-driven breathing being suppressed by O2 therapy?). pCO2 rising to 68 despite O2. Likely O2-induced hypercapnia (patient lost hypoxic drive with supplemental O2).',
+    firstAction: 'REDUCE O2 immediately—patient likely experiencing CO2 retention. Do NOT remove O2 completely; titrate to target O2 sat 88-92%. Notify provider STAT. Obtain stat ABG after O2 adjustment. Prepare for possible non-invasive ventilation (BiPAP) or intubation. Check for causes of acute worsening (infection, pneumonia). Keep patient upright.',
+    modelAnswer: {
+      situation: 'COPD exacerbation with acute worsening: somnolence, confusion, RR 8, rising pCO2 (68, up from 55). Classic CO2 retention.',
+      background: 'Severe COPD (FEV1 20%). Hypoxic ventilatory drive. Supplemental O2 at 3L suppressed hypoxic drive, leading to respiratory depression and CO2 retention (permissive hypoxemia concept).',
+      assessment: 'CO2 retention with respiratory depression likely due to O2 therapy dosing. Patient needs titrated O2 (target sat 88-92%, not >94%) and possible assisted ventilation.',
+      recommendation: 'Reduce O2 to target sat 88-92%. Notify provider STAT. Recheck ABG after O2 adjustment. Prepare for non-invasive ventilation (BiPAP preferred over intubation if possible). Assess for infection/pneumonia. Elevate HOB. Monitor mental status closely—should improve as pCO2 normalizes.'
+    }
+  },
+  {
+    id: 'oxy-04',
+    area: 'oxy',
+    title: 'ARDS on Mechanical Ventilation',
+    patient: '52-year-old male, sepsis-induced ARDS',
+    setting: 'ICU, intubated, day 3 of mechanical ventilation',
+    setup: 'Patient admitted with septic shock from pneumonia. Intubated on day 1 for respiratory failure. Now on day 3 of mechanical ventilation with worsening oxygenation.',
+    vitals: {
+      'FiO2 required': 'Escalated from 0.40 to 1.0 to maintain SpO2 88%',
+      'PEEP': '12 cmH2O',
+      'Pplat': '31 cmH2O',
+      'PaO2': '62 mmHg on FiO2 1.0, PEEP 12',
+      'HR': '116 bpm',
+      'BP': '98/62 mmHg (on norepinephrine)',
+      'Urine output': '400 mL/24 hrs (decreased)'
+    },
+    assessment: 'Worsening hypoxia despite FiO2 escalation (now 1.0). CXR shows bilateral infiltrates (white-out pattern). Lung compliance poor (Pplat 31, goal <30). SOFA score worsening.',
+    firstAction: 'Notify ICU provider and respiratory therapist STAT. Do NOT increase FiO2 above 1.0. Interventions: optimize PEEP (consider recruitment maneuver), prone positioning trial, assess fluid status (may need CRRT if overloaded), ensure appropriate sedation/paralysis, consider low-dose hydrocortisone per ARDS protocol.',
+    modelAnswer: {
+      situation: 'ARDS worsening: escalating FiO2 requirement (now 1.0), bilateral infiltrates, hypoxia (PaO2 62 on FiO2 1.0), high Pplat (31). Day 3 of mechanical ventilation.',
+      background: 'Sepsis-induced ARDS. High mortality if multiorgan dysfunction develops. Prone positioning and lung-protective ventilation are key interventions.',
+      assessment: 'ARDS with severe hypoxia and poor lung mechanics. FiO2 at max, further increase not possible. Patient at high risk for VILI (ventilator-induced lung injury) with Pplat 31.',
+      recommendation: 'Notify provider STAT. Recommend: assess PEEP adequacy, consider recruitment maneuver, initiate prone positioning trial if no contraindications, assess fluid overload status (consider CRRT), maintain lung-protective strategy (Vt 6-8 mL/kg PBW), optimize sedation. Consider extracorporeal membrane oxygenation (ECMO) if worsening despite interventions.'
+    }
+  },
+  {
+    id: 'oxy-05',
+    area: 'oxy',
+    title: 'Ventilator Alarm - High Peak Pressure',
+    patient: '64-year-old male, post-op day 1 (open abdominal surgery), intubated',
+    setting: 'ICU, mechanically ventilated',
+    setup: 'Patient extubated to mechanical ventilation post-op. Stable overnight. Alarm sounding: HIGH PEAK PRESSURE.',
+    vitals: {
+      'HR': '98 bpm',
+      'BP': '118/72 mmHg',
+      'RR (set)': '12, actual higher',
+      'Peak pressure (Ppeak)': '45 cmH2O (alarm threshold 40)',
+      'Pplat (plateau pressure)': '30 cmH2O',
+      'Breath sounds': 'Decreased RIGHT lower lobe'
+    },
+    assessment: 'High peak pressure alarm. Ppeak elevated but Pplat acceptable. Breath sounds decreased right lower (suggests atelectasis or secretion plugging). No acute distress visible. Chest tube: minimal output.',
+    firstAction: 'Assess tube patency first (listen for air movement). Suction endotracheal tube for secretions. Manual bagging to assess compliance. Auscultate both lung fields. Consider: tube obstruction (suction, reposition), atelectasis (recruit with higher PEEP briefly, then resume), pneumothorax (obtain portable CXR). If tube patent and breath sounds bilateral, likely secretions or atelectasis.',
+    modelAnswer: {
+      situation: 'Ventilator high peak pressure alarm: Ppeak 45 (>40), Pplat acceptable (30). Breath sounds decreased right lower. Post-op day 1.',
+      background: 'Post-op intubated patient. High Ppeak can indicate: endotracheal tube obstruction, patient coughing/fighting ventilator, atelectasis, pneumothorax, bronchospasm.',
+      assessment: 'High peak pressure likely due to secretions (airway obstruction) or atelectasis given decreased breath sounds right lower. Pplat normal suggests good lung compliance when pressure is generated.',
+      recommendation: 'Assess tube patency: listen for airflow, try manual bagging. Suction ETT for secretions. Reposition patient. Auscultate for bilateral breath sounds. Consider brief recruitment maneuver (higher PEEP) to open collapsed alveoli. If persistent, obtain portable CXR to rule out pneumothorax or acute change. Adjust ventilator settings if indicated by assessment.'
+    }
+  },
+
+  // FLUID & ELECTROLYTE SCENARIOS
+  {
+    id: 'fluid-01',
+    area: 'fluid',
+    title: 'Hyperkalemia with ECG Changes',
+    patient: '70-year-old male, chronic kidney disease (CKD stage 4)',
+    setting: 'Medical floor, 1400 hours',
+    setup: 'Patient with CKD (baseline Cr 3.1) admitted for hypertension management. Prescribed new ACE inhibitor (lisinopril) 2 days ago. Lab work ordered this morning.',
+    vitals: {
+      'HR': '52 bpm, bradycardic',
+      'BP': '156/92 mmHg',
+      'RR': '18 breaths/min',
+      'O2 sat': '96% RA',
+      'Temp': '37.0°C'
+    },
+    labs: {
+      'K+': '7.2 mEq/L (CRITICAL)',
+      'Cr': '3.4 (up from 3.1 baseline)',
+      'ECG': 'Peaked T waves, prolonged PR interval, widened QRS'
+    },
+    assessment: 'Asymptomatic but ECG shows signs of hyperkalemia (peaked T waves, widened QRS). Bradycardia (HR 52). Recent ACE inhibitor initiation + CKD + possible poor dietary K+ adherence led to hyperkalemia.',
+    firstAction: 'STAT notification to provider. STAT 12-lead ECG confirmation. DO NOT GIVE K+-containing fluids or medications. Establish IV access. Prepare for emergent treatment: calcium gluconate or calcium chloride IV (stabilize cardiac membrane), insulin + dextrose IV (shift K+ intracellularly), albuterol nebulized (shift K+ intracellularly), possibly sodium bicarbonate.',
+    modelAnswer: {
+      situation: 'Hyperkalemia K+ 7.2 with ECG changes (peaked T waves, widened QRS, bradycardia HR 52). LIFE-THREATENING ARRHYTHMIA RISK.',
+      background: 'CKD stage 4 (Cr 3.4). Just started ACE inhibitor which decreases aldosterone and increases K+ retention. Likely poor dietary K+ control.',
+      assessment: 'Life-threatening hyperkalemia with cardiac manifestations (ECG changes, bradycardia). High risk for fatal arrhythmia (VF, asystole).',
+      recommendation: 'Notify provider STAT. STAT ECG. Immediate treatment: IV calcium gluconate 10mL of 10% solution over 2-5 min (stabilizes membrane). Then: insulin 10u IV + D50 25mL (shift K+ in), albuterol neb 10-20mg (shift K+ in), possible sodium bicarbonate. HOLD ACE inhibitor. Urgent dialysis likely needed if K+ remains elevated. Check medications for K+-wasting issues (NSAIDs, K+-sparing diuretics).'
+    }
+  },
+  {
+    id: 'fluid-02',
+    area: 'fluid',
+    title: 'Hyponatremia with Neurological Changes',
+    patient: '78-year-old female, SIADH secondary to lung cancer',
+    setting: 'Oncology floor, 2200 hours',
+    setup: 'Patient with small-cell lung cancer, recently started on chemotherapy. Develops confusion and weakness. Labs ordered for evaluation.',
+    vitals: {
+      'HR': '88 bpm',
+      'BP': '118/74 mmHg',
+      'RR': '20 breaths/min',
+      'O2 sat': '94% RA',
+      'Temp': '37.2°C',
+      'LOC': 'Confused, not oriented to place'
+    },
+    labs: {
+      'Na+': '118 mEq/L (CRITICAL, normal 135-145)',
+      'Osmolality': 'Low (250 mOsm/kg)',
+      'Urine Na+': 'Elevated (100 mEq/L)',
+      'Urine osmolality': 'Elevated (450 mOsm/kg)'
+    },
+    assessment: 'Acute hyponatremia (Na+ 118) with SIADH pattern (low serum osmolality, elevated urine osmolality, inappropriate ADH secretion). Neurological signs: confusion, weakness, risk for seizures if worsens.',
+    firstAction: 'Notify provider STAT. Obtain stat serum Na+ and osmolality. Fluid restrict to 800mL/day (standard SIADH management). Prepare for possible 3% hypertonic saline if seizures/severe symptoms develop, but correct SLOWLY (goal 4-6 mEq/L per 24 hours to avoid osmotic demyelination). Monitor neuro status closely.',
+    modelAnswer: {
+      situation: 'Hyponatremia Na+ 118 with SIADH pattern and neurological signs (confusion, weakness). Risk for seizures if severe.',
+      background: 'Lung cancer with SIADH (oncologic SIADH common with SCLC). Chemotherapy may worsen SIADH.',
+      assessment: 'Symptomatic hyponatremia from SIADH. Seizure risk if Na+ drops further or corrected too rapidly.',
+      recommendation: 'Notify provider STAT. Recommend: fluid restriction 800mL/day (first-line SIADH). If seizures develop, give hypertonic saline BUT CORRECT SLOWLY (max 8 mEq/L per 24 hrs; rate <10 mEq/L per 24 hrs to avoid osmotic demyelination). Monitor Na+ q4-6h initially. Consider tolvaptan (vasopressin antagonist) if available. Neuro checks q1h. Review medication list for SIADH-causing drugs.'
+    }
+  },
+  {
+    id: 'fluid-03',
+    area: 'fluid',
+    title: 'Fluid Overload Post-Transfusion',
+    patient: '82-year-old female, anemia (post-GI bleed)',
+    setting: 'Medical floor, 1800 hours',
+    setup: 'Patient admitted 2 days ago with GI bleeding (peptic ulcer). Transfused 2 units PRBC yesterday. Post-transfusion, became dyspneic. This morning, new onset orthopnea and weight gain.',
+    vitals: {
+      'HR': '98 bpm',
+      'BP': '142/88 mmHg',
+      'RR': '26 breaths/min, labored',
+      'O2 sat': '90% on 2L NC (was 95% yesterday)',
+      'JVD': 'Elevated at 6 cm',
+      'Lung exam': 'Crackles bilateral lower lobes',
+      'Weight': '+2.2 kg since yesterday'
+    },
+    labs: {
+      'Hgb': '8.9 g/dL (adequate)',
+      'BNP': '450 pg/mL (elevated)',
+      'Cr': '1.8 (baseline 1.2, mild worsening)'
+    },
+    assessment: 'Transfusion-related circulatory overload (TRCO): dyspnea, orthopnea, crackles, elevated JVD, weight gain post-transfusion. No fever, so likely not TRALI. Acute decompensation of mild underlying cardiac/renal function.',
+    firstAction: 'STOP further transfusions. Notify provider and blood bank. Diuresis: give furosemide IV (slow to avoid AKI). Monitor I&O closely. Elevate HOB. Place on higher O2. Assess for signs of pulmonary edema/HF. Recheck vitals q2h. If worsens, prepare for non-invasive ventilation.',
+    modelAnswer: {
+      situation: 'Post-transfusion dyspnea, orthopnea, crackles, JVD, weight gain +2.2 kg, low O2 sat (90%). TRCO (transfusion-related circulatory overload).',
+      background: 'Transfusion of 2 units PRBC in older patient with possible borderline cardiac function. TRCO risk increases with age, renal insufficiency, cardiac disease.',
+      assessment: 'TRCO: acute decompensation from blood volume excess post-transfusion. Mild renal worsening (Cr 1.8) suggests volume overload impacting perfusion.',
+      recommendation: 'STOP transfusions. Notify blood bank. Diuresis with IV furosemide (cautious to avoid AKI). Elevate HOB, increase O2. Monitor I&O strict. Recheck vitals q2h. If worsens, non-invasive ventilation may be needed. Future transfusions should be slower or with concurrent diuretics if necessary.'
+    }
+  },
+  {
+    id: 'fluid-04',
+    area: 'fluid',
+    title: 'Diabetic Ketoacidosis (DKA) Presentation',
+    patient: '24-year-old female, type 1 diabetes (new diagnosis)',
+    setting: 'ED, acute presentation',
+    setup: 'Patient brought to ED by friend. Reports 3-day history of polyuria, polydipsia, malaise. Presents with abdominal pain and altered mental status.',
+    vitals: {
+      'HR': '122 bpm, tachycardia',
+      'BP': '98/62 mmHg, hypotension',
+      'RR': '28 breaths/min, Kussmaul respirations (deep, labored)',
+      'O2 sat': '95% RA',
+      'Temp': '38.1°C, fever',
+      'LOC': 'Lethargic, oriented ×1'
+    },
+    assessment: 'Fruity-smelling breath (acetone), Kussmaul respirations (deep and fast), abdominal pain, polyuria/polydipsia × 3 days. Labs: glucose >400, arterial pH 7.18 (severe acidosis), HCO3- 12, positive serum/urine ketones.',
+    firstAction: 'STAT labs: glucose, BMP, VBG/ABG, ketones, anion gap, lactate. STAT IV access × 2 large-bore. Start aggressive IV rehydration (normal saline 0.9%, 500mL/hr × 2-4 hrs initially), then slow. DO NOT give insulin until K+ level confirmed (hypokalemia risk). Prepare for possible ICU admission.',
+    modelAnswer: {
+      situation: 'DKA presentation: new-onset T1DM, polyuria/polydipsia, Kussmaul respirations, altered mental status, fruity breath, hypotension, acidosis (pH 7.18).',
+      background: 'New-onset type 1 diabetes with severe metabolic acidosis. Risk of cerebral edema if over-corrected. High mortality if untreated.',
+      assessment: 'Severe DKA (pH 7.18, HCO3- 12, elevated anion gap) with altered mental status and hemodynamic instability. Life-threatening metabolic emergency.',
+      recommendation: 'STAT labs (glucose, BMP, VBG, ketones, lactate). STAT IV access ×2. Aggressive isotonic fluid resuscitation 500mL/hr ×2-4 hrs then slow. WAIT for K+ before insulin (risk of hypokalemia). Once K+ confirmed, start insulin drip 0.1 u/kg/hr (adjust per protocol). Monitor closely for cerebral edema (altered mental status worsening = sign). ICU admission anticipated. Address underlying trigger (infection, medication non-compliance, new diagnosis).'
+    }
+  },
+
+  // NEURO SCENARIOS
+  {
+    id: 'neuro-01',
+    area: 'neuro',
+    title: 'Acute Ischemic Stroke (Thromboembolic)',
+    patient: '67-year-old male, history of A-fib (not on anticoagulation)',
+    setting: 'ED, STAT evaluation',
+    setup: 'Patient witnessed to have sudden onset right-sided weakness and speech difficulty while at home 45 minutes ago. Spouse called 911. Now in ED.',
+    vitals: {
+      'HR': '92 bpm, irregular (A-fib)',
+      'BP': '168/94 mmHg',
+      'RR': '16 breaths/min',
+      'O2 sat': '96% RA',
+      'Temp': '37.1°C',
+      'LOC': 'Alert, but speech slurred'
+    },
+    neuro: {
+      'Right arm': 'Unable to lift against gravity (MRC 1/5)',
+      'Right leg': 'Weak (MRC 3/5)',
+      'Speech': 'Expressive aphasia (Broca area stroke)',
+      'NIHSS': '~12-14 (moderate-severe)'
+    },
+    assessment: 'Acute ischemic stroke, symptom onset 45 minutes ago (WITHIN THROMBOLYTIC WINDOW). Right hemiparesis, aphasia consistent with LEFT MCA territory stroke. A-fib on exam confirms embolic source.',
+    firstAction: 'STAT CT head (non-contrast) to rule out hemorrhage. STAT labs: CBC, BMP, PT/INR, troponin, lactate. EKG already shows A-fib. Contact neurology STAT. Patient is candidate for thrombolytics (tPA IV) if CT normal and within window (goal door-to-needle <60 min). Prepare for rapid intervention. NPO pending swallow screen.',
+    modelAnswer: {
+      situation: 'Acute ischemic stroke: symptom onset 45 min ago (WITHIN thrombolytic window). Left MCA distribution (right hemiparesis, aphasia). A-fib confirmed.',
+      background: 'A-fib without anticoagulation is major stroke risk. Embolic stroke from heart.',
+      assessment: 'Acute ischemic stroke, likely embolic from A-fib. NIHSS 12-14 indicates moderate-severe stroke. Candidate for IV thrombolytics if CT normal.',
+      recommendation: 'STAT CT head non-contrast (rule out hemorrhage). STAT labs. EKG shows A-fib. Contact neurology STAT. Eligible for IV tPA if CT normal and time criteria met. Prepare for possible IV tPA administration or thrombectomy evaluation. NPO pending swallow screen. Admit to ICU/stroke unit for close neuro monitoring. Post-stroke anticoagulation (heparin bridge to warfarin likely).'
+    }
+  },
+  {
+    id: 'neuro-02',
+    area: 'neuro',
+    title: 'Increased Intracranial Pressure (ICP) - Cushing\'s Triad',
+    patient: '45-year-old male, post-craniotomy (brain tumor resection)',
+    setting: 'ICU, post-op day 2',
+    setup: 'Patient underwent craniotomy for brain tumor 2 days ago. Post-op course initially stable. Suddenly develops change in mental status and vital sign changes.',
+    vitals: {
+      'HR': '48 bpm, bradycardia (from 70s)',
+      'BP': '186/106 mmHg, hypertension (from baseline 120/80)',
+      'RR': '8 breaths/min, irregular respirations (from 16)',
+      'Temp': '37.8°C',
+      'LOC': 'Lethargic, not responding to verbal stimuli, only to pain'
+    },
+    neuro: {
+      'Pupils': 'Dilated right (3mm), pinpoint left (2mm) - ANISOCORIC',
+      'Gaze': 'Down gaze palsy (looking down at nose)',
+      'Motor': 'Decorticate posturing (flexion)'
+    },
+    assessment: 'CUSHING\'S TRIAD present: bradycardia (48), hypertension (186/106), irregular respirations (8). Plus: anisocoria, decreased LOC, posturing. Classic signs of elevated ICP (>20 mmHg likely).',
+    firstAction: 'STAT notification to neurosurgeon. Do NOT delay for imaging—clinical diagnosis is clear. STAT interventions: elevate HOB 30 degrees, maintain normothermia, hyperventilate (target pCO2 30-35 for temporary ICP reduction), osmotic therapy (mannitol 0.25-1 g/kg IV rapidly or hypertonic saline 3%), prepare for emergency head CT and possible return to OR. Ensure airway management.',
+    modelAnswer: {
+      situation: 'Post-craniotomy with Cushing\'s triad: bradycardia (48), hypertension (186/106), irregular respirations (8). Anisocoria, decreased mental status, posturing. Signs of severe elevated ICP.',
+      background: 'Post-op day 2 craniotomy. Possible causes: epidural hematoma, brain edema, hemorrhage.',
+      assessment: 'Severe elevated ICP (Cushing\'s triad indicates ICP >20-25 mmHg). Brainstem herniation risk if not rapidly treated.',
+      recommendation: 'NOTIFY NEUROSURGEON STAT. Emergency interventions: elevate HOB 30°, maintain normothermia, hyperventilate (pCO2 30-35), osmotic therapy (mannitol 1g/kg IV rapid or hypertonic saline), prepare STAT CT head, prepare for emergency return to OR. Do NOT delay for imaging—clinical diagnosis clear. Secure airway if deteriorates further. ICU monitoring essential.'
+    }
+  },
+  {
+    id: 'neuro-03',
+    area: 'neuro',
+    title: 'Status Epilepticus',
+    patient: '52-year-old female, history of seizure disorder (non-compliant with meds)',
+    setting: 'ED, acute presentation',
+    setup: 'Patient brought to ED in the midst of repeated seizures. Ran out of antiepileptic medications 1 week ago. Witnessed generalized tonic-clonic seizure × 3 minutes in ambulance, then immediately another seizure.',
+    vitals: {
+      'HR': '132 bpm (during seizure)',
+      'BP': '162/94 mmHg',
+      'RR': '12 breaths/min (post-ictal, depressed)',
+      'O2 sat': '87% on room air',
+      'Temp': '38.2°C (elevated)',
+      'Muscle tone': 'Rigidity, still slightly twitching'
+    },
+    assessment: 'Witnessed repeated seizures without full consciousness between episodes (status epilepticus). Cyanosis, elevated temp (fever or post-seizure hyperthermia), muscle rigidity.',
+    firstAction: 'ESTABLISH AIRWAY—patient at high aspiration risk. Place on high-flow O2, prepare for intubation if seizures continue. STAT IV access ×2. STAT labs (glucose, BMP, Mg, Ca, AED levels, CBC, UA). STAT lorazepam 4mg IV (benzodiazepine, first-line for status). If seizures continue after 2-5 min: add fosphenytoin 15-20 PE/kg IV or levetiracetam IV. Prepare for ICU admission. Treat any reversible causes (infection, medication non-compliance).',
+    modelAnswer: {
+      situation: 'Status epilepticus: repeated generalized tonic-clonic seizures without full recovery between events. Patient cyanotic, hyperthermic, post-seizure.',
+      background: 'Seizure disorder, non-compliant with meds (ran out 1 week ago). Status is MEDICAL EMERGENCY—high mortality/morbidity if untreated.',
+      assessment: 'Active status epilepticus. High aspiration risk, risk of rhabdomyolysis, hyperthermia.',
+      recommendation: 'Establish IV access ×2, high-flow O2. STAT benzodiazepine: lorazepam 4mg IV push. If continues, add second-line AED (fosphenytoin 15-20 PE/kg IV or levetiracetam 30-60 mg/kg IV). Prepare for intubation. STAT labs (glucose, electrolytes, AED level, renal function). ICU admission. Address precipitant (medication non-compliance). Cardiac monitoring, temperature management.'
+    }
+  },
+  {
+    id: 'neuro-04',
+    area: 'neuro',
+    title: 'Post-Craniotomy Neurological Deterioration',
+    patient: '68-year-old male, post-op day 1 (aneurysm clipping)',
+    setting: 'ICU, 0600 hours',
+    setup: 'Patient underwent craniotomy for anterior communicating artery aneurysm clipping yesterday. Neuro checks stable overnight. This morning at 0600, nurse notes sudden change.',
+    vitals: {
+      'HR': '76 bpm (stable)',
+      'BP': '124/78 mmHg (stable)',
+      'RR': '16 breaths/min',
+      'Temp': '37.1°C',
+      'LOC': 'Suddenly MORE lethargic (was fully alert)'
+    },
+    neuro: {
+      'Right pupil': 'Dilated (3.5mm) compared to left (2.5mm) - NEW',
+      'Right arm': 'Now moving to pain only (was moving to voice)',
+      'Right leg': 'Weak (MRC 2/5, was 4/5 yesterday)',
+      'Speech': 'Slurred, mumbling only'
+    },
+    assessment: 'Acute deterioration post-op day 1: new anisocoria (dilated right), right-sided weakness, decreased consciousness. Signs of possible epidural hematoma or brainstem mass effect.',
+    firstAction: 'STAT notification to neurosurgeon. STAT head CT (post-op baseline likely done, but CT to assess for acute bleed/hematoma). Do NOT wait for full workup—notify surgeon IMMEDIATELY. Prepare for possible emergency return to OR. Elevate HOB 30 degrees. Maintain airway—prepare for intubation if deteriorates.',
+    modelAnswer: {
+      situation: 'Post-craniotomy acute deterioration: new anisocoria (dilated right pupil), new right-sided weakness, decreased consciousness. RED FLAG for epidural hematoma or other surgical complication.',
+      background: 'Post-op day 1, procedure for aneurysm clipping. Acute neuro changes concerning for acute bleed/hematoma.',
+      assessment: 'Acute surgical complication (likely epidural hematoma or bleeding) causing mass effect and brainstem compression. Requires EMERGENCY neurosurgical intervention.',
+      recommendation: 'NOTIFY NEUROSURGEON STAT. Do NOT delay. STAT CT head (to confirm hematoma). Prepare for EMERGENCY return to OR. Elevate HOB 30°, maintain airway patency, prepare for intubation. Monitor pupil size and neuro status q15-30min until definitive treatment.'
+    }
+  },
+
+  // EMERGENCY SCENARIOS
+  {
+    id: 'emergency-01',
+    area: 'emergency',
+    title: 'Hemorrhagic Shock (Trauma)',
+    patient: '34-year-old male, motor vehicle collision (frontal impact)',
+    setting: 'ED trauma bay, STAT arrival',
+    setup: 'EMS brings patient from scene of high-speed MVC. Ejected from vehicle. Suspected intra-abdominal bleeding.',
+    vitals: {
+      'HR': '146 bpm, thready',
+      'BP': '72/48 mmHg, SHOCK',
+      'RR': '32 breaths/min, labored',
+      'O2 sat': '89% on high-flow O2',
+      'Skin': 'Pale, clammy, cold',
+      'Cap refill': '>3 seconds'
+    },
+    assessment: 'Signs of CLASS III-IV hemorrhagic shock: severe tachycardia (146), hypotension (72/48), severe tachypnea (32), altered perfusion (pale, cold, cap refill >3 sec). Acute abdomen: rigid, distended abdomen with severe pain. Likely splenic or liver laceration.',
+    firstAction: 'MASSIVE TRANSFUSION PROTOCOL. Establish 2+ large-bore IVs (18G or larger). Call type & cross for massive transfusion. Begin fluid resuscitation with PRBCs (uncrossed O-negative), avoid crystalloid (whole blood or 1:1:1 ratio). STAT FAST exam (focused assessment with sonography for trauma) or CT if stable enough. Notify surgery STAT—patient will need emergent OR.',
+    modelAnswer: {
+      situation: 'Hemorrhagic shock CLASS III-IV: HR 146, BP 72/48, severe tachypnea (32), altered perfusion (pale, cold). Likely intra-abdominal bleed.',
+      background: 'High-speed MVC, ejected from vehicle. Mechanism suggests severe trauma.',
+      assessment: 'Class III-IV hemorrhagic shock with acute abdomen. LIFE-THREATENING. Requires emergency surgical intervention.',
+      recommendation: 'Initiate MASSIVE TRANSFUSION PROTOCOL. Establish 2 large-bore IVs ×18G+. Type & cross for massive transfusion. Begin PRBCs uncrossed O-neg (1:1:1 ratio with FFP and platelets). LIMIT crystalloid. STAT FAST exam. NOTIFY TRAUMA SURGERY STAT. Prepare for emergency OR. Continuous reassessment and resuscitation.'
+    }
+  },
+  {
+    id: 'emergency-02',
+    area: 'emergency',
+    title: 'Anaphylaxis (After IV Contrast)',
+    patient: '58-year-old female, received IV contrast for CT angiography (PE protocol)',
+    setting: 'CT scanner area, minutes after contrast injection',
+    setup: 'Patient underwent CT PE protocol with IV iodinated contrast. Minutes after contrast injection, develops acute symptoms.',
+    vitals: {
+      'HR': '128 bpm',
+      'BP': '84/52 mmHg, hypotensive',
+      'RR': '32 breaths/min, stridor audible',
+      'Breathing': 'Wheezing, stridor',
+      'Skin': 'Erythematous, urticarial rash appearing'
+    },
+    symptoms: 'Throat tightness, difficulty swallowing, wheezing. Patient reports "can\'t breathe." Itching, flushing.',
+    firstAction: 'STOP contrast immediately. Establish IV access if not already present. STAT IM epinephrine 0.3-0.5mg (1:1000 concentration) given IM immediately (standard anaphylaxis dose). Place on high-flow O2. Prepare for possible airway management (if stridor worsens, may need intubation). Give antihistamine (diphenhydramine 50mg IV) and corticosteroid (methylprednisolone 125mg IV). Monitor vitals closely. Prepare for possible repeat epi if not responding.',
+    modelAnswer: {
+      situation: 'Anaphylaxis post-IV contrast: hypotension (84/52), stridor, wheezing, urticaria, throat tightness. LIFE-THREATENING AIRWAY EMERGENCY.',
+      background: 'IV iodinated contrast exposure. Allergic reaction.',
+      assessment: 'Anaphylaxis with airway involvement (stridor) and cardiovascular collapse (hypotensive). Requires immediate intervention.',
+      recommendation: 'STOP contrast. STAT IM epinephrine 0.3-0.5mg (1:1000) immediately. High-flow O2. IV access established. Prepare for airway management—stridor suggests laryngeal edema. IV antihistamine (diphenhydramine 50mg) and IV corticosteroid (methylprednisolone 125mg). Continuous monitoring. Prepare for repeat epi if needed. Transfer to ED for ongoing management.'
+    }
+  },
+  {
+    id: 'emergency-03',
+    area: 'emergency',
+    title: 'Sepsis Progression with Altered Mental Status',
+    patient: '72-year-old female, admitted with UTI, now signs of sepsis',
+    setting: 'Medical floor, evening shift',
+    setup: 'Patient admitted yesterday with dysuria and fever. Urine culture pending. This afternoon, became increasingly lethargic and confused. Vital signs concerning.',
+    vitals: {
+      'HR': '128 bpm',
+      'BP': '88/54 mmHg (DOWN from 118/72 on admission)',
+      'RR': '28 breaths/min',
+      'O2 sat': '92% on room air',
+      'Temp': '39.4°C (fever)',
+      'Skin': 'Pale, mottled, cool peripherally',
+      'LOC': 'Lethargic, not oriented to place/time'
+    },
+    assessment: 'Sepsis progressing to septic shock: altered mental status (SIRS + infection + organ dysfunction), hypotension (88/54), tachycardia (128), fever (39.4), cool extremities (poor perfusion). SOFA score likely ≥2-3 (cognitive dysfunction, hypotension, tachypnea).',
+    firstAction: 'STAT notification to provider. STAT labs: lactate (will be elevated if tissue hypoperfusion), CBC, BMP, blood cultures ×2, UA/urine culture. Start IV fluids AGGRESSIVELY (bolus 30mL/kg—likely 2-2.5L normal saline for this patient). Obtain source (urine, blood, wound). Start IV antibiotics within 1 hour (broad-spectrum: piperacillin-tazobactam or carbapenems). Assess for signs of multi-organ dysfunction. Prepare for possible ICU transfer.',
+    modelAnswer: {
+      situation: 'Septic shock: hypotension (88/54), tachycardia (128), fever (39.4), altered mental status, mottled skin. SYSTEMIC LIFE-THREATENING INFECTION.',
+      background: 'UTI source (urine culture pending). Progressed from suspected UTI to septic shock in <24 hours.',
+      assessment: 'Sepsis with shock criteria met (hypotension + tissue hypoperfusion signs). Organ dysfunction evident (CNS—altered mental). High mortality if not rapidly treated.',
+      recommendation: 'NOTIFY provider STAT. STAT labs: lactate, BC ×2, CBC, BMP, UA. AGGRESSIVE IV fluid resuscitation 30mL/kg bolus (2-2.5L NS). STAT IV antibiotics within 1 hour (broad-spectrum). Urinary catheter for output monitoring. ICU admission likely. Vasopressor support if BP not responsive to fluids. Source control (ensure urine draining). Serial lactate to assess response.'
+    }
+  },
+  {
+    id: 'emergency-04',
+    area: 'emergency',
+    title: 'Carbon Monoxide Poisoning (Family Exposure)',
+    patient: 'Family of 4: parents (48F, 52M) and children (16F, 12M)',
+    setting: 'ED, brought via EMS from home',
+    setup: 'Family members presented to ED with non-specific symptoms. Ran space heater in bedroom overnight during power outage. Family reports headache, dizziness, nausea. Two children more symptomatic.',
+    vitals: {
+      'All': 'Headache, dizziness, malaise',
+      '12M (son)': 'Confusion, weakness, cherry-red skin',
+      '16F (daughter)': 'Severe headache, syncope (passed out ×1), lactic acidosis suspected'
+    },
+    carboxyhemoglobin: 'Suspected high (especially children)',
+    assessment: 'Suspected carbon monoxide poisoning: non-specific symptoms (headache, nausea, dizziness) common in CO exposure. Cherry-red skin in youngest child is CLASSIC sign (though rare). Confabulation and weakness in another child concerning for severe exposure.',
+    firstAction: 'STAT carboxyhemoglobin levels. ALL FAMILY MEMBERS NEED HIGH-FLOW O2 (100% O2, non-rebreather mask). If available, HYPERBARIC OXYGEN (gold standard, especially if COHb >25% or neurological symptoms). Remove from CO source immediately. STAT labs: ABC, COHb, lactate, troponin, CK. Neuro exam to assess for encephalopathy. ECG to assess for ischemia.',
+    modelAnswer: {
+      situation: 'Carbon monoxide poisoning: family of 4 exposed to space heater in closed bedroom. Headache, dizziness, nausea. Cherry-red skin in one, confusion in another. HIGH-RISK EXPOSURE.',
+      background: 'Space heater in closed space (power outage). CO binds to Hb with 200× affinity vs O2, causing tissue hypoxia.',
+      assessment: 'CO poisoning likely. Neurological symptoms (confusion) indicate significant CNS involvement. Risk of delayed neurological sequelae even after acute treatment.',
+      recommendation: 'REMOVE from CO source immediately. HIGH-FLOW O2 (100%, non-rebreather) to all family. STAT COHb levels. If COHb >25% or neuro symptoms: HYPERBARIC OXYGEN (2.8 ATA, 100% O2). STAT labs: ABC, COHb, lactate, troponin, CK, neuro exam. Monitor for arrhythmias (cardiac toxicity). All require ED evaluation; consider ICU admission for most symptomatic.'
+    }
+  }
+];
+
+let currentAreaFilter = 'all';
+let currentMode = 'practice';
+let timerActive = false;
+let timerInterval = null;
+let timerRemaining = 90;
+let completedScenarios = new Set();
+let scenarioRatings = {};
+
+function init() {
+  applyTheme();
+  loadData();
+  renderScenarios();
+  updateStats();
+}
+
+function persistData() {
+  const data = {
+    completedScenarios: Array.from(completedScenarios),
+    scenarioRatings,
+    currentAreaFilter,
+    currentMode
+  };
+  localStorage.setItem('sbar-journal-data', JSON.stringify(data));
+}
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('sbar-journal-data');
+    if (saved) {
+      const data = JSON.parse(saved);
+      completedScenarios = new Set(data.completedScenarios || []);
+      scenarioRatings = data.scenarioRatings || {};
+    }
+  } catch(e) {
+    console.warn('Could not load saved data:', e);
+  }
+}
+
+function startTimedMode() {
+  timerActive = true;
+  timerRemaining = 90;
+
+  // Lock all textareas and show timer
+  document.querySelectorAll('.sbar-textarea').forEach(ta => {
+    ta.classList.remove('locked');
+  });
+
+  // Create or show timer overlay
+  let timerDisplay = document.getElementById('timerDisplay');
+  if (!timerDisplay) {
+    timerDisplay = document.createElement('div');
+    timerDisplay.id = 'timerDisplay';
+    timerDisplay.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(231, 76, 60, 0.95);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
+    document.body.appendChild(timerDisplay);
+  }
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerRemaining--;
+    const mins = Math.floor(timerRemaining / 60);
+    const secs = timerRemaining % 60;
+    timerDisplay.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+    if (timerRemaining <= 0) {
+      clearInterval(timerInterval);
+      expireTimedMode();
+    }
+  }, 1000);
+}
+
+function stopTimedMode() {
+  timerActive = false;
+  if (timerInterval) clearInterval(timerInterval);
+  const timerDisplay = document.getElementById('timerDisplay');
+  if (timerDisplay) timerDisplay.remove();
+
+  document.querySelectorAll('.sbar-textarea').forEach(ta => {
+    ta.classList.remove('locked');
+  });
+}
+
+function expireTimedMode() {
+  timerActive = false;
+  const timerDisplay = document.getElementById('timerDisplay');
+  if (timerDisplay) {
+    timerDisplay.textContent = 'TIME\'S UP!';
+    timerDisplay.style.background = 'rgba(44, 62, 80, 0.95)';
+  }
+
+  // Lock all textareas
+  document.querySelectorAll('.sbar-textarea').forEach(ta => {
+    ta.classList.add('locked');
+  });
+
+  // Show alert
+  alert('90-second timed practice session has ended. Your responses have been locked. Review the model answers and rate your confidence.');
+}
+
+function applyTheme() {
+  const saved = localStorage.getItem('n8hub_darkmode');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('n8hub_darkmode', newTheme);
+  document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.textContent.toLowerCase().includes(mode === 'timed' ? 'timed' : 'practice')) {
+      btn.classList.add('active');
+    }
+  });
+
+  if (mode === 'timed') {
+    startTimedMode();
+  } else {
+    stopTimedMode();
+  }
+}
+
+function filterByArea(area) {
+  currentAreaFilter = area;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const btnArea = btn.textContent.toLowerCase();
+    const filterMatch = (
+      (area === 'all' && btn.textContent.includes('All')) ||
+      (area === 'cardiac' && btn.textContent.includes('Cardiac')) ||
+      (area === 'oxy' && btn.textContent.includes('Oxygenation')) ||
+      (area === 'fluid' && btn.textContent.includes('Fluid')) ||
+      (area === 'neuro' && btn.textContent.includes('Neuro')) ||
+      (area === 'emergency' && btn.textContent.includes('Emergency'))
+    );
+    if (filterMatch) btn.classList.add('active');
+  });
+  renderScenarios();
+}
+
+function renderScenarios() {
+  const container = document.getElementById('scenariosContainer');
+  container.innerHTML = '';
+
+  const filtered = currentAreaFilter === 'all'
+    ? scenarios
+    : scenarios.filter(s => s.area === currentAreaFilter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state">No scenarios in this area.</div>';
+    return;
+  }
+
+  filtered.forEach(scenario => {
+    const card = createScenarioCard(scenario);
+    container.appendChild(card);
+  });
+
+  updateStats();
+}
+
+function createScenarioCard(scenario) {
+  const card = document.createElement('div');
+  card.className = `scenario-card ${scenario.area}`;
+  card.id = `card-${scenario.id}`;
+
+  const isCompleted = completedScenarios.has(scenario.id);
+  const rating = scenarioRatings[scenario.id] || 0;
+
+  card.innerHTML = `
+    <div class="scenario-header">
+      <span class="scenario-badge ${scenario.area}">${scenario.area.toUpperCase()}</span>
+      <div class="scenario-title">${scenario.title}</div>
+      <div class="scenario-subtitle">${scenario.patient}</div>
+    </div>
+
+    <div class="scenario-setup">
+      <div class="setup-label">Setting</div>
+      <div>${scenario.setting}</div>
+    </div>
+
+    <div class="scenario-setup">
+      <div class="setup-label">Situation</div>
+      <div>${scenario.setup}</div>
+    </div>
+
+    <div class="vital-section">
+      <div class="setup-label">Vital Signs & Assessment</div>
+      ${Object.entries(scenario.vitals).map(([key, val]) => `
+        <div class="vital-item">
+          <span class="vital-label">${key}:</span>
+          <span class="vital-value">${val}</span>
+        </div>
+      `).join('')}
+      <div class="vital-item">
+        <span class="vital-label">Assessment:</span>
+        <span class="vital-value">${scenario.assessment}</span>
+      </div>
+      <div class="vital-item">
+        <span class="vital-label">First Action Before Calling:</span>
+        <span class="vital-value"><strong>${scenario.firstAction}</strong></span>
+      </div>
+    </div>
+
+    <div class="sbar-container">
+      <div class="sbar-field">
+        <label class="sbar-label">Situation</label>
+        <textarea class="sbar-textarea" placeholder="What is the immediate problem?"></textarea>
+      </div>
+
+      <div class="sbar-field">
+        <label class="sbar-label">Background</label>
+        <textarea class="sbar-textarea" placeholder="Patient history, relevant context..."></textarea>
+      </div>
+
+      <div class="sbar-field">
+        <label class="sbar-label">Assessment</label>
+        <textarea class="sbar-textarea" placeholder="Your interpretation of vital signs and findings..."></textarea>
+      </div>
+
+      <div class="sbar-field">
+        <label class="sbar-label">Recommendation</label>
+        <textarea class="sbar-textarea" placeholder="What should the provider do? What do you need?"></textarea>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-reveal" onclick="revealAnswer('${scenario.id}')">Reveal Model Answer</button>
+      <button class="btn-print" onclick="printScenario('${scenario.id}')">Print Scenario</button>
+    </div>
+
+    <div id="answer-${scenario.id}" class="model-answer">
+      <div class="model-answer-label">Model Answer:</div>
+      <p><strong>Situation:</strong> ${scenario.modelAnswer.situation}</p>
+      <p><strong>Background:</strong> ${scenario.modelAnswer.background}</p>
+      <p><strong>Assessment:</strong> ${scenario.modelAnswer.assessment}</p>
+      <p><strong>Recommendation:</strong> ${scenario.modelAnswer.recommendation}</p>
+    </div>
+
+    <div class="rating-section">
+      <div class="rating-label">Self-Rating (How confident are you in your SBAR?)</div>
+      <div class="star-rating" id="rating-${scenario.id}">
+        ${[1,2,3,4,5].map(i => `<span class="star ${rating >= i ? 'selected' : ''}" data-rating="${i}">★</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  // Attach star rating click handler
+  const ratingDiv = card.querySelector(`#rating-${scenario.id}`);
+  if (ratingDiv) {
+    ratingDiv.addEventListener('click', (e) => {
+      if (e.target.classList.contains('star')) {
+        rateScenario(scenario.id, e);
+      }
+    });
+  }
+
+  return card;
+}
+
+function revealAnswer(scenarioId) {
+  const answerDiv = document.getElementById(`answer-${scenarioId}`);
+  answerDiv.classList.toggle('show');
+}
+
+function rateScenario(scenarioId, event) {
+  const rating = parseInt(event.target.dataset.rating);
+  if (!rating) return;
+
+  scenarioRatings[scenarioId] = rating;
+  completedScenarios.add(scenarioId);
+
+  // Find the rating section for this scenario and update stars
+  const scenario = scenarios.find(s => s.id === scenarioId);
+  const card = Array.from(document.querySelectorAll('.scenario-card')).find(
+    c => c.querySelector('.scenario-title')?.textContent === scenario.title
+  );
+  if (card) {
+    card.querySelectorAll('.star').forEach((star, idx) => {
+      if (idx + 1 <= rating) {
+        star.classList.add('selected');
+      } else {
+        star.classList.remove('selected');
+      }
+    });
+  }
+
+  updateStats();
+  persistData();
+
+  // Log to study data - map scenario area to StudyData concept area
+  if (typeof StudyData !== 'undefined') {
+    const conceptAreaMap = {
+      'cardiac': 'cardiac',
+      'oxy': 'oxygenation',
+      'fluid': 'fluid-electrolytes',
+      'neuro': 'cognition-sensation',
+      'emergency': 'emergency-disaster'
+    };
+    const conceptArea = conceptAreaMap[scenario.area] || scenario.area;
+    StudyData.recordResult('sbar-journal', conceptArea, rating >= 4 ? 1 : 0, 1);
+    StudyData.trackExposure('sbar-journal:' + scenarioId, rating >= 4);
+  }
+}
+
+function updateStats() {
+  const filtered = currentAreaFilter === 'all'
+    ? scenarios
+    : scenarios.filter(s => s.area === currentAreaFilter);
+
+  const completed = Array.from(completedScenarios).filter(id =>
+    filtered.some(s => s.id === id)
+  ).length;
+  const total = filtered.length;
+  const ratings = Array.from(completedScenarios)
+    .filter(id => filtered.some(s => s.id === id))
+    .map(id => scenarioRatings[id] || 0);
+  const avgRating = ratings.length > 0
+    ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
+    : '--';
+
+  document.getElementById('completedCount').textContent = completed;
+  document.getElementById('totalScenarios').textContent = total;
+  document.getElementById('avgRating').textContent = avgRating;
+
+  const progress = total > 0 ? (completed / total) * 100 : 0;
+  document.getElementById('progressBar').style.width = progress + '%';
+}
+
+function printScenario(scenarioId) {
+  const scenario = scenarios.find(s => s.id === scenarioId);
+  const printWindow = window.open('', '_blank');
+
+  let html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${scenario.title}</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+    h2 { color: #1a1a2e; margin-bottom: 10px; }
+    h3 { color: #333; margin-top: 20px; margin-bottom: 10px; }
+    p { margin: 8px 0; }
+    .vitals { background: #f5f5f5; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    .section { margin-bottom: 20px; }
+    .response-space { border: 1px dashed #ccc; min-height: 150px; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>${scenario.title}</h2>
+  <p><strong>Patient:</strong> ${scenario.patient}</p>
+  <p><strong>Setting:</strong> ${scenario.setting}</p>
+
+  <div class="section">
+    <h3>Situation</h3>
+    <p>${scenario.setup}</p>
+  </div>
+
+  <div class="section">
+    <h3>Vital Signs & Assessment</h3>
+    <div class="vitals">`;
+
+  Object.entries(scenario.vitals).forEach(([key, val]) => {
+    html += `<p><strong>${key}:</strong> ${val}</p>`;
+  });
+
+  html += `</div>
+    <p><strong>Assessment:</strong> ${scenario.assessment}</p>
+    <p><strong>First Action Before Calling:</strong> ${scenario.firstAction}</p>
+  </div>
+
+  <div class="section">
+    <h3>Your SBAR Response</h3>
+    <div class="response-space"></div>
+  </div>
+</body>
+</html>`;
+
+  printWindow.document.write(html);
+  printWindow.document.close();
+  setTimeout(() => printWindow.print(), 250);
+}
+
+function goBack() {
+  try { if (window.parent && window.parent !== window) { window.parent.closeViewer(); return; } } catch(e) {}
+  window.history.length > 1 ? window.history.back() : (window.location.href = '../n8-hub-complete.html');
+}
+
+init();
+
+</script>
+
+</body>
+</html>

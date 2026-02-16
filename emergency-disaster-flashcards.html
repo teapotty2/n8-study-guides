@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency & Disaster Nursing Flashcards</title>
+    <style>
+        :root {
+            --gotit: #4ade80;
+            --unsure: #fbbf24;
+            --missed: #f87171;
+            --primary: #22d3ee;
+            --muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .screen { display: none; min-height: 100vh; padding: 1.5rem; }
+        .screen.active { display: block; }
+
+        /* START SCREEN */
+        .start-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .start-container h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        #progress-summary {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        #progress-summary h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .overall-bar {
+            height: 12px;
+            background: #475569;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-gotit { background: var(--gotit); }
+        .mb-unsure { background: var(--unsure); }
+        .mb-missed { background: var(--missed); }
+
+        .overall-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        /* Category Grid */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--cat-color, var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.selected {
+            border-color: var(--cat-color, var(--primary));
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .cat-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .cat-count {
+            font-size: 0.85rem;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .cat-mastery-bar {
+            height: 6px;
+            background: #475569;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .cat-mastery-text {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Options Row */
+        .options-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .toggle-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .start-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #0f172a;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover { background: #06b6d4; transform: translateY(-2px); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover { background: rgba(34, 211, 238, 0.1); }
+
+        .btn-weak {
+            background: var(--missed);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-weak:hover { background: #ef4444; }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-reset:hover { border-color: var(--missed); color: var(--missed); }
+
+        /* CARD SCREEN */
+        .card-screen {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 3rem);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .progress-section { flex: 1; min-width: 200px; }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .requeue-badge {
+            background: var(--unsure);
+            color: #0f172a;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .cat-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Flashcard */
+        .flashcard {
+            flex: 1;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            min-height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .card-inner { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .card-back { transform: rotateY(180deg); }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .card-front .card-content { font-size: 1.35rem; }
+
+        .flip-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        .answer-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .exam-tip {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Confidence Controls */
+        .conf-controls {
+            display: none;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .conf-controls.visible { display: flex; }
+
+        .conf-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .conf-btn:hover { transform: translateY(-3px); }
+
+        .conf-missed { background: var(--missed); color: white; }
+        .conf-unsure { background: var(--unsure); color: #0f172a; }
+        .conf-gotit { background: var(--gotit); color: #0f172a; }
+
+        .conf-icon { font-size: 1.5rem; }
+        .conf-label { font-weight: 600; }
+        .conf-key { font-size: 0.75rem; opacity: 0.8; }
+
+        /* Navigation */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .kb-hints {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .kb-hints kbd {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin: 0 0.25rem;
+        }
+
+        /* RESULTS SCREEN */
+        .results-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .results-container h1 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 120px;
+        }
+
+        .stat-value { font-size: 2.5rem; font-weight: 700; }
+        .stat-label { font-size: 0.9rem; color: var(--muted); }
+        .stat-pct { font-size: 1.1rem; margin-top: 0.25rem; }
+
+        .stat-gotit .stat-value { color: var(--gotit); }
+        .stat-unsure .stat-value { color: var(--unsure); }
+        .stat-missed .stat-value { color: var(--missed); }
+
+        .breakdown-section, .weak-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .breakdown-section h3, .weak-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .cat-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cat-stat-name { flex: 0 0 150px; font-size: 0.9rem; }
+
+        .cat-stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .bar-seg { height: 100%; }
+        .bar-gotit { background: var(--gotit); }
+        .bar-unsure { background: var(--unsure); }
+        .bar-missed { background: var(--missed); }
+
+        .cat-stat-pct { flex: 0 0 50px; text-align: right; font-size: 0.9rem; }
+
+        .weak-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .weak-item:last-child { border-bottom: none; }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card-content { font-size: 1.1rem; }
+            .card-front .card-content { font-size: 1.2rem; }
+            .conf-btn { padding: 0.75rem; }
+            .cat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="screen-start" class="screen active">
+    <div class="start-container">
+        <h1>Emergency & Disaster Nursing</h1>
+        <p class="subtitle">Comprehensive flashcard deck covering ED foundations, triage, primary survey, airway, hemorrhage, trauma, environmental emergencies, toxicology, disasters, and WMD</p>
+
+        <div id="progress-summary"></div>
+
+        <div class="cat-grid" id="cat-grid"></div>
+
+        <div class="options-row">
+            <label class="toggle-label">
+                <input type="checkbox" id="chk-shuffle" checked> Shuffle cards
+            </label>
+            <label class="toggle-label">
+                <input type="checkbox" id="chk-multi"> Multi-select categories
+            </label>
+        </div>
+
+        <div class="start-actions">
+            <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+            <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+            <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+        </div>
+    </div>
+</div>
+
+<!-- CARD SCREEN -->
+<div id="screen-card" class="screen">
+    <div class="card-screen">
+        <div class="card-header">
+            <div class="progress-section">
+                <div class="progress-text">
+                    <span id="cur-num">1</span> / <span id="tot-num">0</span>
+                    <span class="requeue-badge" id="requeue-info" style="display:none;"></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                </div>
+            </div>
+            <span class="cat-badge" id="cur-cat">Category</span>
+        </div>
+
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="card-inner">
+                <div class="card-face card-front">
+                    <div class="card-content" id="front-content"></div>
+                    <div class="flip-hint">SPACE or click to flip</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-content" id="back-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="conf-controls" id="conf-controls">
+            <button class="conf-btn conf-missed" onclick="rate('missed')">
+                <span class="conf-icon">&#10007;</span>
+                <span class="conf-label">Missed</span>
+                <span class="conf-key">Press 1</span>
+            </button>
+            <button class="conf-btn conf-unsure" onclick="rate('unsure')">
+                <span class="conf-icon">~</span>
+                <span class="conf-label">Unsure</span>
+                <span class="conf-key">Press 2</span>
+            </button>
+            <button class="conf-btn conf-gotit" onclick="rate('gotit')">
+                <span class="conf-icon">&#10003;</span>
+                <span class="conf-label">Got It</span>
+                <span class="conf-key">Press 3</span>
+            </button>
+        </div>
+
+        <div class="nav-row">
+            <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+            <div class="kb-hints">
+                <kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd> Exit
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="screen-results" class="screen">
+    <div class="results-container">
+        <h1>Session Complete</h1>
+
+        <div class="stats-row" id="stats-row"></div>
+
+        <div class="breakdown-section" id="breakdown-section">
+            <h3>By Category</h3>
+            <div id="cat-breakdown"></div>
+        </div>
+
+        <div class="weak-section" id="weak-section" style="display:none;">
+            <h3>Focus Areas</h3>
+            <div id="weak-list"></div>
+        </div>
+
+        <div class="results-actions">
+            <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
+            <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+            <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const STORAGE_KEY = 'emergency-disaster-fc-v1';
+
+const categories = {
+    'foundations': { name: 'ED Foundations & Triage', color: '#3b82f6' },
+    'primary-survey': { name: 'Primary Survey (ABCDE)', color: '#10b981' },
+    'airway': { name: 'Airway Management', color: '#06b6d4' },
+    'hemorrhage': { name: 'Hemorrhage & Shock', color: '#ef4444' },
+    'trauma': { name: 'Trauma & Wounds', color: '#f97316' },
+    'environmental': { name: 'Environmental Emergencies', color: '#8b5cf6' },
+    'toxicology': { name: 'Poisoning & Substance Abuse', color: '#ec4899' },
+    'psychosocial': { name: 'Psychosocial Emergencies', color: '#14b8a6' },
+    'disaster': { name: 'Disaster Preparedness', color: '#dc2626' },
+    'bio-chem-rad': { name: 'WMD: Bio/Chem/Radiation', color: '#eab308' }
+};
+
+const cards = [
+    // ===== FOUNDATIONS & TRIAGE (1-18) =====
+    { id: 1, cat: 'foundations', q: 'What does EMTALA require and what are penalties for violation?', a: 'EMTALA requires medical screening exam and stabilizing treatment for ALL patients regardless of ability to pay. Penalties: federal funding loss, civil penalties up to $100k, potential state/federal license revocation.', tip: 'EMTALA applies to all patients with life-threatening conditions OR requesting examination for emergency care.' },
+    { id: 2, cat: 'foundations', q: 'When is implied consent valid in emergency care?', a: 'Implied consent is valid for unconscious or severely impaired patients who cannot provide informed consent. Assumed they would reasonably want lifesaving treatment.', tip: 'Document the reason implied consent was used (unconscious, severe distress, unable to communicate).' },
+    { id: 3, cat: 'foundations', q: 'What are critical rules for evidence preservation in trauma?', a: 'Do NOT cut through bullet holes or stab wounds; use paper bags (not plastic - prevents condensation) for clothing; maintain chain of custody with documentation; wear gloves to prevent contamination.', tip: 'Every item and transfer must be documented with signatures.' },
+    { id: 4, cat: 'foundations', q: 'What are the 5 ESI Triage Levels and what defines Level 1?', a: 'Level 1 (Immediate) = life-threatening emergency requiring immediate intervention. Level 2 = high-risk situation. Level 3 = stable but needs resources. Level 4 = minor injury. Level 5 = minimal injury, no resources.', tip: 'Level 1 examples: unresponsive, in distress, unstable vitals, acutely altered mental status.' },
+    { id: 5, cat: 'foundations', q: 'What ESI Level examples include respiratory compromise, severe shock, or uncontrolled hemorrhage?', a: 'These are ALL Level 1 (immediate). Also includes: penetrating injuries to head/neck/torso, major burns, nonresponse to voice.', tip: 'Any condition threatening life in minutes = Level 1 and goes to resuscitation bay.' },
+    { id: 6, cat: 'foundations', q: 'What is the key difference between ED triage and disaster triage?', a: 'ED triage: individual receives best care available. Disaster triage: "greatest good for greatest number" - may withhold resources from expectant cases to maximize overall survival.', tip: 'This ethical shift is critical to understand for disaster preparedness.' },
+    { id: 7, cat: 'foundations', q: 'What does AVPU stand for and what action corresponds to each level?', a: 'Alert (eyes open, responds appropriately), Voice (responds to voice stimulus), Pain (responds to pain only), Unresponsive (no response). Lower levels = need airway support.', tip: 'AVPU is a rapid neuro assessment tool for emergencies.' },
+    { id: 8, cat: 'foundations', q: 'What constitutes a "focused history" in emergency assessment?', a: 'AMPLE: Allergies, Medications, PMHx, Last meal, Events/Environment surrounding injury.', tip: 'Keep history focused and quick - stabilize first, detailed history later.' },
+    { id: 9, cat: 'foundations', q: 'What is the role of nurses in ED triage decisions?', a: 'Nurses perform rapid assessment, apply triage criteria, identify acuity level, ensure appropriate placement, communicate changes in status to MD/provider, reassess continuously.', tip: 'Triage is a clinical nursing judgment - not clerical.' },
+    { id: 10, cat: 'foundations', q: 'What is "gatekeeping" and what are ethical concerns?', a: 'Gatekeeping is inappropriately restricting access to ED care to reduce costs. Ethical violations: violates EMTALA, denies care to vulnerable populations, prioritizes finances over patient safety.', tip: 'Advocacy for patients is a key nursing responsibility.' },
+    { id: 11, cat: 'foundations', q: 'What are Level 2 ESI examples?', a: 'High-risk situation (may deteriorate): chest pain, stroke symptoms, altered mental status, severe abdominal pain, fever in infant <3mo, multiple injuries even if stable.', tip: 'Level 2 = stable now but at risk of rapid decline.' },
+    { id: 12, cat: 'foundations', q: 'What defines Level 3 triage and how many resources typically needed?', a: 'Stable patient who needs resources (labs, imaging, procedures). Examples: moderate laceration, mild asthma exacerbation, ankle sprain. Typically 1-2 resources.', tip: 'Level 3 patients may wait longer because they are stable.' },
+    { id: 13, cat: 'foundations', q: 'What is the purpose of the Glasgow Coma Scale (GCS) in emergency assessment?', a: 'Standardized assessment of level of consciousness. Eye opening (1-4), Verbal response (1-5), Motor response (1-6). Total 3-15. Predicts outcome.', tip: 'GCS <8 = intubation often indicated. GCS 9-12 = at risk. GCS ≥13 = better prognosis.' },
+    { id: 14, cat: 'foundations', q: 'What is "alert and oriented x3" and what does it mean?', a: 'Alert = eyes open spontaneously. Oriented x3 = knows person, place, and time.', tip: 'Document specifically what patient is confused about if not x3.' },
+    { id: 15, cat: 'foundations', q: 'What is the role of rapid trauma assessment in emergency care?', a: 'Quick visual inspection for life threats: obvious deformities, wounds, swelling, asymmetry. Done BEFORE or DURING stabilization, in seconds, not minutes.', tip: 'Primary survey focuses on ABCs; rapid trauma assessment is visual screening.' },
+    { id: 16, cat: 'foundations', q: 'What information should be communicated during transfer of care in ED?', a: 'SBAR: Situation (why here), Background (relevant PMHx/current status), Assessment (current condition), Recommendation (next steps). Include triage level, vital signs, any deterioration noted.', tip: 'Clear handoff prevents critical information loss.' },
+    { id: 17, cat: 'foundations', q: 'What factors increase risk for violent behavior in ED and how should nurse prepare?', a: 'Risk factors: intoxication, psychiatric illness, pain, altered mental status, delirium. Preparation: position near exit, keep hands visible, de-escalate language, alert security preemptively.', tip: 'Violence is never acceptable - prioritize staff safety.' },
+    { id: 18, cat: 'foundations', q: 'What is "staff-initiated violence prevention" vs "chemical/physical restraint"?', a: 'Prevention: de-escalation, environmental control, therapeutic communication. Restraint = only for imminent danger when verbal methods fail. Never for convenience.', tip: 'Chemical sedation requires MD order. Document behavior prompting action.' },
+
+    // ===== PRIMARY SURVEY ABCDE (19-35) =====
+    { id: 19, cat: 'primary-survey', q: 'What is the CRITICAL rule for "A = Airway" in ALL trauma patients?', a: 'ASSUME C-SPINE INJURY until proven otherwise. Protect cervical spine with manual stabilization or cervical collar. Use jaw thrust (not head-tilt) to open airway if spine suspected.', tip: 'C-spine injury can lead to permanent paralysis if not protected.' },
+    { id: 20, cat: 'primary-survey', q: 'What is the difference between jaw thrust and head-tilt chin-lift maneuvers?', a: 'Jaw thrust: useful in trauma, does not move spine. Head-tilt chin-lift: simple, but moves cervical spine - avoid in trauma.', tip: 'In doubt, use jaw thrust - safest for spine protection.' },
+    { id: 21, cat: 'primary-survey', q: 'What signs indicate airway is compromised and needs immediate action?', a: 'Stridor (high-pitched breathing), accessory muscle use, cyanosis, altered consciousness, inability to swallow, tongue obstruction, soft tissue swelling.', tip: 'Do not delay intubation if airway threatened.' },
+    { id: 22, cat: 'primary-survey', q: 'What is "B = Breathing" assessment in primary survey?', a: 'Count respiratory rate, assess depth/pattern, auscultate bilaterally for breath sounds (anterior + posterior), feel for air movement. Look for tension pneumothorax signs.', tip: 'Asymmetrical breath sounds = unilateral problem (pneumothorax, hemothorax, aspiration).' },
+    { id: 23, cat: 'primary-survey', q: 'What are signs of TENSION PNEUMOTHORAX and what is immediate treatment?', a: 'Signs: tracheal deviation AWAY from injury, JVD, hypotension, unilateral absent breath sounds, respiratory distress. Treatment: needle decompression FIRST (2nd intercostal midclavicular), then chest tube.', tip: 'Tension pneumo is a KILL condition - decompress before imaging.' },
+    { id: 24, cat: 'primary-survey', q: 'What is "C = Circulation" assessment and what is priority 1 in hemorrhage?', a: 'Check pulse, skin perfusion, bleeding. Priority 1 = CONTROL EXTERNAL HEMORRHAGE with direct pressure. Establish 2 large-bore IVs (14-16 gauge). Initiate fluid resuscitation.', tip: 'Direct pressure is the MOST effective hemorrhage control.' },
+    { id: 25, cat: 'primary-survey', q: 'What is the proper procedure for tourniquet placement and documentation?', a: 'Apply 2-3 inches ABOVE wound, over muscle mass, tight enough to stop bleeding. Document TIME applied (write "T" on forehead with marker). Do NOT remove in field - removed only in OR.', tip: 'Tourniquet time is critical for limb salvage.' },
+    { id: 26, cat: 'primary-survey', q: 'What are the Four Classes of Hemorrhage and their estimated blood loss?', a: 'Class I: 0-750mL (15%), vital signs normal. Class II: 750-1500mL (15-30%), mild tachycardia. Class III: 1500-2000mL (30-40%), tachycardia + hypotension. Class IV: >2000mL (>40%), severe shock, possible coma.', tip: 'Classes guide fluid resuscitation volume.' },
+    { id: 27, cat: 'primary-survey', q: 'What are signs of Class III hemorrhage and initial treatment?', a: 'SBP <100, HR >120, respiratory distress, anxiety, altered mental status, cool clammy skin. Treatment: massive transfusion protocol (1:1:1 RBC:FFP:Platelets), activate level 1 trauma alert.', tip: 'Class III = severe shock state.' },
+    { id: 28, cat: 'primary-survey', q: 'What is "D = Disability" in primary survey and what is the quick neuro assessment?', a: 'Rapid neurological evaluation. Use AVPU + GCS. Assess pupil size/reactivity, gross motor/sensory, check for lateralizing signs.', tip: 'Declining mental status = emergency (hemorrhage, hypoxia, head injury).' },
+    { id: 29, cat: 'primary-survey', q: 'What does GCS <8 indicate and what is management implication?', a: 'Severe head injury with inability to protect airway. Indication for INTUBATION to prevent aspiration.', tip: 'Intubation is needed for airway protection, not to treat the injury itself.' },
+    { id: 30, cat: 'primary-survey', q: 'What is "E = Exposure" and why is it critical?', a: 'Remove ALL clothing to visualize entire body for hidden injuries. BUT prevent hypothermia: remove wet clothing, cover patient with blankets, warm IV fluids.', tip: 'Hypothermia worsens shock outcomes.' },
+    { id: 31, cat: 'primary-survey', q: 'What is the log-roll technique and when is it used?', a: 'Method to assess posterior body without moving spine. Team: one person stabilizes head/neck, others roll patient toward rescuer while evaluating back/buttocks/posterior extremities. Used when spine injury suspected.', tip: 'Protects C-spine while allowing posterior assessment.' },
+    { id: 32, cat: 'primary-survey', q: 'When does secondary survey occur and what does it involve?', a: 'AFTER primary survey is complete and patient is stable. Head-to-toe inspection: palpate skull, face, neck, chest, abdomen, pelvis, extremities. Perform focused neuro exam.', tip: 'Secondary survey is more thorough but done after stabilization.' },
+    { id: 33, cat: 'primary-survey', q: 'What is the FAST exam and what does it detect?', a: 'Focused Assessment with Sonography for Trauma. Evaluates: pericardial sac (tamponade), right upper quadrant (liver injury), left upper quadrant (splenic injury), pelvis (free fluid = blood).', tip: 'FAST can be done at bedside in minutes.' },
+    { id: 34, cat: 'primary-survey', q: 'What is the significance of positive FAST exam and what is next step?', a: 'Positive FAST (free fluid in peritoneum) suggests intra-abdominal hemorrhage in trauma. Next step: prepare for OR (OR is ONLY definitive treatment for hemorrhage control).', tip: 'Do not delay for CT if FAST positive and unstable.' },
+    { id: 35, cat: 'primary-survey', q: 'What vital sign findings indicate SHOCK in trauma and what is immediate intervention?', a: 'Shock indicators: SBP <90, HR >120, urine output <0.5 mL/kg/hr, cool clammy skin, altered mental status. Intervention: 2 large-bore IVs, rapid fluid resuscitation, control hemorrhage, prepare for OR.', tip: 'Traumatic shock is hemorrhagic until proven otherwise.' },
+
+    // ===== AIRWAY MANAGEMENT (36-50) =====
+    { id: 36, cat: 'airway', q: 'What are indications for endotracheal intubation in emergency care?', a: 'Unable to maintain airway, GCS <8, risk of aspiration, severe respiratory distress, apnea, stridor, severe facial trauma.', tip: 'Intubation is a definitive airway.' },
+    { id: 37, cat: 'airway', q: 'How do you measure an oropharyngeal airway (OPA) and when is it contraindicated?', a: 'Measure from corner of mouth to earlobe. Use ONLY in unconscious patients with intact gag reflex. Contraindications: awake patients (gag reflex = vomiting), intact airway reflexes.', tip: 'Wrong-sized OPA can obstruct airway.' },
+    { id: 38, cat: 'airway', q: 'What is a nasopharyngeal airway (NPA) and when is it preferred over OPA?', a: 'Flexible tube inserted through nose into nasopharynx. Can be used in conscious patients (no gag reflex stimulation). CONTRAINDICATED in basilar skull fracture (risk of intracranial placement).', tip: 'Never force NPA - can cause epistaxis.' },
+    { id: 39, cat: 'airway', q: 'How do you recognize basilar skull fracture and why is NPA contraindicated?', a: 'Signs: Battle sign (bruising behind ear), raccoon eyes (periorbital ecchymosis), CSF from ear/nose (halo sign on dressing), hemotympanum. NPA contraindicated = risk of entering cranial vault.', tip: 'Always assess for skull fracture before nasal tube placement.' },
+    { id: 40, cat: 'airway', q: 'What is cricothyroidotomy and when is it the ONLY option?', a: 'Surgical airway: needle or surgical incision through cricothyroid membrane. Used when intubation impossible/contraindicated AND patient needs airway NOW (last resort).', tip: 'Cricothyroidotomy bypasses upper airway obstruction.' },
+    { id: 41, cat: 'airway', q: 'What is the proper hand position for chest compressions and why does it matter?', a: 'Hand position: lower half of sternum (between nipples). Depth: 2-2.4 inches (5-6cm). Matters because: cardiac output depends on adequate compression depth, improper position risks rib fractures/liver injury.', tip: 'Quality compressions = ultimate airway protection.' },
+    { id: 42, cat: 'airway', q: 'What does "rocuronium" do and when is it used in intubation?', a: 'Paralytic agent: paralyzes muscles for easier intubation. Used in RSI (rapid sequence intubation) to prevent patient movement, resistance, aspiration.', tip: 'Patient must be sedated AND paralyzed - paralytics alone cause awareness.' },
+    { id: 43, cat: 'airway', q: 'What is "difficult airway" and how does the LEMON mnemonic help?', a: 'Difficult airway = anticipated or unexpected intubation challenge. LEMON: Look (face appearance), Evaluate (3-3-2 rule), Mallampati (visualization), Obstruction (foreign body/mass), Neck (range of motion).', tip: 'Identify difficult airway before emergent intubation attempt.' },
+    { id: 44, cat: 'airway', q: 'What is the "3-3-2 rule" in airway assessment?', a: '3 = 3 fingers fit between patient incisors. 3 = 3 fingers from angle of jaw to chin point. 2 = 2 fingers fit from neck to larynx. If all three TRUE, reasonable chance of intubation.', tip: 'Used to assess for difficult airway.' },
+    { id: 45, cat: 'airway', q: 'What is post-intubation verification and why is it critical?', a: 'Confirm tube position: visualization of tube passing through cords, bilateral breath sounds, condensation in tube, capnography (ETCO2 >40 mmHg), chest rise symmetrical.', tip: 'Unrecognized tube malposition = hypoxia and death.' },
+    { id: 46, cat: 'airway', q: 'What is "aspiration risk" in emergency patients and how do you prevent it?', a: 'Risk = full stomach, emergency situation, supine position. Prevention: RSI with cricoid pressure (Sellick maneuver), intubation with cuffed tube, elevated head-of-bed post-intubation.', tip: 'Aspiration = pulmonary edema and severe pneumonia.' },
+    { id: 47, cat: 'airway', q: 'What is "capnography" and what does ETCO2 tell you?', a: 'Continuous waveform monitor of exhaled CO2. Normal ETCO2 35-45 mmHg. <25 = inadequate ventilation. Absence = unintubated/tube in esophagus.', tip: 'Capnography is GOLD STANDARD for confirming tube position.' },
+    { id: 48, cat: 'airway', q: 'What are complications of prolonged intubation?', a: 'Sinusitis, otitis, ventilator-associated pneumonia (VAP), tracheal stenosis, subglottic stenosis, laryngeal edema.', tip: 'Plan early for extubation or tracheostomy to limit complications.' },
+    { id: 49, cat: 'airway', q: 'What is "upper airway obstruction" vs "lower airway obstruction"?', a: 'Upper (larynx/above): stridor, can hear from distance, voice changes. Lower (trachea/bronchi): wheezing, breathlessness with exertion, silent chest if severe.', tip: 'Stridor = upper; wheezing = lower.' },
+    { id: 50, cat: 'airway', q: 'What is "silent chest" and what does it indicate?', a: 'No breath sounds despite respiratory effort = severe airway obstruction or severe pneumothorax. This is EMERGENCY and needs immediate intervention (may need cricothyrotomy).', tip: 'Silent chest + respiratory distress = treat immediately.' },
+
+    // ===== HEMORRHAGE & SHOCK (51-68) =====
+    { id: 51, cat: 'hemorrhage', q: 'What is the sequence of hemorrhage control interventions?', a: '1) Direct pressure (first-line), 2) Elevation, 3) Pressure dressing, 4) Tourniquet (if uncontrolled), 5) Hemostatic agents (gauze), 6) Last resort surgical intervention.', tip: 'Do not remove first dressing; apply new layer over it.' },
+    { id: 52, cat: 'hemorrhage', q: 'What are hemostatic agents and when are they used?', a: 'Agents: QuikClot, Celox (activate with water/blood). Used when direct pressure fails, for heavily bleeding deep wounds. Apply directly to wound, apply pressure.', tip: 'Hemostatic agents speed clotting cascade.' },
+    { id: 53, cat: 'hemorrhage', q: 'What is "massive transfusion protocol" and when is it activated?', a: 'Activation criteria: uncrossmatched blood transfusion OR massive ongoing hemorrhage. Protocol: 1:1:1 RBC:FFP:platelets (not normal ratios which are too low).', tip: 'Goal = restore coagulation cascade, not just RBCs.' },
+    { id: 54, cat: 'hemorrhage', q: 'Why are COLD IV fluids dangerous in trauma and what is recommendation?', a: 'Cold fluids cause hypothermia, worsen shock, increase mortality. Recommendation: WARM fluids (room temperature or better) before infusion.', tip: 'Use fluid warmers whenever possible.' },
+    { id: 55, cat: 'hemorrhage', q: 'What is the difference between crystalloid (LR vs NS) for hemorrhage control?', a: 'LR preferred: contains potassium, lactate (buffered for acidosis). NS: contains chloride (causes hyperchloremic acidosis with large volumes). Both used, but LR is better.', tip: 'In severe hemorrhage, type matters less than VOLUME and blood products.' },
+    { id: 56, cat: 'hemorrhage', q: 'What is "autotransfusion" and when is it indicated?', a: 'Patient\'s own shed blood collected and reinfused. Indicated in: hemothorax, hemoperitoneum, massive trauma. Benefits: avoids blood bank delay, no typing needed, no transfusion reaction.', tip: 'Must be done within 4 hours and filtered through cell saver.' },
+    { id: 57, cat: 'hemorrhage', q: 'What are the stages/compensatory mechanisms in hypovolemic shock?', a: '1) Compensatory: SNS activation increases HR/contractility/vasoconstriction, maintains BP. 2) Progressive: mechanisms failing, BP drops. 3) Irreversible: organ failure/death.', tip: 'Treat aggressively in compensatory stage for best outcomes.' },
+    { id: 58, cat: 'hemorrhage', q: 'What are clinical signs of compensatory shock?', a: 'Tachycardia (HR >100), vasoconstriction (cool clammy skin), normal or slightly low BP, anxiety, decreased urine output, increased respiratory rate.', tip: 'Patient looks "sick" but BP still normal.' },
+    { id: 59, cat: 'hemorrhage', q: 'What are clinical signs of progressive shock?', a: 'SBP 90-110, HR >120, altered mental status, oliguria (<0.5mL/kg/hr), mottled skin, weak thready pulse, respiratory distress.', tip: 'Organs starting to fail - aggressive treatment needed.' },
+    { id: 60, cat: 'hemorrhage', q: 'What are clinical signs of irreversible shock?', a: 'SBP <80, HR >140 (or bradycardic/absent), unresponsive, anuria, no peripheral pulses, fixed dilated pupils, decorticate posturing, imminent death.', tip: 'Even with aggressive treatment, survival unlikely.' },
+    { id: 61, cat: 'hemorrhage', q: 'What is "permissive hypotension" and when is it used?', a: 'Strategy in hemorrhage: maintain SBP 80-90 (not normal 120+) to avoid increasing bleeding while hemorrhage site is being surgically controlled. Goal: preserve brain/heart perfusion while preventing blood loss.', tip: 'Only used in controlled setting (operating room) with surgeon present.' },
+    { id: 62, cat: 'hemorrhage', q: 'What is the target blood pressure in hemorrhagic shock BEFORE reaching OR?', a: 'Keep SBP >90 mmHg (or MAP >65). This is minimum for organ perfusion. Avoid aggressive fluids pre-operatively that may increase bleeding.', tip: 'Goal: balance hemorrhage control with adequate perfusion.' },
+    { id: 63, cat: 'hemorrhage', q: 'What is "resuscitative endovascular balloon occlusion of the aorta" (REBOA)?', a: 'Emergency procedure: balloon placed in descending aorta to stop hemorrhage from lower body. Bridge to surgery for non-compressible truncal hemorrhage (pelvic/lower abdominal).', tip: 'Newer technique for hemorrhage control.' },
+    { id: 64, cat: 'hemorrhage', q: 'What is compartment syndrome and what are the "5 P\'s" of ischemia?', a: '5 P\'s: Pain (pain out of proportion to injury), Paresthesias, Pallor, Pulselessness (late), Paralysis (late/irreversible). Treatment: fasciotomy STAT to prevent tissue death.', tip: 'Compartment syndrome is a SURGICAL EMERGENCY - do NOT wait for all 5 signs.' },
+    { id: 65, cat: 'hemorrhage', q: 'What is crush injury and what serious complication must be prevented?', a: 'Crush injury: prolonged compression causing muscle breakdown. Complication = RHABDOMYOLYSIS (muscle protein in urine). Signs: dark (tea/cola) urine, elevated CK >6000, myoglobin >1000, hyperkalemia.', tip: 'Aggressive fluids to prevent acute kidney injury.' },
+    { id: 66, cat: 'hemorrhage', q: 'What is the treatment goal for rhabdomyolysis?', a: 'Prevent acute kidney injury: aggressive IV hydration (target urine output 200-300 mL/hr until myoglobin clears), alkalinize urine with sodium bicarb (target urine pH >6.5).', tip: 'Dialysis if AKI develops despite aggressive fluids.' },
+    { id: 67, cat: 'hemorrhage', q: 'How do you assess for internal hemorrhage in blunt abdominal trauma?', a: 'Assessment: FAST exam (pericardial, RUQ, LUQ, pelvis), trending vital signs + labs (H/H, lactate), abdominal exam (distension, bruising), CT scan (if stable).', tip: 'FAST done at bedside in <2 minutes.' },
+    { id: 68, cat: 'hemorrhage', q: 'What does "coagulopathy of trauma" mean and what causes it?', a: 'Massive hemorrhage + resuscitation triggers: dilution (dilutional coagulopathy), shock (endothelial dysfunction), hypothermia (impaired clotting), acidosis. Treatment: balanced transfusion ratio.', tip: 'Prevent by avoiding over-resuscitation and hypothermia.' },
+
+    // ===== TRAUMA & WOUNDS (69-87) =====
+    { id: 69, cat: 'trauma', q: 'What is the difference between penetrating and blunt abdominal trauma in terms of management?', a: 'Penetrating: most injuries need surgery (all gunshot wounds crossing peritoneum). Blunt: some injuries resolve with observation. Both: FAST exam helps identify free fluid.', tip: 'Gunshot wounds = operative exploration almost always.' },
+    { id: 70, cat: 'trauma', q: 'What is the most commonly injured solid organ in blunt abdominal trauma?', a: 'LIVER (most commonly injured, ~40% of solid organ injuries). Also: kidneys, spleen. Solid organ injuries may self-limit with observation if patient stable.', tip: 'Monitor serial exams and labs for deterioration.' },
+    { id: 71, cat: 'trauma', q: 'What is "referred pain pattern" and what does left shoulder pain indicate in abdominal trauma?', a: 'Referred pain: pain felt distant from source. Left shoulder pain = SPLENIC INJURY (phrenic nerve irritation). Right shoulder pain = LIVER INJURY. Peritoneal irritation.', tip: 'Always assess for shoulder pain in abdominal trauma.' },
+    { id: 72, cat: 'trauma', q: 'What is diagnostic peritoneal lavage (DPL) and what findings indicate peritoneal penetration?', a: 'DPL: catheter placed in peritoneum, fluids instilled/drained, fluid analyzed. Positive findings: RBC >100,000, WBC >500, bacteria, bile. Indicates need for surgery.', tip: 'FAST has largely replaced DPL (non-invasive).' },
+    { id: 73, cat: 'trauma', q: 'What is "evisceration" and how should it be managed?', a: 'Abdominal organs protrude through wound. Management: DO NOT push organs back into abdomen. Cover with sterile moist saline dressing (prevents drying). Urgent surgery.', tip: 'Gentle handling - organs are fragile.' },
+    { id: 74, cat: 'trauma', q: 'What are signs of urinary tract injury and when should foley catheter be avoided?', a: 'Signs: blood at meatus, inability to void, hematuria, pelvic fracture. Avoid foley if: blood at meatus, perineal trauma - get urethrography first (retrograde urethrogram).', tip: 'Blind catheter placement can cause further damage.' },
+    { id: 75, cat: 'trauma', q: 'What is the primary assessment step BEFORE placing a urinary catheter in trauma?', a: 'RECTAL EXAM: assess for prostate position (high = urethral injury). If prostate high/boggy, suspect urethral injury. Then order retrograde urethrogram BEFORE catheterization.', tip: 'Do not skip this - can prevent iatrogenic injury.' },
+    { id: 76, cat: 'trauma', q: 'What fracture patterns require emergency intervention?', a: 'Open/compound fractures (bone protruding through skin), displaced fractures with neurovascular compromise, pelvic fractures (hemorrhage), femur fractures (fat embolism/shock risk).', tip: 'Splint all fractures before moving patient.' },
+    { id: 77, cat: 'trauma', q: 'What is the critical rule for neurovascular assessment in extremity trauma?', a: 'Assess BEFORE and AFTER splinting/reduction. Check: 6 P\'s - Pulses, Pain, Paresthesias, Pallor, Pulselessness, Paralysis. Document findings to establish baseline.', tip: 'Changes after intervention = limb-threatening emergency.' },
+    { id: 78, cat: 'trauma', q: 'What is "fat embolism syndrome" and when does it occur after trauma?', a: 'Syndrome: occurs 24-72 hours after major fractures (especially femur). Symptoms: respiratory distress, confusion, petechiae, fever. Mechanism: fat globules enter bloodstream.', tip: 'Risk increased by immobilization delay - splint early.' },
+    { id: 79, cat: 'trauma', q: 'What is proper wound management for open fractures?', a: 'Priority: prevent infection. Remove obvious debris, cover with sterile dressing (do NOT reinsert bone into wound). IV antibiotics ASAP. Surgical exploration needed.', tip: 'Tetanus prophylaxis also needed.' },
+    { id: 80, cat: 'trauma', q: 'What is pelvic fracture hemorrhage risk and why?', a: 'Pelvic fractures can tear iliac vessels causing massive retroperitoneal hemorrhage. Massive transfusion protocol may be needed. Pelvic binder/external fixation helps stabilize and limit bleeding.', tip: 'Do not delay pelvic imaging/intervention.' },
+    { id: 81, cat: 'trauma', q: 'What is the "Golden Hour" and what does it mean for trauma outcome?', a: 'Concept: trauma patients have best outcomes if definitive treatment (surgery) performed within 60 minutes of injury. Every minute counts.', tip: 'Speed of transport + transfer is critical.' },
+    { id: 82, cat: 'trauma', q: 'What is "blast injury" and what are the four mechanisms?', a: '1) Primary: pressure waves. 2) Secondary: flying debris/projectiles. 3) Tertiary: patient thrown. 4) Quaternary: burns/inhalation. All four can occur in one blast.', tip: 'Assess for all four mechanisms in blast victims.' },
+    { id: 83, cat: 'trauma', q: 'What is "barotrauma" and what injuries result from blast pressure?', a: 'Barotrauma: injury from pressure wave. Affects: lungs (pneumothorax, hemothorax), ear (TM rupture), GI (perforation). Severe pneumothorax can be life-threatening.', tip: 'High-frequency ventilation may be needed.' },
+    { id: 84, cat: 'trauma', q: 'What are critical nursing considerations for mass casualty (multi-victim) trauma?', a: 'Implement incident command system, triage all patients rapidly, stabilize ABCs, assign nurses by triage level. Emotional support for survivors/staff. Detailed documentation.', tip: 'Team approach and clear communication are essential.' },
+    { id: 85, cat: 'trauma', q: 'What is "tactical combat casualty care" (TCCC) and how does it differ from standard trauma?', a: 'TCCC: care provided in active conflict/dangerous environment. Focuses on: threat elimination, tourniquets, hemostatic gauze, minimal fluid resuscitation. Used by military/tactical teams.', tip: 'Different environment = different priorities.' },
+    { id: 86, cat: 'trauma', q: 'What is proper documentation for trauma in terms of LEGAL implications?', a: 'Document: exact time of injury/arrival, all assessment findings, all interventions performed, time of intubation/procedures, triage level, name/ID of all providers involved.', tip: 'Documentation may become legal evidence.' },
+    { id: 87, cat: 'trauma', q: 'What are signs of intra-abdominal injury in blunt trauma even WITHOUT external signs?', a: 'Signs: abdominal distension, bruising, tenderness, decreased bowel sounds, referred shoulder pain, decreasing hemoglobin, ongoing tachycardia/hypotension despite fluids.', tip: 'Serial exams are critical - injury may evolve.' },
+
+    // ===== ENVIRONMENTAL EMERGENCIES (88-107) =====
+    { id: 88, cat: 'environmental', q: 'What defines heat stroke and what is the critical temperature threshold?', a: 'Heat stroke: core temp ≥40.6°C (105°F) WITH CNS dysfunction (altered mental status, confusion, seizures, loss of consciousness) AND hot DRY skin (NOT sweating despite high temp).', tip: 'Heat exhaustion has NO CNS dysfunction - this is the critical difference.' },
+    { id: 89, cat: 'environmental', q: 'What is the ONLY definitive treatment for heat stroke?', a: 'RAPID external cooling. Goal: cool to 39°C (102°F) within 1 hour. Then STOP cooling at 38°C (100°F) to prevent overshoot hypothermia.', tip: 'Optimal: immersion in cold water bath. Ice packs to groin/axillae if bath unavailable.' },
+    { id: 90, cat: 'environmental', q: 'What is heat exhaustion and how does it differ from heat stroke?', a: 'Heat exhaustion: temp <40°C, profuse sweating, weakness, dizziness, nausea, NO altered mental status. Heat stroke: temp ≥40.6°C, hot dry skin, altered mental status (CNS dysfunction).', tip: 'Heat exhaustion is precursor to heat stroke.' },
+    { id: 91, cat: 'environmental', q: 'What are risk factors for heat illness in older adults?', a: 'Impaired thermoregulation, medications (anticholinergics, diuretics), dehydration risk, inability to access cooling, pre-existing cardiac/respiratory disease.', tip: 'Elder patients are high-risk during heat waves.' },
+    { id: 92, cat: 'environmental', q: 'What is "frostbite" classification and what do 3rd/4th degree frostbite indicate?', a: '1st degree: erythema, edema. 2nd degree: blistering. 3rd degree: tissue necrosis (full-thickness). 4th degree: involves bone/tendons. 3rd/4th = permanent loss/amputation likely.', tip: 'Early appearance does NOT predict final extent.' },
+    { id: 93, cat: 'environmental', q: 'What is the proper management of frostbite rewarming?', a: 'Rapid rewarming 37-40°C water bath for 30-40 minutes. DO NOT massage (damages tissue). Give analgesics BEFORE rewarming (very painful). DO NOT rub with snow.', tip: 'Once rewarmed, frostbitten tissue cannot refreeze.' },
+    { id: 94, cat: 'environmental', q: 'What is the difference between hemorrhagic and nonhemorrhagic blisters in frostbite and how are they managed?', a: 'Hemorrhagic blisters (dark fluid) = worse prognosis, leave intact (infected blisters). Nonhemorrhagic blisters (clear fluid) = better prognosis, debride and care locally.', tip: 'Hemorrhagic = full-thickness, nonhemorrhagic = partial.' },
+    { id: 95, cat: 'environmental', q: 'What patient education should be given after frostbite injury?', a: 'Avoid tobacco (vasoconstriction), avoid alcohol (impairs judgment), avoid caffeine (diuretic effect), elevate extremity, gentle exercise to prevent stiffness.', tip: 'Recovery takes months to years.' },
+    { id: 96, cat: 'environmental', q: 'What is hypothermia and how is it classified by temperature?', a: 'Hypothermia: core temp ≤35°C (95°F). Mild: 32.2-35°C. Moderate: 28-32.2°C. Severe: <28°C. In severe hypothermia, patient may appear DEAD.', tip: '"No one is dead until warm and dead" - do not pronounce until rewarmed.' },
+    { id: 97, cat: 'environmental', q: 'What happens to shivering as core temperature drops in hypothermia?', a: 'Shivering STOPS below 32.2°C (90°F). Paradoxically, severely hypothermic patients may remove clothing ("paradoxical undressing") and appear unaware of danger.', tip: 'Absence of shivering = severe hypothermia.' },
+    { id: 98, cat: 'environmental', q: 'What is "afterdrop" and why is it clinically important in hypothermia management?', a: 'Afterdrop: further temperature drop despite rewarming efforts. Caused by peripheral vasodilation bringing cold blood back to core. Prevent by: slow rewarming, limit movement, minimize heat loss.', tip: 'Avoid aggressive active external rewarming in moderate-severe hypothermia.' },
+    { id: 99, cat: 'environmental', q: 'What is the rewarming approach for MILD hypothermia vs MODERATE-SEVERE?', a: 'Mild (32.2-35°C): active external rewarming (blankets, warm environment). Moderate-severe (<32.2°C): passive internal rewarming (ECMO/extracorporeal rewarming preferred), slow core rewarming.', tip: 'ECMO is gold standard for severe hypothermia.' },
+    { id: 100, cat: 'environmental', q: 'Why is defibrillation ineffective in severe hypothermia <31°C?', a: 'Cold myocardium is resistant to defibrillation and medications. Approach: defer defibrillation until core temp >30°C (unless already in V-fib).', tip: 'Rewarm first, THEN reassess rhythm.' },
+    { id: 101, cat: 'environmental', q: 'What is the drug interval for ACLS medications in hypothermia?', a: 'Increase interval to every 3-5 minutes (instead of 3 minutes) if core temp <30°C. Medications given less frequently because cold slows metabolism dramatically.', tip: 'Cold = slow everything down.' },
+    { id: 102, cat: 'environmental', q: 'What is near-drowning and what is the primary concern post-rescue?', a: 'Near-drowning: submersion with survival ≥24 hours. Primary concern: ASPIRATION and secondary drowning (pulmonary edema from inhaled water/aspirant). Can develop hours after rescue.', tip: 'Monitor respiratory status closely for 24 hours.' },
+    { id: 103, cat: 'environmental', q: 'What is the impact of cold water immersion on diving reflex and prognosis?', a: 'Cold water triggers diving reflex: decreased HR, vasoconstriction, decreased metabolism (brain protected). Victims may survive longer submersions in cold water.', tip: '"Never give up" on cold water submersions - extended CPR may succeed.' },
+    { id: 104, cat: 'environmental', q: 'What fresh water vs salt water aspiration complications differ and why?', a: 'Fresh: hypotonic, causes water to enter blood (hypervolemia, pulmonary edema). Salt: hypertonic, draws fluid INTO lungs (hypovolemia). Both cause surfactant washout + ARDS risk.', tip: 'Mechanisms differ but both have pulmonary complications.' },
+    { id: 105, cat: 'environmental', q: 'What is "immersion pulmonary edema" and when does it occur?', a: 'Occurs immediately upon water immersion/cold water shock. Cause: involuntary gasping reflex, water aspiration into lungs. Victims may drown within seconds.', tip: 'Prevention: gradual water adaptation, avoid sudden immersion.' },
+    { id: 106, cat: 'environmental', q: 'What are complications of near-drowning that develop hours/days after incident?', a: 'Secondary drowning: delayed pulmonary edema. Mechanisms: surfactant washout, ARDS, electrolyte abnormalities (hyperkalemia if saltwater).', tip: 'Keep hospitalized for observation even if initially stable.' },
+    { id: 107, cat: 'environmental', q: 'What is "cold-induced diuresis" in hypothermia and what electrolyte problem results?', a: 'Cold-induced diuresis: kidney loss of fluid despite dehydration. Results in: hypovolemia, hyperkalemia (from muscle breakdown), electrolyte abnormalities.', tip: 'Fluid replacement needed despite paradoxical diuresis.' },
+
+    // ===== POISONING & SUBSTANCE ABUSE (108-130) =====
+    { id: 108, cat: 'toxicology', q: 'What is the standard initial assessment for ingested poison and what is first intervention?', a: 'History: what substance, when ingested, how much. Vital signs + neuro exam. First intervention: activated charcoal if within 1 hour (NOT with corrosives/hydrocarbons).', tip: 'Decontamination first, then supportive care.' },
+    { id: 109, cat: 'toxicology', q: 'What are contraindications to activated charcoal?', a: 'Corrosives (acids/alkalis - risk of GI perforation), petroleum products (lipid soluble, risk of aspiration pneumonia), iron supplements (charcoal doesn\'t absorb).', tip: 'Do NOT use charcoal with corrosives.' },
+    { id: 110, cat: 'toxicology', q: 'Is ipecac recommended for poisoning and why?', a: 'NO - ipecac NOT recommended. Can cause: cardiovascular effects, seizures, aspiration risk. Charcoal and supportive care are preferred.', tip: 'Ipecac is outdated practice.' },
+    { id: 111, cat: 'toxicology', q: 'What is carbon monoxide poisoning and what is WRONG with pulse oximetry?', a: 'CO binds hemoglobin 200x more readily than O2. Pulse oximetry CANNOT distinguish carboxyhemoglobin from oxyhemoglobin (reads normal despite severe hypoxia!).', tip: 'Use CO-oximetry to measure carboxyhemoglobin directly.' },
+    { id: 112, cat: 'toxicology', q: 'What is the treatment for carbon monoxide poisoning?', a: '100% O2 (reduces half-life of CO from 4 hours to 40 minutes). Hyperbaric oxygen if severe or neurological symptoms (reduces half-life to 20 minutes).', tip: 'Continue treatment until carboxyhemoglobin <5%.' },
+    { id: 113, cat: 'toxicology', q: 'What are signs of carbon monoxide poisoning and why is "cherry red skin" unreliable?', a: 'Signs: headache, dizziness, nausea, confusion, syncope, seizures, death. Cherry red skin is UNRELIABLE (seen in <10% of cases) - do NOT wait for this sign.', tip: 'High index of suspicion needed - ask about other victims/pets affected.' },
+    { id: 114, cat: 'toxicology', q: 'What is the management of CORROSIVE poisoning (acids/alkalis)?', a: 'NEVER induce vomiting. Dilute with water/milk (neutralizes). Endoscopy to assess internal burns. NPO, prepare for potential surgery.', tip: 'Worse damage occurs on way up (vomiting) than going down (ingestion).' },
+    { id: 115, cat: 'toxicology', q: 'What is "acetaminophen toxicity" in terms of dosage and stages?', a: 'Toxic dose: >140 mg/kg. Stages: Stage 1 (0-24h): nausea/vomiting. Stage 2 (24-48h): apparent recovery. Stage 3 (48-96h): liver failure, coagulopathy, encephalopathy, death.', tip: 'NCLEX loves acetaminophen toxicity - #1 overdosed drug.' },
+    { id: 116, cat: 'toxicology', q: 'What is N-acetylcysteine (NAC) and what is the critical timing?', a: 'Antidote for acetaminophen: replenishes glutathione stores (detoxifies metabolite). Most effective if given within 8-10 hours (ideally within 24 hours). Multi-dose IV or oral protocol.', tip: 'NAC is lifesaving when given early.' },
+    { id: 117, cat: 'toxicology', q: 'What is the CRITICAL interaction between NAC and activated charcoal?', a: 'Activated charcoal absorbs NAC! If charcoal given, WAIT at least 1-2 hours before giving NAC (or give NAC, then charcoal later).', tip: 'Timeline matters - coordinate interventions.' },
+    { id: 118, cat: 'toxicology', q: 'What is opioid overdose presentation and what is the antidote?', a: 'Presentation: pinpoint pupils, respiratory depression, coma, bradycardia. Antidote: naloxone (Narcan). IMPORTANT: naloxone has shorter half-life than most opioids - may need repeated doses.', tip: 'Never assume one Narcan dose is enough.' },
+    { id: 119, cat: 'toxicology', q: 'What is the risk of naloxone in opioid overdose and how is it managed?', a: 'Risk: opioid withdrawal syndrome (acute withdrawal symptoms: agitation, sweating, body aches). Manage: prepare for IV access, medications, monitoring. Withdrawal is uncomfortable but not lethal.', tip: 'Always prioritize respiratory support over avoiding withdrawal.' },
+    { id: 120, cat: 'toxicology', q: 'What is cocaine overdose presentation and how is it treated?', a: 'Presentation: CNS stimulation (tremor, seizures), hypertension, tachycardia, hyperthermia, chest pain, arrhythmias. Treatment: benzodiazepines (seizure/agitation), cooling measures, cardiac monitoring, nitrates for chest pain.', tip: 'Cocaine effects last 15-30 minutes but toxicity can persist.' },
+    { id: 121, cat: 'toxicology', q: 'What is methamphetamine toxicity and what are neuropsychiatric complications?', a: 'Toxicity: hyperthermia, hypertension, arrhythmias, seizures. Neuropsych: acute paranoia, hallucinations, violent behavior, chronic: psychosis, memory loss, dental decay.', tip: 'Meth is highly addictive and causes long-term brain damage.' },
+    { id: 122, cat: 'toxicology', q: 'What is alcohol withdrawal timeline and how severe can it be?', a: 'Timeline: 6-12 hours (tremor, diaphoresis, anxiety). 12-24 hours: hallucinations. 24-96 hours (PEAK RISK): delirium tremens (DTs) = confusion, hallucinations, autonomic storm (fever, HTN, tachycardia).', tip: 'DTs has 5-15% mortality even WITH treatment.' },
+    { id: 123, cat: 'toxicology', q: 'What is the first-line treatment for alcohol withdrawal?', a: 'Benzodiazepines: thiamine first (prevent Wernicke encephalopathy), then benzodiazepines (GABA substitution). CIWA-Ar protocol for symptom-triggered dosing.', tip: 'GABA = what alcohol stimulates, so benzo replacement works.' },
+    { id: 124, cat: 'toxicology', q: 'What is CIWA protocol and why is symptom-triggered dosing preferred?', a: 'CIWA-Ar: Clinical Institute Withdrawal Assessment scale. Symptom-triggered dosing: give benzo only if needed (based on symptoms), avoiding over-sedation and under-treatment.', tip: 'Individualized approach gives better outcomes.' },
+    { id: 125, cat: 'toxicology', q: 'What is "Wernicke encephalopathy" and how is it prevented in alcohol withdrawal?', a: 'Wernicke: thiamine (B1) deficiency → confusion, ataxia, ophthalmoplegia. Prevention: ALWAYS give thiamine BEFORE glucose in alcoholics (glucose without thiamine worsens deficiency).', tip: 'Thiamine-first in alcohol withdrawal.' },
+    { id: 126, cat: 'toxicology', q: 'What are complications of chronic alcohol use beyond withdrawal?', a: 'Liver disease (cirrhosis, hepatitis), pancreatitis, cardiomyopathy, anemia, thrombocytopenia, neuropathy, Wernicke/Korsakoff syndrome.', tip: 'Alcohol damages nearly every organ system.' },
+    { id: 127, cat: 'toxicology', q: 'What are signs of cyanide poisoning and what color is the clue?', a: 'Cyanide blocks cytochrome oxidase (cells can\'t use O2). Signs: respiratory distress, altered mental status, seizures, cardiovascular collapse. KEY: venous blood stays BRIGHT RED (normal venous blood is dark).', tip: 'Bright red venous blood = cyanide poisoning until proven otherwise.' },
+    { id: 128, cat: 'toxicology', q: 'What is the antidote for cyanide poisoning?', a: 'Hydroxocobalamin (preferred - can give empirically). Also: sodium nitrite/sodium thiosulfate combination. Hydroxocobalamin binds cyanide and excretes it in urine.', tip: 'Hydroxocobalamin is safe and effective.' },
+    { id: 129, cat: 'toxicology', q: 'What is organophosphate/nerve agent poisoning (SLUDGE syndrome)?', a: 'Organophosphates (pesticides) inhibit acetylcholinesterase. SLUDGE: Salivation, Lacrimation, Urination, Diarrhea, GI distress, Emesis. Treatment: atropine, pralidoxime.', tip: 'Nerve agents (sarin, VX) cause same symptoms.' },
+    { id: 130, cat: 'toxicology', q: 'What is the treatment sequence for nerve agent poisoning?', a: '1) Atropine (blocks acetylcholine) - give every 5-10 min until dry mouth/dilated pupils. 2) Pralidoxime (reactivates cholinesterase) - only effective early. 3) Benzodiazepines for seizures.', tip: 'Time is critical - early treatment prevents death.' },
+
+    // ===== PSYCHOSOCIAL EMERGENCIES (131-145) =====
+    { id: 131, cat: 'psychosocial', q: 'What are critical steps in sexual assault evidence collection?', a: 'Never leave patient alone. Obtain detailed history. Collect clothing (paper bags). Perform exam with speculum moistened with water ONLY (no lubricant - compromises specimens). Maintain chain of custody with documentation.', tip: 'Forensic evidence is legal evidence.' },
+    { id: 132, cat: 'psychosocial', q: 'What are nursing responsibilities in sexual assault beyond physical exam?', a: 'Provide non-judgmental care, support, privacy. Screen for STIs/pregnancy. Offer emergency contraception (within 72 hours). Assess safety plan. Provide referral to counseling/support services. Report per state law (may be mandatory).', tip: 'Trauma-informed care is essential.' },
+    { id: 133, cat: 'psychosocial', q: 'What is the timeline for DNA collection and testing post-sexual assault?', a: 'DNA collection effective up to 72 hours (preferably within 24 hours). Semen can be detected: vagina up to 5 days, rectum up to 3 days, mouth up to 6-12 hours.', tip: 'Urge patient to have exam even if delayed.' },
+    { id: 134, cat: 'psychosocial', q: 'What is "drug-facilitated sexual assault" and what is the screening approach?', a: 'Assault where drug given to facilitate (rohypnol, GHB, ketamine). Patient may not remember assault. Urine toxicology within 96 hours can detect some drugs. Trauma protocol applies regardless.', tip: 'Believe patient even if unable to recall details.' },
+    { id: 135, cat: 'psychosocial', q: 'What are red flags for human trafficking in ED assessment?', a: 'Red flags: accompanied by controlling "boyfriend," reluctant to speak freely, inconsistent history, poor hygiene, malnourished, fearful, multiple tattoos (branding), lack of ID/money.', tip: 'Ask screening questions in private, away from companion.' },
+    { id: 136, cat: 'psychosocial', q: 'How should trafficking assessment be conducted and what is the key nursing role?', a: 'Assess alone if possible. Ask targeted questions about control, freedom to leave, money, fear. Document findings. Report to social work/case management. Provide resources/safe house info (not via phone they don\'t control).', tip: 'Trafficking victims need safety planning.' },
+    { id: 137, cat: 'psychosocial', q: 'What are risk factors for suicide in acute ED presentation?', a: 'Risk factors: male gender (higher completion rate), older age, previous attempts, substance abuse, psychiatric illness, access to means (gun), recent loss/crisis, chronic illness/pain.', tip: 'Assess intent AND means (do they have way to do it?).' },
+    { id: 138, cat: 'psychosocial', q: 'What is critical nursing responsibility for suicidal patient?', a: 'NEVER leave patient alone (1:1 observation). Remove harmful objects. Conduct suicide risk assessment. Collaborate with psychiatry. Provide emotional support, validation. Safety is PRIORITY.', tip: '1:1 observation is non-negotiable.' },
+    { id: 139, cat: 'psychosocial', q: 'What is the difference between males vs females in suicide attempts and completion?', a: 'Males: attempt less frequently BUT have higher completion rate (choose more lethal means). Females: attempt more frequently but use less lethal means, so lower completion rate.', tip: 'NCLEX often asks about this gender difference.' },
+    { id: 140, cat: 'psychosocial', q: 'What is "command hallucinations" and when are they dangerous?', a: 'Hallucinations where voices "command" patient to harm self/others. Dangerous if: patient believes voices are real, voices are authoritative, patient compliant with commands.', tip: 'Ask specifically: "Are the voices telling you to hurt yourself or others?"' },
+    { id: 141, cat: 'psychosocial', q: 'What is proper management of acutely agitated/violent patient in ED?', a: 'De-escalation first: calm voice, respect personal space, offer choices. If fails: remove from area, security present. Medications if needed: benzodiazepines, antipsychotics. Restraint as last resort if danger.', tip: 'Violence is NEVER acceptable - staff safety matters.' },
+    { id: 142, cat: 'psychosocial', q: 'What is the difference between mechanical and chemical restraint?', a: 'Mechanical: physical restraints (4-point, 5-point). Chemical: sedating medications. Both require: MD order, least restrictive approach first, documented reason, constant monitoring.', tip: 'Always document behavior prompting restraint.' },
+    { id: 143, cat: 'psychosocial', q: 'What patient populations are at higher risk for ED violence?', a: 'Psychiatric illness, intoxication/withdrawal, dementia/delirium, pain, neurological conditions (temporal lobe epilepsy, TBI), personality disorders.', tip: 'Early recognition + intervention prevents escalation.' },
+    { id: 144, cat: 'psychosocial', q: 'What is "compassion fatigue" and how does it affect ED staff?', a: 'Compassion fatigue: secondary trauma from prolonged exposure to suffering. Symptoms: emotional exhaustion, detachment, cynicism, reduced empathy. Prevention: debriefing, support groups, peer support, time off.', tip: 'Self-care is not selfish - it\'s essential for patient care.' },
+    { id: 145, cat: 'psychosocial', q: 'What resources should be offered to victims of violence/trauma post-ED discharge?', a: 'Resources: crisis hotlines (domestic violence, rape, suicide), mental health counseling, support groups, shelters, case management. Provide written info (not verbally if in control of companion).', tip: 'Safety planning is essential before discharge.' },
+
+    // ===== DISASTER PREPAREDNESS (146-160) =====
+    { id: 146, cat: 'disaster', q: 'What is an Emergency Operations Plan (EOP) and what does Joint Commission require?', a: 'EOP: detailed plan for hospital response to disasters. Joint Commission requires: planning, practice (at least 2 times yearly), communication drills, supply checks, staff education.', tip: 'EOP goal = maximize community protection.' },
+    { id: 147, cat: 'disaster', q: 'What are critical components of Hospital Emergency Operations Plan (HEOP)?', a: '1) Activation response protocol, 2) Communication plan (internal/external), 3) Patient care protocols, 4) Security/crowd control, 5) External resources, 6) Personnel management.', tip: 'All components must work together.' },
+    { id: 148, cat: 'disaster', q: 'What is the "staff recall system" in disaster planning?', a: 'Method to notify staff of disaster activation. Methods: call tree, text alert system, hospital hotline, local media. Staff: know phone number, answer calls, confirm receipt.', tip: 'Clear communication prevents delays.' },
+    { id: 149, cat: 'disaster', q: 'What is the NATO disaster triage system and how does it differ from ESI?', a: 'NATO: RED (immediate), YELLOW (delayed), GREEN (minor), BLACK (expectant). Used in disasters when resources limited. Major difference: BLACK (expectant) = no resources allocated.', tip: 'This is "greatest good for greatest number."' },
+    { id: 150, cat: 'disaster', q: 'What are RED triage examples in disaster and what interventions do they receive?', a: 'RED examples: sucking chest wound, tension pneumothorax, severe shock, burns 15-40% TBSA, airway compromise. Interventions: ABCs, control hemorrhage, prepare for transport/surgery.', tip: 'RED gets priority resources.' },
+    { id: 151, cat: 'disaster', q: 'What are YELLOW triage examples in disaster and what is management?', a: 'YELLOW examples: stable abdominal wounds, soft tissue injuries, maxillofacial without airway compromise, moderate fractures. Management: initial stabilization, delayed transport (wait for RED to move first).', tip: 'YELLOW are urgent but can wait.' },
+    { id: 152, cat: 'disaster', q: 'What are GREEN triage examples and what counseling do they receive?', a: 'GREEN examples: minor lacerations, upper extremity fractures, minor burns, sprains, anxiety. Counseling: self-care instructions, when to seek follow-up, location of resources/shelters.', tip: 'GREEN patient may not need immediate medical care.' },
+    { id: 153, cat: 'disaster', q: 'What are BLACK triage examples in disaster and what is the ethical consideration?', a: 'BLACK examples: penetrating head wounds (unresponsive), high spinal cord injury, burns >60% TBSA, massive trauma incompatible with life. Ethical consideration: comfort care/palliative approach, not abandonment.', tip: 'BLACK patients receive emotional/spiritual support, not interventions.' },
+    { id: 154, cat: 'disaster', q: 'What is the critical ethical shift when comparing normal ED care vs disaster triage?', a: 'Normal ED: "best care for each individual." Disaster: "greatest good for greatest number." Same patient labeled BLACK in disaster would receive all resources in normal ED.', tip: 'This is utilitarian ethics vs individual care.' },
+    { id: 155, cat: 'disaster', q: 'What is "hospital incident command system" (HICS) and who are key roles?', a: 'HICS: unified command structure. Key roles: Incident Commander (oversees all), Operations (patient care), Planning (tracking/info), Logistics (supplies), Finance/Admin (costs).', tip: 'Clear hierarchy prevents chaos.' },
+    { id: 156, cat: 'disaster', q: 'What are critical supply considerations in disaster preparedness?', a: 'Supplies: medications (IV fluids, blood products, antibiotics), PPE, airway equipment, bandages/tourniquets, blankets, water. Storage: accessible location, checked quarterly, replenished after drills.', tip: 'Supply management prevents mid-disaster shortages.' },
+    { id: 157, cat: 'disaster', q: 'What is "mutual aid" and how does it function in large-scale disasters?', a: 'Mutual aid: neighboring hospitals/healthcare systems provide support (staff, supplies, patient transfers). Pre-planned agreements expedite response. Regional coordination ensures optimal resource distribution.', tip: 'No single hospital can manage massive disaster alone.' },
+    { id: 158, cat: 'disaster', q: 'What is the role of nurses who work "outside their scope" during disaster?', a: 'During disaster, nurses may perform expanded scope (medications they don\'t normally give, tasks outside credentials) IF: supervision present, emergency circumstances justify it, goal is patient safety.', tip: 'Liability protections exist for emergency personnel.' },
+    { id: 159, cat: 'disaster', q: 'What is psychological first aid and when should it be offered?', a: 'Psychological first aid: emotional support, validation, information provision. Offered immediately after disaster to reduce acute stress reactions, prevent PTSD.', tip: 'All disaster survivors should be offered support.' },
+    { id: 160, cat: 'disaster', q: 'What are long-term psychosocial complications of disaster exposure and how are they addressed?', a: 'Complications: PTSD (15-20%), depression, anxiety, substance abuse. Management: counseling, support groups, medication, occupational therapy. May persist years after event.', tip: 'Mental health care is part of disaster recovery.' },
+
+    // ===== WMD: BIO/CHEM/RADIATION (161-180) =====
+    { id: 161, cat: 'bio-chem-rad', q: 'What are the four levels of PPE and when is each used?', a: 'Level A: highest (SCBA + encapsulating suit), used for unknown chemical/biological. Level B: SCBA + non-vapor-tight, unknown chemical/biological. Level C: APR (air-purifying respirator), known agent. Level D: standard work attire.', tip: 'Most ED uses Level C.' },
+    { id: 162, cat: 'bio-chem-rad', q: 'What is the critical rule for donning PPE in WMD response?', a: 'Don ALL PPE BEFORE patient contact. Chemicals/biologicals are often colorless + odorless. Contaminated patients = contaminated caregivers if unprepared.', tip: 'Prevention first, treatment second.' },
+    { id: 163, cat: 'bio-chem-rad', q: 'What are the three categories of biological weapons and examples?', a: 'Category A (high mortality): anthrax, botulism, smallpox, plague, tularemia. Category B (low mortality): Q fever, ricin. Category C (lower threat): emerging pathogens.', tip: 'Category A agents cause most concern.' },
+    { id: 164, cat: 'bio-chem-rad', q: 'What is anthrax in all three forms and which is MOST deadly?', a: 'Anthrax (gram-positive bacillus, odorless, spore-forming). Skin (cutaneous): black eschar, 80% untreated mortality. Inhalation: flu-like then respiratory failure, 90%+ mortality even treated. GI: nausea/diarrhea, lower mortality.', tip: 'Inhalation anthrax is the WMD threat.' },
+    { id: 165, cat: 'bio-chem-rad', q: 'What is the clinical presentation of inhalation anthrax and what is pathognomonic finding?', a: 'Presentation: days 1-2 flu-like (fever, cough, SOB). Brief apparent recovery (day 2-3). Day 4: sudden severe respiratory distress, shock, death in 24-36 hours. Pathognomonic: hemorrhagic mediastinitis on CXR.', tip: 'CXR finding is diagnostic.' },
+    { id: 166, cat: 'bio-chem-rad', q: 'What is the treatment for anthrax and post-exposure prophylaxis?', a: 'Treatment: antibiotics (penicillin IV or doxycycline) + supportive care. PEP: ciprofloxacin OR doxycycline x 60 days (exposed persons). Standard precautions only (not airborne).', tip: 'Early treatment improves survival.' },
+    { id: 167, cat: 'bio-chem-rad', q: 'What is the proper handling of anthrax-exposed bodies?', a: 'Bodies: cremation preferred (spores killed by heat). If burial: watertight casket in sealed vault (prevent environmental contamination).', tip: 'Spores extremely hardy.' },
+    { id: 168, cat: 'bio-chem-rad', q: 'What is nerve agent poisoning (sarin, VX) and what is the "SLUDGE" mnemonic?', a: 'Nerve agents: organophosphates that inhibit acetylcholinesterase. SLUDGE: Salivation, Lacrimation, Urination, Diarrhea, GI distress, Emesis.', tip: 'All from acetylcholine excess.' },
+    { id: 169, cat: 'bio-chem-rad', q: 'What is the treatment for nerve agent exposure?', a: 'Decontamination (remove clothing, skin wash). Atropine (blocks acetylcholine) - titrate to stop SLUDGE symptoms. Pralidoxime (reactivates cholinesterase) - only effective early. Benzodiazepines for seizures.', tip: 'Time is critical.' },
+    { id: 170, cat: 'bio-chem-rad', q: 'What are cyanide/blood agents and why is venous blood bright red?', a: 'Cyanide: blocks cytochrome oxidase (cells can\'t use O2 despite normal O2 supply). Venous blood stays BRIGHT RED because cells haven\'t extracted O2.', tip: 'Bright red venous blood = cyanide (not normal).' },
+    { id: 171, cat: 'bio-chem-rad', q: 'What is the treatment for cyanide WMD exposure?', a: 'Decontamination (remove clothing, skin wash). Hydroxocobalamin (preferred): binds cyanide, excretes in urine. Alternative: sodium nitrite + sodium thiosulfate (older regimen).', tip: 'Hydroxocobalamin can be given empirically.' },
+    { id: 172, cat: 'bio-chem-rad', q: 'What are vesicant (blister) agents like mustard gas and what is the management?', a: 'Mustard: delayed action (no immediate pain), causes blistering. Management: decontamination (water, soap), supportive care (infection prevention, pain), no specific antidote.', tip: 'Blisters develop 2-24 hours after exposure.' },
+    { id: 173, cat: 'bio-chem-rad', q: 'What are pulmonary agents like phosgene and what do they cause?', a: 'Phosgene: inert gas that damages lungs. Causes: delayed pulmonary edema (hours after exposure), respiratory failure. Management: remove from exposure, oxygen, supportive care, may need intubation.', tip: 'Delayed presentation = insidious danger.' },
+    { id: 174, cat: 'bio-chem-rad', q: 'What are the three types of radiation exposure and decontamination needs?', a: '1) External irradiation: exposure to external source (NOT radioactive) - no decontamination needed. 2) Contamination: radioactive material on skin/clothes - needs decontamination. 3) Incorporation: uptake into cells - needs specific treatment.', tip: 'Irradiation ≠ contamination.' },
+    { id: 175, cat: 'bio-chem-rad', q: 'What is the decontamination procedure for radioactive contamination?', a: 'Remove clothing (removes 90% of contamination). Shower with soap + water. Two pairs of gloves. Triage outside hospital. Waste management: collect contaminated materials.', tip: 'Simple water wash is effective.' },
+    { id: 176, cat: 'bio-chem-rad', q: 'What are the three factors to minimize radiation exposure and which is most important?', a: 'Time (minimize duration), Distance (maximize distance), Shielding (use barriers). Time is MOST important - minimize exposure.', tip: 'Doubling distance = 1/4 exposure.' },
+    { id: 177, cat: 'bio-chem-rad', q: 'What are the four phases of acute radiation syndrome (ARS) and timeline?', a: '1) Prodromal (0-2 days): nausea, vomiting, diarrhea. 2) Latent (2-14 days): symptom-free but bone marrow dying. 3) Manifest (2-3 weeks): bone marrow failure, infection, bleeding. 4) Recovery or Death.', tip: 'Phase 2 is deceptively quiet.' },
+    { id: 178, cat: 'bio-chem-rad', q: 'What is "potassium iodide" (KI) and what does it protect against?', a: 'KI: protects thyroid ONLY from radioactive iodine (I-131) uptake. Effective if given within 3-4 hours of exposure. Does NOT protect other organs. Does NOT reverse damage.', tip: 'KI is NOT a general antidote - specific to iodine.' },
+    { id: 179, cat: 'bio-chem-rad', q: 'What is the dose limiting organ in radiation exposure and what condition results?', a: 'Dose limiting: bone marrow (most radiosensitive). Condition: acute hematopoietic syndrome (anemia, infection risk, bleeding) when exposed to 2-6 Gray.', tip: 'Bone marrow failure is the biggest threat.' },
+    { id: 180, cat: 'bio-chem-rad', q: 'What is the treatment approach for severe acute radiation syndrome (>6 Gray)?', a: 'Treatment: supportive/palliative care only (survival unlikely). Pain management, emotional support, comfort measures. Prognosis: death inevitable. Focus: dignity, family support.', tip: 'High doses are lethal despite treatment.' }
+];
+
+// ===================== STATE =====================
+let state = {
+    deck: [],
+    idx: 0,
+    flipped: false,
+    results: {},
+    overflow: [],
+    totalOriginal: 0
+};
+
+let savedProgress = {};
+let selectedCats = new Set();
+
+// ===================== STORAGE =====================
+function loadProgress() {
+    try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        savedProgress = data ? JSON.parse(data) : {};
+    } catch (e) {
+        savedProgress = {};
+    }
+}
+
+function saveProgress() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress));
+    } catch (e) {}
+}
+
+function saveSessionResults() {
+    Object.entries(state.results).forEach(([cardId, result]) => {
+        savedProgress[cardId] = result;
+    });
+    saveProgress();
+}
+
+function resetProgress() {
+    if (confirm('Reset all progress? This cannot be undone.')) {
+        savedProgress = {};
+        saveProgress();
+        renderStartScreen();
+    }
+}
+
+// ===================== SCREENS =====================
+function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    if (name === 'start') renderStartScreen();
+}
+
+function renderStartScreen() {
+    loadProgress();
+
+    // Calculate overall progress
+    const total = cards.length;
+    let gotit = 0, unsure = 0, missed = 0, unseen = 0;
+    cards.forEach(c => {
+        const status = savedProgress[c.id];
+        if (status === 'gotit') gotit++;
+        else if (status === 'unsure') unsure++;
+        else if (status === 'missed') missed++;
+        else unseen++;
+    });
+
+    const progressDiv = document.getElementById('progress-summary');
+    if (gotit + unsure + missed > 0) {
+        const gpct = (gotit / total * 100).toFixed(1);
+        const upct = (unsure / total * 100).toFixed(1);
+        const mpct = (missed / total * 100).toFixed(1);
+        progressDiv.innerHTML = `
+            <h3>Overall Progress</h3>
+            <div class="overall-bar">
+                <div class="mb-gotit" style="width:${gpct}%"></div>
+                <div class="mb-unsure" style="width:${upct}%"></div>
+                <div class="mb-missed" style="width:${mpct}%"></div>
+            </div>
+            <div class="overall-text">${gotit} mastered · ${unsure} unsure · ${missed} missed · ${unseen} unseen</div>
+        `;
+        progressDiv.style.display = 'block';
+    } else {
+        progressDiv.style.display = 'none';
+    }
+
+    // Render category grid
+    const grid = document.getElementById('cat-grid');
+    grid.innerHTML = '';
+
+    Object.entries(categories).forEach(([catId, cat]) => {
+        const catCards = cards.filter(c => c.cat === catId);
+        const catTotal = catCards.length;
+        let cg = 0, cu = 0, cm = 0;
+        catCards.forEach(c => {
+            const status = savedProgress[c.id];
+            if (status === 'gotit') cg++;
+            else if (status === 'unsure') cu++;
+            else if (status === 'missed') cm++;
+        });
+
+        const masteryPct = catTotal > 0 ? (cg / catTotal * 100).toFixed(0) : 0;
+        const gpct = catTotal > 0 ? (cg / catTotal * 100) : 0;
+        const upct = catTotal > 0 ? (cu / catTotal * 100) : 0;
+        const mpct = catTotal > 0 ? (cm / catTotal * 100) : 0;
+
+        const btn = document.createElement('div');
+        btn.className = 'cat-btn';
+        btn.dataset.cat = catId;
+        btn.style.setProperty('--cat-color', cat.color);
+        btn.innerHTML = `
+            <span class="cat-name">
+                <span class="cat-dot" style="background:${cat.color}"></span>
+                ${cat.name}
+            </span>
+            <span class="cat-count">${catTotal} cards</span>
+            <div class="cat-mastery">
+                <div class="cat-mastery-bar">
+                    <div class="mb-gotit" style="width:${gpct}%"></div>
+                    <div class="mb-unsure" style="width:${upct}%"></div>
+                    <div class="mb-missed" style="width:${mpct}%"></div>
+                </div>
+                <div class="cat-mastery-text">${masteryPct}% mastered</div>
+            </div>
+        `;
+        btn.addEventListener('click', () => toggleCategory(catId, btn));
+        grid.appendChild(btn);
+    });
+
+    // Update weak cards button
+    const weakCount = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure').length;
+    document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+    document.getElementById('btn-weak').disabled = weakCount === 0;
+
+    selectedCats.clear();
+}
+
+function toggleCategory(catId, btn) {
+    const multiSelect = document.getElementById('chk-multi').checked;
+
+    if (multiSelect) {
+        if (selectedCats.has(catId)) {
+            selectedCats.delete(catId);
+            btn.classList.remove('selected');
+        } else {
+            selectedCats.add(catId);
+            btn.classList.add('selected');
+        }
+    } else {
+        // Single select - start session immediately
+        startSession([catId]);
+    }
+}
+
+// ===================== SESSION =====================
+function startSession(catIds) {
+    loadProgress();
+
+    let sessionCards = cards.filter(c => catIds.includes(c.cat));
+
+    if (document.getElementById('chk-shuffle').checked) {
+        sessionCards = shuffleArray([...sessionCards]);
+    }
+
+    state = {
+        deck: sessionCards.map(c => c.id),
+        idx: 0,
+        flipped: false,
+        results: {},
+        overflow: [],
+        totalOriginal: sessionCards.length
+    };
+
+    if (state.deck.length === 0) {
+        alert('No cards in selected categories.');
+        return;
+    }
+
+    showScreen('card');
+    displayCard();
+}
+
+function startAll() {
+    if (selectedCats.size > 0) {
+        startSession([...selectedCats]);
+    } else {
+        startSession(Object.keys(categories));
+    }
+}
+
+function studyWeak() {
+    loadProgress();
+    const weakCards = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure');
+
+    if (weakCards.length === 0) {
+        alert('No weak cards to study!');
+        return;
+    }
+
+    let sessionCards = document.getElementById('chk-shuffle').checked
+        ? shuffleArray([...weakCards])
+        : weakCards;
+
+    state = {
+        deck: sessionCards.map(c => c.id),
+        idx: 0,
+        flipped: false,
+        results: {},
+        overflow: [],
+        totalOriginal: sessionCards.length
+    };
+
+    showScreen('card');
+    displayCard();
+}
+
+function exitSession() {
+    saveSessionResults();
+    showScreen('start');
+}
+
+// ===================== CARD DISPLAY =====================
+function displayCard() {
+    if (state.idx >= state.deck.length) {
+        if (state.overflow.length > 0) {
+            state.deck = state.deck.concat(state.overflow);
+            state.overflow = [];
+        } else {
+            saveSessionResults();
+            showResults();
+            return;
+        }
+    }
+
+    const cardId = state.deck[state.idx];
+    const card = cards.find(c => c.id === cardId);
+    const cat = categories[card.cat];
+
+    document.getElementById('front-content').innerHTML = card.q;
+
+    let backHtml = `<div class="answer-text">${card.a}</div>`;
+    if (card.tip) {
+        backHtml += `<div class="exam-tip">${card.tip}</div>`;
+    }
+    document.getElementById('back-content').innerHTML = backHtml;
+
+    document.getElementById('cur-cat').textContent = cat.name;
+    document.getElementById('cur-cat').style.borderColor = cat.color;
+
+    document.getElementById('cur-num').textContent = state.idx + 1;
+    document.getElementById('tot-num').textContent = state.deck.length;
+
+    const pct = (state.idx / state.totalOriginal * 100);
+    document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
+
+    // Show requeue info if we're past original deck
+    const requeueInfo = document.getElementById('requeue-info');
+    if (state.idx >= state.totalOriginal) {
+        requeueInfo.textContent = 'Review';
+        requeueInfo.style.display = 'inline';
+    } else {
+        requeueInfo.style.display = 'none';
+    }
+
+    state.flipped = false;
+    document.getElementById('flashcard').classList.remove('flipped');
+    document.getElementById('conf-controls').classList.remove('visible');
+}
+
+function flipCard() {
+    state.flipped = !state.flipped;
+    document.getElementById('flashcard').classList.toggle('flipped', state.flipped);
+    if (state.flipped) {
+        document.getElementById('conf-controls').classList.add('visible');
+    }
+}
+
+function rate(confidence) {
+    if (!state.flipped) return;
+
+    const cardId = state.deck[state.idx];
+    state.results[cardId] = confidence;
+
+    if (confidence === 'missed') {
+        const offset = 5 + Math.floor(Math.random() * 3);
+        const insertAt = state.idx + offset;
+        if (insertAt < state.deck.length) {
+            state.deck.splice(insertAt, 0, cardId);
+        } else {
+            state.overflow.push(cardId);
+        }
+    } else if (confidence === 'unsure') {
+        const offset = 8 + Math.floor(Math.random() * 3);
+        const insertAt = state.idx + offset;
+        if (insertAt < state.deck.length) {
+            state.deck.splice(insertAt, 0, cardId);
+        } else {
+            state.overflow.push(cardId);
+        }
+    }
+
+    state.idx++;
+    displayCard();
+}
+
+// ===================== RESULTS =====================
+function showResults() {
+    showScreen('results');
+
+    let gotit = 0, unsure = 0, missed = 0;
+    const catStats = {};
+
+    Object.entries(state.results).forEach(([cardId, result]) => {
+        const card = cards.find(c => c.id === parseInt(cardId));
+        if (!catStats[card.cat]) {
+            catStats[card.cat] = { gotit: 0, unsure: 0, missed: 0 };
+        }
+
+        if (result === 'gotit') { gotit++; catStats[card.cat].gotit++; }
+        else if (result === 'unsure') { unsure++; catStats[card.cat].unsure++; }
+        else if (result === 'missed') { missed++; catStats[card.cat].missed++; }
+    });
+
+    const total = gotit + unsure + missed;
+
+    document.getElementById('stats-row').innerHTML = `
+        <div class="stat-card stat-gotit">
+            <div class="stat-value">${gotit}</div>
+            <div class="stat-label">Got It</div>
+            <div class="stat-pct">${total > 0 ? (gotit/total*100).toFixed(0) : 0}%</div>
+        </div>
+        <div class="stat-card stat-unsure">
+            <div class="stat-value">${unsure}</div>
+            <div class="stat-label">Unsure</div>
+            <div class="stat-pct">${total > 0 ? (unsure/total*100).toFixed(0) : 0}%</div>
+        </div>
+        <div class="stat-card stat-missed">
+            <div class="stat-value">${missed}</div>
+            <div class="stat-label">Missed</div>
+            <div class="stat-pct">${total > 0 ? (missed/total*100).toFixed(0) : 0}%</div>
+        </div>
+    `;
+
+    // Category breakdown
+    let breakdownHtml = '';
+    const weakAreas = [];
+
+    Object.entries(catStats).forEach(([catId, stats]) => {
+        const cat = categories[catId];
+        const catTotal = stats.gotit + stats.unsure + stats.missed;
+        const gpct = (stats.gotit / catTotal * 100);
+        const upct = (stats.unsure / catTotal * 100);
+        const mpct = (stats.missed / catTotal * 100);
+
+        if (gpct < 60) {
+            weakAreas.push({ name: cat.name, pct: gpct.toFixed(0) });
+        }
+
+        breakdownHtml += `
+            <div class="cat-stat-row">
+                <div class="cat-stat-name">${cat.name}</div>
+                <div class="cat-stat-bar">
+                    <div class="bar-seg bar-gotit" style="width:${gpct}%"></div>
+                    <div class="bar-seg bar-unsure" style="width:${upct}%"></div>
+                    <div class="bar-seg bar-missed" style="width:${mpct}%"></div>
+                </div>
+                <div class="cat-stat-pct">${gpct.toFixed(0)}%</div>
+            </div>
+        `;
+    });
+
+    document.getElementById('cat-breakdown').innerHTML = breakdownHtml;
+
+    // Weak areas
+    const weakSection = document.getElementById('weak-section');
+    if (weakAreas.length > 0) {
+        let weakHtml = '';
+        weakAreas.forEach(w => {
+            weakHtml += `<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`;
+        });
+        document.getElementById('weak-list').innerHTML = weakHtml;
+        weakSection.style.display = 'block';
+    } else {
+        weakSection.style.display = 'none';
+    }
+
+    // Update review buttons
+    document.getElementById('btn-review-missed').disabled = missed === 0;
+}
+
+function reviewMissed() {
+    const missedIds = Object.entries(state.results)
+        .filter(([_, r]) => r === 'missed')
+        .map(([id, _]) => parseInt(id));
+
+    if (missedIds.length === 0) return;
+
+    const missedCards = cards.filter(c => missedIds.includes(c.id));
+
+    state = {
+        deck: missedCards.map(c => c.id),
+        idx: 0,
+        flipped: false,
+        results: {},
+        overflow: [],
+        totalOriginal: missedCards.length
+    };
+
+    showScreen('card');
+    displayCard();
+}
+
+function reviewMissedAndUnsure() {
+    const reviewIds = Object.entries(state.results)
+        .filter(([_, r]) => r === 'missed' || r === 'unsure')
+        .map(([id, _]) => parseInt(id));
+
+    if (reviewIds.length === 0) return;
+
+    const reviewCards = cards.filter(c => reviewIds.includes(c.id));
+
+    state = {
+        deck: shuffleArray(reviewCards.map(c => c.id)),
+        idx: 0,
+        flipped: false,
+        results: {},
+        overflow: [],
+        totalOriginal: reviewCards.length
+    };
+
+    showScreen('card');
+    displayCard();
+}
+
+// ===================== UTILITIES =====================
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+// ===================== KEYBOARD =====================
+document.addEventListener('keydown', (e) => {
+    const cardScreen = document.getElementById('screen-card');
+    const resultsScreen = document.getElementById('screen-results');
+
+    if (cardScreen.classList.contains('active')) {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            flipCard();
+        } else if (e.key === '1') {
+            rate('missed');
+        } else if (e.key === '2') {
+            rate('unsure');
+        } else if (e.key === '3') {
+            rate('gotit');
+        } else if (e.key === 'Escape') {
+            exitSession();
+        }
+    } else if (resultsScreen.classList.contains('active')) {
+        if (e.key === 'Escape' || e.key === 'Enter') {
+            showScreen('start');
+        }
+    }
+});
+
+// ===================== INIT =====================
+loadProgress();
+renderStartScreen();
+</script>
+
+</body>
+</html>

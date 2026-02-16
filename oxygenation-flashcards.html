@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oxygenation & Gas Exchange — Flashcards</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;min-height:100vh;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding:1.5rem;}
+.screen.active{display:block;}
+
+/* START SCREEN */
+.start-container{max-width:820px;margin:0 auto;padding-top:1.5rem;}
+.start-container h1{font-size:1.8rem;text-align:center;color:#22d3ee;margin-bottom:.25rem;}
+.subtitle{text-align:center;color:#94a3b8;font-size:.88rem;margin-bottom:1.5rem;}
+
+/* PROGRESS SUMMARY */
+#progress-summary{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:none;}
+#progress-summary h3{color:#94a3b8;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.overall-bar{height:10px;background:#0f172a;border-radius:5px;overflow:hidden;display:flex;margin-bottom:.4rem;}
+.mb-gotit{background:#4ade80;transition:width .4s;}
+.mb-unsure{background:#fbbf24;transition:width .4s;}
+.mb-missed{background:#f87171;transition:width .4s;}
+.overall-text{font-size:.78rem;color:#94a3b8;text-align:center;}
+
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+.cat-btn{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.cat-btn:hover{border-color:var(--cat-color);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.cat-btn.selected{border-color:var(--cat-color);box-shadow:0 0 0 2px var(--cat-color),0 4px 12px rgba(0,0,0,.3);}
+.cat-name{display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:.88rem;color:#e2e8f0;margin-bottom:.25rem;}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.cat-count{font-size:.75rem;color:#94a3b8;display:block;margin-bottom:.4rem;}
+.cat-mastery-bar{height:5px;background:#0f172a;border-radius:3px;overflow:hidden;display:flex;margin-bottom:.2rem;}
+.cat-mastery-text{font-size:.7rem;color:#64748b;}
+
+/* OPTIONS ROW */
+.options-row{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1.25rem;flex-wrap:wrap;}
+.toggle-label{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#94a3b8;cursor:pointer;}
+.toggle-label input{accent-color:#22d3ee;}
+
+/* BUTTONS */
+.btn-primary{background:linear-gradient(135deg,#0891b2,#22d3ee);color:#0f172a;border:none;padding:.65rem 1.5rem;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,211,238,.3);}
+.btn-secondary{background:transparent;border:1px solid #334155;color:#94a3b8;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:#22d3ee;color:#22d3ee;}
+.btn-weak{background:transparent;border:1px solid #f87171;color:#f87171;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;}
+.btn-weak:hover{background:#f87171;color:#0f172a;}
+.btn-reset{background:transparent;border:none;color:#64748b;font-size:.78rem;cursor:pointer;padding:.4rem;text-decoration:underline;}
+.btn-reset:hover{color:#f87171;}
+.start-actions{display:flex;gap:.75rem;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:.5rem;}
+
+/* CARD SCREEN */
+.card-screen{max-width:680px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 3rem);}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;}
+.progress-section{flex:1;min-width:200px;}
+.progress-text{font-size:.82rem;color:#94a3b8;margin-bottom:.3rem;}
+.requeue-badge{background:#fbbf24;color:#0f172a;font-size:.7rem;padding:.1rem .4rem;border-radius:4px;margin-left:.5rem;font-weight:600;}
+.progress-bar{height:6px;background:#0f172a;border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#22d3ee,#0891b2);transition:width .3s;border-radius:3px;}
+.cat-badge{background:#334155;color:#e2e8f0;padding:.3rem .7rem;border-radius:6px;font-size:.78rem;font-weight:600;white-space:nowrap;}
+
+/* FLASHCARD */
+.flashcard{perspective:1200px;flex:1;display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:320px;margin-bottom:1rem;}
+.card-inner{width:100%;max-width:640px;min-height:300px;position:relative;transition:transform .55s;transform-style:preserve-3d;}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;top:0;left:0;width:100%;min-height:300px;backface-visibility:hidden;border-radius:16px;padding:2rem 2rem 3rem;display:flex;flex-direction:column;justify-content:center;}
+.card-front{background:linear-gradient(145deg,#1e293b,#334155);border:1px solid #475569;z-index:2;}
+.card-back{background:linear-gradient(145deg,#1a2332,#1e293b);border:1px solid #475569;transform:rotateY(180deg);}
+.card-content{font-size:1.05rem;line-height:1.7;color:#e2e8f0;}
+.card-content .answer-label{color:#22d3ee;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;}
+.card-content .answer-text{margin-bottom:.75rem;}
+.card-content .tip-box{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:8px;padding:.6rem .8rem;margin-top:.5rem;font-size:.88rem;color:#67e8f9;}
+.card-content .tip-box strong{color:#22d3ee;}
+.flip-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);font-size:.75rem;color:#64748b;letter-spacing:.5px;}
+
+/* CONFIDENCE CONTROLS */
+.conf-controls{display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:0;pointer-events:none;transition:opacity .3s;}
+.conf-controls.visible{opacity:1;pointer-events:auto;}
+.conf-btn{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.7rem 1.5rem;border-radius:10px;border:2px solid;cursor:pointer;background:transparent;transition:all .2s;min-width:100px;}
+.conf-btn:hover{transform:translateY(-2px);}
+.conf-missed{border-color:#f87171;color:#f87171;}.conf-missed:hover{background:rgba(248,113,113,.1);}
+.conf-unsure{border-color:#fbbf24;color:#fbbf24;}.conf-unsure:hover{background:rgba(251,191,36,.1);}
+.conf-gotit{border-color:#4ade80;color:#4ade80;}.conf-gotit:hover{background:rgba(74,222,128,.1);}
+.conf-icon{font-size:1.3rem;font-weight:700;}
+.conf-label{font-size:.82rem;font-weight:600;}
+.conf-key{font-size:.68rem;opacity:.6;}
+
+/* NAV ROW */
+.nav-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.kb-hints{font-size:.72rem;color:#475569;}
+.kb-hints kbd{background:#1e293b;border:1px solid #334155;padding:.1rem .35rem;border-radius:3px;font-family:inherit;margin:0 .1rem;}
+
+/* RESULTS SCREEN */
+.results-container{max-width:680px;margin:0 auto;padding-top:2rem;}
+.results-container h1{text-align:center;color:#22d3ee;font-size:1.6rem;margin-bottom:1.5rem;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:2rem;}
+.stat-card{background:#1e293b;border-radius:12px;padding:1.25rem;text-align:center;border:1px solid #334155;}
+.stat-card .stat-value{font-size:2rem;font-weight:800;}
+.stat-card .stat-label{font-size:.8rem;color:#94a3b8;margin:.2rem 0;}
+.stat-card .stat-pct{font-size:.88rem;font-weight:600;}
+.stat-gotit .stat-value,.stat-gotit .stat-pct{color:#4ade80;}
+.stat-unsure .stat-value,.stat-unsure .stat-pct{color:#fbbf24;}
+.stat-missed .stat-value,.stat-missed .stat-pct{color:#f87171;}
+
+.breakdown-section{margin-bottom:1.5rem;}
+.breakdown-section h3{color:#94a3b8;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;}
+.cat-stat-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.84rem;}
+.cat-stat-name{width:160px;color:#e2e8f0;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cat-stat-bar{flex:1;height:8px;background:#0f172a;border-radius:4px;overflow:hidden;display:flex;}
+.bar-seg{transition:width .4s;}
+.bar-gotit{background:#4ade80;}
+.bar-unsure{background:#fbbf24;}
+.bar-missed{background:#f87171;}
+.cat-stat-pct{width:45px;text-align:right;color:#94a3b8;font-size:.78rem;}
+
+.weak-section{margin-bottom:1.5rem;}
+.weak-section h3{color:#f87171;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.weak-item{display:flex;justify-content:space-between;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.5rem .75rem;margin-bottom:.4rem;font-size:.84rem;}
+.weak-item span:last-child{color:#f87171;font-weight:600;}
+
+.results-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+
+/* MOBILE */
+@media(max-width:600px){
+  .screen{padding:1rem;}
+  .cat-grid{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:1fr;}
+  .card-face{padding:1.5rem 1.25rem 2.5rem;}
+  .conf-btn{padding:.6rem 1rem;min-width:80px;}
+  .cat-stat-name{width:100px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== START SCREEN ========== -->
+<div id="screen-start" class="screen active">
+<div class="start-container">
+<h1>Oxygenation & Gas Exchange Flashcards</h1>
+<p class="subtitle">Brunner & Suddarth Ch 17-20 &mdash; 190 cards across 10 categories</p>
+
+<div id="progress-summary">
+<h3>Overall Progress</h3>
+<div class="overall-bar">
+<div class="mb-gotit" id="ov-gotit"></div>
+<div class="mb-unsure" id="ov-unsure"></div>
+<div class="mb-missed" id="ov-missed"></div>
+</div>
+<div class="overall-text" id="ov-text"></div>
+</div>
+
+<div class="cat-grid" id="cat-grid"></div>
+
+<div class="options-row">
+<label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+<label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+</div>
+
+<div class="start-actions">
+<button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+<button class="btn-primary" onclick="startAll()">Study All Cards</button>
+<button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+</div>
+</div>
+</div>
+
+<!-- ========== CARD SCREEN ========== -->
+<div id="screen-card" class="screen">
+<div class="card-screen">
+<div class="card-header">
+<div class="progress-section">
+<div class="progress-text"><span id="cur-num">1</span> / <span id="tot-num">0</span><span class="requeue-badge" id="requeue-info" style="display:none"></span></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+<span class="cat-badge" id="cur-cat">Category</span>
+</div>
+
+<div class="flashcard" id="flashcard" onclick="flipCard()">
+<div class="card-inner" id="card-inner">
+<div class="card-face card-front">
+<div class="card-content" id="front-content"></div>
+<div class="flip-hint">SPACE or click to flip</div>
+</div>
+<div class="card-face card-back">
+<div class="card-content" id="back-content"></div>
+</div>
+</div>
+</div>
+
+<div class="conf-controls" id="conf-controls">
+<button class="conf-btn conf-missed" onclick="rate('missed')">
+<span class="conf-icon">&times;</span>
+<span class="conf-label">Missed</span>
+<span class="conf-key">Press 1</span>
+</button>
+<button class="conf-btn conf-unsure" onclick="rate('unsure')">
+<span class="conf-icon">~</span>
+<span class="conf-label">Unsure</span>
+<span class="conf-key">Press 2</span>
+</button>
+<button class="conf-btn conf-gotit" onclick="rate('gotit')">
+<span class="conf-icon">&check;</span>
+<span class="conf-label">Got It</span>
+<span class="conf-key">Press 3</span>
+</button>
+</div>
+
+<div class="nav-row">
+<button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+<div class="kb-hints"><kbd>Space</kbd> Flip &nbsp;<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate &nbsp;<kbd>Esc</kbd> Exit</div>
+</div>
+</div>
+</div>
+
+<!-- ========== RESULTS SCREEN ========== -->
+<div id="screen-results" class="screen">
+<div class="results-container">
+<h1>Session Complete</h1>
+<div class="stats-row">
+<div class="stat-card stat-gotit"><div class="stat-value" id="res-gotit-n">0</div><div class="stat-label">Got It</div><div class="stat-pct" id="res-gotit-p">0%</div></div>
+<div class="stat-card stat-unsure"><div class="stat-value" id="res-unsure-n">0</div><div class="stat-label">Unsure</div><div class="stat-pct" id="res-unsure-p">0%</div></div>
+<div class="stat-card stat-missed"><div class="stat-value" id="res-missed-n">0</div><div class="stat-label">Missed</div><div class="stat-pct" id="res-missed-p">0%</div></div>
+</div>
+<div class="breakdown-section" id="breakdown"></div>
+<div class="weak-section" id="weak-section"></div>
+<div class="results-actions">
+<button class="btn-primary" id="btn-rev-missed" onclick="reviewMissed()">Review Missed Cards</button>
+<button class="btn-secondary" id="btn-rev-mu" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+<button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+</div>
+</div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const STORAGE_KEY = 'oxygenation-fc-v1';
+
+const categories = {
+  'anatomy': { name: 'Anatomy & Physiology', color: '#3b82f6' },
+  'assessment': { name: 'Assessment', color: '#10b981' },
+  'abg': { name: 'ABGs & Diagnostics', color: '#f97316' },
+  'o2therapy': { name: 'O2 Therapy & Devices', color: '#06b6d4' },
+  'upper': { name: 'Upper Respiratory', color: '#ec4899' },
+  'lower': { name: 'Lower Resp & Infections', color: '#ef4444' },
+  'obstructive': { name: 'Obstructive Disease', color: '#eab308' },
+  'trauma': { name: 'Trauma & Pleural', color: '#8b5cf6' },
+  'critical': { name: 'Critical Care & Vents', color: '#dc2626' },
+  'pharm': { name: 'Pharmacology', color: '#14b8a6' }
+};
+
+const cards = [
+// ===== ANATOMY & PHYSIOLOGY (20 cards) =====
+{id:1, cat:'anatomy', q:'What is the difference between respiration and ventilation?', a:'<strong>Respiration</strong> = entire process of gas exchange (atmosphere \u2194 blood \u2194 cells). <strong>Ventilation</strong> = mechanical movement of air in and out of lungs. You can have ventilation without adequate respiration (dead-space ventilation).', tip:'EXAM TIP: If a question asks about "adequate ventilation," they want to know if air is moving. If they ask about "adequate respiration/gas exchange," they want to know if O2 and CO2 are actually being exchanged.'},
+{id:2, cat:'anatomy', q:'What is the primary drive to breathe in a healthy person vs. a severe COPD patient?', a:'<strong>Healthy</strong>: rising CO2 detected by central chemoreceptors in the medulla. <strong>Severe COPD</strong>: hypoxic drive \u2014 low O2 detected by peripheral chemoreceptors (aortic arch and carotid bodies), because central receptors are desensitized to chronically elevated CO2.', tip:'EXAM TIP: This is WHY high-flow O2 can suppress respiratory drive in COPD patients. NCLEX loves this concept.'},
+{id:3, cat:'anatomy', q:'Where are central and peripheral chemoreceptors located, and what does each respond to FIRST?', a:'<strong>Central</strong> (medulla): respond to CSF pH changes reflecting blood CO2. <strong>Peripheral</strong> (aortic arch and carotid bodies): respond first to PaO2, then PaCO2 and pH.'},
+{id:4, cat:'anatomy', q:'What is the Hering-Breuer reflex?', a:'Stretch receptors in the alveoli that inhibit inspiration when the lungs become overdistended \u2014 a built-in safety valve against overinflation.'},
+{id:5, cat:'anatomy', q:'What is compliance? How does increased compliance differ from decreased compliance?', a:'Compliance = ease with which lungs expand under pressure (stretchiness). <strong>Increased</strong>: lost elastic recoil, overdistended (emphysema \u2014 air goes in but won\'t come out). <strong>Decreased</strong>: stiff lungs requiring more energy to inflate (ARDS, fibrosis, pneumothorax, pleural effusion, pulmonary edema).', tip:'EXAM TIP: Think of compliance like a balloon. Emphysema = old stretched-out balloon. ARDS = trying to inflate a brand new thick balloon.'},
+{id:6, cat:'anatomy', q:'Obstructive vs. restrictive lung disease: what happens to lung volumes?', a:'<strong>Obstructive</strong> = air gets trapped (can\'t get out) \u2192 RV, FRC, TLC all INCREASE. Think emphysema. <strong>Restrictive</strong> = lungs can\'t expand (can\'t get in) \u2192 VC, IC, TLC all DECREASE. Think fibrosis.'},
+{id:7, cat:'anatomy', q:'What is tidal volume (TV) and what is its normal value?', a:'Volume of air inhaled and exhaled with each normal breath. Normal: <strong>500 mL (5-10 mL/kg)</strong>. May not vary even with severe disease.'},
+{id:8, cat:'anatomy', q:'What vital capacity (VC) threshold indicates a patient cannot sustain spontaneous ventilation?', a:'<strong>VC &lt;10 mL/kg</strong> = unable to sustain spontaneous ventilation.', tip:'EXAM TIP: This is a key threshold for determining if mechanical ventilation is needed.'},
+{id:9, cat:'anatomy', q:'What is the normal PaO2, and at what level does it become critical on the oxyhemoglobin dissociation curve?', a:'Normal PaO2: <strong>80-100 mmHg</strong>. Critical threshold: <strong>PaO2 60 mmHg = SpO2 ~90%</strong>. Below this, you\'re on the steep slope \u2014 small PaO2 drops cause dramatic saturation drops.', tip:'EXAM TIP: SpO2 of 90% is the cliff edge. Below it, deterioration accelerates rapidly.'},
+{id:10, cat:'anatomy', q:'What causes a RIGHT shift of the oxyhemoglobin dissociation curve, and what does it mean clinically?', a:'Right shift = hemoglobin releases MORE O2 to tissues. Caused by: increased CO2, acidosis, increased temperature, increased 2,3-DPG. <strong>Mnemonic: "CADET face Right"</strong> \u2014 CO2, Acidosis, DPG, Exercise, Temperature.'},
+{id:11, cat:'anatomy', q:'What causes a LEFT shift of the oxyhemoglobin dissociation curve?', a:'Left shift = hemoglobin holds on TIGHTER to O2 (less released to tissues). Caused by: decreased CO2, alkalosis, decreased temperature, decreased 2,3-DPG, hypothermia, CO poisoning. Tissues may become hypoxic even with adequate SaO2.'},
+{id:12, cat:'anatomy', q:'What is P50 and what is its normal value?', a:'P50 is the PaO2 at which hemoglobin is <strong>50% saturated</strong>. Normal: ~<strong>27 mmHg</strong>.'},
+{id:13, cat:'anatomy', q:'What are Type I and Type II alveolar cells?', a:'<strong>Type I</strong>: 95% of alveolar surface area; form the gas diffusion barrier. <strong>Type II</strong>: only 5% surface area but produce <strong>surfactant</strong> (reduces surface tension, prevents collapse) and can regenerate Type I cells after injury.'},
+{id:14, cat:'anatomy', q:'Describe the four V/Q states and give a clinical example of each.', a:'<strong>Normal V/Q</strong> (~0.8): matched ventilation and perfusion (healthy lung). <strong>Low V/Q (Shunt)</strong>: blood bypasses ventilated alveoli (pneumonia, atelectasis). <strong>High V/Q (Dead Space)</strong>: ventilated alveoli without blood flow (PE). <strong>Silent Unit</strong>: no ventilation AND no perfusion (pneumothorax, severe ARDS).'},
+{id:15, cat:'anatomy', q:'At what percentage does shunting cause severe hypoxia? Why is true shunt often refractory to supplemental O2?', a:'Severe hypoxia when shunting exceeds <strong>20%</strong>. True shunts are refractory to O2 because the blood never encounters ventilated alveoli \u2014 you can increase O2 all you want, but the blood is bypassing the gas exchange.', tip:'EXAM TIP: This is why a pneumonia patient may not respond well to supplemental O2 \u2014 consolidated lung = intrapulmonary shunt.'},
+{id:16, cat:'anatomy', q:'What controls the rate and depth of breathing?', a:'<strong>Medulla oblongata</strong>: inspiratory and expiratory centers set baseline rate and depth. <strong>Pons</strong>: apneustic center (lower pons) promotes deep, prolonged inspiration; pneumotaxic center (upper pons) controls respiratory pattern.'},
+{id:17, cat:'anatomy', q:'Why does the pulmonary circulation operate at much lower pressures than systemic?', a:'Pulmonary circulation is a <strong>low-pressure system</strong> (systolic 20-30 mmHg, diastolic 5-15 mmHg) \u2014 it only needs to push blood through the lungs for gas exchange, not the entire body. About 2% of blood bypasses alveolar capillaries (physiologic shunt).'},
+{id:18, cat:'anatomy', q:'What are the four causes of increased airway resistance?', a:'1. Bronchial smooth muscle contraction (<strong>asthma</strong>). 2. Bronchial mucosa thickening (<strong>chronic bronchitis</strong>). 3. Airway obstruction (tumor, mucus plug, foreign body). 4. Loss of elasticity (<strong>emphysema</strong>).'},
+{id:19, cat:'anatomy', q:'What is anatomic dead space?', a:'The volume of air (~<strong>150 mL</strong>) in the conducting airways that never reaches alveoli and therefore never participates in gas exchange.'},
+{id:20, cat:'anatomy', q:'How is CO2 transported in the blood?', a:'<strong>90%</strong> carried by red blood cells, 5% dissolved in plasma (measured as PaCO2), 5% in other forms. Only 6% of venous CO2 is removed per pass through the lungs.'},
+
+// ===== ASSESSMENT (20 cards) =====
+{id:21, cat:'assessment', q:'What is dyspnea, and why is it important to assess?', a:'Dyspnea is the <strong>subjective</strong> feeling of discomfort when breathing \u2014 it\'s what the patient reports, not what you measure. It is a <strong>predictor of adverse outcomes</strong>. Assess degree, onset (sudden vs. gradual), associated anxiety, and aggravating/relieving factors.'},
+{id:22, cat:'assessment', q:'What is orthopnea and how is it measured?', a:'SOB when lying flat, seen in heart disease and COPD. Relieved by sitting/standing. Measured by number of pillows needed (e.g., "2-pillow orthopnea").'},
+{id:23, cat:'assessment', q:'A patient has a morning cough with sputum production. What does this suggest? What about a nighttime cough?', a:'<strong>Morning with sputum</strong> = bronchitis. <strong>Night cough</strong> = left-sided heart failure or bronchial asthma.', tip:'EXAM TIP: Night cough + HF is classic. The supine position increases venous return \u2192 pulmonary congestion \u2192 cough.'},
+{id:24, cat:'assessment', q:'A patient has a dry, irritating cough with no sputum. They recently started a new medication. What should you suspect?', a:'<strong>ACE inhibitor</strong> side effect. Dry cough is a well-known adverse effect of ACE inhibitors (lisinopril, enalapril, etc.).', tip:'EXAM TIP: NCLEX loves ACE inhibitor cough. If you see a new dry cough + medication question, look for an ACE inhibitor.'},
+{id:25, cat:'assessment', q:'Differentiate hemoptysis from hematemesis.', a:'<strong>Hemoptysis (lung)</strong>: bright red, frothy, mixed with sputum, tickling in throat, alkaline pH (>7). <strong>Hematemesis (stomach)</strong>: vomited, mixed with food, dark/"coffee grounds," acidic pH (<7).', tip:'EXAM TIP: Frothy + bright red = lungs. Coffee grounds = stomach. This distinction shows up frequently.'},
+{id:26, cat:'assessment', q:'What is stridor and what must you do?', a:'Continuous high-pitched sound heard over the neck indicating upper airway narrowing. Demands <strong>IMMEDIATE intervention</strong> \u2014 this is an airway emergency. Watch for it post-extubation.', tip:'EXAM TIP: Stridor = ABC priority. This patient gets seen FIRST.'},
+{id:27, cat:'assessment', q:'Why is cyanosis considered an unreliable and LATE sign of hypoxia?', a:'Cyanosis appears only when \u22655 g/dL of hemoglobin is unoxygenated. An <strong>anemic patient may NEVER show cyanosis</strong> (not enough total Hgb). A <strong>polycythemic patient may appear cyanotic</strong> even when adequately oxygenated. Assess central cyanosis (tongue/lips) as it\'s more reliable than peripheral.'},
+{id:28, cat:'assessment', q:'Which direction does the trachea shift in atelectasis vs. pneumothorax/effusion?', a:'<strong>TOWARD</strong> the problem in atelectasis/collapse (collapsed side pulls). <strong>AWAY FROM</strong> the problem in effusion, pneumothorax, tension pneumothorax (fluid/air pushes).', tip:'EXAM TIP: Think "collapse pulls, pressure pushes."'},
+{id:29, cat:'assessment', q:'What is barrel chest and what condition is it most associated with?', a:'Increased anteroposterior (AP) diameter from chronic lung overinflation. Hallmark of <strong>emphysema and COPD</strong>.'},
+{id:30, cat:'assessment', q:'What is tactile fremitus? When is it increased vs. decreased?', a:'Vibrations felt on the chest wall when the patient says "99." <strong>Increased</strong> over consolidated tissue (pneumonia \u2014 fluid conducts sound). <strong>Decreased/absent</strong> in emphysema (hyperinflated, air-filled lungs don\'t conduct sound).', tip:'EXAM TIP: Remember \u2014 air does NOT conduct sound well. Fluid/solid tissue does.'},
+{id:31, cat:'assessment', q:'What is egophony and what does it indicate?', a:'Patient says "E" but you hear "A" through the stethoscope (E-to-A change). Indicates <strong>consolidation</strong> (e.g., pneumonia). Fluid-filled tissue changes how sound is transmitted.'},
+{id:32, cat:'assessment', q:'What breathing pattern shows increasing rate AND depth, deep and labored? What condition is it associated with?', a:'<strong>Kussmaul respirations</strong>. Associated with <strong>DKA</strong> and untreated kidney failure (metabolic acidosis). The body is trying to blow off CO2 to compensate for the acidosis.'},
+{id:33, cat:'assessment', q:'Describe Cheyne-Stokes breathing and its associations.', a:'Crescendo-decrescendo breathing cycle alternating with periods of apnea (~20 seconds). Associated with <strong>heart failure</strong> and respiratory center damage.'},
+{id:34, cat:'assessment', q:'What is the characteristic finding of obstructive breathing patterns (COPD, asthma)?', a:'<strong>Prolonged expiratory phase</strong>. Air goes in but has difficulty getting out due to airway narrowing/obstruction.'},
+{id:35, cat:'assessment', q:'On percussion, what sound do you expect with a pneumothorax? With lobar pneumonia?', a:'<strong>Pneumothorax</strong>: hyperresonant or tympanitic (air-filled space). <strong>Lobar pneumonia</strong>: dull (consolidated, fluid-filled tissue).'},
+{id:36, cat:'assessment', q:'Differentiate wheezes from rhonchi. Which clears with coughing?', a:'<strong>Wheezes</strong>: continuous, musical, high-pitched, usually expiratory (narrowed airways). <strong>Rhonchi</strong>: deep, rumbling, snoring quality, primarily expiratory. <strong>Rhonchi may clear with coughing</strong> (secretions or mucus). Wheezes typically do not.'},
+{id:37, cat:'assessment', q:'What adventitious breath sound is heard in BOTH inspiration AND expiration and does NOT clear with coughing?', a:'<strong>Pleural friction rub</strong>. Low-pitched rubbing/grating sound caused by inflammation and loss of lubricating pleural fluid.'},
+{id:38, cat:'assessment', q:'What are the expected assessment findings in COPD? (Percussion, breath sounds, fremitus)', a:'<strong>Percussion</strong>: diffusely hyperresonant. <strong>Breath sounds</strong>: decreased with delayed expiration. <strong>Adventitious sounds</strong>: crackles, wheezes, rhonchi. <strong>Fremitus</strong>: decreased. Trachea: midline.'},
+{id:39, cat:'assessment', q:'What sputum appearance suggests pulmonary edema?', a:'<strong>Profuse, frothy, pink</strong> sputum. This is a hallmark finding of pulmonary edema.'},
+{id:40, cat:'assessment', q:'What does finger clubbing indicate and what conditions is it associated with?', a:'Sign of <strong>chronic hypoxic conditions</strong>. The nail bed becomes spongy and the angle flattens/reverses. Associated with congenital heart disease, chronic lung disease, lung malignancy, endocarditis, and IBD.'},
+
+// ===== ABGs & DIAGNOSTICS (20 cards) =====
+{id:41, cat:'abg', q:'What is ETCO2 and why is it considered superior to SpO2 for detecting respiratory compromise?', a:'End-tidal CO2 measures <strong>ventilation</strong> (how effectively the patient exchanges CO2), while SpO2 only measures oxygenation. ETCO2 gives breath-by-breath reflection of ventilation status and <strong>identifies respiratory depression BEFORE clinical signs appear</strong>.', tip:'EXAM TIP: ETCO2 > SpO2 for early detection. Lecture emphasized this repeatedly.'},
+{id:42, cat:'abg', q:'What is the normal ETCO2 range?', a:'<strong>35-45 mmHg</strong> (same as PaCO2). Colorimetric detector changes purple to yellow when CO2 detected.'},
+{id:43, cat:'abg', q:'What happens to ETCO2 trends during hyperventilation vs. hypoventilation?', a:'<strong>Hyperventilation</strong>: RR increases, ETCO2 decreases (blowing off CO2 too fast). <strong>Hypoventilation</strong>: RR decreases, ETCO2 increases (retaining CO2, respiratory depression).'},
+{id:44, cat:'abg', q:'List the normal ABG values: pH, PaCO2, HCO3, PaO2, SaO2.', a:'<strong>pH</strong>: 7.35-7.45. <strong>PaCO2</strong>: 35-45 mmHg. <strong>HCO3</strong>: 22-26 mEq/L. <strong>PaO2</strong>: 80-100 mmHg. <strong>SaO2</strong>: 95-98%.', tip:'EXAM TIP: Memorize these cold. Every ABG question starts here.'},
+{id:45, cat:'abg', q:'Explain the ROME method for ABG interpretation.', a:'<strong>R</strong>espiratory = <strong>O</strong>pposite: pH and PCO2 move in opposite directions (pH\u2191 + PCO2\u2193 = resp alkalosis; pH\u2193 + PCO2\u2191 = resp acidosis). <strong>M</strong>etabolic = <strong>E</strong>qual: pH and HCO3 move in same direction (pH\u2191 + HCO3\u2191 = met alkalosis; pH\u2193 + HCO3\u2193 = met acidosis).'},
+{id:46, cat:'abg', q:'pH 7.30, PaCO2 55, HCO3 24. What is the acid-base disturbance?', a:'<strong>Uncompensated respiratory acidosis.</strong> pH is low (acidotic), PaCO2 is high (respiratory cause), HCO3 is normal (kidneys haven\'t compensated yet).'},
+{id:47, cat:'abg', q:'pH 7.38, PaCO2 55, HCO3 32. What is the acid-base disturbance?', a:'<strong>Fully compensated respiratory acidosis.</strong> pH is normal (7.38 is below 7.40 so acidotic tendency). CO2 and HCO3 are both abnormal. Since pH < 7.40, the primary disorder is acidosis, and CO2 is high = respiratory origin.'},
+{id:48, cat:'abg', q:'pH 7.28, PaCO2 50, HCO3 18. What is the acid-base disturbance?', a:'<strong>Partially compensated mixed acidosis</strong> (or combined respiratory and metabolic acidosis). Nothing is normal \u2014 pH low, CO2 high, HCO3 low. Both systems are contributing to the acidosis.'},
+{id:49, cat:'abg', q:'What is the compensation mechanism for metabolic acidosis?', a:'<strong>Hyperventilation</strong> to blow off CO2 (decrease PaCO2). Kidneys also increase H+ excretion. Classic example: Kussmaul breathing in DKA.'},
+{id:50, cat:'abg', q:'How do you distinguish partially compensated from fully compensated ABGs?', a:'<strong>Partially compensated</strong>: NOTHING is normal (pH, CO2, HCO3 all abnormal). <strong>Fully compensated</strong>: pH is NORMAL, but CO2 and HCO3 are both abnormal. Use 7.40 as dividing line to determine primary disorder.'},
+{id:51, cat:'abg', q:'What are the limitations of pulse oximetry?', a:'Not accurate in: hypothermia, sepsis, hemodynamic instability, nail polish, dark skin pigment. Cannot detect hyperoxemia, cannot measure PaO2 or ventilation directly. SpO2 >95% = normal; <90% = inadequate tissue oxygenation.'},
+{id:52, cat:'abg', q:'What PFT finding indicates airway obstruction?', a:'<strong>FEV1/FVC < 85%</strong> = airway obstruction. FEF 25-75% detects early small airway disease.'},
+{id:53, cat:'abg', q:'What is the gold standard diagnostic test for PE?', a:'<strong>MDCTA</strong> (Multidetector CT Pulmonary Angiography). D-dimer is highly sensitive (96.2%) and best for <strong>ruling OUT</strong> PE, not ruling it in.'},
+{id:54, cat:'abg', q:'What does a V/Q scan show in PE?', a:'<strong>Ventilation WITHOUT perfusion</strong> = PE. The alveoli are receiving air but there\'s no blood flow past them (dead space).'},
+{id:55, cat:'abg', q:'What is the nursing priority after a bronchoscopy?', a:'<strong>NPO until cough reflex returns.</strong> The procedure requires anesthetic spray to the throat which suppresses the gag/cough reflex, creating aspiration risk.'},
+{id:56, cat:'abg', q:'What diagnostic test is more accurate than CT for distinguishing viable from dead tissue in lung nodules?', a:'<strong>PET scan</strong>. More accurate than CT for evaluating malignancy in lung nodules.'},
+{id:57, cat:'abg', q:'What reversal agents should you know for respiratory diagnostic procedures? What does each reverse?', a:'<strong>Naloxone (Narcan)</strong> reverses opioids. <strong>Flumazenil (Romazicon)</strong> reverses benzodiazepines.', tip:'EXAM TIP: Know these two cold. If a sedated patient has respiratory depression, which agent depends on which sedative was used.'},
+{id:58, cat:'abg', q:'What base excess values indicate metabolic acid-base disturbance?', a:'Normal: <strong>\u00b12 mEq/L</strong>. > +2 = metabolic alkalosis. < -2 = metabolic acidosis.'},
+{id:59, cat:'abg', q:'Why can ETCO2 readings be misleading during sedation?', a:'Sedation causes shallow breathing. Alveolar CO2 rises, but expired CO2 appears to DECREASE because gas isn\'t fully exhaled and gets diluted by dead space air. This is why <strong>waveform monitoring</strong> matters \u2014 look at the pattern, not just the number.'},
+{id:60, cat:'abg', q:'What three systems does ETCO2 simultaneously assess?', a:'<strong>Airway, breathing, AND circulation.</strong> ETCO2 is affected by changes in ventilation (asthma, COPD), diffusion (pulmonary edema, CO poisoning), and perfusion (shock, PE, cardiac arrest).'},
+
+// ===== O2 THERAPY & DEVICES (16 cards) =====
+{id:61, cat:'o2therapy', q:'What is the cardinal rule about oxygen therapy?', a:'<strong>Oxygen is a medication</strong> \u2014 use the lowest amount necessary.', tip:'EXAM TIP: O2 is not benign. Prolonged high FiO2 causes lung damage similar to ARDS (O2 toxicity).'},
+{id:62, cat:'o2therapy', q:'What is the difference between hypoxemia and hypoxia?', a:'<strong>Hypoxemia</strong> = decreased arterial O2 (PaO2 <60 mmHg). <strong>Hypoxia</strong> = decreased O2 delivery to tissues. Hypoxemia leads to hypoxia. Rapid O2 deterioration causes CNS changes early.'},
+{id:63, cat:'o2therapy', q:'What are the early signs of hypoxemia?', a:'Agitation, confusion, lethargy, increased BP, diaphoresis, heart rate changes, and central cyanosis (LATE sign).', tip:'EXAM TIP: Restlessness and agitation are EARLY signs. Cyanosis is LATE. If a postop patient becomes restless, think hypoxia first.'},
+{id:64, cat:'o2therapy', q:'What FiO2 does a nasal cannula at 1-6 L/min deliver?', a:'<strong>24-44% FiO2</strong>. Advantages: lightweight, comfortable, inexpensive, patient can eat and talk. Disadvantages: easily dislodged, skin breakdown, nasal drying, variable FiO2.'},
+{id:65, cat:'o2therapy', q:'What is the minimum flow rate for a simple face mask and why?', a:'<strong>6 L/min minimum</strong> (delivers 40-60% FiO2). Below 6 L/min, the mask becomes a reservoir for exhaled CO2 \u2014 the patient would rebreathe their own CO2.'},
+{id:66, cat:'o2therapy', q:'What makes the Venturi mask special among O2 delivery devices?', a:'It delivers <strong>precise, controlled FiO2</strong> (24-40%). This makes it ideal for <strong>COPD patients</strong> who need accurate, low-percentage oxygen delivery.', tip:'EXAM TIP: COPD + precise O2 needed = Venturi mask.'},
+{id:67, cat:'o2therapy', q:'What is HFNC and what is its maximum flow rate? What precaution is needed?', a:'High-flow nasal cannula delivers up to <strong>100% FiO2 at up to 60 L/min</strong>. Used extensively in COVID. <strong>Requires airborne precautions</strong> because it aerosolizes respiratory secretions.'},
+{id:68, cat:'o2therapy', q:'Why must you be cautious with O2 in COPD patients?', a:'High-flow O2 depresses their respiratory drive (they rely on hypoxic drive, not CO2 drive). Alveolar hypoventilation cannot accommodate increased O2. <strong>Maintain SpO2 >90% at the lowest effective flow rate.</strong>'},
+{id:69, cat:'o2therapy', q:'What is O2 toxicity and what does it look like?', a:'Lung damage from prolonged high FiO2. Causes damage <strong>similar to ARDS</strong>. This is why the goal is always to use the lowest FiO2 that maintains adequate oxygenation.'},
+{id:70, cat:'o2therapy', q:'A COPD patient in chronic respiratory failure presents with lethargy and drowsiness. Why is this different from acute hypoxemia?', a:'In <strong>chronic O2 deprivation</strong> with hypercarbia, patients present with delayed reactions, lethargy, and drowsiness (gradual adaptation). In <strong>acute hypoxemia</strong>, patients show restlessness, agitation, and confusion (CNS changes from rapid O2 drop).'},
+{id:71, cat:'o2therapy', q:'What is a non-rebreather mask and when is it used?', a:'A reservoir mask with one-way valves that prevent rebreathing. Delivers the <strong>highest FiO2 of any mask device (up to 95-100%)</strong>. Used in emergencies when high O2 is needed quickly.'},
+{id:72, cat:'o2therapy', q:'What safety precaution must be taught with home O2?', a:'<strong>No smoking with home O2.</strong> O2 is not flammable itself but supports combustion \u2014 anything nearby that ignites burns faster and hotter.'},
+{id:73, cat:'o2therapy', q:'What is BiPAP and when is it preferred over CPAP?', a:'BiPAP provides two levels of pressure: higher on inspiration and lower on expiration. Preferred for <strong>severe OSA with hypoxemia/hypercapnia</strong> where CPAP alone is insufficient.'},
+{id:74, cat:'o2therapy', q:'What are the categories of low-flow vs. high-flow O2 devices?', a:'<strong>Low-flow</strong>: nasal cannula, simple face mask. <strong>High-flow</strong>: Venturi mask, HFNC, tracheostomy collar, face tent, transtracheal catheter. High-flow devices provide more accurate FiO2.'},
+{id:75, cat:'o2therapy', q:'What position best promotes lung expansion in a patient with respiratory distress?', a:'<strong>Semi-Fowler or Fowler position</strong> (30-90 degrees). Gravity pulls diaphragm down, decreasing pressure on lungs, and reduces venous return/edema.'},
+{id:76, cat:'o2therapy', q:'What SpO2 target should be maintained for most patients? What about COPD?', a:'Most patients: <strong>SpO2 >95%</strong>. COPD patients: <strong>SpO2 >90%</strong> (at lowest effective flow rate to avoid suppressing respiratory drive).'},
+
+// ===== UPPER RESPIRATORY (18 cards) =====
+{id:77, cat:'upper', q:'A common cold virus is shed how long before symptoms appear?', a:'<strong>2 days before symptoms appear</strong>, making it highly contagious before the person even knows they\'re sick. Up to 200 different viruses cause the common cold.'},
+{id:78, cat:'upper', q:'What is rhinitis medicamentosa?', a:'<strong>Rebound nasal congestion</strong> from overuse of OTC topical decongestants (phenylephrine, oxymetazoline). Teaching: topical decongestants should NOT be used for more than <strong>3-4 days</strong>.', tip:'EXAM TIP: Patient teaching question. If they\'ve been using Afrin for 2 weeks and congestion is worse, suspect rebound.'},
+{id:79, cat:'upper', q:'How do you distinguish bacterial rhinosinusitis (ABRS) from viral (AVRS)?', a:'<strong>ABRS</strong>: high fever (\u226539\u00b0C), symptoms persist \u226510 days or worsen, facial pain present. Treat with antibiotics (amoxicillin first-line). <strong>AVRS</strong>: lower fever, <10 days, doesn\'t worsen. Supportive care only.'},
+{id:80, cat:'upper', q:'What dangerous complications can arise from rhinosinusitis?', a:'Osteomyelitis, <strong>orbital cellulitis</strong> (\u2192 ptosis, proptosis, chemosis \u2192 loss of vision if pressure on optic nerve), cavernous sinus thrombosis, meningitis, brain abscess.'},
+{id:81, cat:'upper', q:'What percentage of pharyngitis cases are Group A Strep, and what is the first-line treatment?', a:'<strong>15% are GAS</strong>. First-line: <strong>Penicillin V potassium \u00d7 10 days</strong>. GAS findings: fiery-red pharynx, swollen tonsils with white-purple exudate, enlarged tender cervical lymph nodes, NO cough, fever >38.3\u00b0C.', tip:'EXAM TIP: Full antibiotic course is critical \u2014 incomplete treatment leads to rheumatic fever and glomerulonephritis.'},
+{id:82, cat:'upper', q:'What complications can result from untreated strep pharyngitis?', a:'<strong>Rheumatic fever</strong> (onset 2-3 weeks post-pharyngitis) and <strong>post-streptococcal glomerulonephritis</strong>. This is why the full antibiotic course matters.'},
+{id:83, cat:'upper', q:'What is a peritonsillar abscess (Quinsy)? What are the key findings?', a:'Most common major suppurative complication of sore throat. Key findings: severe sore throat, fever, <strong>trismus</strong> (can\'t open mouth), drooling, intense pain, rancid breath, raspy voice. Can be <strong>life-threatening</strong> if it spreads (mediastinitis, airway obstruction).'},
+{id:84, cat:'upper', q:'What is the most common site of epistaxis and what is the initial management?', a:'<strong>Anterior septum (Kiesselbach plexus)</strong>. Management: sit upright, tilt head <strong>FORWARD</strong> (not back), pinch soft nose against septum for 5-10 minutes.', tip:'EXAM TIP: Head FORWARD, not backward. Tilting back causes blood to run down the throat \u2192 swallowing blood \u2192 nausea/vomiting.'},
+{id:85, cat:'upper', q:'What are the risk factors and cardiovascular consequences of OSA?', a:'Risk factors: <strong>obesity</strong> (major), large neck, male sex, post-menopause, older age. ~26% of adults 30-70; up to 90% undiagnosed. Cardiovascular: <strong>high prevalence of HTN, high risk for MI and stroke.</strong>', tip:'EXAM TIP: All hypertensive adults should be screened for OSA.'},
+{id:86, cat:'upper', q:'How is OSA diagnosed and what are the diagnostic criteria?', a:'Diagnosed with <strong>polysomnography</strong> (overnight sleep study). Criteria: apnea episodes during sleep \u226510 seconds, \u22655 episodes/hour, awakening with a snort, loud snoring.'},
+{id:87, cat:'upper', q:'List the OSA treatment ladder from least to most invasive.', a:'1. Weight loss, avoid alcohol, positional therapy. 2. MAD (mandibular advancement device). 3. <strong>CPAP</strong>. 4. <strong>BiPAP</strong> (severe with hypoxemia). 5. Surgery (tonsillectomy, UPPP \u2014 50% effective).'},
+{id:88, cat:'upper', q:'What is the most common type of laryngeal cancer and what is the early sign of glottic tumors?', a:'Almost all are <strong>squamous cell carcinoma</strong>. Early sign of glottic tumors: <strong>hoarseness >2 weeks</strong> (tumor impedes vocal cord movement). One-quarter of all head/neck cancers.'},
+{id:89, cat:'upper', q:'What is lost after a total laryngectomy and what speech alternatives exist?', a:'Patient loses <strong>permanent vocal function</strong> and gets a <strong>permanent tracheostomy</strong>. Speech alternatives: writing, lip reading, esophageal speech, artificial (electric) larynx, <strong>tracheoesophageal puncture (TEP) with Blom-Singer valve</strong> (most resembles normal speech).'},
+{id:90, cat:'upper', q:'How long is a total laryngectomy patient NPO post-op, and what sign suggests hemorrhage?', a:'<strong>NPO for 7 days</strong> post-op (NGT, PEG, or IVF until swallow study clears). <strong>Frequent swallowing = sign of bleeding!</strong> Carotid artery rupture is possible.', tip:'EXAM TIP: Frequent swallowing post-laryngectomy is a red flag. Think bleeding \u2014 assess and act immediately.'},
+{id:91, cat:'upper', q:'What are the nursing priorities after laryngectomy?', a:'Semi-Fowler/Fowler position, assess lung sounds, turn/cough/deep breathe, change disposable laryngeal tube q8h, wound drain monitoring, alternative communication methods (call light, notepad, tablet).'},
+{id:92, cat:'upper', q:'What risk factors contribute to laryngeal cancer?', a:'Tobacco (primary), asbestos, paint fumes, wood dust, chemicals, nutritional deficiencies, alcohol abuse, male gender, African Americans.'},
+{id:93, cat:'upper', q:'When does laryngeal cancer typically recur?', a:'Recurrence usually within the <strong>first 2-3 years</strong>. 55% present with lymph node involvement at diagnosis.'},
+{id:94, cat:'upper', q:'What are drug-induced causes of rhinitis?', a:'ACE inhibitors, beta-blockers, statins, antidepressants, antianxiety medications, and aspirin can all cause drug-induced rhinitis.'},
+
+// ===== LOWER RESP & INFECTIONS (18 cards) =====
+{id:95, cat:'lower', q:'Differentiate CAP, HCAP, HAP, and VAP.', a:'<strong>CAP</strong>: community or <48h of hospitalization. <strong>HCAP</strong>: recent healthcare contact but not hospitalized. <strong>HAP</strong>: \u226548h after admission. <strong>VAP</strong>: \u226548h after ETT placement (highest mortality).'},
+{id:96, cat:'lower', q:'What pathogen should you suspect in pneumonia with a patient who has AIDS?', a:'<strong>Pneumocystis jirovecii (PCP)</strong> \u2014 an opportunistic infection. Other associations: COPD \u2192 H. influenzae, CF \u2192 Pseudomonas and Staph, post-influenza \u2192 Staph pneumonia.'},
+{id:97, cat:'lower', q:'When should pneumonia vaccine be given to adults >65?', a:'Both <strong>PCV13 and PPSV23</strong>, given one year apart. Also recommended for adults >19 if immunocompromised.'},
+{id:98, cat:'lower', q:'What special caution applies to fluid therapy in older adults with pneumonia?', a:'Caution with fluids in <strong>older adults and/or CHF patients</strong> \u2014 high risk for fluid overload.'},
+{id:99, cat:'lower', q:'What is sarcoidosis and how is it treated?', a:'Interstitial lung disease (ages 20-40) producing <strong>noninfectious granulomas</strong> that reduce compliance and cause fibrosis. Confirmed by biopsy. Treatment: <strong>corticosteroids</strong> (taper after 12 months); add methotrexate if unable to reduce steroid dose.'},
+{id:100, cat:'lower', q:'What are the complications of pneumonia?', a:'<strong>Shock, respiratory failure, and pleural effusion.</strong>'},
+{id:101, cat:'lower', q:'What is the definition of chronic bronchitis?', a:'<strong>Cough and sputum production for 3 months in 2 consecutive years.</strong> Smoke and irritants cause mucous hypersecretion, plugging, reduced cilia, bronchial wall thickening, and narrowed lumen.', tip:'EXAM TIP: "3 months, 2 years" is a classic NCLEX testable definition.'},
+{id:102, cat:'lower', q:'What are the hallmark clinical features of emphysema?', a:'<strong>Barrel chest, weight loss, SOB on exertion.</strong> Destruction of alveolar walls \u2192 increased dead space \u2192 no gas exchange. Leads to hypoxemia, hypercapnia, respiratory acidosis, and <strong>cor pulmonale</strong> (right-sided HF).'},
+{id:103, cat:'lower', q:'What is cor pulmonale?', a:'<strong>Right-sided heart failure</strong> from long-term high blood pressure in the pulmonary arteries (pulmonary hypertension). Backup in venous system causes dependent edema, JVD. Seen in emphysema/severe COPD.'},
+{id:104, cat:'lower', q:'What percentage of COPD cases are caused by tobacco smoke?', a:'<strong>80-90%</strong>. Additional risk factors: secondhand smoke, age, occupational exposure, air pollution, and alpha1-antitrypsin deficiency (genetic).'},
+{id:105, cat:'lower', q:'What vaccine is heavily emphasized for COPD patients?', a:'<strong>Annual influenza (flu) vaccine.</strong> This was heavily emphasized in lecture.', tip:'EXAM TIP: COPD patient education questions love to test flu vaccine.'},
+{id:106, cat:'lower', q:'What is the strongest predisposing factor for asthma?', a:'<strong>Allergies</strong> \u2014 seasonal, dust, dander, mold, pollens, roach droppings, air pollution, smoke.'},
+{id:107, cat:'lower', q:'What is status asthmaticus and what is the most dangerous sign?', a:'Severe, persistent asthma attack that <strong>does NOT respond to regular therapy</strong>. Most dangerous sign: <strong>disappearance of wheezing</strong> = impending respiratory failure (not enough air movement to produce a wheeze). Increasing PaCO2 is a warning.', tip:'EXAM TIP: Silent chest in an asthma patient = escalate IMMEDIATELY. No wheezing does NOT mean improvement.'},
+{id:108, cat:'lower', q:'What medication is given IV for status asthmaticus beyond SABAs and steroids?', a:'<strong>Magnesium sulfate 2g over 20 minutes</strong> for smooth muscle relaxation. Also: supplemental O2, IVF, ABGs, cardiac monitoring.'},
+{id:109, cat:'lower', q:'What is CF, who gets it, and what is the key to management?', a:'<strong>Autosomal recessive</strong> disease, most common in <strong>Caucasians</strong>. Most diagnosed at age 2; median survival late 30s. <strong>Airway clearance is the KEY</strong> to management: chest PT, anti-inflammatory agents.'},
+{id:110, cat:'lower', q:'When should chest PT be performed for CF patients and why?', a:'<strong>Before meals</strong> (avoid vomiting/aspiration), before bed, and in the morning. This is the same timing principle as postural drainage.'},
+{id:111, cat:'lower', q:'What is the ICOUGH protocol for atelectasis prevention?', a:'<strong>I</strong> = Incentive Spirometry, <strong>C</strong> = Coughing & Deep Breathing, <strong>O</strong> = Oral Care, <strong>U</strong> = Understanding (patient education), <strong>G</strong> = Get OOB to chair \u00d73 daily, <strong>H</strong> = HOB >30\u00b0.'},
+{id:112, cat:'lower', q:'How is atelectasis most commonly acquired? What are the priority interventions?', a:'Most commonly <strong>post-operative</strong>. Priority: position changes, ambulation, deep breathing and coughing, incentive spirometry, suction PRN, pain control (multimodal \u2014 opioids depress respiratory drive).'},
+
+// ===== TRAUMA & PLEURAL (18 cards) =====
+{id:113, cat:'trauma', q:'What is flail chest and what is the hallmark finding?', a:'<strong>\u22653 ribs fractured at \u22652 sites</strong> creating a free-floating chest wall segment. Hallmark: <strong>paradoxical movement</strong> \u2014 flail segment moves inward on inhalation and outward on exhalation (opposite of normal).', tip:'EXAM TIP: Paradoxical chest wall movement + trauma = flail chest. This decreases ventilation and can be fatal.'},
+{id:114, cat:'trauma', q:'What defines a tension pneumothorax and why is it life-threatening?', a:'Air enters pleural space and is <strong>trapped</strong>, creating positive pressure. Affected lung collapses. Heart, great vessels, and trachea <strong>deviate to UNAFFECTED side</strong>. Increased intrathoracic pressure \u2192 decreased venous return \u2192 decreased CO \u2192 possible PEA.', tip:'EXAM TIP: Tracheal deviation + absent breath sounds on one side = tension pneumo. Needle decompression is emergent.'},
+{id:115, cat:'trauma', q:'What is the difference between pneumothorax and hemothorax?', a:'<strong>Pneumothorax</strong>: air in the pleural space. <strong>Hemothorax</strong>: blood in the pleural space. Both compromise ventilation and may require chest tube drainage.'},
+{id:116, cat:'trauma', q:'What is pleuritic pain and how should the patient be positioned?', a:'Sharp pain that "catches" on inspiration, like being "stabbed by a knife." One-sided, worsened by deep breathing/coughing/sneezing. Position: <strong>lay on the affected side</strong> to splint the chest wall; splint with pillow when coughing.'},
+{id:117, cat:'trauma', q:'What are the assessment findings in pleural effusion?', a:'Diminished/absent breath sounds, decreased fremitus, <strong>dull/flat percussion</strong>. Trachea shifted AWAY from affected side. Normal pleural fluid is 5-15 mL. Diagnosed by CXR, CT, thoracentesis.'},
+{id:118, cat:'trauma', q:'What is empyema and how is it treated?', a:'Thick, <strong>purulent</strong> fluid collection in pleural space. Fibrin walls off the infection. Treatment: thoracentesis (if not too thick), chest tube or wedge resection, <strong>4-6 weeks of antibiotics</strong>.'},
+{id:119, cat:'trauma', q:'Describe the three types of chest drainage systems.', a:'1. <strong>Traditional wet (water seal)</strong>: 3 chambers; requires sterile fluid in both water-seal and suction chambers. 2. <strong>Dry suction water seal</strong>: sterile fluid only in water-seal chamber at 2 cm. 3. <strong>Dry suction (one-way valve)</strong>: no fluid needed; works if knocked over; ideal for ambulatory/emergencies.'},
+{id:120, cat:'trauma', q:'What does intermittent bubbling in a chest drainage system mean? What about continuous bubbling?', a:'<strong>Intermittent bubbling = functioning properly</strong> (air is evacuating from the pleural space). <strong>Continuous bubbling</strong> = air leak in the system \u2014 check all connections.', tip:'EXAM TIP: Intermittent = good. Continuous = problem. Know the difference.'},
+{id:121, cat:'trauma', q:'What equipment must ALWAYS be at the bedside for a patient with a chest tube?', a:'<strong>Vaseline gauze, Kelly clamps, sterile water, dressing and tape.</strong>', tip:'EXAM TIP: Vaseline gauze is for emergent occlusion if the tube comes out. This is a classic safety question.'},
+{id:122, cat:'trauma', q:'What are the priority nursing interventions for chest tube patients?', a:'Frequent breath sound assessment, encourage IS/deep breathing, check for leaks, monitor drainage amount/color, assess insertion site, multimodal pain management, mobilize patient, shoulder exercises 8-12h post-surgery, monitor cardiac rhythm.'},
+{id:123, cat:'trauma', q:'What is subcutaneous emphysema and how do you identify it?', a:'Air trapped in tissue under the skin (neck, chest, arms, face). Identified by <strong>crackling sensation on palpation (crepitus)</strong>. Usually self-absorbs. Severe cases may need tracheostomy if airway threatened.'},
+{id:124, cat:'trauma', q:'What is the most common cause of blunt chest trauma?', a:'<strong>MVA</strong> (motor vehicle accident) \u2014 steering wheel, seat belts, falls, bicycle handlebars. Results in hypoxemia, hypovolemia, cardiac failure.'},
+{id:125, cat:'trauma', q:'A patient with a malignancy-related pleural effusion has fluid drained. What should you expect?', a:'The fluid will <strong>reaccumulate within days/weeks</strong>. Malignant effusions are recurrent. Patient presents with dyspnea when flat and coughing.'},
+{id:126, cat:'trauma', q:'In penetrating chest trauma, what is the priority management sequence?', a:'Restore/maintain cardiopulmonary function: establish airway, assess for shock, large-bore IV, fluid/blood replacement, type and crossmatch, massive hemorrhage protocol, NGT (decompress stomach), Foley (monitor UO), chest tube (re-inflate lung).'},
+{id:127, cat:'trauma', q:'What respiratory complications are common with rib fractures?', a:'Pain from rib fractures causes <strong>splinting</strong> (shallow breathing to avoid pain) \u2192 <strong>atelectasis</strong> \u2192 pneumonia. Aggressive pain management is essential to allow deep breathing.'},
+{id:128, cat:'trauma', q:'When should you suspect flail chest might be fatal?', a:'When accompanied by <strong>pulmonary contusion</strong> (common) and the patient is sensitive to fluid overload. Without stabilization (hooks/wires), the paradoxical movement severely impairs ventilation and gas exchange.'},
+{id:129, cat:'trauma', q:'How does postural drainage work and when should it be performed?', a:'Secretions drain from bronchioles into bronchi/trachea by gravity, then are coughed or suctioned out. Bronchodilators or mucolytics may help. Perform <strong>2-3 times daily PRIOR to meals</strong> to reduce N/V and aspiration risk.'},
+{id:130, cat:'trauma', q:'What does percussion sound like over a pneumothorax vs. a pleural effusion?', a:'<strong>Pneumothorax</strong>: hyperresonant to tympanitic (air). <strong>Pleural effusion</strong>: dull to flat (fluid). These are opposite findings for opposite conditions.'},
+
+// ===== CRITICAL CARE & VENTS (22 cards) =====
+{id:131, cat:'critical', q:'What three criteria define acute respiratory failure?', a:'<strong>PaO2 <60 mmHg</strong> AND <strong>PaCO2 >50 mmHg</strong> (hypercapnia) AND <strong>pH <7.35</strong> (acidosis) \u2014 all occurring together.'},
+{id:132, cat:'critical', q:'What are the EARLY vs. LATE signs of respiratory failure?', a:'<strong>Early</strong>: restlessness, fatigue, headache, dyspnea, tachycardia, accessory muscle use, elevated BP. <strong>Late</strong>: confusion, lethargy, tachycardia, tachypnea, central cyanosis, diaphoresis.', tip:'EXAM TIP: Restlessness = early. Lethargy/confusion = late. A patient going from restless to quiet is NOT improving \u2014 they\'re deteriorating.'},
+{id:133, cat:'critical', q:'What is the defining feature of ARDS?', a:'<strong>Hypoxemia that is UNRESPONSIVE to O2 therapy regardless of increased PEEP.</strong> Reduced lung compliance. CXR shows bilateral infiltrates. Mortality: 27-50%.', tip:'EXAM TIP: "Refractory hypoxemia" = think ARDS immediately.'},
+{id:134, cat:'critical', q:'What is the pathophysiology chain of ARDS?', a:'Trigger \u2192 cellular/chemical mediator release \u2192 capillary membrane injury \u2192 structural lung damage \u2192 severe V/Q mismatch \u2192 alveolar collapse (loss of surfactant) \u2192 decreased compliance \u2192 stiff, non-compliant lungs \u2192 refractory to supplemental O2.'},
+{id:135, cat:'critical', q:'What management strategies are used in the acute phase of ARDS?', a:'Intubation, <strong>sedate AND paralyze</strong> (never remove sedation if paralyzed), nitric oxide, fluid/nutrition support, maintain SpO2 >90%, suction PRN, frequent ABGs, <strong>prone positioning</strong>, high PEEP, vasopressors.'},
+{id:136, cat:'critical', q:'Why must you NOT remove sedation from a chemically paralyzed patient?', a:'Chemical paralysis eliminates voluntary movement but does NOT affect consciousness or sensation. The patient is <strong>fully aware and can feel everything</strong> but cannot move, blink, or communicate. Removing sedation would be terrifying and inhumane.'},
+{id:137, cat:'critical', q:'What complications arise from chemical paralysis in ARDS?', a:'VTE, muscle atrophy, skin breakdown, foot drop, hemorrhage, corneal abrasions (eyes don\'t blink \u2014 need eye care).'},
+{id:138, cat:'critical', q:'Where should an ETT be positioned and when should it be converted to a tracheostomy?', a:'ETT positioned <strong>2 cm above the carina</strong>, confirmed by CXR. Convert to tracheostomy at <strong>14-21 days</strong> to reduce tracheal trauma, prevent vocal cord paralysis, and prevent fistula.'},
+{id:139, cat:'critical', q:'What should be kept at the bedside for an intubated patient?', a:'ETT markings measured each shift. At bedside: <strong>Ambu-bag with facemask, suction (Yankauer), O2 flow meter</strong>, vent settings as ordered. Maintain HOB >30\u00b0.'},
+{id:140, cat:'critical', q:'What is the tracheostomy tube inserted between, and what equipment is at the bedside?', a:'Inserted between the <strong>2nd and 3rd tracheal rings</strong>. Bedside: extra trach set, obturator, Ambu-bag with facemask, suction, Yankauer, O2 flow meter.'},
+{id:141, cat:'critical', q:'What happens with high vs. low tracheostomy cuff pressure?', a:'<strong>High</strong>: tracheal bleeding, ischemia, pressure necrosis. <strong>Low</strong>: aspiration risk. Must maintain appropriate pressure.'},
+{id:142, cat:'critical', q:'What are the ventilator modes A/C, SIMV, and Pressure Support?', a:'<strong>A/C (Assist-Control)</strong>: preset TV and RR; assists any patient-initiated breath to full volume. <strong>SIMV</strong>: set breaths + patient can breathe spontaneously between them; senses exhale to prevent "bucking." <strong>Pressure Support</strong>: pressure to help patient breathe on own; reduced as strength improves.'},
+{id:143, cat:'critical', q:'What is PEEP and what does "best PEEP" mean?', a:'Positive End-Expiratory Pressure: applied at end of expiration to reverse/prevent microatelectasis and allow lower FiO2. <strong>"Best PEEP" = oxygenation without hemodynamic compromise</strong> (too much PEEP decreases venous return and cardiac output).'},
+{id:144, cat:'critical', q:'High-pressure alarm on the ventilator. What are the causes?', a:'Coughing, plugged tube, decreased compliance, kinked tubing, pneumothorax, bronchospasm. Solutions: suction, adjust sensitivity, sedate if needed, manually ventilate.'},
+{id:145, cat:'critical', q:'How does PEEP affect cardiac output?', a:'PEEP compresses heart/vessels during inspiration \u2192 <strong>decreased venous return \u2192 decreased cardiac output</strong>. Monitor for: restlessness, tachycardia, tachypnea, pallor, diaphoresis, decreased urine output.'},
+{id:146, cat:'critical', q:'What are the 5 elements of the VAP Prevention Bundle?', a:'1. <strong>HOB 30\u00b0-45\u00b0</strong>. 2. <strong>Daily sedation vacations</strong> + readiness to extubate assessment. 3. <strong>PUD prophylaxis</strong>. 4. <strong>DVT prophylaxis</strong>. 5. <strong>Daily oral care with chlorhexidine 0.12%</strong>.', tip:'EXAM TIP: This bundle is heavily tested. Know all 5 components.'},
+{id:147, cat:'critical', q:'What does the ABCDEF Bundle stand for?', a:'<strong>A</strong> = Awakening & spontaneous breathing trials. <strong>B</strong> = Breathing coordination. <strong>C</strong> = Choice of sedation/analgesia. <strong>D</strong> = Delirium monitoring (CAM-ICU q2-4h). <strong>E</strong> = Early mobility. <strong>F</strong> = Family engagement.'},
+{id:148, cat:'critical', q:'What are the criteria for Early Mobility in the ABCDEF bundle?', a:'Patient responds to verbal stimuli, <strong><60% FiO2, <10 cm PEEP</strong>, no contraindications to mobilization.'},
+{id:149, cat:'critical', q:'What are the rules for suctioning an intubated patient?', a:'Use inline suction (maintain sterility). <strong>Increase O2 to 100% before suctioning.</strong> Suction for <strong>no longer than 10 seconds.</strong>'},
+{id:150, cat:'critical', q:'What signs indicate weaning failure from mechanical ventilation?', a:'Rising CO2, increasing HR and RR, diaphoresis, nasal flaring, accessory muscle use. Example: CO2 rises from 36\u219265, HR from 102\u2192126, RR from 20\u219235 with diaphoresis = <strong>not tolerating the wean</strong>.'},
+{id:151, cat:'critical', q:'List the steps of the extubation process.', a:'1. Obtain order, notify RT. 2. RT checks cuff leak. 3. Explain to patient. 4. Raise HOB. 5. Set up suction. 6. O2 flow meter for mask. 7. Suction ETT and oral cavity. 8. Remove OGT with ETT. 9. Monitor for respiratory distress/stridor. 10. NPO until swallow evaluation.'},
+{id:152, cat:'critical', q:'Why are older adults on mechanical ventilation at high risk for delirium?', a:'Often sedated with benzos/opioids (potentially inappropriate per Beers Criteria), restrained, immobilized, and sensory deprived. Use minimal sedation, reduce restraints, mobilize daily, provide glasses/hearing aids.'},
+
+// ===== PHARMACOLOGY (20 cards) =====
+{id:153, cat:'pharm', q:'What is a SABA? Give examples and its role.', a:'Short-Acting Beta-2 Agonist. Examples: <strong>albuterol</strong>, levalbuterol, terbutaline. Role: <strong>quick relief / rescue inhaler</strong>. Relaxes bronchial smooth muscle.', tip:'EXAM TIP: Albuterol = rescue = immediate symptom relief. If a patient is wheezing, this is given FIRST.'},
+{id:154, cat:'pharm', q:'What is a LABA and what is the critical rule about using it?', a:'Long-Acting Beta-2 Agonist. Examples: salmeterol, formoterol, indacaterol. <strong>Must ALWAYS be used WITH an anti-inflammatory agent</strong> (never as monotherapy). Controller medication, not rescue.'},
+{id:155, cat:'pharm', q:'Name three inhaled corticosteroids (ICS) and why they are preferred over oral steroids.', a:'Beclomethasone, budesonide, fluticasone. Preferred because they have <strong>fewer systemic side effects</strong> than oral steroids. Long-term oral corticosteroids can cause muscle weakness and respiratory failure.'},
+{id:156, cat:'pharm', q:'What important patient teaching applies to corticosteroid use in COPD?', a:'Corticosteroids improve symptoms but <strong>do NOT slow disease progression</strong>. Inhaled preferred over oral. Long-term oral steroids \u2192 muscle weakness, Cushing features, adrenal suppression.'},
+{id:157, cat:'pharm', q:'What anticholinergic bronchodilators should you know?', a:'<strong>Ipratropium bromide</strong> (short-acting), <strong>tiotropium bromide</strong> (long-acting), umeclidinium. Bronchodilate via a different mechanism than beta-agonists. DuoNeb = salbutamol + ipratropium (combination).'},
+{id:158, cat:'pharm', q:'What does Naloxone (Narcan) reverse and what does Flumazenil (Romazicon) reverse?', a:'<strong>Naloxone</strong> = opioid antagonist (reverses opioid respiratory depression). <strong>Flumazenil</strong> = benzodiazepine antagonist (reverses benzo sedation).', tip:'EXAM TIP: Post-procedure patient with respiratory depression \u2014 what drug was used for sedation determines which reversal agent you give.'},
+{id:159, cat:'pharm', q:'What is the role of Magnesium Sulfate in respiratory emergencies?', a:'Given <strong>2g IV over 20 minutes</strong> in <strong>status asthmaticus</strong> for smooth muscle relaxation of the bronchial airways.'},
+{id:160, cat:'pharm', q:'What anticoagulants are used for PE prevention and treatment?', a:'Prevention: <strong>SubQ heparin or Enoxaparin (Lovenox)</strong>, SCDs, ambulation. Treatment: <strong>Heparin GTT</strong> (monitor aPTT, anti-Xa), discharge on long-term oral anticoagulation (monitor INR).'},
+{id:161, cat:'pharm', q:'What is the role of chlorhexidine 0.12% in critical care?', a:'<strong>Oral care for VAP prevention</strong>. Part of the VAP bundle. Applied during oral care q2 in intubated patients.'},
+{id:162, cat:'pharm', q:'What is Remdesivir and when is it indicated?', a:'<strong>Antiviral</strong> \u2014 the only FDA-approved drug for <strong>hospitalized COVID-19</strong> patients.'},
+{id:163, cat:'pharm', q:'What smoking cessation medications are available?', a:'NRT: gum, inhaler, patch, sublingual tablet, lozenge. Medications: <strong>bupropion SR, nortriptyline, clonidine, Chantix (varenicline)</strong>. Not candidates: pregnant patients, adolescents, light smokers (\u226410/day).'},
+{id:164, cat:'pharm', q:'What is the first-line antibiotic for bacterial rhinosinusitis?', a:'<strong>Amoxicillin or amoxicillin-clavulanate</strong> (first-line for ABRS).'},
+{id:165, cat:'pharm', q:'A patient on a ventilator has blood glucose of 280 mg/dL. They\'re on tube feeds and dexamethasone. Why?', a:'<strong>Tube feedings + corticosteroids (steroids)</strong> both increase blood glucose. Check blood sugars <strong>q6 hours</strong> in ventilated patients on these therapies.', tip:'EXAM TIP: Steroids = hyperglycemia risk. Always monitor glucose.'},
+{id:166, cat:'pharm', q:'What class of medications can cause drug-induced rhinitis?', a:'ACE inhibitors, beta-blockers, statins, antidepressants, antianxiety medications, and aspirin.'},
+{id:167, cat:'pharm', q:'What is the first-line treatment for GAS pharyngitis?', a:'<strong>Penicillin V potassium \u00d7 10 days</strong>. Full course is essential to prevent rheumatic fever and glomerulonephritis.'},
+{id:168, cat:'pharm', q:'What role do corticosteroids play in COVID-19 treatment?', a:'<strong>Limited to patients requiring supplemental O2.</strong> Not given to mild cases. Help reduce the inflammatory response in severe disease.'},
+{id:169, cat:'pharm', q:'What are combination ICS + LABA inhalers?', a:'<strong>Budesonide/formoterol (Symbicort), fluticasone/salmeterol (Advair), fluticasone furoate/vilanterol (Breo)</strong>. Combine controller anti-inflammatory with long-acting bronchodilator.'},
+{id:170, cat:'pharm', q:'What medications are used for pulmonary hypertension?', a:'<strong>Calcium channel blockers, prostanoids, phosphodiesterase inhibitors</strong>, diuretics, O2, anticoagulation, digoxin.'},
+{id:171, cat:'pharm', q:'When is an IVC filter indicated?', a:'For patients with <strong>recurrent PEs</strong> despite anticoagulation. The filter traps clots before they reach the lungs.'},
+{id:172, cat:'pharm', q:'Long-term high-dose NSAIDs are used in what pediatric respiratory condition?', a:'<strong>Cystic Fibrosis</strong> (ages 6-17) \u2014 slows loss of lung function.'},
+
+// ===== PE, PULM HTN, COVID, GERI, LUNG CANCER (18 cards) =====
+{id:173, cat:'critical', q:'How quickly can PE cause death?', a:'Death often occurs <strong>within 1 hour of symptom onset</strong>. This is a time-critical emergency. DVT is the most common cause.', tip:'EXAM TIP: Sudden-onset SOB + chest pain + tachycardia post-op = think PE immediately. Do not dismiss.'},
+{id:174, cat:'critical', q:'What are the clinical manifestations of PE?', a:'SOB, sudden pleuritic chest pain, substernal pain (mimics angina), anxiety, tachycardia, cough, syncope.'},
+{id:175, cat:'critical', q:'What is the role of D-dimer in PE diagnosis?', a:'Highly sensitive (96.2%, 87.5% accuracy). Best for <strong>ruling OUT PE</strong>. A negative D-dimer makes PE very unlikely. A positive D-dimer is nonspecific (many conditions elevate it).'},
+{id:176, cat:'critical', q:'What is pulmonary hypertension and what is the main symptom?', a:'High pressure in the pulmonary artery causing the heart to work harder. <strong>Dyspnea is the main symptom</strong> \u2014 first with exertion, then at rest. Other: substernal chest pain, syncope, right-sided HF, distended neck veins.'},
+{id:177, cat:'lower', q:'What is the most common cause of cancer death in the US?', a:'<strong>Lung cancer</strong>. Cigarette smoke responsible for >85% of cases. Most common sign: cough or change in chronic cough. Pain is a <strong>late sign</strong> (may indicate bone metastasis).'},
+{id:178, cat:'lower', q:'What are the two major categories of lung cancer?', a:'<strong>NSCLC</strong> (84%): squamous cell, adenocarcinoma, large cell. Primary surgical candidate. <strong>SCLC</strong> (13%): grows rapidly, metastasizes extensively. Staged I-IV.'},
+{id:179, cat:'lower', q:'How do you calculate pack-years?', a:'(Packs per day) \u00d7 (years smoked). Example: 1 pack/day \u00d7 20 years = <strong>20 pack-years</strong>.'},
+{id:180, cat:'lower', q:'Why is right lung removal (pneumonectomy) more dangerous than left?', a:'The right lung has a <strong>larger vascular bed</strong>, so its removal carries higher hemodynamic risk.'},
+{id:181, cat:'assessment', q:'What age-related changes increase infection risk in older adults?', a:'Decreased cilia and mucus production, decreased cough and gag reflex, reduced alveolar surface area (after age 40), loss of alveolar elasticity (around age 50), decreased respiratory muscle strength, decreased peripheral chemosensitivity.'},
+{id:182, cat:'assessment', q:'What functional lung changes occur with aging?', a:'Increased residual volume (RV), decreased IRV/ERV/FVC, premature airway closure, increased respiratory dead space, reduced ability to rapidly move air. Vital capacity peaks in mid-20s.'},
+{id:183, cat:'critical', q:'What PPE is required for aerosol-generating procedures with COVID patients?', a:'<strong>N95 or PAPR</strong>. Aerosol-generating: intubation, extubation, suctioning, resuscitation, HFNC use. Standard contact/droplet: gowns, gloves, surgical mask, face shield/goggles.'},
+{id:184, cat:'critical', q:'What is prone positioning and when is it used?', a:'Patient placed face-down to improve oxygenation. Used in <strong>ARDS and severe COVID</strong>. Position 12-16 hours/day when mechanically ventilated. Pad bony prominences, move electrode placement to back.'},
+{id:185, cat:'critical', q:'Why are COVID patients on ventilators at high risk for pneumothorax?', a:'<strong>High PEEP</strong> required for oxygenation increases risk of barotrauma \u2192 pneumothorax. Keep <strong>chest tray at bedside</strong> (atrium, Vaseline gauze, sterile water, Kelly clamps).'},
+{id:186, cat:'critical', q:'What coagulation concern exists in COVID patients?', a:'<strong>Increased clotting risk.</strong> SCDs or anticoagulation needed. COVID causes endothelial injury and hypercoagulability.'},
+{id:187, cat:'critical', q:'What nursing interventions are specific to COVID ICU care?', a:'Assess respiratory effort/WOB, sedate for vent synchrony, prone positioning, oral care q2, SCDs/anticoagulation, <strong>check blood sugars q6</strong> (tube feeds + steroids), administer vasopressors, ECMO if refractory.'},
+{id:188, cat:'critical', q:'What signs of healthcare worker burnout should be recognized?', a:'Difficulty concentrating, anger, withdrawal, nightmares. Interventions: talk to trusted colleagues, limit news/social media, exercise, meditation, notify supervisor, engage employer mental health services.'},
+{id:189, cat:'critical', q:'What is ECMO used for in respiratory failure?', a:'Extracorporeal Membrane Oxygenation \u2014 used for <strong>refractory respiratory failure</strong> when conventional ventilation fails. Blood is oxygenated outside the body. Outcomes still evolving. Often needed in severe COVID.'},
+{id:190, cat:'assessment', q:'A patient post-extubation develops stridor. What is the priority action?', a:'<strong>Immediate airway assessment and intervention</strong> \u2014 stridor post-extubation indicates laryngeal edema/upper airway narrowing. This is an emergency. Prepare for possible re-intubation. Notify provider STAT.', tip:'EXAM TIP: Post-extubation stridor = don\'t wait. This is an ABC priority.'}
+];
+
+// ==================== STATE ====================
+let state = {
+  deck: [],
+  idx: 0,
+  flipped: false,
+  results: {},
+  overflow: [],
+  totalOriginal: 0
+};
+
+// ==================== STORAGE ====================
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+function saveSessionResults() {
+  const p = loadProgress();
+  Object.entries(state.results).forEach(([id, conf]) => { p[id] = conf; });
+  saveProgress(p);
+}
+
+// ==================== SCREENS ====================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (name === 'start') renderStartScreen();
+}
+
+function renderStartScreen() {
+  const p = loadProgress();
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+
+  let totalGotit = 0, totalUnsure = 0, totalMissed = 0, totalCards = cards.length;
+
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catCards = cards.filter(c => c.cat === catId);
+    let g = 0, u = 0, m = 0;
+    catCards.forEach(c => {
+      const r = p[c.id];
+      if (r === 'gotit') { g++; totalGotit++; }
+      else if (r === 'unsure') { u++; totalUnsure++; }
+      else if (r === 'missed') { m++; totalMissed++; }
+    });
+    const total = catCards.length;
+    const gP = total ? (g/total*100).toFixed(0) : 0;
+    const uP = total ? (u/total*100).toFixed(0) : 0;
+    const mP = total ? (m/total*100).toFixed(0) : 0;
+
+    const btn = document.createElement('div');
+    btn.className = 'cat-btn';
+    btn.dataset.cat = catId;
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.innerHTML = `
+      <span class="cat-name"><span class="cat-dot" style="background:${cat.color}"></span>${cat.name}</span>
+      <span class="cat-count">${total} cards</span>
+      <div class="cat-mastery">
+        <div class="cat-mastery-bar">
+          <div class="mb-gotit" style="width:${gP}%"></div>
+          <div class="mb-unsure" style="width:${uP}%"></div>
+          <div class="mb-missed" style="width:${mP}%"></div>
+        </div>
+        <div class="cat-mastery-text">${gP}% mastered</div>
+      </div>`;
+    btn.addEventListener('click', () => handleCatClick(btn, catId));
+    grid.appendChild(btn);
+  });
+
+  // Progress summary
+  const studied = totalGotit + totalUnsure + totalMissed;
+  const ps = document.getElementById('progress-summary');
+  if (studied > 0) {
+    ps.style.display = 'block';
+    document.getElementById('ov-gotit').style.width = (totalGotit/totalCards*100) + '%';
+    document.getElementById('ov-unsure').style.width = (totalUnsure/totalCards*100) + '%';
+    document.getElementById('ov-missed').style.width = (totalMissed/totalCards*100) + '%';
+    document.getElementById('ov-text').textContent = `${totalGotit} mastered \u00b7 ${totalUnsure} unsure \u00b7 ${totalMissed} missed \u00b7 ${totalCards - studied} unseen`;
+  } else {
+    ps.style.display = 'none';
+  }
+
+  // Weak cards count
+  const weakCount = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').length;
+  document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+  document.getElementById('btn-weak').style.display = weakCount > 0 ? '' : 'none';
+}
+
+let selectedCats = new Set();
+function handleCatClick(btn, catId) {
+  const multi = document.getElementById('chk-multi').checked;
+  if (multi) {
+    if (selectedCats.has(catId)) { selectedCats.delete(catId); btn.classList.remove('selected'); }
+    else { selectedCats.add(catId); btn.classList.add('selected'); }
+  } else {
+    selectedCats.clear();
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    selectedCats.add(catId);
+    btn.classList.add('selected');
+    startSession([catId]);
+  }
+}
+
+// ==================== SESSION ====================
+function startSession(catIds) {
+  let deck = cards.filter(c => catIds.includes(c.cat)).map(c => c.id);
+  if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+  if (deck.length === 0) return;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function startAll() {
+  const catIds = Object.keys(categories);
+  startSession(catIds);
+}
+
+function studyWeak() {
+  const p = loadProgress();
+  let deck = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').map(c => c.id);
+  if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+  if (deck.length === 0) return;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ==================== CARD DISPLAY ====================
+function displayCard() {
+  if (state.idx >= state.deck.length) {
+    if (state.overflow.length > 0) {
+      state.deck = state.deck.concat(state.overflow);
+      state.overflow = [];
+    }
+    if (state.idx >= state.deck.length) {
+      saveSessionResults();
+      showResults();
+      return;
+    }
+  }
+
+  const cardId = state.deck[state.idx];
+  const card = cards.find(c => c.id === cardId);
+  if (!card) return;
+
+  state.flipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('conf-controls').classList.remove('visible');
+
+  document.getElementById('front-content').innerHTML = card.q;
+
+  let backHtml = '<div class="answer-label">Answer</div><div class="answer-text">' + card.a + '</div>';
+  if (card.tip) backHtml += '<div class="tip-box"><strong>EXAM TIP:</strong> ' + card.tip.replace(/^EXAM TIP:\s*/i, '') + '</div>';
+  document.getElementById('back-content').innerHTML = backHtml;
+
+  const cat = categories[card.cat];
+  const badge = document.getElementById('cur-cat');
+  badge.textContent = cat.name;
+  badge.style.background = cat.color + '22';
+  badge.style.color = cat.color;
+  badge.style.border = '1px solid ' + cat.color;
+
+  // Progress
+  const answered = Object.keys(state.results).length;
+  document.getElementById('cur-num').textContent = answered + 1;
+  document.getElementById('tot-num').textContent = state.totalOriginal;
+  document.getElementById('prog-fill').style.width = (answered / state.totalOriginal * 100) + '%';
+
+  // Requeue info
+  const requeueCount = state.deck.length - state.idx - 1 + state.overflow.length;
+  const extra = state.deck.length - state.totalOriginal + state.overflow.length;
+  const ri = document.getElementById('requeue-info');
+  if (extra > 0) { ri.style.display = ''; ri.textContent = '+' + extra + ' requeued'; }
+  else { ri.style.display = 'none'; }
+
+  // Auto-adjust card height
+  const inner = document.getElementById('card-inner');
+  inner.style.minHeight = '300px';
+}
+
+function flipCard() {
+  if (state.idx >= state.deck.length) return;
+  state.flipped = !state.flipped;
+  document.getElementById('card-inner').classList.toggle('flipped');
+  if (state.flipped) document.getElementById('conf-controls').classList.add('visible');
+  else document.getElementById('conf-controls').classList.remove('visible');
+}
+
+// ==================== RATING ====================
+function rate(confidence) {
+  if (!state.flipped) return;
+  const cardId = state.deck[state.idx];
+  state.results[cardId] = confidence;
+
+  if (confidence === 'missed') {
+    const offset = 5 + Math.floor(Math.random() * 3);
+    const insertAt = state.idx + offset;
+    if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  } else if (confidence === 'unsure') {
+    const offset = 8 + Math.floor(Math.random() * 3);
+    const insertAt = state.idx + offset;
+    if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  }
+
+  state.idx++;
+  displayCard();
+}
+
+function exitSession() {
+  saveSessionResults();
+  if (Object.keys(state.results).length > 0) showResults();
+  else showScreen('start');
+}
+
+// ==================== RESULTS ====================
+function showResults() {
+  showScreen('results');
+  const r = state.results;
+  let g = 0, u = 0, m = 0;
+  Object.values(r).forEach(v => { if (v === 'gotit') g++; else if (v === 'unsure') u++; else if (v === 'missed') m++; });
+  const total = g + u + m;
+
+  document.getElementById('res-gotit-n').textContent = g;
+  document.getElementById('res-gotit-p').textContent = total ? Math.round(g/total*100) + '%' : '0%';
+  document.getElementById('res-unsure-n').textContent = u;
+  document.getElementById('res-unsure-p').textContent = total ? Math.round(u/total*100) + '%' : '0%';
+  document.getElementById('res-missed-n').textContent = m;
+  document.getElementById('res-missed-p').textContent = total ? Math.round(m/total*100) + '%' : '0%';
+
+  // Category breakdown
+  const bd = document.getElementById('breakdown');
+  let html = '<h3>By Category</h3>';
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catResults = Object.entries(r).filter(([id]) => {
+      const card = cards.find(c => c.id === parseInt(id));
+      return card && card.cat === catId;
+    });
+    if (catResults.length === 0) return;
+    let cg = 0, cu = 0, cm = 0;
+    catResults.forEach(([, v]) => { if (v === 'gotit') cg++; else if (v === 'unsure') cu++; else m++; });
+    // Recount missed for this category
+    cm = catResults.filter(([,v]) => v === 'missed').length;
+    const ct = cg + cu + cm;
+    const gw = ct ? (cg/ct*100).toFixed(0) : 0;
+    const uw = ct ? (cu/ct*100).toFixed(0) : 0;
+    const mw = ct ? (cm/ct*100).toFixed(0) : 0;
+    html += `<div class="cat-stat-row">
+      <div class="cat-stat-name">${cat.name}</div>
+      <div class="cat-stat-bar">
+        <div class="bar-seg bar-gotit" style="width:${gw}%"></div>
+        <div class="bar-seg bar-unsure" style="width:${uw}%"></div>
+        <div class="bar-seg bar-missed" style="width:${mw}%"></div>
+      </div>
+      <div class="cat-stat-pct">${gw}%</div>
+    </div>`;
+  });
+  bd.innerHTML = html;
+
+  // Weak areas
+  const ws = document.getElementById('weak-section');
+  let weakHtml = '<h3>Focus Areas</h3>';
+  let hasWeak = false;
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catResults = Object.entries(r).filter(([id]) => {
+      const card = cards.find(c => c.id === parseInt(id));
+      return card && card.cat === catId;
+    });
+    if (catResults.length === 0) return;
+    const cg = catResults.filter(([,v]) => v === 'gotit').length;
+    const ct = catResults.length;
+    const pct = Math.round(cg/ct*100);
+    if (pct < 60) {
+      hasWeak = true;
+      weakHtml += `<div class="weak-item"><span>${cat.name}</span><span>${pct}% mastery</span></div>`;
+    }
+  });
+  ws.innerHTML = hasWeak ? weakHtml : '';
+
+  // Button visibility
+  document.getElementById('btn-rev-missed').style.display = m > 0 ? '' : 'none';
+  document.getElementById('btn-rev-mu').style.display = (m + u) > 0 ? '' : 'none';
+}
+
+function reviewMissed() {
+  const missedIds = Object.entries(state.results).filter(([,v]) => v === 'missed').map(([id]) => parseInt(id));
+  if (missedIds.length === 0) return;
+  let deck = document.getElementById('chk-shuffle').checked ? shuffle(missedIds) : missedIds;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function reviewMissedAndUnsure() {
+  const ids = Object.entries(state.results).filter(([,v]) => v === 'missed' || v === 'unsure').map(([id]) => parseInt(id));
+  if (ids.length === 0) return;
+  let deck = document.getElementById('chk-shuffle').checked ? shuffle(ids) : ids;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function resetProgress() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderStartScreen();
+  }
+}
+
+// ==================== KEYBOARD ====================
+document.addEventListener('keydown', (e) => {
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+  const id = active.id;
+
+  if (id === 'screen-card') {
+    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); flipCard(); }
+    if (e.key === '1') rate('missed');
+    if (e.key === '2') rate('unsure');
+    if (e.key === '3') rate('gotit');
+    if (e.key === 'Escape') exitSession();
+  }
+  if (id === 'screen-results') {
+    if (e.key === 'Escape' || e.key === 'Enter') showScreen('start');
+  }
+});
+
+// ==================== INIT ====================
+renderStartScreen();
+</script>
+</body>
+</html>

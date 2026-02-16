@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognition & Sensation — Flashcards</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;min-height:100vh;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding:1.5rem;}
+.screen.active{display:block;}
+
+/* START SCREEN */
+.start-container{max-width:820px;margin:0 auto;padding-top:1.5rem;}
+.start-container h1{font-size:1.8rem;text-align:center;color:#22d3ee;margin-bottom:.25rem;}
+.subtitle{text-align:center;color:#94a3b8;font-size:.88rem;margin-bottom:1.5rem;}
+
+/* PROGRESS SUMMARY */
+#progress-summary{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:none;}
+#progress-summary h3{color:#94a3b8;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.overall-bar{height:10px;background:#0f172a;border-radius:5px;overflow:hidden;display:flex;margin-bottom:.4rem;}
+.mb-gotit{background:#4ade80;transition:width .4s;}
+.mb-unsure{background:#fbbf24;transition:width .4s;}
+.mb-missed{background:#f87171;transition:width .4s;}
+.overall-text{font-size:.78rem;color:#94a3b8;text-align:center;}
+
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+.cat-btn{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:.85rem 1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.cat-btn:hover{border-color:var(--cat-color);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.cat-btn.selected{border-color:var(--cat-color);box-shadow:0 0 0 2px var(--cat-color),0 4px 12px rgba(0,0,0,.3);}
+.cat-name{display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:.88rem;color:#e2e8f0;margin-bottom:.25rem;}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.cat-count{font-size:.75rem;color:#94a3b8;display:block;margin-bottom:.4rem;}
+.cat-mastery-bar{height:5px;background:#0f172a;border-radius:3px;overflow:hidden;display:flex;margin-bottom:.2rem;}
+.cat-mastery-text{font-size:.7rem;color:#64748b;}
+
+/* OPTIONS ROW */
+.options-row{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1.25rem;flex-wrap:wrap;}
+.toggle-label{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#94a3b8;cursor:pointer;}
+.toggle-label input{accent-color:#22d3ee;}
+
+/* BUTTONS */
+.btn-primary{background:linear-gradient(135deg,#0891b2,#22d3ee);color:#0f172a;border:none;padding:.65rem 1.5rem;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,211,238,.3);}
+.btn-secondary{background:transparent;border:1px solid #334155;color:#94a3b8;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:#22d3ee;color:#22d3ee;}
+.btn-weak{background:transparent;border:1px solid #f87171;color:#f87171;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;}
+.btn-weak:hover{background:#f87171;color:#0f172a;}
+.btn-reset{background:transparent;border:none;color:#64748b;font-size:.78rem;cursor:pointer;padding:.4rem;text-decoration:underline;}
+.btn-reset:hover{color:#f87171;}
+.start-actions{display:flex;gap:.75rem;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:.5rem;}
+
+/* CARD SCREEN */
+.card-screen{max-width:680px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 3rem);}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;}
+.progress-section{flex:1;min-width:200px;}
+.progress-text{font-size:.82rem;color:#94a3b8;margin-bottom:.3rem;}
+.requeue-badge{background:#fbbf24;color:#0f172a;font-size:.7rem;padding:.1rem .4rem;border-radius:4px;margin-left:.5rem;font-weight:600;}
+.progress-bar{height:6px;background:#0f172a;border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#22d3ee,#0891b2);transition:width .3s;border-radius:3px;}
+.cat-badge{background:#334155;color:#e2e8f0;padding:.3rem .7rem;border-radius:6px;font-size:.78rem;font-weight:600;white-space:nowrap;}
+
+/* FLASHCARD */
+.flashcard{perspective:1200px;flex:1;display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:320px;margin-bottom:1rem;}
+.card-inner{width:100%;max-width:640px;min-height:300px;position:relative;transition:transform .55s;transform-style:preserve-3d;}
+.card-inner.flipped{transform:rotateY(180deg);}
+.card-face{position:absolute;top:0;left:0;width:100%;min-height:300px;backface-visibility:hidden;border-radius:16px;padding:2rem 2rem 3rem;display:flex;flex-direction:column;justify-content:center;}
+.card-front{background:linear-gradient(145deg,#1e293b,#334155);border:1px solid #475569;z-index:2;}
+.card-back{background:linear-gradient(145deg,#1a2332,#1e293b);border:1px solid #475569;transform:rotateY(180deg);}
+.card-content{font-size:1.05rem;line-height:1.7;color:#e2e8f0;}
+.card-content .answer-label{color:#22d3ee;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;}
+.card-content .answer-text{margin-bottom:.75rem;}
+.card-content .tip-box{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:8px;padding:.6rem .8rem;margin-top:.5rem;font-size:.88rem;color:#67e8f9;}
+.card-content .tip-box strong{color:#22d3ee;}
+.flip-hint{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);font-size:.75rem;color:#64748b;letter-spacing:.5px;}
+
+/* CONFIDENCE CONTROLS */
+.conf-controls{display:flex;gap:.75rem;justify-content:center;margin-bottom:1rem;opacity:0;pointer-events:none;transition:opacity .3s;}
+.conf-controls.visible{opacity:1;pointer-events:auto;}
+.conf-btn{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.7rem 1.5rem;border-radius:10px;border:2px solid;cursor:pointer;background:transparent;transition:all .2s;min-width:100px;}
+.conf-btn:hover{transform:translateY(-2px);}
+.conf-missed{border-color:#f87171;color:#f87171;}.conf-missed:hover{background:rgba(248,113,113,.1);}
+.conf-unsure{border-color:#fbbf24;color:#fbbf24;}.conf-unsure:hover{background:rgba(251,191,36,.1);}
+.conf-gotit{border-color:#4ade80;color:#4ade80;}.conf-gotit:hover{background:rgba(74,222,128,.1);}
+.conf-icon{font-size:1.3rem;font-weight:700;}
+.conf-label{font-size:.82rem;font-weight:600;}
+.conf-key{font-size:.68rem;opacity:.6;}
+
+/* NAV ROW */
+.nav-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.kb-hints{font-size:.72rem;color:#475569;}
+.kb-hints kbd{background:#1e293b;border:1px solid #334155;padding:.1rem .35rem;border-radius:3px;font-family:inherit;margin:0 .1rem;}
+
+/* RESULTS SCREEN */
+.results-container{max-width:680px;margin:0 auto;padding-top:2rem;}
+.results-container h1{text-align:center;color:#22d3ee;font-size:1.6rem;margin-bottom:1.5rem;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:2rem;}
+.stat-card{background:#1e293b;border-radius:12px;padding:1.25rem;text-align:center;border:1px solid #334155;}
+.stat-card .stat-value{font-size:2rem;font-weight:800;}
+.stat-card .stat-label{font-size:.8rem;color:#94a3b8;margin:.2rem 0;}
+.stat-card .stat-pct{font-size:.88rem;font-weight:600;}
+.stat-gotit .stat-value,.stat-gotit .stat-pct{color:#4ade80;}
+.stat-unsure .stat-value,.stat-unsure .stat-pct{color:#fbbf24;}
+.stat-missed .stat-value,.stat-missed .stat-pct{color:#f87171;}
+
+.breakdown-section{margin-bottom:1.5rem;}
+.breakdown-section h3{color:#94a3b8;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;}
+.cat-stat-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;font-size:.84rem;}
+.cat-stat-name{width:160px;color:#e2e8f0;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cat-stat-bar{flex:1;height:8px;background:#0f172a;border-radius:4px;overflow:hidden;display:flex;}
+.bar-seg{transition:width .4s;}
+.bar-gotit{background:#4ade80;}
+.bar-unsure{background:#fbbf24;}
+.bar-missed{background:#f87171;}
+.cat-stat-pct{width:45px;text-align:right;color:#94a3b8;font-size:.78rem;}
+
+.weak-section{margin-bottom:1.5rem;}
+.weak-section h3{color:#f87171;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.weak-item{display:flex;justify-content:space-between;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.5rem .75rem;margin-bottom:.4rem;font-size:.84rem;}
+.weak-item span:last-child{color:#f87171;font-weight:600;}
+
+.results-actions{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+
+/* MOBILE */
+@media(max-width:600px){
+  .screen{padding:1rem;}
+  .cat-grid{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:1fr;}
+  .card-face{padding:1.5rem 1.25rem 2.5rem;}
+  .conf-btn{padding:.6rem 1rem;min-width:80px;}
+  .cat-stat-name{width:100px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== START SCREEN ========== -->
+<div id="screen-start" class="screen active">
+<div class="start-container">
+<h1>Cognition & Sensation Flashcards</h1>
+<p class="subtitle">Complex Neurological Disorders (Chapters 60-65) &mdash; 185 cards across 11 categories</p>
+
+<div id="progress-summary">
+<h3>Overall Progress</h3>
+<div class="overall-bar">
+<div class="mb-gotit" id="ov-gotit"></div>
+<div class="mb-unsure" id="ov-unsure"></div>
+<div class="mb-missed" id="ov-missed"></div>
+</div>
+<div class="overall-text" id="ov-text"></div>
+</div>
+
+<div class="cat-grid" id="cat-grid"></div>
+
+<div class="options-row">
+<label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+<label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+</div>
+
+<div class="start-actions">
+<button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+<button class="btn-primary" onclick="startAll()">Study All Cards</button>
+<button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+</div>
+</div>
+</div>
+
+<!-- ========== CARD SCREEN ========== -->
+<div id="screen-card" class="screen">
+<div class="card-screen">
+<div class="card-header">
+<div class="progress-section">
+<div class="progress-text"><span id="cur-num">1</span> / <span id="tot-num">0</span><span class="requeue-badge" id="requeue-info" style="display:none"></span></div>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+<span class="cat-badge" id="cur-cat">Category</span>
+</div>
+
+<div class="flashcard" id="flashcard" onclick="flipCard()">
+<div class="card-inner" id="card-inner">
+<div class="card-face card-front">
+<div class="card-content" id="front-content"></div>
+<div class="flip-hint">SPACE or click to flip</div>
+</div>
+<div class="card-face card-back">
+<div class="card-content" id="back-content"></div>
+</div>
+</div>
+</div>
+
+<div class="conf-controls" id="conf-controls">
+<button class="conf-btn conf-missed" onclick="rate('missed')">
+<span class="conf-icon">&times;</span>
+<span class="conf-label">Missed</span>
+<span class="conf-key">Press 1</span>
+</button>
+<button class="conf-btn conf-unsure" onclick="rate('unsure')">
+<span class="conf-icon">~</span>
+<span class="conf-label">Unsure</span>
+<span class="conf-key">Press 2</span>
+</button>
+<button class="conf-btn conf-gotit" onclick="rate('gotit')">
+<span class="conf-icon">&check;</span>
+<span class="conf-label">Got It</span>
+<span class="conf-key">Press 3</span>
+</button>
+</div>
+
+<div class="nav-row">
+<button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+<div class="kb-hints"><kbd>Space</kbd> Flip &nbsp;<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate &nbsp;<kbd>Esc</kbd> Exit</div>
+</div>
+</div>
+</div>
+
+<!-- ========== RESULTS SCREEN ========== -->
+<div id="screen-results" class="screen">
+<div class="results-container">
+<h1>Session Complete</h1>
+<div class="stats-row">
+<div class="stat-card stat-gotit"><div class="stat-value" id="res-gotit-n">0</div><div class="stat-label">Got It</div><div class="stat-pct" id="res-gotit-p">0%</div></div>
+<div class="stat-card stat-unsure"><div class="stat-value" id="res-unsure-n">0</div><div class="stat-label">Unsure</div><div class="stat-pct" id="res-unsure-p">0%</div></div>
+<div class="stat-card stat-missed"><div class="stat-value" id="res-missed-n">0</div><div class="stat-label">Missed</div><div class="stat-pct" id="res-missed-p">0%</div></div>
+</div>
+<div class="breakdown-section" id="breakdown"></div>
+<div class="weak-section" id="weak-section"></div>
+<div class="results-actions">
+<button class="btn-primary" id="btn-rev-missed" onclick="reviewMissed()">Review Missed Cards</button>
+<button class="btn-secondary" id="btn-rev-mu" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+<button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+</div>
+</div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const STORAGE_KEY = 'cognition-sensation-fc-v1';
+
+const categories = {
+  'neuroanatomy': { name: 'Neuroanatomy', color: '#3b82f6' },
+  'assessment': { name: 'Neuro Assessment', color: '#10b981' },
+  'loc': { name: 'Altered LOC & GCS', color: '#f97316' },
+  'icp': { name: 'Increased ICP', color: '#ef4444' },
+  'surgery': { name: 'Intracranial Surgery', color: '#8b5cf6' },
+  'seizures': { name: 'Seizures', color: '#eab308' },
+  'stroke': { name: 'Stroke & TIA', color: '#dc2626' },
+  'tbi': { name: 'Head Injury & TBI', color: '#ec4899' },
+  'sci': { name: 'Spinal Cord Injury', color: '#06b6d4' },
+  'infections': { name: 'CNS Infections', color: '#14b8a6' },
+  'autoimmune': { name: 'Autoimmune & CN Disorders', color: '#a855f7' }
+};
+
+const cards = [
+// ===== NEUROANATOMY (18 cards) =====
+{id:1, cat:'neuroanatomy', q:'What is the primary neurotransmitter affected in Myasthenia Gravis?', a:'<strong>Acetylcholine (ACh)</strong>. Antibodies attack ACh receptors at the neuromuscular junction, impairing nerve-to-muscle communication.', tip:'MG = impaired ACh binding. Remember: ACh for muscle action.'},
+{id:2, cat:'neuroanatomy', q:'What neurotransmitter is decreased in Parkinson\'s Disease?', a:'<strong>Dopamine</strong>. Produced in the substantia nigra; affects behavior, attention, and fine motor movement.', tip:'Parkinson\'s = dopamine deficiency. This is why levodopa (dopamine precursor) is used for treatment.'},
+{id:3, cat:'neuroanatomy', q:'What neurotransmitter is decreased in seizure disorders?', a:'<strong>GABA</strong> (gamma-aminobutyric acid). GABA is the primary inhibitory neurotransmitter. Decreased GABA = less inhibition = more excitation = seizures.'},
+{id:4, cat:'neuroanatomy', q:'Which brain lobe controls concentration, abstract thinking, memory, motor function, judgment, and personality?', a:'<strong>Frontal lobe</strong> (the largest lobe). Damage causes personality changes, poor judgment, and motor deficits.'},
+{id:5, cat:'neuroanatomy', q:'Which brain lobe is responsible for auditory reception and understanding language?', a:'<strong>Temporal lobe</strong>. Contains Wernicke\'s area for language comprehension. Damage causes hearing deficits and receptive aphasia.'},
+{id:6, cat:'neuroanatomy', q:'Where is Broca\'s area located, and what happens when it\'s damaged?', a:'<strong>Left inferior frontal gyrus</strong>. Damage causes <strong>expressive aphasia</strong>: patient cannot speak or write BUT can understand language.', tip:'Broca\'s = Broken speech. Patient knows what they want to say but can\'t get it out.'},
+{id:7, cat:'neuroanatomy', q:'Where is Wernicke\'s area located, and what happens when it\'s damaged?', a:'<strong>Left posterior temporal gyrus</strong>. Damage causes <strong>receptive aphasia</strong>: patient cannot understand language; speaks fluently but nonsensically ("word salad").', tip:'Wernicke\'s = "What?" They don\'t understand. Speech sounds fluent but makes no sense.'},
+{id:8, cat:'neuroanatomy', q:'What does the brain stem control?', a:'<strong>Vital reflex centers</strong>: respiration, heart rate, blood pressure, coughing, vomiting, swallowing, sneezing. Also contains the reticular formation (arousal and sleep-wake cycles).'},
+{id:9, cat:'neuroanatomy', q:'Why does a stroke on one side of the brain cause deficits on the opposite side of the body?', a:'Motor fibers <strong>decussate (cross)</strong> at the level of the medulla. Damage above this level affects the <strong>contralateral</strong> (opposite) side.', tip:'Right brain stroke = left-sided deficits. Left brain stroke = right-sided deficits.'},
+{id:10, cat:'neuroanatomy', q:'What is the function of the cerebellum?', a:'<strong>Coordination</strong> of movement, fine motor control, balance, and <strong>proprioception</strong> (body position awareness). Damage causes ataxia (uncoordinated movements).'},
+{id:11, cat:'neuroanatomy', q:'Name the three meningeal layers from outermost to innermost.', a:'<strong>Dura mater</strong> (tough, gray, inelastic) → <strong>Arachnoid</strong> (spider web-like) → <strong>Pia mater</strong> (thin, hugs brain). CSF circulates in the <strong>subarachnoid space</strong>.'},
+{id:12, cat:'neuroanatomy', q:'Where is an epidural hematoma located, and what artery is usually involved?', a:'Between the <strong>skull and dura</strong>. Usually arterial bleeding from the <strong>middle meningeal artery</strong>. Classic presentation: brief LOC → lucid interval → rapid deterioration.', tip:'Epidural = Epi-"dura" = above the dura. Arterial = rapid, dangerous.'},
+{id:13, cat:'neuroanatomy', q:'Where is a subdural hematoma located, and what vessels are usually involved?', a:'Between the <strong>dura and arachnoid</strong>. Usually venous bleeding from <strong>bridging veins</strong>. Can be acute (24-48 hrs) or chronic (weeks to months).'},
+{id:14, cat:'neuroanatomy', q:'What is the normal CSF appearance? What does cloudy CSF suggest?', a:'Normal: <strong>clear and colorless</strong>. Cloudy = <strong>infection (meningitis)</strong>. Pink/bloody = subarachnoid hemorrhage.'},
+{id:15, cat:'neuroanatomy', q:'Why are cerebral blood vessels more prone to aneurysm formation?', a:'Cerebral vessels have <strong>TWO layers instead of three</strong>, making them weaker and more prone to rupture under pressure. The Circle of Willis bifurcations are the most common aneurysm sites.'},
+{id:16, cat:'neuroanatomy', q:'Why is head positioning so critical in managing intracranial pressure?', a:'Cerebral veins have <strong>NO VALVES</strong>. They depend entirely on gravity and blood pressure for flow. Head elevation (30-45°) and neutral alignment promote venous drainage.'},
+{id:17, cat:'neuroanatomy', q:'What disrupts the blood-brain barrier?', a:'<strong>Trauma, cerebral edema, and hypoxemia</strong>. The barrier normally protects the CNS from many blood plasma substances, including many medications and antibiotics.'},
+{id:18, cat:'neuroanatomy', q:'What is the Monro-Kellie Hypothesis?', a:'The skull is a rigid, closed container. Three components compete for fixed volume: <strong>brain tissue (~1400g) + blood (~75 mL) + CSF (~75 mL)</strong>. If one increases, another must decrease or ICP rises.'},
+
+// ===== NEURO ASSESSMENT (17 cards) =====
+{id:19, cat:'assessment', q:'What is the MOST SENSITIVE indicator of neurological status?', a:'<strong>Level of consciousness (LOC)</strong>. It\'s always the first thing to change with deterioration and the most reliable measure of the patient\'s condition.', tip:'A change in LOC, however subtle, demands immediate attention. This is a priority assessment.'},
+{id:20, cat:'assessment', q:'What is the difference between dizziness and vertigo?', a:'<strong>Dizziness</strong> = abnormal sensation of imbalance/movement. <strong>Vertigo</strong> = illusion of rotation—"the room is spinning."'},
+{id:21, cat:'assessment', q:'What is a positive Babinski reflex in an adult, and what does it indicate?', a:'Toes fan out and big toe extends upward when lateral plantar surface is stroked. Indicates <strong>upper motor neuron lesion</strong> affecting the corticospinal tract.', tip:'Babinski is NORMAL in infants (disappears by 9-10 months). In adults, it\'s ABNORMAL.'},
+{id:22, cat:'assessment', q:'What normal aging change increases the risk for chronic subdural hematoma in older adults?', a:'<strong>Brain atrophy</strong> (decreased brain weight, increased ventricle size). The brain shrinks away from the skull, stretching the bridging veins and making them vulnerable to tearing.'},
+{id:23, cat:'assessment', q:'Why must you be careful with hot and cold packs in older adults?', a:'<strong>Reduced temperature and pain perception</strong>. They may not feel when something is too hot or too cold, risking burns or frostbite.'},
+{id:24, cat:'assessment', q:'Are changes in cognition (memory, language, judgment) a normal part of aging?', a:'<strong>NO!</strong> Mental processing may slow, but significant memory lapses indicate pathology, not age. Always investigate cognitive changes.', tip:'This is a classic NCLEX trap. Normal aging ≠ dementia.'},
+{id:25, cat:'assessment', q:'What is the purpose of a lumbar puncture, and when is it CONTRAINDICATED?', a:'To obtain CSF for analysis. <strong>CONTRAINDICATED with increased ICP</strong> (risk of herniation). Patient should void beforehand.', tip:'If you suspect increased ICP, do NOT do an LP. Herniation can be fatal.'},
+{id:26, cat:'assessment', q:'What causes post-LP headache, and how is it managed?', a:'CSF leakage from puncture site. Headache <strong>lessens when lying down</strong>. Managed with analgesics, hydration, caffeine, and supine position.'},
+{id:27, cat:'assessment', q:'When should a CT scan be done for suspected stroke?', a:'Within <strong>20 minutes of ED arrival</strong>. Differentiates ischemic vs hemorrhagic stroke, which determines treatment (tPA for ischemic ONLY).'},
+{id:28, cat:'assessment', q:'What are the key nursing considerations for MRI?', a:'Remove <strong>ALL metal</strong>. Contraindicated with pacemakers. Warn patient about loud noises. Superior for detecting demyelination and diffuse axonal injury.'},
+{id:29, cat:'assessment', q:'What is the purpose of an EEG?', a:'Records brain electrical activity. Diagnoses <strong>seizures</strong> and <strong>brain death</strong>. Patient should avoid caffeine; wash hair after (lubricant used).'},
+{id:30, cat:'assessment', q:'What are the components of a neurologic examination?', a:'<strong>Consciousness & Cognition</strong>, <strong>Cranial Nerves</strong> (12 pairs), <strong>Motor System</strong> (strength, coordination), <strong>Sensory System</strong> (touch, pain, position), <strong>Reflexes</strong> (DTRs, Babinski).'},
+{id:31, cat:'assessment', q:'What gerontologic changes affect the neurologic exam?', a:'<strong>Brain weight decreases</strong>, ventricle size increases, cerebral blood flow reduced. DTRs may be absent or decreased. Reduced pain/temperature perception. <strong>Distinguish normal aging from pathology</strong>.', tip:'Slower mental processing is normal. Significant memory loss is NOT.'},
+{id:32, cat:'assessment', q:'What LOC state is characterized by the patient responding only to vigorous, painful stimulation?', a:'<strong>Stupor</strong>. Progression: Alert → Confused → Lethargic (drowsy but arousable) → Obtunded (difficult to arouse) → Stupor (painful stimuli only) → Coma (unresponsive).'},
+{id:33, cat:'assessment', q:'What is Locked-In Syndrome?', a:'Patient is <strong>fully conscious</strong> but cannot move or respond except through <strong>eye movements</strong>. Caused by a pons lesion. Cognition is preserved.', tip:'This is a terrifying state—the patient is "locked in" their body but fully aware.'},
+{id:34, cat:'assessment', q:'What breathing pattern is associated with DKA?', a:'<strong>Kussmaul respirations</strong>: deep, labored breathing with increased rate AND depth. The body is trying to blow off CO2 to compensate for metabolic acidosis.'},
+{id:35, cat:'assessment', q:'What breathing pattern is associated with heart failure and respiratory center damage?', a:'<strong>Cheyne-Stokes</strong>: crescendo-decrescendo breathing alternating with periods of apnea (~20 seconds).'},
+
+// ===== ALTERED LOC & GCS (16 cards) =====
+{id:36, cat:'loc', q:'What are the three components of the Glasgow Coma Scale?', a:'<strong>Eye Opening</strong> (1-4), <strong>Verbal Response</strong> (1-5), <strong>Motor Response</strong> (1-6). Total range: 3-15.'},
+{id:37, cat:'loc', q:'What GCS score indicates coma and generally requires airway protection?', a:'<strong>GCS ≤ 8</strong>. These patients cannot protect their airway and typically need intubation.', tip:'GCS 8 or less = intubate. This is a critical threshold.'},
+{id:38, cat:'loc', q:'On the GCS, what motor score is given for decorticate posturing?', a:'<strong>3</strong> (Flexion to pain). Arms flexed, brought toward core; legs extended.'},
+{id:39, cat:'loc', q:'On the GCS, what motor score is given for decerebrate posturing?', a:'<strong>2</strong> (Extension to pain). ALL extremities extended; indicates brain stem level injury.', tip:'Decerebrate is WORSE than decorticate. D-E for extension = brain stem Damage.'},
+{id:40, cat:'loc', q:'What is the mnemonic for remembering decorticate vs. decerebrate posturing?', a:'<strong>"Decorticate = Cord still works"</strong> (flexion—arms toward core). <strong>"Decerebrate = Brain stem Damage"</strong> (extension—all extended). Flaccid = worst prognosis.'},
+{id:41, cat:'loc', q:'What is the FIRST priority in caring for a patient with altered LOC?', a:'<strong>Airway</strong>. Patients with altered LOC lose protective reflexes. Maintain HOB at 30°, lateral positioning, frequent suctioning, oral hygiene.'},
+{id:42, cat:'loc', q:'A patient who was unconscious is now waking up and agitated. What should you do?', a:'<strong>Minimize stimulation</strong> during this period. Agitation when arousing from coma is common. Protect the patient but don\'t over-stimulate.'},
+{id:43, cat:'loc', q:'What is the nursing priority for thermoregulation in patients with altered LOC?', a:'Manage fever aggressively (minimal bedding, acetaminophen, cooling measures) but <strong>PREVENT SHIVERING</strong>—shivering increases ICP and metabolic demands.'},
+{id:44, cat:'loc', q:'Why is it important to talk to and touch unconscious patients?', a:'<strong>Sensory stimulation</strong> promotes brain function. Hearing is often the last sense to go. Always assume the patient can hear you.'},
+{id:45, cat:'loc', q:'What GCS eye opening score is given if the patient opens eyes to verbal stimuli?', a:'<strong>3</strong>. Scoring: Spontaneous = 4, To verbal = 3, To pain = 2, None = 1.'},
+{id:46, cat:'loc', q:'What GCS verbal score is given for confused but conversational speech?', a:'<strong>4</strong>. Scoring: Oriented = 5, Confused conversation = 4, Inappropriate words = 3, Incomprehensible = 2, None = 1.'},
+{id:47, cat:'loc', q:'What GCS motor score is given if the patient localizes to painful stimulus?', a:'<strong>5</strong> (Purposeful movement). Scoring: Obeys commands = 6, Localizes = 5, Withdraws = 4, Decorticate = 3, Decerebrate = 2, None = 1.'},
+{id:48, cat:'loc', q:'What are the key nursing interventions to prevent complications in altered LOC?', a:'<strong>Turning schedule</strong>, correct body alignment, passive ROM, splints/foam boots, eye care (artificial tears, patches), scrupulous oral care.'},
+{id:49, cat:'loc', q:'Why should nursing activities be spaced out in patients with neurological compromise?', a:'<strong>Clustering activities increases ICP</strong>. Space interventions to allow ICP to return to baseline between activities.'},
+{id:50, cat:'loc', q:'What is Akinetic Mutism?', a:'Patient is unresponsive to environment with no movement or sound, but <strong>may open eyes</strong>. Different from coma because eyes can open.'},
+{id:51, cat:'loc', q:'What characterizes Persistent Vegetative State?', a:'Patient is devoid of cognitive function but has <strong>sleep-wake cycles</strong>. Can open eyes, may have reflexes, but no awareness.'},
+
+// ===== INCREASED ICP (20 cards) =====
+{id:52, cat:'icp', q:'What is normal ICP and at what level does it require intervention?', a:'Normal: <strong>0-10 mmHg</strong> (upper limit 15 mmHg). Intervention needed when <strong>>15 mmHg</strong>.'},
+{id:53, cat:'icp', q:'What is the formula for Cerebral Perfusion Pressure (CPP)?', a:'<strong>CPP = MAP - ICP</strong>. Target CPP: 70-80 mmHg. CPP <50 mmHg = irreversible neurologic damage.', tip:'When ICP equals MAP, cerebral circulation stops. This is brain death.'},
+{id:54, cat:'icp', q:'What is the EARLIEST and most sensitive sign of increased ICP?', a:'<strong>Change in LOC</strong>—restlessness, confusion, slowing of speech, delayed responses. This is always the FIRST sign!', tip:'Don\'t wait for late signs. Catch LOC changes early and intervene.'},
+{id:55, cat:'icp', q:'What is Cushing\'s Triad, and is it an early or late sign of increased ICP?', a:'<strong>LATE sign</strong>: ↑ systolic BP with widened pulse pressure + bradycardia + irregular respirations. Indicates brain stem compression and imminent herniation.', tip:'If you see Cushing\'s Triad, herniation is imminent. This is a dire sign.'},
+{id:56, cat:'icp', q:'What positioning is used for patients with increased ICP?', a:'<strong>HOB 30-45 degrees</strong>, head in <strong>neutral (midline) position</strong>. Avoid extreme neck rotation or flexion (compresses jugular veins). Avoid hip flexion.'},
+{id:57, cat:'icp', q:'What activities should be avoided in patients with increased ICP?', a:'<strong>Valsalva maneuver</strong> (straining), coughing, sneezing, abdominal distention, emotional stress, clustering nursing activities. Use stool softeners.'},
+{id:58, cat:'icp', q:'How does CO2 affect cerebral blood vessels and ICP?', a:'<strong>↑ CO2 (hypercapnia)</strong> = vasodilation = ↑ ICP. <strong>↓ CO2 (hypocapnia)</strong> = vasoconstriction = ↓ ICP (but may cause ischemia). PaCO2 should not go below 30 mmHg.'},
+{id:59, cat:'icp', q:'What is the mechanism of action of Mannitol for increased ICP?', a:'<strong>Osmotic diuretic</strong>: pulls fluid from brain tissue into vascular compartment. Monitor serum osmolality, electrolytes; watch for heart failure and pulmonary edema.'},
+{id:60, cat:'icp', q:'When is dexamethasone (corticosteroid) effective for cerebral edema?', a:'Only for edema surrounding <strong>brain tumors</strong>. <strong>NOT effective for traumatic edema</strong>.'},
+{id:61, cat:'icp', q:'What nursing consideration is critical for CSF drainage via ventriculostomy?', a:'<strong>Strict aseptic technique</strong>. Monitor for signs of infection (meningitis). This directly drains CSF to reduce volume.'},
+{id:62, cat:'icp', q:'How does fever affect a patient with increased ICP?', a:'Fever <strong>increases cerebral metabolism</strong>, which increases ICP. Aggressive fever management is essential. Prevent shivering!'},
+{id:63, cat:'icp', q:'What is the difference between SIADH and Diabetes Insipidus as complications of increased ICP?', a:'<strong>SIADH</strong>: excessive ADH → water retention, ↓ urine output, dilutional hyponatremia. <strong>DI</strong>: decreased ADH → massive urine output, hypernatremia.'},
+{id:64, cat:'icp', q:'How is SIADH treated?', a:'<strong>Fluid restriction (<800 mL/day)</strong>. 3% hypertonic saline for severe hyponatremia.'},
+{id:65, cat:'icp', q:'How is Diabetes Insipidus treated?', a:'<strong>Fluid replacement</strong> and <strong>desmopressin</strong> (synthetic ADH, DDAVP).'},
+{id:66, cat:'icp', q:'What post-craniotomy finding suggests Diabetes Insipidus?', a:'<strong>Urine output >200 mL/hour for 2 consecutive hours</strong>. The urine will be dilute and odorless.', tip:'Watch UO closely post-craniotomy. Excessive output = DI.'},
+{id:67, cat:'icp', q:'What is autoregulation in the context of cerebral blood flow?', a:'The brain\'s ability to maintain <strong>constant cerebral blood flow</strong> despite changes in systemic BP. Can be impaired by pathologic increases in ICP.'},
+{id:68, cat:'icp', q:'What ICP change is acceptable during nursing interventions?', a:'ICP should not increase above <strong>25 mmHg</strong> during nursing interventions and should <strong>return to baseline within 5 minutes</strong>.'},
+{id:69, cat:'icp', q:'What is the progression of motor signs in increasing ICP?', a:'Weakness on one side → Decorticate posturing → Decerebrate posturing → Flaccid (loss of all motor function). Each stage indicates worsening herniation.'},
+{id:70, cat:'icp', q:'What happens to pupil response with increasing ICP?', a:'Early: pupillary changes, impaired extraocular movements. Late: fixed, dilated pupils (pressure on CN III). <strong>Pupil changes are an early-to-mid sign</strong>.'},
+{id:71, cat:'icp', q:'What type of headache is characteristic of increased ICP?', a:'<strong>Constant, increasing intensity</strong>, worse with movement, straining, or position changes. Often accompanied by projectile vomiting (no nausea warning).'},
+
+// ===== INTRACRANIAL SURGERY (12 cards) =====
+{id:72, cat:'surgery', q:'What is the difference between a craniotomy and a craniectomy?', a:'<strong>Craniotomy</strong>: bone flap is created and repositioned after surgery. <strong>Craniectomy</strong>: portion of skull is removed and NOT replaced initially (for decompression).'},
+{id:73, cat:'surgery', q:'What is a cranioplasty?', a:'Repair of a cranial defect using a plastic or metal plate to cover the skull defect (often done after craniectomy).'},
+{id:74, cat:'surgery', q:'What is the transsphenoidal approach used for?', a:'<strong>Pituitary adenoma removal</strong>. Accesses the sella turcica through the nasal cavity and sphenoid sinus, avoiding a craniotomy.'},
+{id:75, cat:'surgery', q:'What are the risks of the transsphenoidal approach?', a:'Transient <strong>diabetes insipidus</strong>, CSF leakage, visual disturbances, postop meningitis, SIADH.'},
+{id:76, cat:'surgery', q:'What is the post-op care after transsphenoidal surgery?', a:'Nasal packing in place, <strong>NO nose blowing</strong>, oral care per protocol, HOB elevated. Watch for CSF leak.'},
+{id:77, cat:'surgery', q:'When does cerebral edema peak after intracranial surgery?', a:'<strong>24-36 hours post-surgery</strong>. A slight decrease in LOC on postop day 1-2 may represent this peak.', tip:'This is expected, but always assess thoroughly. Don\'t assume it\'s "just edema."'},
+{id:78, cat:'surgery', q:'What post-craniotomy signs indicate increasing ICP or intracranial hematoma?', a:'<strong>↑ BP with ↓ HR and respiratory failure</strong> = increasing ICP. Patient not waking up or deteriorating = potential clot. Dilated pupil on operative side = hematoma.'},
+{id:79, cat:'surgery', q:'Why should blood-stained dressings be changed after craniotomy?', a:'Blood-stained dressings are a <strong>medium for bacterial growth</strong>. Change them to reduce infection risk.'},
+{id:80, cat:'surgery', q:'What should post-craniotomy patients NOT do regarding their airway?', a:'Do NOT <strong>cough, sneeze, or blow nose</strong>. These activities increase ICP and can cause CSF leak.'},
+{id:81, cat:'surgery', q:'What is given pre- and post-craniotomy to prevent seizures?', a:'<strong>Anticonvulsants</strong> (phenytoin, levetiracetam). Seizures are a common complication of intracranial surgery.'},
+{id:82, cat:'surgery', q:'How often should neuro status be monitored after craniotomy?', a:'<strong>q15-60 minutes</strong> during the acute phase, depending on patient stability.'},
+{id:83, cat:'surgery', q:'What VTE prevention is used after craniotomy?', a:'<strong>Early ambulation and SCDs</strong> (sequential compression devices). Pharmacologic anticoagulation may be delayed due to bleeding risk.'},
+
+// ===== SEIZURES (15 cards) =====
+{id:84, cat:'seizures', q:'What is a seizure?', a:'An abnormal episode of motor, sensory, autonomic, or psychic activity from <strong>sudden, uncontrolled electrical discharge</strong> from cerebral neurons.'},
+{id:85, cat:'seizures', q:'What is the difference between focal and generalized seizures?', a:'<strong>Focal (partial)</strong>: originates in ONE hemisphere. <strong>Generalized</strong>: engages BOTH hemispheres from onset.'},
+{id:86, cat:'seizures', q:'What is the postictal phase?', a:'Period after a seizure characterized by <strong>confusion, sleepiness</strong> lasting hours. Patient may not remember the event.'},
+{id:87, cat:'seizures', q:'What are the nursing priorities DURING a seizure?', a:'<strong>Stay with patient</strong>, protect from injury, clear area, loosen clothing, <strong>DO NOT restrain</strong>, <strong>DO NOT put anything in mouth</strong>, turn to side when possible, TIME the seizure.'},
+{id:88, cat:'seizures', q:'What should be documented about a seizure?', a:'Circumstances before (aura?), type of body movement, pupil size, incontinence (yes/no), duration, ability to speak after, cognitive status after.'},
+{id:89, cat:'seizures', q:'What is the first-line IV medication for active seizures?', a:'<strong>Lorazepam (Ativan) 2 mg IV</strong>. May repeat x1 after 2 minutes if seizure continues.'},
+{id:90, cat:'seizures', q:'What defines status epilepticus?', a:'Continuous seizure activity lasting <strong>≥5 minutes</strong> OR serial seizures without recovery between episodes. <strong>MEDICAL EMERGENCY</strong>—causes permanent brain damage from repeated anoxia.', tip:'Status epilepticus is life-threatening. Stop the seizure ASAP.'},
+{id:91, cat:'seizures', q:'What are the management priorities for status epilepticus?', a:'Stop seizure ASAP, treat underlying cause, establish <strong>advanced airway</strong>, IV anticonvulsants, electrolytes, glucose, EEG monitoring, continuous cardiac/respiratory monitoring.'},
+{id:92, cat:'seizures', q:'What complication can result from prolonged seizures affecting the kidneys?', a:'<strong>Rhabdomyolysis</strong> (skeletal muscle breakdown) → acute kidney injury in 15% of patients. Monitor for hyperuricemia. Hydration and alkalinization help protect kidneys.'},
+{id:93, cat:'seizures', q:'What equipment should be at the bedside for seizure precautions?', a:'<strong>Padded side rails</strong>, bed in lowest position, suction equipment, oxygen, IV access maintained, clutter-free environment.'},
+{id:94, cat:'seizures', q:'What common triggers can cause provoked seizures?', a:'Metabolic disturbances, infection, drug withdrawal, fever, sleep deprivation, stopping anticonvulsants abruptly.'},
+{id:95, cat:'seizures', q:'What should you check immediately after a seizure begins?', a:'<strong>Blood glucose</strong>. Hypoglycemia can cause seizures and is rapidly treatable.'},
+{id:96, cat:'seizures', q:'Why should you NOT restrain a seizing patient?', a:'Restraining can cause <strong>injury</strong> (fractures, dislocations) as the patient fights against restraints. Protect from harm but don\'t restrict movement.'},
+{id:97, cat:'seizures', q:'Why should you NOT put anything in a seizing patient\'s mouth?', a:'Risk of <strong>broken teeth, aspiration, or injury</strong> to you or the patient. The tongue cannot be swallowed.', tip:'This is a common misconception. Nothing in the mouth—ever.'},
+{id:98, cat:'seizures', q:'What is an aura?', a:'A <strong>warning sensation</strong> before a seizure (visual, auditory, olfactory, or sensory). If the patient recognizes an aura, they can get to safety.'},
+
+// ===== STROKE & TIA (20 cards) =====
+{id:99, cat:'stroke', q:'What is the primary modifiable risk factor for stroke?', a:'<strong>Hypertension</strong>. It\'s the #1 modifiable risk factor for both ischemic and hemorrhagic stroke.'},
+{id:100, cat:'stroke', q:'What percentage of strokes are ischemic vs. hemorrhagic?', a:'<strong>Ischemic: 87%</strong> (obstruction by thrombus or embolus). <strong>Hemorrhagic: 13%</strong> (bleeding into brain tissue).'},
+{id:101, cat:'stroke', q:'What is the "penumbra" in ischemic stroke?', a:'The ischemic tissue surrounding the infarction that <strong>may be salvaged</strong> with timely intervention. This is why "time is brain."'},
+{id:102, cat:'stroke', q:'What does "TIME IS BRAIN" mean quantitatively?', a:'<strong>1.9 million neurons lost per minute</strong>; brain ages 3.6 years per hour without treatment.', tip:'Every minute counts. This is why door-to-needle time is critical.'},
+{id:103, cat:'stroke', q:'What is the BEFAST mnemonic for stroke recognition?', a:'<strong>B</strong>alance problems, <strong>E</strong>yes (visual changes), <strong>F</strong>ace drooping, <strong>A</strong>rm weakness, <strong>S</strong>peech difficulty, <strong>T</strong>ime to call 911.'},
+{id:104, cat:'stroke', q:'What is the difference between hemiplegia and hemiparesis?', a:'<strong>Hemiplegia</strong> = paralysis of one side. <strong>Hemiparesis</strong> = weakness of one side.'},
+{id:105, cat:'stroke', q:'What is dysarthria?', a:'<strong>Impaired speech from muscle paralysis</strong> (slurred speech). The patient knows what to say but muscles can\'t execute it properly.'},
+{id:106, cat:'stroke', q:'What is a TIA and why is it significant?', a:'<strong>Transient Ischemic Attack</strong>: temporary neurologic deficit resolving within 24 hours (most <1 hour). <strong>3-15% of strokes are preceded by TIA</strong>—it\'s a warning stroke requiring workup!'},
+{id:107, cat:'stroke', q:'What cardiac condition is the most common cause of embolic stroke?', a:'<strong>Atrial fibrillation</strong>. Blood pools in fibrillating atria, forming clots that can travel to the brain.', tip:'A-fib patients need anticoagulation to prevent stroke.'},
+{id:108, cat:'stroke', q:'What is the door-to-needle goal for tPA administration?', a:'<strong>45 minutes</strong>. tPA eligibility: within 3 hours (extended to 4.5 hours with restrictions).'},
+{id:109, cat:'stroke', q:'What is the tPA dosing protocol?', a:'<strong>0.9 mg/kg</strong> (max 90 mg). 10% as bolus over 1 minute, remainder over 1 hour with 50 mL NS flush.'},
+{id:110, cat:'stroke', q:'What is the major risk of tPA, and what precautions are needed?', a:'<strong>BLEEDING</strong>. Insert all invasive lines BEFORE administration. No anticoagulants for 24 hours. Monitor for bleeding at all sites and change in LOC.'},
+{id:111, cat:'stroke', q:'Why is tPA contraindicated after the treatment window?', a:'Revascularization of necrotic tissue increases <strong>cerebral edema and hemorrhage</strong>. The tissue is already dead—reperfusion causes more harm.'},
+{id:112, cat:'stroke', q:'What is "permissive hypertension" in stroke management?', a:'Allowing BP up to <strong>185/105</strong> to perfuse the penumbra. Don\'t aggressively lower BP—the brain needs that pressure to maintain perfusion.'},
+{id:113, cat:'stroke', q:'What is the cardinal symptom of hemorrhagic stroke?', a:'Sudden, severe headache—<strong>"worst headache of my life."</strong> Also: early sudden LOC changes, nausea/vomiting, seizures, nuchal rigidity (if subarachnoid).'},
+{id:114, cat:'stroke', q:'What is vasospasm and when does it occur after subarachnoid hemorrhage?', a:'Arterial narrowing reducing blood flow, causing secondary stroke. Occurs <strong>4-14 days</strong> after SAH (often 7-8 days when clot lyses).'},
+{id:115, cat:'stroke', q:'What medication is given to ALL patients with subarachnoid hemorrhage to prevent vasospasm?', a:'<strong>Nimodipine</strong>—a calcium channel blocker that dilates arterial smooth muscle.'},
+{id:116, cat:'stroke', q:'What are aneurysm precautions?', a:'<strong>Absolute bed rest</strong> with HOB 30°, avoid Valsalva, avoid neck flexion/rotation, stool softeners, <strong>non-stimulating environment</strong> (dim lights, no TV/radio), restricted visitors.'},
+{id:117, cat:'stroke', q:'What post-tPA monitoring frequency is required?', a:'q15 min for 2 hours → q30 min for 6 hours → q1 hour for 16 hours (<strong>total 24 hours</strong>).'},
+{id:118, cat:'stroke', q:'What swallowing precautions are needed after stroke?', a:'Sit upright for meals, <strong>chin tuck</strong> for swallowing, thickened liquids if needed, assess swallow before oral intake.'},
+
+// ===== HEAD INJURY & TBI (18 cards) =====
+{id:119, cat:'tbi', q:'What is the #1 cause of brain trauma?', a:'<strong>Falls</strong>. Highest risk groups: children 0-4, adolescents 15-19, adults 65+.'},
+{id:120, cat:'tbi', q:'What is the difference between primary and secondary brain injury?', a:'<strong>Primary</strong>: direct trauma at moment of injury (contusions, lacerations, hematomas). <strong>Secondary</strong>: evolves over hours/days (edema, ischemia, chemical changes). Secondary injury is <strong>PREVENTABLE</strong>!', tip:'Good nursing care prevents secondary injury. This is where you make a difference.'},
+{id:121, cat:'tbi', q:'What is the classic presentation of an epidural hematoma?', a:'Brief LOC → <strong>LUCID INTERVAL</strong> (appears fine) → rapid deterioration. Usually arterial (middle meningeal artery). <strong>EMERGENCY requiring immediate surgery</strong>.', tip:'Lucid interval = epidural hematoma. Don\'t be fooled by the "good period."'},
+{id:122, cat:'tbi', q:'Who is at high risk for chronic subdural hematoma?', a:'<strong>Older adults</strong> (brain atrophy stretches bridging veins). Develops over weeks to months with fluctuating symptoms. May mimic stroke.'},
+{id:123, cat:'tbi', q:'What is diffuse axonal injury (DAI)?', a:'<strong>Widespread axon damage</strong> causing immediate coma and decorticate/decerebrate posturing. Diagnosed by MRI. Poor prognosis.'},
+{id:124, cat:'tbi', q:'What is coup-contrecoup injury?', a:'<strong>Acceleration-deceleration</strong> injury. Damage occurs at the impact site (coup) AND the opposite side of the brain (contrecoup).'},
+{id:125, cat:'tbi', q:'What is Battle Sign and what does it indicate?', a:'<strong>Ecchymosis over the mastoid process</strong> (behind the ear). Indicates <strong>basilar skull fracture</strong>.'},
+{id:126, cat:'tbi', q:'What are Raccoon Eyes and what do they indicate?', a:'<strong>Periorbital ecchymosis</strong> (bruising around both eyes). Indicates <strong>basilar skull fracture</strong>.'},
+{id:127, cat:'tbi', q:'What is the Halo Sign?', a:'<strong>Ring of clear fluid around blood stain</strong> on dressing or pillow. Indicates <strong>CSF leak</strong> from skull fracture.'},
+{id:128, cat:'tbi', q:'What must you ALWAYS assume in a trauma patient until ruled out?', a:'<strong>Cervical spine injury</strong>. Immobilize at scene; one person stabilizes head and neck to prevent flexion, rotation, or extension.'},
+{id:129, cat:'tbi', q:'What sedatives are preferred in TBI patients and why?', a:'<strong>Benzodiazepines</strong> (lorazepam, midazolam)—they don\'t affect cerebral blood flow or ICP.'},
+{id:130, cat:'tbi', q:'When do contusion effects peak?', a:'<strong>18-36 hours</strong> after injury. Expect longer unconsciousness than concussion.'},
+{id:131, cat:'tbi', q:'What is CTE and how is it caused?', a:'<strong>Chronic Traumatic Encephalopathy</strong>—progressive brain degeneration from repeated concussions. Common in athletes and military.'},
+{id:132, cat:'tbi', q:'What are the cardinal signs of brain death?', a:'<strong>Coma</strong>, <strong>absence of brain stem reflexes</strong>, <strong>apnea</strong>.'},
+{id:133, cat:'tbi', q:'What is the apnea test for brain death?', a:'Patient taken off ventilator with O2 cannula (4-10 L/min). Absence of respirations with CO2 rising to <strong>60 mmHg</strong> (or 20 mmHg above baseline) over 8-10 minutes confirms brain death.'},
+{id:134, cat:'tbi', q:'What legal status does brain death confer?', a:'<strong>Brain death = cardiac death</strong>. Patient must be taken off life support. This is a legal and medical determination of death.'},
+{id:135, cat:'tbi', q:'What should you do if clear drainage is coming from the nose or ear after head trauma?', a:'Suspect <strong>CSF leak</strong>. Do NOT pack the nose or ear. Let it drain. Test for glucose (CSF contains glucose). Keep HOB elevated.'},
+{id:136, cat:'tbi', q:'What is the main goal of TBI management?', a:'<strong>Prevent secondary injury</strong> by treating cerebral edema, maintaining cerebral perfusion, maintaining oxygenation, and preventing seizures.'},
+
+// ===== SPINAL CORD INJURY (18 cards) =====
+{id:137, cat:'sci', q:'What are the most frequent levels of spinal cord injury?', a:'<strong>C5-C7, T12, L1</strong>—areas of greatest mobility.'},
+{id:138, cat:'sci', q:'What is the difference between paraplegia and tetraplegia?', a:'<strong>Paraplegia</strong> = paralysis of lower body. <strong>Tetraplegia (quadriplegia)</strong> = paralysis of all four extremities (cervical injuries).'},
+{id:139, cat:'sci', q:'What is spinal shock?', a:'<strong>Sudden depression of reflex activity below injury level</strong> (areflexia). Muscular flaccidity, lack of sensation and reflexes. ↓ BP, ↓ HR. Paralytic ileus occurs 2-3 days post-SCI.'},
+{id:140, cat:'sci', q:'What is neurogenic shock?', a:'<strong>Loss of autonomic function below lesion</strong> → loss of sympathetic tone → ↓ BP, ↓ HR, ↓ cardiac output. Venous pooling causes peripheral vasodilation.'},
+{id:141, cat:'sci', q:'How do you distinguish neurogenic shock from hypovolemic shock?', a:'Neurogenic shock: skin is <strong>WARM and DRY</strong>, heart rate is <strong>SLOW</strong> (bradycardia). Hypovolemic shock: skin is cool/clammy, heart rate is fast (tachycardia).', tip:'Warm + bradycardia = neurogenic. Cold + tachycardia = hypovolemic.'},
+{id:142, cat:'sci', q:'What is autonomic dysreflexia and who is at risk?', a:'<strong>Acute emergency</strong> in patients with lesions ABOVE T6 after spinal shock resolves. Exaggerated sympathetic response to noxious stimulus below injury level.'},
+{id:143, cat:'sci', q:'What are the symptoms of autonomic dysreflexia?', a:'Severe pounding headache, <strong>sudden severe hypertension</strong>, profuse diaphoresis above lesion, flushing above/pallor below, nasal congestion, <strong>bradycardia</strong>.'},
+{id:144, cat:'sci', q:'What is the MOST COMMON trigger for autonomic dysreflexia?', a:'<strong>Distended bladder</strong>—kinked catheter, blocked drainage. Also: constipation/fecal impaction, skin irritation.', tip:'Check the bladder FIRST when autonomic dysreflexia is suspected.'},
+{id:145, cat:'sci', q:'What is the FIRST nursing intervention for autonomic dysreflexia?', a:'<strong>SIT THE PATIENT UP</strong>—lowers BP using gravity. Then rapidly find and eliminate cause (check catheter, check for impaction, examine skin).'},
+{id:146, cat:'sci', q:'What medication is given if BP remains severely elevated in autonomic dysreflexia?', a:'<strong>Hydralazine IV</strong> (ganglionic blocking agent).'},
+{id:147, cat:'sci', q:'Why is respiratory failure a major concern in high SCI?', a:'High cervical injuries (C3-C5) affect the <strong>phrenic nerve</strong> that controls the diaphragm. Monitor respiratory status closely; may need mechanical ventilation.'},
+{id:148, cat:'sci', q:'How often should PROM be performed in SCI patients?', a:'<strong>At least 4 times daily</strong>. Contractures develop rapidly without regular ROM exercises.'},
+{id:149, cat:'sci', q:'What are the leading causes of death in SCI patients?', a:'<strong>Pneumonia, pulmonary embolism, sepsis</strong> (often from pressure injuries or UTIs).'},
+{id:150, cat:'sci', q:'What DVT prophylaxis is needed in SCI patients?', a:'Anticoagulation within <strong>72 hours</strong> for at least <strong>3 months</strong>. Use compression devices.'},
+{id:151, cat:'sci', q:'What MAP target is maintained during the hyperacute phase of SCI?', a:'<strong>MAP 85 mmHg</strong> to maintain spinal cord perfusion.'},
+{id:152, cat:'sci', q:'What bladder management is needed after SCI?', a:'Initially: indwelling catheter. Long-term: <strong>intermittent catheterization</strong> preferred. Autonomic dysreflexia prevention is key.'},
+{id:153, cat:'sci', q:'What bowel management is needed after SCI?', a:'Regular <strong>bowel program</strong>: scheduled timing, high fiber, adequate fluids, stool softeners, digital stimulation as needed.'},
+{id:154, cat:'sci', q:'Why are splints used in SCI patients?', a:'To prevent <strong>footdrop</strong> and other contractures. Proper positioning and splinting preserve function.'},
+
+// ===== CNS INFECTIONS (15 cards) =====
+{id:155, cat:'infections', q:'What are the classic symptoms of meningitis?', a:'Headache, high fever, <strong>nuchal rigidity</strong> (stiff, painful neck), photophobia, changes in LOC, behavioral changes.'},
+{id:156, cat:'infections', q:'What is the Kernig sign?', a:'With thigh flexed on abdomen, <strong>leg cannot be fully extended</strong>. Indicates meningeal irritation.'},
+{id:157, cat:'infections', q:'What is the Brudzinski sign?', a:'<strong>Neck flexion causes reflexive flexion of hips and knees</strong>. More sensitive than Kernig for meningeal irritation.'},
+{id:158, cat:'infections', q:'Which type of meningitis is more severe and requires immediate antibiotics?', a:'<strong>Bacterial (septic) meningitis</strong>. Most common pathogens: S. pneumoniae, N. meningitidis. Can be fatal without rapid treatment.'},
+{id:159, cat:'infections', q:'What rash is associated with N. meningitidis (meningococcal) meningitis?', a:'<strong>Petechial or purpuric rash</strong>—red/purple spots that don\'t blanch with pressure. Sign of septicemia.'},
+{id:160, cat:'infections', q:'What is the first-line antibiotic treatment for bacterial meningitis?', a:'<strong>Penicillin G with ceftriaxone</strong> (high-dose IV). Dexamethasone is also given to reduce inflammatory response.'},
+{id:161, cat:'infections', q:'What prophylaxis is needed for close contacts of meningitis patients?', a:'<strong>Antimicrobial prophylaxis within 24 hours</strong>: rifampin, ciprofloxacin, or ceftriaxone.'},
+{id:162, cat:'infections', q:'Who should receive the meningococcal vaccine?', a:'Age <strong>11-12 with booster at 16</strong>. Also: first-year college students, military personnel, immunocompromised individuals.'},
+{id:163, cat:'infections', q:'What type of meningitis is most common in AIDS patients?', a:'<strong>Cryptococcal meningitis</strong> (fungal). Caused by Cryptococcus neoformans.'},
+{id:164, cat:'infections', q:'When is viral (aseptic) meningitis most common?', a:'<strong>Summer and early fall</strong>. Usually caused by enteroviruses. Generally self-limiting.'},
+{id:165, cat:'infections', q:'What isolation precautions are needed for meningitis?', a:'<strong>Droplet precautions</strong> until pathogen is identified and patient has been on antibiotics for 24 hours.'},
+{id:166, cat:'infections', q:'What complications can occur with meningitis?', a:'Increased ICP, septic shock, seizures, hearing loss, cranial nerve damage, hydrocephalus.'},
+{id:167, cat:'infections', q:'What nursing assessments are priority for meningitis patients?', a:'Frequent <strong>neuro assessment</strong>, monitor for increased ICP, pain and fever management, infection control precautions.'},
+{id:168, cat:'infections', q:'What position helps reduce ICP in meningitis?', a:'<strong>HOB elevated 30 degrees</strong>, head in neutral position—same as any increased ICP situation.'},
+{id:169, cat:'infections', q:'What diagnostic test confirms meningitis?', a:'<strong>Lumbar puncture</strong> with CSF analysis. CSF will show: ↑ WBC, ↑ protein, ↓ glucose in bacterial meningitis.'},
+
+// ===== AUTOIMMUNE & CRANIAL NERVE DISORDERS (16 cards) =====
+{id:170, cat:'autoimmune', q:'What is the pathophysiology of Multiple Sclerosis?', a:'Progressive immune-related <strong>demyelination of the CNS</strong>. Frequently relapsing-remitting pattern with exacerbations and stability periods.'},
+{id:171, cat:'autoimmune', q:'What percentage of MS patients experience spasticity, and where is it most common?', a:'<strong>90%</strong> of MS patients experience spasticity, most often in the <strong>lower extremities</strong>.'},
+{id:172, cat:'autoimmune', q:'What environmental factor worsens MS symptoms?', a:'<strong>Heat</strong>. Maintain a temperate environment; use air conditioning. Heat increases fatigue and worsens symptoms.'},
+{id:173, cat:'autoimmune', q:'What is the initial presentation of Myasthenia Gravis?', a:'<strong>Ocular muscles first</strong>: diplopia (double vision) and ptosis (drooping eyelid). Weakness worsens with use and improves with rest.'},
+{id:174, cat:'autoimmune', q:'What is the Tensilon test and what does a positive result indicate?', a:'IV edrophonium (Tensilon) → <strong>immediate improvement in muscle strength = positive for MG</strong>. Have atropine available for side effects (bradycardia, bronchoconstriction).'},
+{id:175, cat:'autoimmune', q:'What is the first-line medication for Myasthenia Gravis?', a:'<strong>Mestinon (pyridostigmine)</strong>—a cholinesterase inhibitor that prevents ACh breakdown at the neuromuscular junction.'},
+{id:176, cat:'autoimmune', q:'What surgical treatment can result in complete remission of MG?', a:'<strong>Thymectomy</strong>—typically in patients <strong>&lt;60 years</strong>. Earlier surgery = better outcomes. Monitor post-op in <strong>ICU for respiratory depression</strong>.'},
+{id:177, cat:'autoimmune', q:'What is the difference between myasthenic crisis and cholinergic crisis?', a:'<strong>Myasthenic crisis</strong>: undermedication/disease exacerbation. <strong>Cholinergic crisis</strong>: overmedication with cholinesterase inhibitors. Both cause severe weakness and respiratory compromise.'},
+{id:178, cat:'autoimmune', q:'What medications should be avoided in MG patients?', a:'<strong>Sedatives and tranquilizers</strong>—they can cause respiratory and cardiac depression. Monitor respiratory status closely.'},
+{id:179, cat:'autoimmune', q:'What is Guillain-Barré Syndrome (GBS)?', a:'Autoimmune attack on <strong>peripheral nerve myelin</strong>. 60-70% follow a viral infection 1-3 weeks prior. Peak severity within 2-4 weeks.'},
+{id:180, cat:'autoimmune', q:'What is the hallmark progression pattern of GBS?', a:'Weakness and paralysis <strong>starts in lower extremities and ASCENDS upward</strong>. May progress to respiratory failure.', tip:'Ascending paralysis = GBS. Watch for respiratory compromise.'},
+{id:181, cat:'autoimmune', q:'What is the major life-threatening complication of GBS?', a:'<strong>Respiratory failure</strong>. Elective intubation BEFORE autonomic dysfunction occurs improves outcomes.'},
+{id:182, cat:'autoimmune', q:'What treatments are used for GBS?', a:'ICU monitoring, respiratory support, <strong>plasmapheresis or IVIG</strong> to reduce circulating antibodies.'},
+{id:183, cat:'autoimmune', q:'What is Trigeminal Neuralgia and how does it present?', a:'Condition of <strong>CN V</strong> characterized by paroxysms of severe, stabbing facial pain. Triggered by washing face, brushing teeth, eating, or draft of air.'},
+{id:184, cat:'autoimmune', q:'What is Bell\'s Palsy and what is the prognosis?', a:'Unilateral inflammation of <strong>CN VII</strong> causing sudden facial paralysis with facial distortion. <strong>Most recover completely in 3-5 weeks</strong>.'},
+{id:185, cat:'autoimmune', q:'What patient reassurance is important with Bell\'s Palsy?', a:'<strong>This is NOT a stroke</strong>. Recovery is expected. Treatment: corticosteroids within 72 hours, eye protection, facial exercises.'}
+];
+
+// ==================== STORAGE ====================
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+function saveSessionResults() {
+  const p = loadProgress();
+  Object.entries(state.results).forEach(([id, r]) => p[id] = r);
+  saveProgress(p);
+}
+
+// ==================== SCREENS ====================
+let state = { deck: [], idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: 0 };
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (name === 'start') renderStartScreen();
+}
+
+function renderStartScreen() {
+  const p = loadProgress();
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+
+  let totalGotit = 0, totalUnsure = 0, totalMissed = 0;
+  const totalCards = cards.length;
+
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catCards = cards.filter(c => c.cat === catId);
+    let g = 0, u = 0, m = 0;
+    catCards.forEach(c => {
+      if (p[c.id] === 'gotit') { g++; totalGotit++; }
+      else if (p[c.id] === 'unsure') { u++; totalUnsure++; }
+      else if (p[c.id] === 'missed') { m++; totalMissed++; }
+    });
+    const studied = g + u + m;
+    const pct = studied > 0 ? Math.round(g / studied * 100) : 0;
+    const gw = studied > 0 ? (g / catCards.length * 100).toFixed(0) : 0;
+    const uw = studied > 0 ? (u / catCards.length * 100).toFixed(0) : 0;
+    const mw = studied > 0 ? (m / catCards.length * 100).toFixed(0) : 0;
+
+    const btn = document.createElement('div');
+    btn.className = 'cat-btn';
+    btn.dataset.cat = catId;
+    btn.style.setProperty('--cat-color', cat.color);
+    btn.innerHTML = `
+      <div class="cat-name"><span class="cat-dot" style="background:${cat.color}"></span>${cat.name}</div>
+      <span class="cat-count">${catCards.length} cards</span>
+      <div class="cat-mastery">
+        <div class="cat-mastery-bar">
+          <div class="mb-gotit" style="width:${gw}%"></div>
+          <div class="mb-unsure" style="width:${uw}%"></div>
+          <div class="mb-missed" style="width:${mw}%"></div>
+        </div>
+        <div class="cat-mastery-text">${studied > 0 ? pct + '% mastered' : 'Not started'}</div>
+      </div>`;
+    btn.addEventListener('click', () => handleCatClick(btn, catId));
+    grid.appendChild(btn);
+  });
+
+  // Progress summary
+  const studied = totalGotit + totalUnsure + totalMissed;
+  const ps = document.getElementById('progress-summary');
+  if (studied > 0) {
+    ps.style.display = 'block';
+    document.getElementById('ov-gotit').style.width = (totalGotit/totalCards*100) + '%';
+    document.getElementById('ov-unsure').style.width = (totalUnsure/totalCards*100) + '%';
+    document.getElementById('ov-missed').style.width = (totalMissed/totalCards*100) + '%';
+    document.getElementById('ov-text').textContent = `${totalGotit} mastered \u00b7 ${totalUnsure} unsure \u00b7 ${totalMissed} missed \u00b7 ${totalCards - studied} unseen`;
+  } else {
+    ps.style.display = 'none';
+  }
+
+  // Weak cards count
+  const weakCount = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').length;
+  document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+  document.getElementById('btn-weak').style.display = weakCount > 0 ? '' : 'none';
+}
+
+let selectedCats = new Set();
+function handleCatClick(btn, catId) {
+  const multi = document.getElementById('chk-multi').checked;
+  if (multi) {
+    if (selectedCats.has(catId)) { selectedCats.delete(catId); btn.classList.remove('selected'); }
+    else { selectedCats.add(catId); btn.classList.add('selected'); }
+  } else {
+    selectedCats.clear();
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    selectedCats.add(catId);
+    btn.classList.add('selected');
+    startSession([catId]);
+  }
+}
+
+// ==================== SESSION ====================
+function startSession(catIds) {
+  let deck = cards.filter(c => catIds.includes(c.cat)).map(c => c.id);
+  if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+  if (deck.length === 0) return;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function startAll() {
+  const catIds = Object.keys(categories);
+  startSession(catIds);
+}
+
+function studyWeak() {
+  const p = loadProgress();
+  let deck = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').map(c => c.id);
+  if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+  if (deck.length === 0) return;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ==================== CARD DISPLAY ====================
+function displayCard() {
+  if (state.idx >= state.deck.length) {
+    if (state.overflow.length > 0) {
+      state.deck = state.deck.concat(state.overflow);
+      state.overflow = [];
+    }
+    if (state.idx >= state.deck.length) {
+      saveSessionResults();
+      showResults();
+      return;
+    }
+  }
+
+  const cardId = state.deck[state.idx];
+  const card = cards.find(c => c.id === cardId);
+  if (!card) return;
+
+  state.flipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('conf-controls').classList.remove('visible');
+
+  document.getElementById('front-content').innerHTML = card.q;
+
+  let backHtml = '<div class="answer-label">Answer</div><div class="answer-text">' + card.a + '</div>';
+  if (card.tip) backHtml += '<div class="tip-box"><strong>EXAM TIP:</strong> ' + card.tip.replace(/^EXAM TIP:\s*/i, '') + '</div>';
+  document.getElementById('back-content').innerHTML = backHtml;
+
+  const cat = categories[card.cat];
+  const badge = document.getElementById('cur-cat');
+  badge.textContent = cat.name;
+  badge.style.background = cat.color + '22';
+  badge.style.color = cat.color;
+  badge.style.border = '1px solid ' + cat.color;
+
+  // Progress
+  const answered = Object.keys(state.results).length;
+  document.getElementById('cur-num').textContent = answered + 1;
+  document.getElementById('tot-num').textContent = state.totalOriginal;
+  document.getElementById('prog-fill').style.width = (answered / state.totalOriginal * 100) + '%';
+
+  // Requeue info
+  const extra = state.deck.length - state.totalOriginal + state.overflow.length;
+  const ri = document.getElementById('requeue-info');
+  if (extra > 0) { ri.style.display = ''; ri.textContent = '+' + extra + ' requeued'; }
+  else { ri.style.display = 'none'; }
+
+  // Auto-adjust card height
+  const inner = document.getElementById('card-inner');
+  inner.style.minHeight = '300px';
+}
+
+function flipCard() {
+  if (state.idx >= state.deck.length) return;
+  state.flipped = !state.flipped;
+  document.getElementById('card-inner').classList.toggle('flipped');
+  if (state.flipped) document.getElementById('conf-controls').classList.add('visible');
+  else document.getElementById('conf-controls').classList.remove('visible');
+}
+
+// ==================== RATING ====================
+function rate(confidence) {
+  if (!state.flipped) return;
+  const cardId = state.deck[state.idx];
+  state.results[cardId] = confidence;
+
+  if (confidence === 'missed') {
+    const offset = 5 + Math.floor(Math.random() * 3);
+    const insertAt = state.idx + offset;
+    if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  } else if (confidence === 'unsure') {
+    const offset = 8 + Math.floor(Math.random() * 3);
+    const insertAt = state.idx + offset;
+    if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+    else state.overflow.push(cardId);
+  }
+
+  state.idx++;
+  displayCard();
+}
+
+function exitSession() {
+  saveSessionResults();
+  if (Object.keys(state.results).length > 0) showResults();
+  else showScreen('start');
+}
+
+// ==================== RESULTS ====================
+function showResults() {
+  showScreen('results');
+  const r = state.results;
+  let g = 0, u = 0, m = 0;
+  Object.values(r).forEach(v => { if (v === 'gotit') g++; else if (v === 'unsure') u++; else if (v === 'missed') m++; });
+  const total = g + u + m;
+
+  document.getElementById('res-gotit-n').textContent = g;
+  document.getElementById('res-gotit-p').textContent = total ? Math.round(g/total*100) + '%' : '0%';
+  document.getElementById('res-unsure-n').textContent = u;
+  document.getElementById('res-unsure-p').textContent = total ? Math.round(u/total*100) + '%' : '0%';
+  document.getElementById('res-missed-n').textContent = m;
+  document.getElementById('res-missed-p').textContent = total ? Math.round(m/total*100) + '%' : '0%';
+
+  // Category breakdown
+  const bd = document.getElementById('breakdown');
+  let html = '<h3>By Category</h3>';
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catResults = Object.entries(r).filter(([id]) => {
+      const card = cards.find(c => c.id === parseInt(id));
+      return card && card.cat === catId;
+    });
+    if (catResults.length === 0) return;
+    let cg = 0, cu = 0, cm = 0;
+    catResults.forEach(([, v]) => { if (v === 'gotit') cg++; else if (v === 'unsure') cu++; else if (v === 'missed') cm++; });
+    const ct = cg + cu + cm;
+    const gw = ct ? (cg/ct*100).toFixed(0) : 0;
+    const uw = ct ? (cu/ct*100).toFixed(0) : 0;
+    const mw = ct ? (cm/ct*100).toFixed(0) : 0;
+    html += `<div class="cat-stat-row">
+      <div class="cat-stat-name">${cat.name}</div>
+      <div class="cat-stat-bar">
+        <div class="bar-seg bar-gotit" style="width:${gw}%"></div>
+        <div class="bar-seg bar-unsure" style="width:${uw}%"></div>
+        <div class="bar-seg bar-missed" style="width:${mw}%"></div>
+      </div>
+      <div class="cat-stat-pct">${gw}%</div>
+    </div>`;
+  });
+  bd.innerHTML = html;
+
+  // Weak areas
+  const ws = document.getElementById('weak-section');
+  let weakHtml = '<h3>Focus Areas</h3>';
+  let hasWeak = false;
+  Object.entries(categories).forEach(([catId, cat]) => {
+    const catResults = Object.entries(r).filter(([id]) => {
+      const card = cards.find(c => c.id === parseInt(id));
+      return card && card.cat === catId;
+    });
+    if (catResults.length === 0) return;
+    const cg = catResults.filter(([,v]) => v === 'gotit').length;
+    const ct = catResults.length;
+    const pct = Math.round(cg/ct*100);
+    if (pct < 60) {
+      hasWeak = true;
+      weakHtml += `<div class="weak-item"><span>${cat.name}</span><span>${pct}% mastery</span></div>`;
+    }
+  });
+  ws.innerHTML = hasWeak ? weakHtml : '';
+
+  // Button visibility
+  document.getElementById('btn-rev-missed').style.display = m > 0 ? '' : 'none';
+  document.getElementById('btn-rev-mu').style.display = (m + u) > 0 ? '' : 'none';
+}
+
+function reviewMissed() {
+  const missedIds = Object.entries(state.results).filter(([,v]) => v === 'missed').map(([id]) => parseInt(id));
+  if (missedIds.length === 0) return;
+  let deck = document.getElementById('chk-shuffle').checked ? shuffle(missedIds) : missedIds;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function reviewMissedAndUnsure() {
+  const ids = Object.entries(state.results).filter(([,v]) => v === 'missed' || v === 'unsure').map(([id]) => parseInt(id));
+  if (ids.length === 0) return;
+  let deck = document.getElementById('chk-shuffle').checked ? shuffle(ids) : ids;
+  state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+  showScreen('card');
+  displayCard();
+}
+
+function resetProgress() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderStartScreen();
+  }
+}
+
+// ==================== KEYBOARD ====================
+document.addEventListener('keydown', (e) => {
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+  const id = active.id;
+
+  if (id === 'screen-card') {
+    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); flipCard(); }
+    if (e.key === '1') rate('missed');
+    if (e.key === '2') rate('unsure');
+    if (e.key === '3') rate('gotit');
+    if (e.key === 'Escape') exitSession();
+  }
+  if (id === 'screen-results') {
+    if (e.key === 'Escape' || e.key === 'Enter') showScreen('start');
+  }
+});
+
+// ==================== INIT ====================
+renderStartScreen();
+</script>
+</body>
+</html>
