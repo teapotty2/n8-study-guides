@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Primer — Week 1 Day 1: Cardiac Assessment & Hemodynamics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface-2: #232733;
+            --border: #2d3143;
+            --text: #e4e6ef;
+            --text-dim: #8b8fa3;
+            --accent: #6c8aff;
+            --accent-glow: rgba(108, 138, 255, 0.15);
+            --red: #ff6b7a;
+            --red-bg: rgba(255, 107, 122, 0.08);
+            --green: #6bdeaa;
+            --green-bg: rgba(107, 222, 170, 0.08);
+            --amber: #f0b866;
+            --amber-bg: rgba(240, 184, 102, 0.08);
+            --purple: #b48eff;
+            --purple-bg: rgba(180, 142, 255, 0.08);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1d27 0%, #1f2333 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid;
+        }
+
+        .badge-week {
+            background: var(--accent-glow);
+            color: var(--accent);
+            border-color: rgba(108, 138, 255, 0.25);
+        }
+
+        .badge-ch {
+            background: var(--amber-bg);
+            color: var(--amber);
+            border-color: rgba(240, 184, 102, 0.2);
+        }
+
+        .badge-due {
+            background: var(--red-bg);
+            color: var(--red);
+            border-color: rgba(255, 107, 122, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e4e6ef, #6c8aff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* Progress bar */
+        .progress-bar-wrap {
+            max-width: 860px;
+            margin: 0.75rem auto 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--purple));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-label {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Main content */
+        .content {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(108, 138, 255, 0.3);
+        }
+
+        .card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .card p,
+        .card li {
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .card ul,
+        .card ol {
+            margin-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .card li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Reveal cards (active recall) */
+        .reveal-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .reveal-card:hover {
+            border-color: rgba(108, 138, 255, 0.3);
+        }
+
+        .reveal-q {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            user-select: none;
+        }
+
+        .reveal-q:hover {
+            background: rgba(108, 138, 255, 0.03);
+        }
+
+        .reveal-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(108, 138, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .reveal-card.open .reveal-marker {
+            background: var(--green-bg);
+            border-color: rgba(107, 222, 170, 0.3);
+            color: var(--green);
+        }
+
+        .reveal-q-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .reveal-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .reveal-card.open .reveal-a {
+            max-height: 800px;
+        }
+
+        .reveal-a-inner {
+            padding: 0 1.25rem 1.25rem 3rem;
+            font-size: 0.88rem;
+            color: var(--text-dim);
+            line-height: 1.65;
+        }
+
+        .reveal-a-inner strong {
+            color: var(--text);
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            border-left: 3px solid;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .callout-label {
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
+        }
+
+        .callout-pearl {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .callout-pearl .callout-label {
+            color: var(--accent);
+        }
+
+        .callout-danger {
+            background: var(--red-bg);
+            border-color: var(--red);
+        }
+
+        .callout-danger .callout-label {
+            color: var(--red);
+        }
+
+        .callout-memory {
+            background: var(--purple-bg);
+            border-color: var(--purple);
+        }
+
+        .callout-memory .callout-label {
+            color: var(--purple);
+        }
+
+        .callout-tip {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        .callout-tip .callout-label {
+            color: var(--green);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin: 0.75rem 0;
+        }
+
+        th {
+            background: var(--surface-2);
+            color: var(--text);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.6rem 0.75rem;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+            vertical-align: top;
+        }
+
+        td strong {
+            color: var(--text);
+        }
+
+        tr:hover td {
+            background: rgba(108, 138, 255, 0.02);
+        }
+
+        /* Mini-quiz */
+        .quiz-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .quiz-q {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .quiz-opt {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-dim);
+            background: transparent;
+            text-align: left;
+        }
+
+        .quiz-opt:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .quiz-opt.correct {
+            border-color: var(--green);
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .quiz-opt.wrong {
+            border-color: var(--red);
+            background: var(--red-bg);
+            color: var(--red);
+            opacity: 0.7;
+        }
+
+        .quiz-opt.disabled {
+            pointer-events: none;
+        }
+
+        .quiz-explanation {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: var(--surface-2);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            display: none;
+            line-height: 1.6;
+        }
+
+        .quiz-explanation.show {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header {
+                padding: 1.25rem 1rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .content {
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .hl-red {
+            color: var(--red);
+            font-weight: 600;
+        }
+
+        .hl-green {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .hl-amber {
+            color: var(--amber);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="header-inner">
+            <div class="header-meta">
+                <span class="badge badge-week">Week 1 · Day 1</span>
+                <span class="badge badge-ch">Brunner Ch. 21</span>
+                <span class="badge badge-due">Tue 2/17 · 7:30 AM</span>
+            </div>
+            <h1>Cardiac Assessment, Testing & Hemodynamics</h1>
+            <p>Active recall primer — click to reveal answers, test yourself before lecture</p>
+            <div class="progress-bar-wrap">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-label" id="progressLabel">0 / 0 revealed</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- SECTION 1: Cardiac Diagnostic Testing -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--accent-glow); color: var(--accent);">🔬</div>
+                <h2>Cardiac Diagnostic Testing</h2>
+            </div>
+
+            <div class="card">
+                <h3>Lab Markers — What Gets Drawn and Why</h3>
+                <table>
+                    <tr>
+                        <th>Lab</th>
+                        <th>What It Tells You</th>
+                        <th>Key Values</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Troponin (I or T)</strong></td>
+                        <td>Myocardial cell death — the gold standard for MI detection. Rises 3-4 hrs after injury,
+                            peaks 12-24 hrs.</td>
+                        <td>Elevated = myocardial damage. Serial draws q3-6h to track trend.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CK-MB</strong></td>
+                        <td>Cardiac-specific creatine kinase isoenzyme. Less specific than troponin but useful for
+                            reinfarction detection (clears faster).</td>
+                        <td>Rises 4-6 hrs, peaks 12-24 hrs, returns to normal 48-72 hrs.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BNP / NT-proBNP</strong></td>
+                        <td>Released by stretched ventricular walls — rises with volume overload. Distinguishes cardiac
+                            vs. pulmonary dyspnea.</td>
+                        <td>BNP >100 pg/mL suggests HF. Higher = worse HF.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lipid Panel</strong></td>
+                        <td>LDL, HDL, triglycerides, total cholesterol. Risk stratification for CAD.</td>
+                        <td>LDL <100 (or <70 if high risk). HDL>40M / >50F.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CRP / hs-CRP</strong></td>
+                        <td>Inflammatory marker — elevated CRP correlates with atherosclerotic disease activity.</td>
+                        <td>hs-CRP >3 mg/L = higher cardiovascular risk.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">A patient presents with chest pain. Troponin drawn on arrival is normal.
+                        Does this rule out MI?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        <strong>No.</strong> Troponin takes <strong>3-4 hours</strong> to rise after myocardial injury.
+                        A negative troponin on arrival means nothing — you need <strong>serial troponins</strong> drawn
+                        every 3-6 hours. The trend matters more than a single value. This is why patients with chest
+                        pain get admitted for serial labs even when the first one is clean.
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">Patient is short of breath. BNP comes back at 850 pg/mL. What does this
+                        tell you vs. a BNP of 45?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        <strong>BNP 850</strong> = almost certainly heart failure causing the dyspnea. The ventricles
+                        are stretched and screaming. <strong>BNP 45</strong> = the heart is probably fine — look for a
+                        pulmonary cause (pneumonia, PE, COPD exacerbation). BNP is your tiebreaker between "is this the
+                        heart or the lungs?"
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Non-Invasive Cardiac Tests</h3>
+                <table>
+                    <tr>
+                        <th>Test</th>
+                        <th>What It Shows</th>
+                        <th>Nursing Considerations</th>
+                    </tr>
+                    <tr>
+                        <td><strong>12-Lead ECG</strong></td>
+                        <td>Electrical activity — rhythm, conduction, ischemia/injury patterns (ST changes)</td>
+                        <td>Skin prep (clean, dry, shave if needed). Correct lead placement is critical for accurate
+                            reading.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Echocardiogram</strong></td>
+                        <td>Ultrasound of heart — chamber size, wall motion, valve function, EF</td>
+                        <td>Non-invasive, no special prep for transthoracic (TTE). TEE requires NPO and sedation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stress Test</strong></td>
+                        <td>Heart's response to exercise — reveals ischemia not visible at rest</td>
+                        <td>Hold beta-blockers and caffeine. Monitor BP, HR, ECG throughout. Stop if chest pain,
+                            significant ST changes, arrhythmias, or hypotension.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pharmacologic Stress Test</strong></td>
+                        <td>Same info as exercise stress — for patients who can't exercise</td>
+                        <td>Uses <strong>adenosine, dipyridamole, or dobutamine</strong> to simulate exercise. Hold
+                            caffeine 24h (it blocks adenosine). Have aminophylline as reversal agent.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Holter Monitor</strong></td>
+                        <td>Continuous ECG recording (24-48h) — catches intermittent arrhythmias</td>
+                        <td>Patient keeps a diary of symptoms and activities. Don't get it wet. Report any symptoms with
+                            timestamps.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="callout callout-memory">
+                <div class="callout-label">🧠 Mental Model</div>
+                <strong>Non-invasive tests answer the question: "What's going on?"</strong>
+                ECG = electrical problem? Echo = structural/functional problem? Stress test = supply-demand mismatch
+                when the heart works harder?
+                <br>Each test targets a different dimension of cardiac function.
+            </div>
+        </div>
+
+        <!-- SECTION 2: Cardiac Catheterization -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--red-bg); color: var(--red);">🫀</div>
+                <h2>Cardiac Catheterization</h2>
+            </div>
+
+            <div class="card">
+                <h3>What It Is</h3>
+                <p>A catheter is threaded (usually via femoral or radial artery) into the heart to directly measure
+                    pressures, visualize coronary arteries with dye (angiography), and potentially intervene
+                    (angioplasty/stent — PCI). This is the <strong>definitive diagnostic test</strong> for coronary
+                    artery disease.</p>
+                <ul>
+                    <li><strong>Left-heart cath</strong> → arterial approach → visualizes coronary arteries, LV
+                        function, aortic/mitral valves, measures LV pressures</li>
+                    <li><strong>Right-heart cath</strong> → venous approach → measures RA, RV, PA pressures, PCWP
+                        (pulmonary capillary wedge pressure) → assesses hemodynamics</li>
+                </ul>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">Why is checking for a contrast/iodine/shellfish allergy critical before
+                        cardiac cath?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        The contrast dye used in angiography is <strong>iodine-based</strong>. Patients with iodine or
+                        shellfish allergies are at higher risk for anaphylaxis. If allergic, they need
+                        <strong>premedication</strong> with corticosteroids and antihistamines (e.g., prednisone +
+                        diphenhydramine) before the procedure. Also assess for <strong>metformin use</strong> — it must
+                        be held 48 hours before/after because contrast + metformin → risk of lactic acidosis.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Pre-Procedure Nursing Care</h3>
+                <ul>
+                    <li><strong>Consent</strong> — verify informed consent is signed</li>
+                    <li><strong>Allergies</strong> — iodine, shellfish, contrast dye, latex</li>
+                    <li><strong>Labs</strong> — check BUN/Cr (kidneys must handle contrast), PT/INR (bleeding risk),
+                        CBC, type & screen</li>
+                    <li><strong>Meds</strong> — hold metformin 48h pre/post (lactic acidosis risk). Anticoagulants per
+                        MD order. May continue aspirin.</li>
+                    <li><strong>NPO</strong> — usually 6-8 hours before procedure</li>
+                    <li><strong>Baseline assessment</strong> — mark peripheral pulses (dorsalis pedis, posterior tibial)
+                        with a marker. Document baseline neuro status and skin color/temp of extremities.</li>
+                    <li><strong>IV access</strong> — establish for fluid hydration (helps kidneys flush contrast)</li>
+                    <li><strong>Teaching</strong> — warm flushing sensation when dye is injected is normal. May feel
+                        like they need to urinate. Must lie flat afterward.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Post-Procedure Nursing Care — The Big Focus</h3>
+                <ul>
+                    <li><strong>Hemostasis at site</strong> — apply pressure or use a closure device. Femoral:
+                        <strong>bed rest 2-6 hours, leg straight, HOB ≤30°</strong>. Radial: shorter rest, but monitor
+                        hand perfusion.</li>
+                    <li><strong>Neurovascular checks q15min × 4</strong> → then q30min × 2 → then q1h. Check the
+                        <strong>5 P's</strong>: Pain, Pulselessness, Pallor, Paresthesia, Paralysis in the affected
+                        extremity.</li>
+                    <li><strong>Check insertion site</strong> — bleeding, hematoma, ecchymosis. Mark any hematoma
+                        borders with a pen and recheck for expansion.</li>
+                    <li><strong>Distal pulses</strong> — compare to baseline marks. Diminished or absent pulse =
+                        <strong>emergency</strong> → notify MD immediately.</li>
+                    <li><strong>Hydration</strong> — push oral fluids + IV fluids to flush contrast. Monitor urine
+                        output (≥30 mL/hr). Watch for contrast-induced nephropathy (rising BUN/Cr).</li>
+                    <li><strong>Vital signs</strong> — watch for hypotension (bleeding, vasovagal), hypertension,
+                        arrhythmias.</li>
+                </ul>
+            </div>
+
+            <div class="callout callout-danger">
+                <div class="callout-label">⚠️ Critical — Know This Cold</div>
+                <strong>If the patient's distal pulse disappears post-cath</strong>, the catheter may have caused
+                <strong>arterial occlusion or thrombosis</strong>. This is a surgical emergency. Hold pressure, notify
+                the provider immediately, and do NOT elevate the leg (keeps blood flowing distally).
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">Femoral cath patient wants to get up to use the bathroom 1 hour
+                        post-procedure. What do you do?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        <strong>Deny the request</strong> — kindly but firmly. Femoral access requires <strong>bed rest
+                            2-6 hours</strong> with the affected leg straight and HOB ≤30°. Offer a bedpan or urinal.
+                        Explain that bending at the groin could dislodge the clot at the insertion site and cause
+                        <strong>hemorrhage</strong>. This is non-negotiable.
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">Why is metformin held for 48 hours after cardiac cath?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        Contrast dye is nephrotoxic — it can temporarily impair kidney function. Metformin is renally
+                        excreted. If the kidneys can't clear metformin properly, it accumulates → <strong>lactic
+                            acidosis</strong> (potentially fatal). You hold it 48h and recheck renal function (BUN/Cr)
+                        before restarting. This is a classic exam question.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Hemodynamic Monitoring -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--purple-bg); color: var(--purple);">📊</div>
+                <h2>Hemodynamic Monitoring</h2>
+            </div>
+
+            <div class="card">
+                <h3>The Mental Model</h3>
+                <p>Hemodynamic monitoring = <strong>measuring pressures inside the cardiovascular system in
+                        real-time</strong>. It answers: Is the heart pumping enough? Is there enough volume? Is
+                    resistance too high/low?</p>
+                <p>Think of it as checking pressure at different points in a plumbing system to figure out where the
+                    problem is.</p>
+            </div>
+
+            <div class="card">
+                <h3>Key Hemodynamic Parameters</h3>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Normal</th>
+                        <th>What It Reflects</th>
+                    </tr>
+                    <tr>
+                        <td><strong>CVP</strong> (Central Venous Pressure)</td>
+                        <td>2–6 mmHg</td>
+                        <td>Right atrial pressure → <strong>preload</strong> of right heart. Reflects volume status.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>PAP</strong> (Pulmonary Artery Pressure)</td>
+                        <td>Systolic: 20-30<br>Diastolic: 8-12<br>Mean: 10-20</td>
+                        <td>Pressure in pulmonary artery → right heart afterload. Elevated in pulmonary HTN, ARDS, left
+                            HF.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PCWP / PAWP</strong> (Pulmonary Capillary Wedge)</td>
+                        <td>8–12 mmHg</td>
+                        <td>Indirect measure of <strong>left atrial pressure → left heart preload</strong>. The best
+                            single number for left ventricular function.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CO</strong> (Cardiac Output)</td>
+                        <td>4–6 L/min</td>
+                        <td>Total blood pumped per minute. CO = SV × HR.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SVR</strong> (Systemic Vascular Resistance)</td>
+                        <td>800–1200 dynes</td>
+                        <td><strong>Left heart afterload</strong>. High SVR = vasoconstriction. Low SVR = vasodilation
+                            (sepsis).</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="callout callout-memory">
+                <div class="callout-label">🧠 Mental Model — Follow the Catheter</div>
+                A PA (Swan-Ganz) catheter enters through a central vein and travels through: <strong>RA → RV → PA →
+                    wedges in a pulmonary capillary branch</strong>. Each position measures the pressure at that point.
+                When wedged, it "sees past" the pulmonary vasculature to reflect left atrial pressure — that's why PCWP
+                = left heart preload.
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">CVP reads 12 mmHg (elevated). What does this likely indicate, and what
+                        conditions cause it?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        Elevated CVP = <strong>right-sided volume overload or right heart failure</strong>. The right
+                        atrium is under more pressure than normal. Causes: <strong>fluid overload, right-sided HF,
+                            cardiac tamponade, tension pneumothorax, pulmonary embolism</strong> (anything that backs up
+                        blood into the right side). Nursing response: assess for JVD, peripheral edema, hepatomegaly.
+                        May need diuretics or fluid restriction.
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">PCWP is 22 mmHg (normal 8-12). What's happening and what will you see
+                        clinically?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        Elevated PCWP = <strong>left-sided heart failure</strong>. The left ventricle can't keep up, so
+                        pressure backs up into the pulmonary vasculature. Clinically you'll see: <strong>pulmonary
+                            edema</strong> (crackles on auscultation), dyspnea, orthopnea, pink frothy sputum in severe
+                        cases. When PCWP >18-20, fluid starts leaking into alveoli. Treatment: diuretics (furosemide),
+                        nitrates (reduces preload), oxygen, position upright.
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal-card" onclick="toggleReveal(this)">
+                <div class="reveal-q">
+                    <span class="reveal-marker">?</span>
+                    <span class="reveal-q-text">Septic shock patient: CO is high, SVR is low. Why does this pattern make
+                        sense?</span>
+                </div>
+                <div class="reveal-a">
+                    <div class="reveal-a-inner">
+                        Sepsis causes massive <strong>vasodilation</strong> (inflammatory mediators relax blood vessels)
+                        → SVR drops. The heart compensates by pumping faster and harder → CO goes up ("warm shock" /
+                        hyperdynamic phase). But despite high CO, tissues aren't getting adequate perfusion because the
+                        vascular tone is gone — blood is pooling in dilated vessels rather than perfusing organs.
+                        Treatment: <strong>vasopressors</strong> (norepinephrine) to restore SVR, plus IV fluids to fill
+                        the expanded vascular space.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Arterial Line (A-line) Monitoring</h3>
+                <ul>
+                    <li>Inserted into <strong>radial artery</strong> (most common) for continuous BP monitoring +
+                        arterial blood sampling</li>
+                    <li>Perform <strong>Allen's test</strong> before insertion — confirms adequate collateral
+                        circulation via ulnar artery</li>
+                    <li><strong>Level the transducer</strong> at the phlebostatic axis (4th ICS, midaxillary line) for
+                        accurate readings</li>
+                    <li><strong>Zero the system</strong> to atmospheric pressure — eliminates drift in readings</li>
+                    <li>Watch for: dampened waveform (air, clot, kink), accidental disconnection (arterial hemorrhage is
+                        rapid and fatal), infection at site</li>
+                </ul>
+            </div>
+
+            <div class="callout callout-pearl">
+                <div class="callout-label">💎 Clinical Pearl</div>
+                <strong>Allen's Test in 3 steps:</strong> Have patient make a fist. Occlude both radial and ulnar
+                arteries. Release the ulnar artery only. If the palm flushes pink within 5-7 seconds → positive (safe —
+                ulnar provides backup). If it stays white → do NOT use that radial artery for an a-line.
+            </div>
+        </div>
+
+        <!-- SECTION 4: Putting It Together -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--green-bg); color: var(--green);">🎯</div>
+                <h2>Quick Self-Check — Lecture Ready?</h2>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">1. Post-cardiac cath, your patient develops sudden pain, pallor, and pulselessness
+                    in the right leg. Priority action?</div>
+                <div class="quiz-options">
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Elevate the leg and apply ice</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Recheck in 15 minutes</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, true)">Maintain flat position, notify provider
+                        STAT</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Administer morphine for pain</button>
+                </div>
+                <div class="quiz-explanation">Acute loss of pulse + pain + pallor = arterial occlusion. This is a
+                    surgical emergency. Keep leg flat (don't elevate — you need gravity to help distal perfusion), apply
+                    pressure if bleeding, and notify the provider immediately. Every minute counts.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">2. PCWP of 24 mmHg with crackles and dyspnea. Which medication addresses the
+                    underlying hemodynamic problem?</div>
+                <div class="quiz-options">
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Norepinephrine (Levophed)</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, true)">Furosemide (Lasix)</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Dopamine</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Atropine</button>
+                </div>
+                <div class="quiz-explanation">High PCWP = volume overload backing into the lungs. Furosemide (loop
+                    diuretic) reduces preload by removing excess fluid. Norepi would increase afterload (making it
+                    worse). Dopamine could increase HR but doesn't address the fluid problem. The crackles are literally
+                    fluid in the alveoli from the elevated pulmonary pressures.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">3. Patient on metformin is scheduled for cardiac cath tomorrow. What medication
+                    teaching is essential?</div>
+                <div class="quiz-options">
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Take an extra dose the morning of the
+                        procedure</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Metformin has no interaction with
+                        cardiac cath</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, true)">Hold metformin 48h before and after;
+                        restart after kidney function confirmed</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Switch to insulin permanently</button>
+                </div>
+                <div class="quiz-explanation">Contrast dye is nephrotoxic. Metformin is renally cleared. Impaired
+                    kidneys + metformin = metformin accumulation = lactic acidosis (can be fatal). Hold metformin,
+                    hydrate well, recheck BUN/Cr before restarting. This is a board-favorite question.</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">4. Before inserting a radial arterial line, the nurse performs Allen's test. The
+                    patient's palm remains pale after releasing the ulnar artery. Next step?</div>
+                <div class="quiz-options">
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Proceed with radial artery
+                        insertion</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, true)">Do NOT use this radial artery — select an
+                        alternative site</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Wait 10 minutes and retest</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Apply warm compresses and retry</button>
+                </div>
+                <div class="quiz-explanation">A negative Allen's test (palm stays pale) means the ulnar artery cannot
+                    provide adequate collateral circulation to the hand. If you cannulate the radial artery and it
+                    occludes, the hand could become ischemic. Choose a different site (other wrist, brachial, or femoral
+                    artery).</div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="quiz-q">5. CVP 1 mmHg, HR 122, BP 82/60. What hemodynamic picture does this suggest?</div>
+                <div class="quiz-options">
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Right-sided heart failure</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Fluid overload</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, true)">Hypovolemia — the tank is empty</button>
+                    <button class="quiz-opt" onclick="checkAnswer(this, false)">Cardiac tamponade</button>
+                </div>
+                <div class="quiz-explanation">Low CVP = low preload = not enough volume returning to the heart. The
+                    heart compensates with tachycardia (HR 122) trying to maintain CO, but BP is still low because
+                    stroke volume is tanked. This patient needs volume — IV fluids and/or blood products. Think:
+                    hemorrhage, severe dehydration, or third-spacing.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        N8 Lecture Primer · Week 1 Day 1 · Cardiac Assessment, Testing & Hemodynamics · Brunner Ch. 21
+    </div>
+
+    <script>
+        // Reveal cards
+        let totalRevealCards = 0;
+        let revealedCount = 0;
+
+        function initProgress() {
+            totalRevealCards = document.querySelectorAll('.reveal-card').length;
+            updateProgress();
+        }
+
+        function toggleReveal(card) {
+            const wasOpen = card.classList.contains('open');
+            card.classList.toggle('open');
+            if (!wasOpen) {
+                revealedCount++;
+            } else {
+                revealedCount--;
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = totalRevealCards;
+            const fill = document.getElementById('progressFill');
+            const label = document.getElementById('progressLabel');
+            const pct = total > 0 ? (revealedCount / total) * 100 : 0;
+            fill.style.width = pct + '%';
+            label.textContent = revealedCount + ' / ' + total + ' revealed';
+        }
+
+        // Quiz
+        function checkAnswer(btn, correct) {
+            const card = btn.closest('.quiz-card');
+            const opts = card.querySelectorAll('.quiz-opt');
+            const explanation = card.querySelector('.quiz-explanation');
+
+            opts.forEach(o => {
+                o.classList.add('disabled');
+                if (o === btn) {
+                    o.classList.add(correct ? 'correct' : 'wrong');
+                }
+                // Show correct answer
+                if (o.getAttribute('onclick').includes('true')) {
+                    o.classList.add('correct');
+                }
+            });
+
+            explanation.classList.add('show');
+        }
+
+        initProgress();
+    </script>
+
+</body>
+
+</html>
