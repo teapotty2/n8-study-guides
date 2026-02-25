@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Blue Mastery Flashcards</title>
+    <style>
+        :root {
+            --gotit: #4ade80;
+            --unsure: #fbbf24;
+            --missed: #f87171;
+            --primary: #dc2626;
+            --primary-hover: #b91c1c;
+            --muted: #94a3b8;
+            --card-bg: #1e293b;
+            --bg: #0f172a;
+            --border: #334155;
+            --text: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        .screen {
+            display: none;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: .5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        #progress-summary {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        #progress-summary h3 {
+            color: var(--primary);
+            margin-bottom: .75rem;
+        }
+
+        .overall-bar {
+            height: 12px;
+            background: #475569;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: .5rem;
+        }
+
+        .mb-gotit {
+            background: var(--gotit);
+        }
+
+        .mb-unsure {
+            background: var(--unsure);
+        }
+
+        .mb-missed {
+            background: var(--missed);
+        }
+
+        .overall-text {
+            font-size: .85rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all .2s;
+            text-align: left;
+            position: relative;
+            color: var(--text);
+            font-size: .95rem;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--cat-color, var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.selected {
+            border-color: var(--cat-color, var(--primary));
+            background: rgba(220, 38, 38, .1);
+        }
+
+        .cat-name {
+            font-weight: 700;
+            display: block;
+            margin-bottom: .25rem;
+        }
+
+        .cat-count {
+            font-size: .8rem;
+            color: var(--muted);
+        }
+
+        .cat-mini-bar {
+            height: 4px;
+            background: #475569;
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+            margin-top: .5rem;
+        }
+
+        .due-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
+            color: #fff;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: .15rem .4rem;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .options-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: var(--muted);
+            font-size: .9rem;
+            cursor: pointer;
+        }
+
+        .toggle-label input {
+            accent-color: var(--primary);
+        }
+
+        .start-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .95rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(220, 38, 38, .1);
+        }
+
+        .btn-due {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: .95rem;
+        }
+
+        .btn-due:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .btn-weak {
+            background: transparent;
+            color: var(--missed);
+            border: 2px solid var(--missed);
+            padding: .75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: .95rem;
+        }
+
+        .btn-weak:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: .5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: .85rem;
+        }
+
+        .card-screen {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+        .progress-section {
+            flex: 1;
+        }
+
+        .progress-text {
+            font-size: .9rem;
+            margin-bottom: .25rem;
+        }
+
+        .requeue-badge {
+            background: #7c3aed;
+            color: #fff;
+            font-size: .75rem;
+            padding: .1rem .4rem;
+            border-radius: 4px;
+            margin-left: .5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width .3s;
+        }
+
+        .cat-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: .25rem .75rem;
+            border-radius: 20px;
+            font-size: .8rem;
+            white-space: nowrap;
+        }
+
+        .flashcard {
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            min-height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            transition: transform .6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .card-front .card-content {
+            font-size: 1.35rem;
+        }
+
+        .flip-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: .85rem;
+            margin-top: auto;
+        }
+
+        .answer-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .exam-tip {
+            background: rgba(220, 38, 38, .1);
+            border-left: 3px solid var(--primary);
+            padding: .75rem 1rem;
+            margin-top: 1rem;
+            font-size: .95rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .typed-answer-display {
+            background: rgba(99, 102, 241, .15);
+            border-left: 3px solid #818cf8;
+            padding: .75rem 1rem;
+            margin-top: .75rem;
+            font-size: .9rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+            color: #c7d2fe;
+        }
+
+        .answer-input-wrap {
+            margin-top: 1rem;
+            display: flex;
+            gap: .5rem;
+        }
+
+        .answer-input-wrap input {
+            flex: 1;
+            padding: .75rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .answer-input-wrap input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .answer-input-wrap button {
+            padding: .75rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .conf-controls {
+            display: none;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .conf-controls.visible {
+            display: flex;
+        }
+
+        .conf-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .conf-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .conf-missed {
+            background: var(--missed);
+            color: #fff;
+        }
+
+        .conf-unsure {
+            background: var(--unsure);
+            color: #0f172a;
+        }
+
+        .conf-gotit {
+            background: var(--gotit);
+            color: #0f172a;
+        }
+
+        .conf-icon {
+            font-size: 1.5rem;
+        }
+
+        .conf-label {
+            font-weight: 600;
+        }
+
+        .conf-key {
+            font-size: .75rem;
+            opacity: .8;
+        }
+
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .kb-hints {
+            color: var(--muted);
+            font-size: .85rem;
+        }
+
+        .kb-hints kbd {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: .2rem .5rem;
+            border-radius: 4px;
+            margin: 0 .25rem;
+        }
+
+        .results-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .results-container h1 {
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: .9rem;
+            color: var(--muted);
+        }
+
+        .stat-pct {
+            font-size: 1.1rem;
+            margin-top: .25rem;
+        }
+
+        .stat-gotit .stat-value {
+            color: var(--gotit);
+        }
+
+        .stat-unsure .stat-value {
+            color: var(--unsure);
+        }
+
+        .stat-missed .stat-value {
+            color: var(--missed);
+        }
+
+        .breakdown-section,
+        .weak-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .breakdown-section h3,
+        .weak-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .cat-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: .75rem;
+        }
+
+        .cat-stat-name {
+            flex: 0 0 150px;
+            font-size: .9rem;
+        }
+
+        .cat-stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .bar-seg {
+            height: 100%;
+        }
+
+        .bar-gotit {
+            background: var(--gotit);
+        }
+
+        .bar-unsure {
+            background: var(--unsure);
+        }
+
+        .bar-missed {
+            background: var(--missed);
+        }
+
+        .cat-stat-pct {
+            flex: 0 0 50px;
+            text-align: right;
+            font-size: .9rem;
+        }
+
+        .weak-item {
+            display: flex;
+            justify-content: space-between;
+            padding: .5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .weak-item:last-child {
+            border-bottom: none;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media(max-width:600px) {
+            .card-content {
+                font-size: 1.1rem;
+            }
+
+            .card-front .card-content {
+                font-size: 1.2rem;
+            }
+
+            .conf-btn {
+                padding: .75rem;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screen active">
+        <div class="start-container">
+            <h1>🚨 Code Blue Mastery</h1>
+            <p class="subtitle">Master the ACLS algorithm, Hs & Ts, drug dosing, and clinical decisions for any code
+                blue</p>
+            <div id="progress-summary"></div>
+            <div class="cat-grid" id="cat-grid"></div>
+            <div class="options-row">
+                <label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-answer-first"> Type answer first</label>
+            </div>
+            <div class="start-actions">
+                <button class="btn-due" id="btn-due" onclick="studyDue()">Due for Review (0)</button>
+                <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+                <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+                <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+        </div>
+    </div>
+    <!-- CARD SCREEN -->
+    <div id="screen-card" class="screen">
+        <div class="card-screen">
+            <div class="card-header">
+                <div class="progress-section">
+                    <div class="progress-text"><span id="cur-num">1</span> / <span id="tot-num">0</span><span
+                            class="requeue-badge" id="requeue-info" style="display:none;"></span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <span class="cat-badge" id="cur-cat">Category</span>
+            </div>
+            <div class="flashcard" id="flashcard" onclick="handleFlashcardClick(event)">
+                <div class="card-inner">
+                    <div class="card-face card-front">
+                        <div class="card-content" id="front-content"></div>
+                        <div id="answer-input-area"></div>
+                        <div class="flip-hint" id="flip-hint">SPACE or click to flip</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-content" id="back-content"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="conf-controls" id="conf-controls">
+                <button class="conf-btn conf-missed" onclick="rate('missed')"><span
+                        class="conf-icon">&#10007;</span><span class="conf-label">Missed</span><span
+                        class="conf-key">Press 1</span></button>
+                <button class="conf-btn conf-unsure" onclick="rate('unsure')"><span class="conf-icon">~</span><span
+                        class="conf-label">Unsure</span><span class="conf-key">Press 2</span></button>
+                <button class="conf-btn conf-gotit" onclick="rate('gotit')"><span class="conf-icon">&#10003;</span><span
+                        class="conf-label">Got It</span><span class="conf-key">Press 3</span></button>
+            </div>
+            <div class="nav-row">
+                <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+                <div class="kb-hints"><kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd>
+                    Exit</div>
+            </div>
+        </div>
+    </div>
+    <!-- RESULTS SCREEN -->
+    <div id="screen-results" class="screen">
+        <div class="results-container">
+            <h1>Session Complete</h1>
+            <div class="stats-row" id="stats-row"></div>
+            <div class="breakdown-section" id="breakdown-section">
+                <h3>By Category</h3>
+                <div id="cat-breakdown"></div>
+            </div>
+            <div class="weak-section" id="weak-section" style="display:none;">
+                <h3>Focus Areas</h3>
+                <div id="weak-list"></div>
+            </div>
+            <div class="results-actions">
+                <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
+                <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+                <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const STORAGE_KEY = 'cb-fc-v1', SR_KEY = 'cb-sr-v1';
+        const categories = { 'algorithm': { name: 'ACLS Algorithm', color: '#dc2626' }, 'hs': { name: "The H's", color: '#f59e0b' }, 'ts': { name: "The T's", color: '#3b82f6' }, 'drugs': { name: 'Code Drugs', color: '#10b981' }, 'cpr': { name: 'CPR & Team', color: '#8b5cf6' }, 'scenarios': { name: 'Scenario Decisions', color: '#ec4899' } };
+        const cards = [
+            // ALGORITHM (12)
+            { id: 1, cat: 'algorithm', q: 'What are the two shockable rhythms in cardiac arrest?', a: '<strong>V-Fib</strong> and <strong>Pulseless V-Tach (pVT)</strong>.', tip: 'Asystole and PEA are NOT shockable.' },
+            { id: 2, cat: 'algorithm', q: 'What are the two non-shockable rhythms?', a: '<strong>Asystole</strong> (flat line) and <strong>PEA</strong> (organized rhythm, no pulse).', tip: 'PEA can look normal on monitor — always check the PULSE.' },
+            { id: 3, cat: 'algorithm', q: 'What is the shockable rhythm algorithm sequence?', a: 'CPR → <strong>Shock</strong> → CPR 2 min → <strong>Shock + Epi 1mg</strong> → CPR 2 min → <strong>Shock + Amio 300mg</strong> → repeat', tip: 'Epi after 2nd shock, Amio after 3rd. Epi q3-5 min throughout.' },
+            { id: 4, cat: 'algorithm', q: 'What is the non-shockable rhythm algorithm?', a: 'CPR → <strong>Epi 1mg ASAP</strong> → CPR 2 min → <strong>Epi q3-5 min</strong> → aggressively search <strong>H\'s and T\'s</strong>. No shocks. No amiodarone.', tip: 'Finding the reversible cause IS the treatment for PEA/asystole.' },
+            { id: 5, cat: 'algorithm', q: 'When is epinephrine given in the shockable vs non-shockable algorithm?', a: '<strong>Shockable:</strong> after the 2nd shock. <strong>Non-shockable:</strong> ASAP. Then q3-5 min in both.', tip: 'Don\'t wait for shock cycles in non-shockable — give Epi immediately.' },
+            { id: 6, cat: 'algorithm', q: 'When is amiodarone given and at what dose?', a: 'After the <strong>3rd shock</strong>. 1st dose: <strong>300 mg IV push</strong>. 2nd dose: <strong>150 mg</strong>. Only for VF/pVT.', tip: 'Never given for asystole or PEA.' },
+            { id: 7, cat: 'algorithm', q: 'What happens immediately after each defibrillation?', a: '<strong>Resume CPR immediately</strong> — start with compressions. Do NOT check rhythm until 2 min of CPR.', tip: 'Even a successful shock needs CPR to maintain coronary perfusion.' },
+            { id: 8, cat: 'algorithm', q: 'How often do you reassess rhythm during a code?', a: 'Every <strong>2 minutes</strong>. Pause briefly (<10 sec) to check rhythm and pulse.', tip: 'Compression fraction goal >80%.' },
+            { id: 9, cat: 'algorithm', q: 'What is ROSC and what are its signs?', a: '<strong>Return of Spontaneous Circulation.</strong> Signs: palpable pulse, measurable BP, sudden ETCO₂ rise ≥40 mmHg.', tip: 'Post-ROSC: 12-lead ECG, targeted temp 32-36°C, avoid hyperoxia.' },
+            { id: 10, cat: 'algorithm', q: 'List all 5 H\'s of reversible causes.', a: '<strong>Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia</strong>', tip: 'Some sources add Hypoglycemia as a 6th H.' },
+            { id: 11, cat: 'algorithm', q: 'List all 5 T\'s of reversible causes.', a: '<strong>Tension pneumothorax, Tamponade (cardiac), Toxins/drugs, Thrombosis—PE, Thrombosis—MI</strong>', tip: 'Systematically consider these during EVERY code.' },
+            { id: 12, cat: 'algorithm', q: 'Patient found unresponsive — first 3 actions?', a: '1) Check responsiveness & call for help. 2) Check pulse (≤10 sec). 3) Start CPR if no pulse + activate code.', tip: 'Compressions first. Don\'t delay for anything.' },
+            // H's (12)
+            { id: 13, cat: 'hs', q: 'HYPOVOLEMIA — what history clues trigger this?', a: 'Trauma, GI bleed, ruptured AAA, surgical patient, massive hemorrhage, recent fluid loss.', tip: '#1 most common reversible cause of PEA arrest.' },
+            { id: 14, cat: 'hs', q: 'HYPOVOLEMIA — what do you check and what would you see?', a: '<strong>Check:</strong> Neck veins, bedside echo. <strong>See:</strong> Flat IJ veins, narrow-complex PEA, low Hgb/Hct.', tip: 'Flat neck veins = empty tank.' },
+            { id: 15, cat: 'hs', q: 'HYPOVOLEMIA — treatment?', a: '<strong>Aggressive IV fluid bolus</strong> (NS/LR wide open), <strong>blood products</strong> if hemorrhagic (activate MTP), surgical consult.', tip: 'Use pressure bags or rapid infuser.' },
+            { id: 16, cat: 'hs', q: 'HYPOXIA — clues and treatment?', a: '<strong>Think if:</strong> respiratory distress before arrest, airway obstruction. <strong>Fix:</strong> Secure airway, confirm ETT with waveform capnography, 100% O₂.', tip: 'Most preventable cause. Verify tube placement!' },
+            { id: 17, cat: 'hs', q: 'HYDROGEN ION (acidosis) — clues and treatment?', a: '<strong>Think if:</strong> DKA, renal failure, sepsis, prolonged arrest. <strong>Fix:</strong> Sodium bicarbonate 1 mEq/kg IV + treat underlying cause.', tip: 'Bicarb NOT routine — only for known severe acidosis, hyperK, or TCA OD.' },
+            { id: 18, cat: 'hs', q: 'HYPERKALEMIA — what ECG changes would you see?', a: '<strong>Peaked T waves → flattened P waves → widened QRS → sine wave → asystole</strong>', tip: 'K⁺ >6.5 is an emergency.' },
+            { id: 19, cat: 'hs', q: 'HYPERKALEMIA — treatment sequence?', a: '1) <strong>Calcium gluconate</strong> 2) <strong>Insulin + D50</strong> 3) <strong>Albuterol</strong> neb 4) <strong>Bicarb</strong> 5) <strong>Kayexalate</strong> 6) <strong>Dialysis</strong>', tip: 'Steps 1-4 shift K⁺. Only Kayexalate/dialysis remove it.' },
+            { id: 20, cat: 'hs', q: 'HYPOKALEMIA — signs and treatment?', a: '<strong>See:</strong> Flattened T waves, U waves, ST depression, prolonged QT. <strong>Fix:</strong> IV potassium (never push, max 20mEq/hr), cardiac monitoring.', tip: 'Must correct Mg²⁺ first — can\'t fix K⁺ without fixing Mg.' },
+            { id: 21, cat: 'hs', q: 'HYPOTHERMIA — clues and management?', a: '<strong>Think if:</strong> found outdoors, submersion, elderly. <strong>See:</strong> Core temp <30°C, Osborn J waves. <strong>Fix:</strong> Active rewarming, warm IV fluids, limit defib until >30°C.', tip: '"Not dead until warm and dead." Continue resuscitation until rewarmed.' },
+            { id: 22, cat: 'hs', q: 'How do neck veins rapidly differentiate H\'s from T\'s?', a: '<strong>Flat</strong> = volume problem (hypovolemia). <strong>Distended</strong> = obstruction (tension pneumo, tamponade, PE).', tip: 'Look at the neck FIRST — fastest bedside differentiator.' },
+            { id: 23, cat: 'hs', q: 'HYPOGLYCEMIA — clues and treatment?', a: '<strong>Think if:</strong> diabetic on insulin, AMS before arrest. <strong>Check:</strong> POC glucose. <strong>Fix:</strong> D50 25g IV push.', tip: 'Fast, cheap, easily reversible. Always check glucose.' },
+            { id: 24, cat: 'hs', q: 'Which H causes are associated with narrow-complex PEA?', a: '<strong>Hypovolemia</strong> and <strong>hypoxia</strong> — conduction intact but no volume to pump.', tip: 'Narrow PEA often responds to volume and oxygenation.' },
+            // T's (10)
+            { id: 25, cat: 'ts', q: 'TENSION PNEUMOTHORAX — what clues trigger this?', a: 'Trauma, central line placement, mechanical ventilation, known lung disease (COPD, blebs), sudden dyspnea with unilateral absent breath sounds.', tip: 'Clinical diagnosis — don\'t wait for CXR in a code.' },
+            { id: 26, cat: 'ts', q: 'TENSION PNEUMOTHORAX — signs and treatment?', a: '<strong>See:</strong> JVD, tracheal deviation (late), absent breath sounds one side. <strong>Fix:</strong> Needle decompression 2nd ICS midclavicular → chest tube.', tip: '14g needle, 2nd intercostal space, midclavicular line.' },
+            { id: 27, cat: 'ts', q: 'CARDIAC TAMPONADE — what clues trigger this?', a: 'Penetrating chest trauma, recent cardiac surgery, pericarditis, malignancy, uremia, post-MI.', tip: 'Fluid compressing the heart so it can\'t fill.' },
+            { id: 28, cat: 'ts', q: 'CARDIAC TAMPONADE — Beck\'s Triad and treatment?', a: '<strong>Beck\'s Triad:</strong> Hypotension + JVD + Muffled heart sounds. <strong>Fix:</strong> Pericardiocentesis or surgical window.', tip: 'Bedside echo confirms — look for pericardial effusion + RV collapse.' },
+            { id: 29, cat: 'ts', q: 'TOXINS — common culprits and their antidotes?', a: 'Opioids → <strong>Naloxone</strong> | TCAs → <strong>Bicarb</strong> | Beta-blockers → <strong>Glucagon</strong> | Digoxin → <strong>Digibind</strong> | CCBs → <strong>Calcium + insulin</strong>', tip: 'Wide QRS + seizures in OD = think TCA → give bicarb.' },
+            { id: 30, cat: 'ts', q: 'THROMBOSIS (PE) — clues and treatment?', a: '<strong>Think if:</strong> recent surgery, immobility, DVT, cancer. <strong>See:</strong> JVD, sudden PEA. <strong>Fix:</strong> Systemic tPA, surgical embolectomy, ECMO.', tip: 'Massive PE can be treated with tPA even during CPR.' },
+            { id: 31, cat: 'ts', q: 'THROMBOSIS (MI) — clues and treatment?', a: '<strong>Think if:</strong> chest pain before arrest, known CAD. <strong>Fix:</strong> 12-lead post-ROSC → emergent PCI. Consider tPA if no PCI available.', tip: 'STEMI = cath lab activation, even post-arrest.' },
+            { id: 32, cat: 'ts', q: 'How do you differentiate the 3 obstructive T\'s using JVD?', a: '<strong>Tension pneumo:</strong> JVD + absent breath sounds. <strong>Tamponade:</strong> JVD + muffled heart sounds. <strong>Massive PE:</strong> JVD + sudden PEA + RV strain on echo.', tip: 'All three cause JVD — additional findings differentiate them.' },
+            { id: 33, cat: 'ts', q: 'Which T causes need a PROCEDURE vs a MEDICATION?', a: '<strong>Procedure:</strong> Tension pneumo (needle decomp), Tamponade (pericardiocentesis), MI (PCI). <strong>Medication:</strong> Toxins (antidote), PE (tPA).', tip: 'Can\'t shock your way out of a mechanical problem.' },
+            { id: 34, cat: 'ts', q: 'What is Beck\'s Triad and what does it indicate?', a: '<strong>Hypotension + Distended neck veins + Muffled heart sounds</strong> = Cardiac Tamponade.', tip: 'Classic exam question. If you see all 3 → pericardiocentesis.' },
+            // DRUGS (10)
+            { id: 35, cat: 'drugs', q: 'Epinephrine — dose and timing in cardiac arrest?', a: '<strong>1 mg IV/IO every 3-5 min</strong> (1:10,000). Flush with 20mL NS. Given in ALL arrest rhythms.', tip: 'Shockable: after 2nd shock. Non-shockable: ASAP.' },
+            { id: 36, cat: 'drugs', q: 'Amiodarone — arrest dose vs stable VT dose?', a: '<strong>Arrest:</strong> 300 mg IV push (1st), 150 mg (2nd). <strong>Stable VT:</strong> 150 mg IV over 10 min.', tip: 'Only for shockable rhythms in arrest. Watch for hypotension/bradycardia.' },
+            { id: 37, cat: 'drugs', q: 'Atropine — dose, mechanism, and when does it FAIL?', a: '<strong>0.5 mg IV q3-5 min, max 3 mg.</strong> Blocks vagus → increases HR. <strong>Fails in:</strong> Mobitz II and 3rd degree block.', tip: 'If atropine fails → transcutaneous pacing → dopamine/epi drip.' },
+            { id: 38, cat: 'drugs', q: 'Adenosine — dose and technique for SVT?', a: '<strong>6 mg rapid IV push</strong> → 20mL flush → may repeat <strong>12 mg</strong> × 2. Use proximal IV.', tip: 'Half-life 6-10 sec. Warn patient about chest tightness.' },
+            { id: 39, cat: 'drugs', q: 'Sodium Bicarbonate — when indicated in a code?', a: '<strong>Severe metabolic acidosis, hyperkalemia, or TCA overdose.</strong> Dose: 1 mEq/kg IV. NOT routine.', tip: 'Too much → metabolic alkalosis → shifts O₂ curve left.' },
+            { id: 40, cat: 'drugs', q: 'Magnesium Sulfate — when and dose?', a: '<strong>Torsades de Pointes:</strong> 1-2 g IV over 5-20 min. Given even if serum Mg is normal.', tip: 'THE drug for Torsades. Regular defib often fails without it.' },
+            { id: 41, cat: 'drugs', q: 'Calcium Gluconate — role in hyperkalemia?', a: '<strong>Membrane stabilizer</strong> — does NOT lower K⁺. Protects heart while other treatments shift K⁺. Works in minutes, lasts 30-60 min.', tip: 'Given FIRST in hyperK because it buys time.' },
+            { id: 42, cat: 'drugs', q: 'What drug should NEVER be given for asystole or PEA?', a: '<strong>Amiodarone</strong> — only for shockable rhythms. The only drug for non-shockable arrest is <strong>epinephrine</strong>.', tip: 'No electrical activity = nothing to reset with an antiarrhythmic.' },
+            { id: 43, cat: 'drugs', q: 'Naloxone — dose and route for opioid OD?', a: '<strong>0.4-2 mg IV/IM/IN every 2-3 min.</strong> Intranasal: 4mg via atomizer. Watch for re-sedation.', tip: 'Start low (0.4mg) in chronic users to avoid acute withdrawal.' },
+            { id: 44, cat: 'drugs', q: 'Post-ROSC vasopressors — which ones and targets?', a: '<strong>Norepinephrine</strong> 0.1-0.5 mcg/kg/min or <strong>Dopamine</strong> 5-20 mcg/kg/min. Target MAP ≥65 mmHg.', tip: 'Also: Epi drip 2-10 mcg/min for persistent bradycardia.' },
+            // CPR & TEAM (8)
+            { id: 45, cat: 'cpr', q: 'What are the 5 parameters of high-quality CPR?', a: '1) Rate <strong>100-120/min</strong> 2) Depth <strong>≥2 inches</strong> 3) <strong>Full chest recoil</strong> 4) <strong>Minimize interruptions</strong> (<10 sec) 5) <strong>Switch every 2 min</strong>', tip: 'Push hard, push fast, let it come all the way back up.' },
+            { id: 46, cat: 'cpr', q: 'Compression-to-ventilation ratio?', a: '<strong>30:2</strong> without advanced airway. <strong>With advanced airway:</strong> continuous compressions + 1 breath every 6 sec (10/min).', tip: '5 cycles of 30:2 ≈ 2 minutes.' },
+            { id: 47, cat: 'cpr', q: 'What ETCO₂ value indicates effective CPR? What suggests ROSC?', a: 'Effective CPR: <strong>ETCO₂ ≥10 mmHg</strong>. Sudden rise to <strong>≥35-40 mmHg</strong> may indicate ROSC.', tip: 'ETCO₂ <10 after 20 min of quality CPR = poor prognosis.' },
+            { id: 48, cat: 'cpr', q: 'What is closed-loop communication?', a: 'Leader gives order → Receiver <strong>repeats back</strong> → Leader confirms. Prevents errors in high-stress situations.', tip: 'Assign clear roles at the start of every code.' },
+            { id: 49, cat: 'cpr', q: 'What are the 6 code team roles?', a: '1) <strong>Team leader</strong> 2) <strong>Compressor</strong> 3) <strong>Airway</strong> 4) <strong>IV/Meds</strong> 5) <strong>Monitor/Defib</strong> 6) <strong>Recorder/Timer</strong>', tip: 'Leader stands back and directs — does not perform tasks.' },
+            { id: 50, cat: 'cpr', q: 'What compression fraction should you target?', a: '<strong>>80%</strong> — compressions happening at least 80% of the total code time.', tip: 'Every pause drops coronary perfusion. Takes ~30 sec to rebuild.' },
+            { id: 51, cat: 'cpr', q: 'When should you consider stopping resuscitation?', a: 'All reversible causes addressed, ETCO₂ <10 after 20 min, no shockable rhythm, no ROSC. <strong>Team leader decides.</strong>', tip: 'Consider: downtime, initial rhythm, comorbidities, H\'s & T\'s addressed.' },
+            { id: 52, cat: 'cpr', q: 'Synchronized cardioversion vs defibrillation?', a: '<strong>Cardioversion:</strong> SYNC ON, timed to R wave, for rhythms WITH pulse. <strong>Defibrillation:</strong> Unsync, for VF/pulseless VT.', tip: 'Pulse = Sync. Pulseless = Defib. T-wave shock → VF.' },
+            // SCENARIOS (8)
+            { id: 53, cat: 'scenarios', q: 'PEA arrest, narrow QRS at 80bpm, FLAT neck veins. Likely cause?', a: '<strong>Hypovolemia.</strong> Flat veins = empty tank. Narrow PEA = intact conduction, no volume. <strong>Tx:</strong> Aggressive fluids ± blood.', tip: 'Flat JVD + narrow PEA = think volume first.' },
+            { id: 54, cat: 'scenarios', q: 'PEA arrest, DISTENDED neck veins, absent breath sounds LEFT side. Next action?', a: '<strong>Needle decompression LEFT chest</strong> (2nd ICS midclavicular, 14g). This is tension pneumothorax.', tip: 'Clinical diagnosis — don\'t wait for CXR during a code.' },
+            { id: 55, cat: 'scenarios', q: 'V-Fib after 3 shocks + 2 rounds of Epi. Still in V-Fib. What drug next?', a: '<strong>Amiodarone 300 mg IV push.</strong> 3rd shock cycle = time for amiodarone. Continue CPR + Epi q3-5 min.', tip: 'If amiodarone unavailable, lidocaine 1-1.5 mg/kg is the alternative.' },
+            { id: 56, cat: 'scenarios', q: 'Asystole on monitor. Teammate grabs defibrillator. Your response?', a: '<strong>"Stop — asystole is NOT shockable."</strong> Correct: CPR + Epi 1mg ASAP + search H\'s and T\'s.', tip: 'Confirm in 2 leads — could be fine VF or lead disconnect.' },
+            { id: 57, cat: 'scenarios', q: 'Post-ROSC, BP 78/50. Your priorities?', a: '1) Vasopressor for MAP ≥65. 2) 12-lead ECG (STEMI → cath lab). 3) Targeted temp 32-36°C. 4) Avoid hyperoxia.', tip: 'Post-arrest care is just as critical as the code itself.' },
+            { id: 58, cat: 'scenarios', q: 'Pill bottles at scene, wide QRS, seizures. Toxin and treatment?', a: '<strong>TCA overdose.</strong> Treat: <strong>Sodium bicarbonate 1-2 mEq/kg IV</strong> to narrow QRS. Intubate for airway.', tip: 'Wide QRS + seizures + OD = TCA until proven otherwise.' },
+            { id: 59, cat: 'scenarios', q: 'Dialysis patient in arrest. Peaked T waves + wide QRS. Treatment?', a: '<strong>Hyperkalemia.</strong> <strong>Calcium gluconate IV</strong> immediately → insulin/D50 → bicarb → consider emergent dialysis.', tip: 'Dialysis + arrest = think hyperK first. Calcium protects in minutes.' },
+            { id: 60, cat: 'scenarios', q: 'Monitor shows organized QRS at 70bpm but NO pulse. Rhythm and action?', a: '<strong>PEA.</strong> Resume CPR + Epi + systematically run through H\'s and T\'s.', tip: 'PEA looks normal on monitor. Always check the PULSE.' }
+        ];
+        let state = { deck: [], idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: 0 }, savedProgress = {}, srData = {}, selectedCats = new Set();
+        function loadProgress() { try { savedProgress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) { savedProgress = {}; } }
+        function saveProgress() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress)); } catch (e) { } }
+        function loadSR() { try { srData = JSON.parse(localStorage.getItem(SR_KEY) || '{}'); } catch (e) { srData = {}; } }
+        function saveSR() { try { localStorage.setItem(SR_KEY, JSON.stringify(srData)); } catch (e) { } }
+        function getSRCard(id) { if (!srData[id]) srData[id] = { box: 1, nextReview: new Date().toISOString().split('T')[0], streak: 0 }; return srData[id]; }
+        function updateSR(id, conf) { const sr = getSRCard(id), today = new Date(), iv = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30 }; if (conf === 'gotit') { sr.streak++; sr.box = Math.min(sr.box + 1, 5); const n = new Date(today); n.setDate(n.getDate() + iv[sr.box]); sr.nextReview = n.toISOString().split('T')[0]; } else { sr.streak = 0; sr.box = conf === 'missed' ? 1 : sr.box; const n = new Date(today); n.setDate(n.getDate() + 1); sr.nextReview = n.toISOString().split('T')[0]; } srData[id] = sr; saveSR(); }
+        function getDueCards() { loadSR(); const t = new Date().toISOString().split('T')[0]; return cards.filter(c => { const s = srData[c.id]; return !s || s.nextReview <= t; }); }
+        function getDueCountForCat(cat) { const t = new Date().toISOString().split('T')[0]; return cards.filter(c => c.cat === cat && (!srData[c.id] || srData[c.id].nextReview <= t)).length; }
+        function saveSessionResults() { Object.entries(state.results).forEach(([id, r]) => { savedProgress[id] = r; updateSR(parseInt(id), r); }); saveProgress(); }
+        function resetProgress() { if (confirm('Reset all progress? Cannot be undone.')) { savedProgress = {}; srData = {}; saveProgress(); saveSR(); renderStartScreen(); } }
+        function showScreen(n) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + n).classList.add('active'); if (n === 'start') renderStartScreen(); }
+        function renderStartScreen() {
+            loadProgress(); loadSR(); const total = cards.length; let g = 0, u = 0, m = 0, un = 0;
+            cards.forEach(c => { const s = savedProgress[c.id]; if (s === 'gotit') g++; else if (s === 'unsure') u++; else if (s === 'missed') m++; else un++; });
+            const pd = document.getElementById('progress-summary');
+            if (g + u + m > 0) { pd.innerHTML = `<h3>Overall Progress</h3><div class="overall-bar"><div class="mb-gotit" style="width:${(g / total * 100).toFixed(1)}%"></div><div class="mb-unsure" style="width:${(u / total * 100).toFixed(1)}%"></div><div class="mb-missed" style="width:${(m / total * 100).toFixed(1)}%"></div></div><div class="overall-text">${g} mastered · ${u} unsure · ${m} missed · ${un} unseen</div>`; pd.style.display = 'block'; } else pd.style.display = 'none';
+            const grid = document.getElementById('cat-grid'); grid.innerHTML = '';
+            Object.entries(categories).forEach(([id, cat]) => {
+                const cc = cards.filter(c => c.cat === id), ct = cc.length; let cg = 0, cu = 0, cm = 0; cc.forEach(c => { const s = savedProgress[c.id]; if (s === 'gotit') cg++; else if (s === 'unsure') cu++; else if (s === 'missed') cm++; }); const due = getDueCountForCat(id); const btn = document.createElement('button'); btn.className = 'cat-btn'; btn.style.setProperty('--cat-color', cat.color); btn.innerHTML = `<span class="cat-name" style="color:${cat.color}">${cat.name}</span><span class="cat-count">${ct} cards</span>${due > 0 ? `<span class="due-badge">${due} due</span>` : ''}<div class="cat-mini-bar"><div class="bar-seg bar-gotit" style="width:${cg / ct * 100}%"></div><div class="bar-seg bar-unsure" style="width:${cu / ct * 100}%"></div><div class="bar-seg bar-missed" style="width:${cm / ct * 100}%"></div></div>`;
+                btn.onclick = () => { const multi = document.getElementById('chk-multi').checked; if (multi) { btn.classList.toggle('selected'); if (btn.classList.contains('selected')) selectedCats.add(id); else selectedCats.delete(id); } else { document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected')); selectedCats.clear(); selectedCats.add(id); btn.classList.add('selected'); startSession(cards.filter(c => c.cat === id)); } }; grid.appendChild(btn);
+            });
+            const due = getDueCards(), weak = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure');
+            document.getElementById('btn-due').textContent = `Due for Review (${due.length})`; document.getElementById('btn-due').disabled = due.length === 0;
+            document.getElementById('btn-weak').textContent = `Study Weak Cards (${weak.length})`; document.getElementById('btn-weak').disabled = weak.length === 0;
+        }
+        function studyDue() { startSession(getDueCards()); }
+        function studyWeak() { startSession(cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure')); }
+        function startAll() { let deck = selectedCats.size > 0 ? cards.filter(c => selectedCats.has(c.cat)) : [...cards]; startSession(deck); }
+        function startSession(deck) { if (!deck.length) return; if (document.getElementById('chk-shuffle').checked) deck = [...deck].sort(() => Math.random() - 0.5); state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length }; showScreen('card'); showCard(); }
+        function showCard() {
+            const c = state.deck[state.idx]; if (!c) return showResults(); state.flipped = false; document.getElementById('flashcard').classList.remove('flipped'); document.getElementById('conf-controls').classList.remove('visible'); document.getElementById('cur-num').textContent = state.idx + 1; document.getElementById('tot-num').textContent = state.deck.length; document.getElementById('prog-fill').style.width = ((state.idx) / state.deck.length * 100) + '%'; const cat = categories[c.cat]; document.getElementById('cur-cat').textContent = cat.name; document.getElementById('cur-cat').style.borderColor = cat.color; document.getElementById('front-content').innerHTML = c.q; let back = `<div class="answer-text">${c.a}</div>`; if (c.tip) back += `<div class="exam-tip">💡 ${c.tip}</div>`; document.getElementById('back-content').innerHTML = back;
+            const area = document.getElementById('answer-input-area'); if (document.getElementById('chk-answer-first').checked) { area.innerHTML = `<div class="answer-input-wrap"><input type="text" id="user-answer" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')submitAnswer()"><button onclick="submitAnswer()">Submit</button></div>`; document.getElementById('flip-hint').textContent = 'Type answer then flip'; setTimeout(() => { const inp = document.getElementById('user-answer'); if (inp) inp.focus(); }, 100); } else { area.innerHTML = ''; document.getElementById('flip-hint').textContent = 'SPACE or click to flip'; }
+            const ri = document.getElementById('requeue-info'); if (state.overflow.length > 0) { ri.style.display = 'inline'; ri.textContent = `+${state.overflow.length} requeued`; } else ri.style.display = 'none';
+        }
+        function submitAnswer() { const inp = document.getElementById('user-answer'); if (!inp || !inp.value.trim()) return; flipCard(); document.getElementById('back-content').innerHTML = `<div class="typed-answer-display">Your answer: ${inp.value.trim()}</div>` + document.getElementById('back-content').innerHTML; }
+        function flipCard() { if (state.flipped) return; state.flipped = true; document.getElementById('flashcard').classList.add('flipped'); document.getElementById('conf-controls').classList.add('visible'); }
+        function handleFlashcardClick(e) { if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return; if (!state.flipped) flipCard(); }
+        function rate(conf) { const c = state.deck[state.idx]; state.results[c.id] = conf; if (conf === 'missed') state.overflow.push(c); state.idx++; if (state.idx >= state.deck.length && state.overflow.length > 0) { state.deck = state.deck.concat(state.overflow.sort(() => Math.random() - 0.5)); state.overflow = []; } showCard(); }
+        function exitSession() { saveSessionResults(); showScreen('start'); }
+        function showResults() {
+            saveSessionResults(); showScreen('results'); let g = 0, u = 0, m = 0; Object.values(state.results).forEach(r => { if (r === 'gotit') g++; else if (r === 'unsure') u++; else m++; }); const tot = g + u + m;
+            document.getElementById('stats-row').innerHTML = `<div class="stat-card stat-gotit"><div class="stat-value">${g}</div><div class="stat-label">Got It</div><div class="stat-pct">${tot ? (g / tot * 100).toFixed(0) : 0}%</div></div><div class="stat-card stat-unsure"><div class="stat-value">${u}</div><div class="stat-label">Unsure</div><div class="stat-pct">${tot ? (u / tot * 100).toFixed(0) : 0}%</div></div><div class="stat-card stat-missed"><div class="stat-value">${m}</div><div class="stat-label">Missed</div><div class="stat-pct">${tot ? (m / tot * 100).toFixed(0) : 0}%</div></div>`;
+            const bd = document.getElementById('cat-breakdown'); bd.innerHTML = ''; Object.entries(categories).forEach(([id, cat]) => { const cc = Object.entries(state.results).filter(([cid]) => cards.find(c => c.id == cid)?.cat === id); if (!cc.length) return; let cg = 0, cu = 0, cm = 0; cc.forEach(([, r]) => { if (r === 'gotit') cg++; else if (r === 'unsure') cu++; else cm++; }); const ct = cc.length; bd.innerHTML += `<div class="cat-stat-row"><div class="cat-stat-name" style="color:${cat.color}">${cat.name}</div><div class="cat-stat-bar"><div class="bar-seg bar-gotit" style="width:${cg / ct * 100}%"></div><div class="bar-seg bar-unsure" style="width:${cu / ct * 100}%"></div><div class="bar-seg bar-missed" style="width:${cm / ct * 100}%"></div></div><div class="cat-stat-pct">${(cg / ct * 100).toFixed(0)}%</div></div>`; });
+            const weak = Object.entries(state.results).filter(([, r]) => r === 'missed' || r === 'unsure'), ws = document.getElementById('weak-section'), wl = document.getElementById('weak-list');
+            if (weak.length) { ws.style.display = 'block'; wl.innerHTML = ''; weak.forEach(([id, r]) => { const c = cards.find(x => x.id == id); if (c) wl.innerHTML += `<div class="weak-item"><span>${c.q.substring(0, 60)}${c.q.length > 60 ? '...' : ''}</span><span style="color:${r === 'missed' ? 'var(--missed)' : 'var(--unsure)'}">${r}</span></div>`; }); } else ws.style.display = 'none';
+            document.getElementById('btn-review-missed').disabled = m === 0;
+        }
+        function reviewMissed() { startSession(Object.entries(state.results).filter(([, r]) => r === 'missed').map(([id]) => cards.find(c => c.id == id)).filter(Boolean)); }
+        function reviewMissedAndUnsure() { startSession(Object.entries(state.results).filter(([, r]) => r === 'missed' || r === 'unsure').map(([id]) => cards.find(c => c.id == id)).filter(Boolean)); }
+        document.addEventListener('keydown', e => { if (!document.getElementById('screen-card').classList.contains('active') || e.target.tagName === 'INPUT') return; if (e.code === 'Space') { e.preventDefault(); if (!state.flipped) flipCard(); } else if (e.key === '1' && state.flipped) rate('missed'); else if (e.key === '2' && state.flipped) rate('unsure'); else if (e.key === '3' && state.flipped) rate('gotit'); else if (e.key === 'Escape') exitSession(); });
+        renderStartScreen();
+    </script>
+</body>
+
+</html>
