@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Code Response — ACLS Simulation</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #0a0e17;
+            --s: #111827;
+            --s2: #1a2236;
+            --s3: #243049;
+            --br: #2d3a52;
+            --t: #e2e8f0;
+            --td: #8899b0;
+            --tm: #556680;
+            --g: #22c55e;
+            --gd: #166534;
+            --gg: rgba(34, 197, 94, .3);
+            --r: #ef4444;
+            --rd: #7f1d1d;
+            --rg: rgba(239, 68, 68, .3);
+            --a: #f59e0b;
+            --ad: #78350f;
+            --ag: rgba(245, 158, 11, .3);
+            --b: #3b82f6;
+            --bd: #1e3a5f;
+            --bg2: rgba(59, 130, 246, .2);
+            --f: 'Segoe UI', system-ui, sans-serif;
+            --m: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            --rad: 12px;
+            --rs: 8px
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            font-family: var(--f);
+            background: var(--bg);
+            color: var(--t);
+            line-height: 1.6
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all .2s
+        }
+
+        button:active {
+            transform: scale(.97)
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            overflow-y: auto;
+            flex-direction: column
+        }
+
+        .screen.active {
+            display: flex
+        }
+
+        /* Title */
+        #title {
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, #111827, #0a0e17 70%);
+            padding: 2rem;
+            text-align: center
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: .25rem;
+            animation: glo 3s ease-in-out infinite
+        }
+
+        @keyframes glo {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 10px var(--rg))
+            }
+
+            50% {
+                filter: drop-shadow(0 0 25px var(--rg))
+            }
+        }
+
+        .title-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: .05em;
+            background: linear-gradient(135deg, var(--r), var(--a));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .title-sub {
+            color: var(--td);
+            font-size: 1.05rem;
+            margin: .5rem auto 2rem;
+            max-width: 420px;
+            line-height: 1.6
+        }
+
+        .title-footer {
+            margin-top: 2.5rem;
+            color: var(--tm);
+            font-size: .82rem
+        }
+
+        /* Scenario Cards */
+        .menu-btns {
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+            width: 100%;
+            max-width: 420px
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: var(--rad);
+            background: var(--s);
+            border: 1px solid var(--br);
+            color: var(--t);
+            font-size: .95rem;
+            text-align: left;
+            transition: all .25s
+        }
+
+        .menu-btn:hover {
+            border-color: var(--b);
+            background: var(--s2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, .15)
+        }
+
+        .menu-btn .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        .menu-btn .lb {
+            font-weight: 600
+        }
+
+        .menu-btn .ds {
+            color: var(--td);
+            font-size: .82rem;
+            margin-top: 2px
+        }
+
+        /* Game Screen */
+        #game {
+            padding: 0
+        }
+
+        .game-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .75rem 1rem;
+            background: var(--s);
+            border-bottom: 1px solid var(--br);
+            flex-shrink: 0
+        }
+
+        .game-title {
+            font-weight: 700;
+            font-size: .95rem
+        }
+
+        .game-step {
+            color: var(--td);
+            font-size: .82rem
+        }
+
+        /* ECG Monitor */
+        .monitor {
+            background: var(--s);
+            border: 1px solid var(--br);
+            border-radius: var(--rad);
+            margin: .75rem;
+            padding: .75rem;
+            flex-shrink: 0
+        }
+
+        .mon-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .5rem
+        }
+
+        .mon-label {
+            font-size: .75rem;
+            color: var(--tm);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            font-weight: 600
+        }
+
+        .rhy-badge {
+            font-size: .8rem;
+            font-weight: 700;
+            padding: .15rem .6rem;
+            border-radius: 10px
+        }
+
+        .ecg-box {
+            width: 100%;
+            height: 90px;
+            background: #050a12;
+            border-radius: var(--rs);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #1a2236
+        }
+
+        .ecg-box svg {
+            width: 100%;
+            height: 100%
+        }
+
+        .ecg-grid {
+            stroke: #0d1a2d;
+            stroke-width: .5
+        }
+
+        .ecg-trace {
+            fill: none;
+            stroke: var(--g);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 4px var(--gg))
+        }
+
+        .vitals {
+            display: flex;
+            gap: .5rem;
+            margin-top: .5rem;
+            flex-wrap: wrap
+        }
+
+        .vital {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            padding: .3rem .6rem;
+            border-radius: var(--rs);
+            background: var(--s2);
+            font-size: .8rem
+        }
+
+        .vital-l {
+            color: var(--tm);
+            font-size: .7rem;
+            text-transform: uppercase
+        }
+
+        .vital-v {
+            font-family: var(--m);
+            font-weight: 700;
+            color: var(--g)
+        }
+
+        .vital-v.crit {
+            color: var(--r)
+        }
+
+        .vital-v.warn {
+            color: var(--a)
+        }
+
+        /* Narrative + Choices */
+        .story-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 .75rem .75rem
+        }
+
+        .narrative {
+            background: var(--s);
+            border: 1px solid var(--br);
+            border-radius: var(--rad);
+            padding: 1rem 1.25rem;
+            margin-bottom: .75rem;
+            font-size: .92rem;
+            line-height: 1.7;
+            color: var(--td)
+        }
+
+        .narrative strong,
+        .narrative b {
+            color: var(--t)
+        }
+
+        .narrative .team-say {
+            color: var(--b);
+            font-weight: 600
+        }
+
+        .narrative .alert-say {
+            color: var(--a);
+            font-weight: 600
+        }
+
+        .question {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: .75rem;
+            padding: 0 .25rem
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            margin-bottom: 1rem
+        }
+
+        .choice-btn {
+            padding: .85rem 1.1rem;
+            border-radius: var(--rad);
+            background: var(--s);
+            border: 2px solid var(--br);
+            color: var(--t);
+            font-size: .9rem;
+            text-align: left;
+            line-height: 1.5;
+            transition: all .2s
+        }
+
+        .choice-btn:hover:not(.picked):not(.disabled) {
+            border-color: var(--b);
+            background: var(--s2);
+            transform: translateX(4px)
+        }
+
+        .choice-btn.correct {
+            border-color: var(--g) !important;
+            background: var(--gd) !important;
+            color: var(--g) !important
+        }
+
+        .choice-btn.suboptimal {
+            border-color: var(--a) !important;
+            background: var(--ad) !important;
+            color: var(--a) !important
+        }
+
+        .choice-btn.wrong {
+            border-color: var(--r) !important;
+            background: var(--rd) !important;
+            color: var(--r) !important
+        }
+
+        .choice-btn.disabled {
+            opacity: .4;
+            pointer-events: none
+        }
+
+        .choice-btn .tag {
+            display: inline-block;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: .1rem .45rem;
+            border-radius: 6px;
+            margin-right: .4rem;
+            text-transform: uppercase
+        }
+
+        .tag-correct {
+            background: var(--gd);
+            color: var(--g)
+        }
+
+        .tag-sub {
+            background: var(--ad);
+            color: var(--a)
+        }
+
+        .tag-wrong {
+            background: var(--rd);
+            color: var(--r)
+        }
+
+        /* Feedback */
+        .feedback {
+            background: var(--s);
+            border: 1px solid var(--br);
+            border-radius: var(--rad);
+            padding: 1.25rem;
+            margin-bottom: .75rem;
+            font-size: .88rem;
+            line-height: 1.7;
+            animation: fadeIn .3s ease
+        }
+
+        .feedback h4 {
+            margin-bottom: .5rem;
+            font-size: .95rem
+        }
+
+        .feedback.fb-ok {
+            border-left: 4px solid var(--g)
+        }
+
+        .feedback.fb-ok h4 {
+            color: var(--g)
+        }
+
+        .feedback.fb-sub {
+            border-left: 4px solid var(--a)
+        }
+
+        .feedback.fb-sub h4 {
+            color: var(--a)
+        }
+
+        .feedback.fb-bad {
+            border-left: 4px solid var(--r)
+        }
+
+        .feedback.fb-bad h4 {
+            color: var(--r)
+        }
+
+        .feedback p {
+            color: var(--td)
+        }
+
+        .feedback .tip {
+            margin-top: .5rem;
+            padding: .5rem .75rem;
+            background: var(--s2);
+            border-radius: var(--rs);
+            font-size: .82rem;
+            color: var(--td)
+        }
+
+        .feedback .tip b {
+            color: var(--a)
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: .85rem;
+            border-radius: var(--rad);
+            background: linear-gradient(135deg, var(--b), #2563eb);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: .02em;
+            margin-bottom: 1rem
+        }
+
+        .next-btn:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 4px 20px var(--bg2)
+        }
+
+        /* Progress Bar */
+        .progress {
+            margin: .75rem;
+            flex-shrink: 0
+        }
+
+        .prog-bar {
+            height: 6px;
+            background: var(--s2);
+            border-radius: 3px;
+            overflow: hidden
+        }
+
+        .prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--b), var(--g));
+            border-radius: 3px;
+            transition: width .4s ease
+        }
+
+        .prog-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: .3rem;
+            font-size: .75rem;
+            color: var(--tm)
+        }
+
+        /* Debrief */
+        #debrief {
+            padding: 2rem;
+            align-items: center
+        }
+
+        .db-card {
+            max-width: 600px;
+            width: 100%;
+            background: var(--s);
+            border: 1px solid var(--br);
+            border-radius: var(--rad);
+            padding: 2rem
+        }
+
+        .db-grade {
+            text-align: center;
+            margin-bottom: 1.5rem
+        }
+
+        .db-grade .icon {
+            font-size: 3rem
+        }
+
+        .db-grade .label {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: .25rem 0
+        }
+
+        .db-grade .sub {
+            color: var(--td);
+            font-size: .9rem
+        }
+
+        .db-score {
+            text-align: center;
+            font-family: var(--m);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem
+        }
+
+        .db-steps {
+            margin-bottom: 1.5rem
+        }
+
+        .db-steps h3 {
+            font-size: 1rem;
+            margin-bottom: .75rem;
+            padding-bottom: .5rem;
+            border-bottom: 1px solid var(--br)
+        }
+
+        .db-step {
+            display: flex;
+            gap: .75rem;
+            padding: .5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            font-size: .85rem
+        }
+
+        .db-step .num {
+            color: var(--tm);
+            min-width: 24px;
+            font-size: .8rem
+        }
+
+        .db-step .q {
+            flex: 1;
+            color: var(--td)
+        }
+
+        .db-step .res {
+            min-width: 24px;
+            text-align: center
+        }
+
+        .db-btns {
+            display: flex;
+            gap: .75rem;
+            margin-top: 1rem
+        }
+
+        .db-btns button {
+            flex: 1;
+            padding: .75rem;
+            border-radius: var(--rad);
+            font-weight: 600;
+            font-size: .9rem
+        }
+
+        .btn-pri {
+            background: linear-gradient(135deg, var(--b), #2563eb);
+            color: #fff
+        }
+
+        .btn-sec {
+            background: var(--s2);
+            border: 1px solid var(--br);
+            color: var(--t)
+        }
+
+        /* Reference */
+        .ref-toggle {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: .5rem 1rem;
+            border-radius: var(--rad);
+            background: var(--s2);
+            border: 1px solid var(--br);
+            color: var(--td);
+            font-size: .82rem;
+            z-index: 100;
+            display: none
+        }
+
+        .ref-toggle:hover {
+            color: var(--t);
+            border-color: var(--b)
+        }
+
+        .ref-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            max-width: 90vw;
+            height: 100vh;
+            background: var(--s);
+            border-left: 1px solid var(--br);
+            z-index: 300;
+            transition: right .3s ease;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, .5)
+        }
+
+        .ref-panel.open {
+            right: 0
+        }
+
+        .ref-panel h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .ref-close {
+            background: none;
+            color: var(--td);
+            font-size: 1.2rem;
+            padding: .25rem
+        }
+
+        .ref-sec {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--br)
+        }
+
+        .ref-sec h4 {
+            color: var(--a);
+            font-size: .85rem;
+            font-weight: 700;
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em
+        }
+
+        .ref-sec p,
+        .ref-sec li {
+            font-size: .83rem;
+            color: var(--td);
+            line-height: 1.6
+        }
+
+        .ref-sec ul {
+            padding-left: 1.2rem
+        }
+
+        .ref-sec li {
+            margin-bottom: .25rem
+        }
+
+        .rdt {
+            width: 100%;
+            font-size: .8rem;
+            border-collapse: collapse
+        }
+
+        .rdt th {
+            text-align: left;
+            padding: .4rem;
+            color: var(--tm);
+            border-bottom: 1px solid var(--br);
+            font-weight: 600;
+            font-size: .7rem;
+            text-transform: uppercase
+        }
+
+        .rdt td {
+            padding: .4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .05);
+            color: var(--td)
+        }
+
+        .rdt td:first-child {
+            color: var(--t);
+            font-weight: 600
+        }
+
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: .75rem;
+            left: .75rem;
+            padding: .4rem .8rem;
+            border-radius: var(--rs);
+            background: var(--s2);
+            color: var(--td);
+            font-size: .82rem;
+            z-index: 100;
+            border: 1px solid var(--br)
+        }
+
+        .back-btn:hover {
+            color: var(--t);
+            border-color: var(--b)
+        }
+
+        @media(max-width:600px) {
+            .title-name {
+                font-size: 1.6rem
+            }
+
+            .logo {
+                font-size: 2.5rem
+            }
+
+            .ecg-box {
+                height: 70px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <div id="title" class="screen active">
+        <div class="logo">🫀</div>
+        <div class="title-name">CODE RESPONSE</div>
+        <p class="title-sub">Practice running a code — step by step. Pick the right action at each decision point. Built
+            for nursing students, by nursing students.</p>
+        <div class="menu-btns" id="menu-btns"></div>
+        <div class="title-footer">🩺 Single file · Works offline · No install needed</div>
+    </div>
+
+    <!-- GAME -->
+    <div id="game" class="screen">
+        <div class="game-hdr">
+            <span class="game-title" id="g-title">—</span>
+            <span class="game-step" id="g-step">Step 1</span>
+        </div>
+        <div class="monitor" id="monitor-panel">
+            <div class="mon-hdr"><span class="mon-label">🖥️ Cardiac Monitor</span><span class="rhy-badge"
+                    id="rhy-badge">—</span></div>
+            <div class="ecg-box"><svg id="ecg-svg" viewBox="0 0 800 100" preserveAspectRatio="none">
+                    <defs>
+                        <clipPath id="ecgclip">
+                            <rect x="0" y="0" width="800" height="100" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#ecgclip)">
+                        <line class="ecg-grid" x1="0" y1="25" x2="800" y2="25" />
+                        <line class="ecg-grid" x1="0" y1="50" x2="800" y2="50" />
+                        <line class="ecg-grid" x1="0" y1="75" x2="800" y2="75" />
+                        <path id="ecg-path" class="ecg-trace" d="" />
+                    </g>
+                </svg></div>
+            <div class="vitals" id="vitals"></div>
+        </div>
+        <div class="story-area" id="story-area"></div>
+        <div class="progress">
+            <div class="prog-bar">
+                <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+            </div>
+            <div class="prog-text"><span id="prog-step">Step 0 of 0</span><span id="prog-pct">0%</span></div>
+        </div>
+    </div>
+
+    <!-- DEBRIEF -->
+    <div id="debrief" class="screen">
+        <div class="db-card" id="db-card"></div>
+    </div>
+
+    <!-- REFERENCE -->
+    <button class="ref-toggle" id="ref-toggle" onclick="toggleRef()">📖 Reference</button>
+    <div class="ref-panel" id="ref-panel">
+        <h3>📖 Quick Reference <button class="ref-close" onclick="toggleRef()">✕</button></h3>
+        <div class="ref-sec">
+            <h4>Cardiac Arrest Algorithm</h4>
+            <p><b>Shockable (V-Fib/pVT):</b></p>
+            <ul>
+                <li>CPR → Rhythm check → <b>Defibrillate</b> → CPR 2 min → repeat</li>
+                <li>Epi 1mg IV q3-5min (after 2nd shock)</li>
+                <li>Amiodarone 300mg (after 3rd shock), then 150mg</li>
+            </ul>
+            <p style="margin-top:.5rem"><b>Non-Shockable (Asystole/PEA):</b></p>
+            <ul>
+                <li>CPR → Epi 1mg q3-5min → Search H's & T's</li>
+                <li><b>Do NOT defibrillate</b></li>
+            </ul>
+        </div>
+        <div class="ref-sec">
+            <h4>Drug Doses</h4>
+            <table class="rdt">
+                <tr>
+                    <th>Drug</th>
+                    <th>Dose</th>
+                    <th>Route</th>
+                </tr>
+                <tr>
+                    <td>Epinephrine</td>
+                    <td>1mg q3-5min</td>
+                    <td>IV/IO</td>
+                </tr>
+                <tr>
+                    <td>Amiodarone 1st</td>
+                    <td>300mg</td>
+                    <td>IV push</td>
+                </tr>
+                <tr>
+                    <td>Amiodarone 2nd</td>
+                    <td>150mg</td>
+                    <td>IV</td>
+                </tr>
+                <tr>
+                    <td>Atropine</td>
+                    <td>0.5mg q3-5min (max 3mg)</td>
+                    <td>IV</td>
+                </tr>
+                <tr>
+                    <td>Adenosine 1st</td>
+                    <td>6mg rapid IVP+flush</td>
+                    <td>IV</td>
+                </tr>
+                <tr>
+                    <td>Adenosine 2nd</td>
+                    <td>12mg rapid IVP</td>
+                    <td>IV</td>
+                </tr>
+                <tr>
+                    <td>MgSO₄</td>
+                    <td>1-2g over 5-20min</td>
+                    <td>IV</td>
+                </tr>
+            </table>
+        </div>
+        <div class="ref-sec">
+            <h4>H's and T's</h4>
+            <ul>
+                <li><b>H</b>ypovolemia · <b>H</b>ypoxia · <b>H</b>ydrogen ion (acidosis)</li>
+                <li><b>H</b>ypo/hyperkalemia · <b>H</b>ypothermia</li>
+                <li><b>T</b>ension PNX · <b>T</b>amponade · <b>T</b>oxins</li>
+                <li><b>T</b>hrombosis (PE) · <b>T</b>hrombosis (MI)</li>
+            </ul>
+        </div>
+        <div class="ref-sec">
+            <h4>Key Reminders</h4>
+            <ul>
+                <li>Charge defib DURING compressions</li>
+                <li>Switch compressors every 2 min</li>
+                <li>Confirm asystole in 2 leads</li>
+                <li>Never shock asystole or PEA</li>
+                <li>Torsades → Magnesium (NOT amiodarone)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+        const $ = id => document.getElementById(id);
+
+        /* ── ECG Rhythms ── */
+        const RH = {
+            nsr: { n: 'Normal Sinus Rhythm', c: 'var(--g)', w(x) { const c = 160, p = x % c, y = 50; if (p < 10) return y; if (p < 18) return y - 8 + Math.sin((p - 10) / 8 * Math.PI) * 8; if (p < 25) return y; if (p < 28) return y + 4; if (p < 33) return y - 35; if (p < 38) return y + 12; if (p < 45) return y; if (p < 60) return y - 6 + Math.sin((p - 45) / 15 * Math.PI) * 6; return y } },
+            vfib: { n: 'V-Fib', c: 'var(--r)', w(x) { return 50 + Math.sin(x * .15) * 18 * Math.sin(x * .07) + Math.sin(x * .31) * 12 + Math.random() * 8 - 4 } },
+            vfib_f: { n: 'Fine V-Fib', c: 'var(--r)', w(x) { return 50 + Math.sin(x * .13) * 8 + Math.sin(x * .29) * 5 + Math.random() * 4 - 2 } },
+            vtach: { n: 'V-Tach', c: 'var(--r)', w(x) { const c = 50, p = x % c, y = 50; if (p < 5) return y + 3; if (p < 12) return y - 30 + Math.sin((p - 5) / 7 * Math.PI) * 5; if (p < 20) return y + 15; if (p < 30) return y - 5 + Math.sin((p - 20) / 10 * Math.PI) * 5; return y } },
+            asys: { n: 'Asystole', c: 'var(--r)', w(x) { return 50 + Math.random() * 1.5 - .75 } },
+            pea: { n: 'PEA', c: 'var(--a)', w(x) { const c = 200, p = x % c, y = 50; if (p < 8) return y - 5 + Math.sin(p / 8 * Math.PI) * 5; if (p < 14) return y; if (p < 17) return y + 3; if (p < 22) return y - 20; if (p < 27) return y + 8; if (p < 34) return y; if (p < 48) return y - 4 + Math.sin((p - 34) / 14 * Math.PI) * 4; return y } },
+            svt: { n: 'SVT', c: 'var(--r)', w(x) { const c = 35, p = x % c, y = 50; if (p < 3) return y; if (p < 7) return y - 25; if (p < 11) return y + 8; if (p < 16) return y - 3 + Math.sin((p - 11) / 5 * Math.PI) * 3; return y } },
+            hb3: { n: '3° Heart Block', c: 'var(--a)', w(x) { const y = 50; let p = 0; const pp = x % 80; if (pp > 5 && pp < 15) p = -6 + Math.sin((pp - 5) / 10 * Math.PI) * 6; let v = 0; const vp = x % 200; if (vp > 10 && vp < 14) v = 3; else if (vp > 14 && vp < 20) v = -28; else if (vp > 20 && vp < 25) v = 10; else if (vp > 30 && vp < 45) v = -5 + Math.sin((vp - 30) / 15 * Math.PI) * 5; return y + p + v } },
+            flat: { n: '—', c: 'var(--tm)', w(x) { return 50 } }
+        };
+
+        let ecgX = 0, ecgF = null, ecgR = 'flat', BUF = [];
+        function drawECG() { const r = RH[ecgR]; for (let i = 0; i < 2; i++) { BUF.push(r.w(ecgX)); ecgX++; if (BUF.length > 800) BUF.shift() } let d = ''; for (let i = 0; i < BUF.length; i++)d += (i ? 'L' : 'M') + i + ' ' + BUF[i]; const t = $('ecg-path'); t.setAttribute('d', d); t.style.stroke = r.c; ecgF = requestAnimationFrame(drawECG) }
+        function startECG() { if (!ecgF) { BUF.length = 0; ecgX = 0; drawECG() } }
+        function stopECG() { if (ecgF) { cancelAnimationFrame(ecgF); ecgF = null } }
+        function setRhy(k) { ecgR = k; const r = RH[k], b = $('rhy-badge'); b.textContent = r.n; b.style.background = k === 'nsr' ? 'var(--gd)' : k.includes('asys') || k.includes('vfib') || k === 'vtach' ? 'var(--rd)' : 'var(--ad)'; b.style.color = r.c }
+        function setVitals(obj) { const v = $('vitals'); v.innerHTML = ''; const items = []; if (obj.hr !== undefined) items.push(['HR', obj.hr === 0 ? '---' : obj.hr, obj.hr === 0 ? 'crit' : obj.hr > 150 || obj.hr < 50 ? 'warn' : '']); if (obj.bp) items.push(['BP', obj.bp, '']); if (obj.spo2) items.push(['SpO₂', obj.spo2, parseInt(obj.spo2) < 90 ? 'crit' : parseInt(obj.spo2) < 95 ? 'warn' : '']); if (obj.etco2) items.push(['EtCO₂', obj.etco2, '']); items.forEach(([l, val, cls]) => { v.innerHTML += `<div class="vital"><span class="vital-l">${l}</span><span class="vital-v ${cls}">${val}</span></div>` }) }
+
+        /* ── Audio ── */
+        let actx = null;
+        function aCtx() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx }
+        function tone(f, d, t, v) { try { const c = aCtx(), o = c.createOscillator(), g = c.createGain(); o.type = t || 'sine'; o.frequency.value = f; g.gain.value = v || .08; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(.001, c.currentTime + d); o.stop(c.currentTime + d) } catch (e) { } }
+        function beep() { tone(880, .08) }
+        function alarm() { tone(660, .15); setTimeout(() => tone(880, .15), 180) }
+        function shockSnd() { tone(200, .5, 'sawtooth', .1) }
+
+        /* ── Scenarios ── */
+        const SCENARIOS = [
+            {
+                id: 'found_down', num: 1, title: '"Found Down" — V-Fib Arrest', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                steps: [
+                    {
+                        narr: '<b>Night shift, 1900 assessment.</b> You walk into room 412 and find your patient — <b>Robert M., 67M</b> (Hx: MI, HTN, on metoprolol) — slumped in bed, unresponsive. Telemetry is alarming.', q: 'What do you do FIRST?', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                        choices: [
+                            { text: 'Check for responsiveness and a pulse (≤10 sec)', type: 'correct', fb: 'Tap and shout → no response. Check carotid pulse ≤10 seconds → <b>no pulse.</b> This tells you it\'s a cardiac arrest.', tip: 'AHA sequence: Unresponsive → Check pulse (≤10 sec) → No pulse → CPR + activate code.' },
+                            { text: 'Grab the defibrillator immediately', type: 'suboptimal', fb: 'You\'ll need the defib, but first you have to <b>confirm pulselessness.</b> You can\'t shock without knowing the rhythm and confirming no pulse.', tip: 'Always: Assess → then Act. Don\'t skip ahead.' },
+                            { text: 'Call the attending physician', type: 'wrong', fb: 'In cardiac arrest, <b>you don\'t wait for a physician</b> — you start BLS immediately. Call a <b>Code Blue</b>, not the attending.', tip: 'Anyone can activate a Code Blue. Every second without CPR = brain damage.' },
+                            { text: 'Give epinephrine 1mg IV', type: 'wrong', fb: 'You haven\'t confirmed arrest yet, and there\'s no IV access. <b>Assess first</b> — then start CPR, then get access, then meds.', tip: 'Meds come AFTER CPR is started and you have IV/IO access.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>No pulse confirmed.</b> The patient is in cardiac arrest. The monitor shows a chaotic, disorganized rhythm.', q: 'What are your next TWO actions?', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                        choices: [
+                            { text: 'Start CPR and call a Code Blue', type: 'correct', fb: '<b>Exactly right.</b> Start high-quality compressions (hard & fast, 100-120/min, full recoil) and activate the Code team immediately.', tip: 'CPR = buy time. Code Blue = get help. Both happen simultaneously.' },
+                            { text: 'Identify the rhythm first, then decide what to do', type: 'suboptimal', fb: 'The rhythm matters, but <b>CPR comes first.</b> You\'ll check the rhythm at the first rhythm check — but compressions can\'t wait.', tip: 'In cardiac arrest: CPR first, analyze rhythm second.' },
+                            { text: 'Run to get the crash cart yourself', type: 'wrong', fb: '<b>Don\'t leave the patient.</b> Call for help — yell, hit the code button, use the phone — but YOU stay and start CPR.', tip: 'Delegate — send someone for the cart. You start compressions.' },
+                            { text: 'Check blood pressure and oxygen saturation', type: 'wrong', fb: 'The patient has <b>no pulse</b> — there IS no blood pressure. SpO₂ probe won\'t read without perfusion. Start CPR.', tip: 'No pulse = no BP, no SpO₂. CPR is the priority.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>CPR in progress. Code Blue called.</b> The crash cart arrives. The team is assembling.<br><br><span class="team-say">Nurse: "What\'s the rhythm?"</span><br>You look at the monitor — it shows a <b>chaotic, disorganized waveform</b> with no identifiable P waves, QRS, or T waves.', q: 'You identify this rhythm as...', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '8' },
+                        choices: [
+                            { text: 'Ventricular fibrillation (V-Fib) — SHOCKABLE', type: 'correct', fb: '<b>Correct!</b> V-Fib is a chaotic, disorganized rhythm with no discernible complexes. It\'s a <b>shockable rhythm</b> — defibrillation is the #1 treatment.', tip: 'V-Fib = chaotic, no pattern. Think "bag of worms." Always shockable.' },
+                            { text: 'Asystole — NON-shockable', type: 'wrong', fb: 'Asystole is a <b>flat line</b> (or near-flat). This rhythm has electrical activity — it\'s chaotic and disorganized. That\'s <b>V-Fib</b>, which is shockable.', tip: 'Asystole = flat. V-Fib = chaotic squiggles. Very different.' },
+                            { text: 'PEA — NON-shockable', type: 'wrong', fb: 'PEA shows an <b>organized-looking rhythm</b> but with no pulse. This rhythm is chaotic and disorganized — that\'s <b>V-Fib</b>.', tip: 'PEA looks organized. V-Fib looks like chaos.' },
+                            { text: 'I\'m not sure — I need to check the reference', type: 'suboptimal', fb: 'It\'s okay to check! This is <b>V-Fib</b> — chaotic with no pattern. Hit the 📖 Reference button anytime to review rhythms.', tip: 'In real codes, the crash cart has a laminated algorithm card. Using references isn\'t cheating—it\'s smart.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>V-Fib confirmed.</b> The crash cart is at bedside.<br><br><span class="team-say">Nurse: "Defib is charged. What energy?"</span>', q: 'What\'s your order?', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '12' },
+                        choices: [
+                            { text: 'Defibrillate at 200J biphasic — "Everyone CLEAR!"', type: 'correct', fb: '<b>Perfect.</b> V-Fib = immediate defibrillation. 200J biphasic is the standard first shock. Clear the patient, shock, then immediately resume CPR.', tip: 'Time to defib is the #1 determinant of V-Fib survival. Every minute without defib = 10% less chance of survival.' },
+                            { text: 'Synchronized cardioversion at 100J', type: 'wrong', fb: '<b>Sync cardioversion is for organized rhythms with a pulse</b> (like unstable V-Tach with a pulse or SVT). V-Fib has no R-waves to sync to — you need <b>unsynchronized defibrillation</b>.', tip: 'Defib = unsynchronized (V-Fib/pulseless VT). Cardioversion = synchronized (unstable tachy WITH pulse).' },
+                            { text: 'Give epinephrine first, then shock', type: 'wrong', fb: 'In V-Fib, <b>defibrillation is the priority</b> — don\'t delay for meds. Epi comes after the 2nd shock if V-Fib persists.', tip: 'Shock early, shock first. Epi after 2nd shock in the algorithm.' },
+                            { text: 'Start an amiodarone drip first', type: 'wrong', fb: 'Amiodarone comes <b>after the 3rd shock</b> if V-Fib persists. Right now, shock #1 is the priority.', tip: 'Algorithm: Shock → CPR → Shock → Epi → Shock → Amio.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>⚡ Shock delivered!</b> You immediately resume CPR.<br><br><span class="alert-say">The team does 2 minutes of high-quality CPR...</span><br><br>Rhythm check: <b>Still V-Fib.</b><br><span class="team-say">Nurse: "Still V-Fib. Second shock?"</span>', q: 'What do you order now?', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '15' },
+                        choices: [
+                            { text: 'Shock again (200J) + give Epinephrine 1mg IV after', type: 'correct', fb: '<b>Correct!</b> After the 2nd shock for persistent V-Fib, you give <b>Epi 1mg IV</b>. Continue CPR immediately after the shock.', tip: 'After 2nd shock: Epi 1mg IV q3-5 min. Don\'t forget IV/IO access!' },
+                            { text: 'Just shock again, no meds yet', type: 'suboptimal', fb: 'The shock is right, but after the <b>2nd shock</b>, the algorithm adds <b>Epi 1mg IV</b>. This is when vasopressors enter the picture.', tip: 'After 2nd shock = time for Epi. After 3rd shock = time for Amiodarone.' },
+                            { text: 'Give amiodarone 300mg IV, then shock', type: 'wrong', fb: 'Amiodarone comes after the <b>3rd shock</b>, not the 2nd. Right now it\'s Epi time.', tip: 'Sequence: Shock 1 → Shock 2 + Epi → Shock 3 + Amio → repeat.' },
+                            { text: 'Stop CPR and re-assess the patient', type: 'wrong', fb: '<b>Never stop CPR</b> except for rhythm/pulse checks. Minimize interruptions — every pause drops perfusion pressure.', tip: 'CPR pauses should be <10 seconds. Resume compressions IMMEDIATELY after shock.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>Second shock + Epi 1mg given.</b> CPR continues.<br><br><span class="alert-say">2 more minutes of CPR pass...</span><br><br>Rhythm check: <b>Still V-Fib.</b> This is shock #3.<br><span class="team-say">Nurse: "Third shock — anything else?"</span>', q: 'After the 3rd shock, what medication do you add?', rhy: 'vfib', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '18' },
+                        choices: [
+                            { text: 'Amiodarone 300mg IV push', type: 'correct', fb: '<b>Yes!</b> After the 3rd shock, add <b>Amiodarone 300mg IV push</b>. A second dose of 150mg can be given later if needed.', tip: 'Amio 300mg after 3rd shock. Amio 150mg after 5th shock if still in V-Fib.' },
+                            { text: 'Amiodarone 150mg IV', type: 'suboptimal', fb: 'Right drug, wrong dose. The <b>first dose of amiodarone is 300mg</b>. The 150mg dose is for the second dose.', tip: '1st amio = 300mg. 2nd amio = 150mg. Don\'t mix them up!' },
+                            { text: 'Lidocaine 100mg IV', type: 'suboptimal', fb: 'Lidocaine is an alternative to amiodarone but is <b>second-line</b>. AHA recommends <b>amiodarone first</b>.', tip: 'Amiodarone is preferred. Lidocaine is the backup if amiodarone isn\'t available.' },
+                            { text: 'Epinephrine 1mg IV (another dose)', type: 'wrong', fb: 'You already gave epi — and it\'s only been 2 minutes. Epi is<b> q3-5 minutes</b>. Right now, the algorithm calls for <b>amiodarone</b>.', tip: 'Don\'t double up on epi. After 3rd shock = amiodarone.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>Third shock + Amiodarone 300mg given.</b> CPR continues.<br><br><span class="alert-say">2 more minutes of CPR pass... Epi given again (q3-5 min)...</span><br><br>Rhythm check: <b>Monitor shows... organized rhythm!</b><br><span class="team-say">Nurse: "I see a rhythm — checking pulse..."</span><br><span class="team-say">Nurse: "I feel a pulse! We have ROSC!"</span>', q: '🫀 ROSC achieved! The patient has a pulse. What is your FIRST priority for post-ROSC care?', rhy: 'nsr', vitals: { hr: 88, bp: '92/58', spo2: '94%', etco2: '38' },
+                        choices: [
+                            { text: 'Secure airway, check vitals, get a 12-lead ECG', type: 'correct', fb: '<b>Excellent!</b> Post-ROSC priorities: maintain airway, target SpO₂ 92-98% (don\'t hyperoxogenate!), SBP >90, and get a 12-lead to check for STEMI.', tip: 'ROSC ≠ done. Post-arrest care prevents re-arrest. 12-lead ECG within 10 min.' },
+                            { text: 'Continue CPR just to be safe', type: 'wrong', fb: 'The patient has a pulse — <b>CPR is contraindicated</b> if there\'s a pulse. You\'ll harm the patient with compressions on a beating heart.', tip: 'Once ROSC is confirmed, STOP CPR. Monitor closely for re-arrest.' },
+                            { text: 'Immediately send the patient to the OR', type: 'wrong', fb: 'Not without assessment. You need vitals, 12-lead ECG, and to <b>stabilize first</b>. If STEMI → cath lab, not OR.', tip: 'Stabilize → Assess → Decide disposition. Don\'t skip steps.' },
+                            { text: 'Blast 100% oxygen via NRB', type: 'suboptimal', fb: 'Oxygen is good, but <b>titrate to SpO₂ 92-98%</b>. Hyperoxia (100% O₂ unnecessarily) actually <b>worsens neurological outcomes</b> post-arrest.', tip: 'Post-ROSC: wean O₂ once SpO₂ ≥92%. Hyperoxia = harmful.' }
+                        ]
+                    },
+                    { narr: '<b>The patient is stabilized.</b> Airway secured, vitals improving, 12-lead obtained.<br><br>Excellent work leading this code. Let\'s debrief.', q: '', rhy: 'nsr', vitals: { hr: 82, bp: '108/64', spo2: '96%', etco2: '36' }, choices: [] }
+                ]
+            },
+
+            {
+                id: 'rapid_resp', num: 2, title: '"Rapid Response" — Unstable V-Tach', rhy: 'vtach', vitals: { hr: 182, bp: '78/50', spo2: '91%', etco2: '32' },
+                steps: [
+                    {
+                        narr: '<b>Rapid response, Room 318.</b> <b>Maria S., 54F</b> (Hx: dilated cardiomyopathy, EF 30%, on amiodarone).<br><br>She\'s awake but diaphoretic: <em>"My heart is racing... I feel like I\'m going to pass out."</em><br><br>Monitor: <b>Wide-complex tachycardia at 182 bpm.</b> BP 78/50.', q: 'This patient has a wide-complex tachycardia with symptoms. First question: is this patient STABLE or UNSTABLE?', rhy: 'vtach', vitals: { hr: 182, bp: '78/50', spo2: '91%', etco2: '32' },
+                        choices: [
+                            { text: 'UNSTABLE — hypotension (BP 78/50), diaphoresis, near-syncope', type: 'correct', fb: '<b>Correct!</b> Signs of instability: hypotension, altered mental status, chest pain, or signs of shock. She has <b>multiple signs of hemodynamic compromise</b>.', tip: 'Unstable = the rhythm is causing symptoms (low BP, AMS, chest pain, shock). Stable = the patient tolerates the rhythm.' },
+                            { text: 'STABLE — she\'s still conscious and talking', type: 'wrong', fb: 'Being awake ≠ stable. She\'s <b>hypotensive (78/50), diaphoretic, and pre-syncopal</b>. These are signs of hemodynamic instability. She\'s compensating but failing.', tip: 'A patient can be conscious AND unstable. Look at the vitals, not just the consciousness.' },
+                            { text: 'Need more information — get a 12-lead first', type: 'suboptimal', fb: 'A 12-lead is useful but <b>don\'t delay treatment for a deteriorating patient</b>. She\'s unstable NOW — intervention first.', tip: 'In unstable tachycardia, treat first. Diagnose the specific rhythm later.' },
+                            { text: 'I can\'t tell from this information', type: 'wrong', fb: 'You have everything you need: <b>BP 78/50, diaphoresis, near-syncope</b> = unstable. These are textbook instability signs.', tip: 'Unstable signs: hypotension, AMS, chest pain, acute heart failure, shock.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>Patient is UNSTABLE.</b> She\'s getting worse — now confused and skin is cool and clammy.<br><br><span class="team-say">Nurse: "BP dropping to 72/46 — what do we do?"</span>', q: 'What is the treatment for UNSTABLE wide-complex tachycardia?', rhy: 'vtach', vitals: { hr: 188, bp: '72/46', spo2: '89%', etco2: '28' },
+                        choices: [
+                            { text: 'Synchronized cardioversion — sedate first if possible', type: 'correct', fb: '<b>Correct!</b> Unstable tachycardia with a pulse → <b>synchronized cardioversion</b>. Sedate with midazolam or etomidate if time allows, but don\'t delay for sedation if the patient is crashing.', tip: 'Unstable tachy + pulse = sync cardioversion. Always use SYNC mode — it times the shock to the R-wave to avoid triggering V-Fib.' },
+                            { text: 'Defibrillation at 200J biphasic', type: 'wrong', fb: 'She has a <b>pulse</b> — defibrillation (unsynchronized) is for <b>pulseless</b> rhythms. With a pulse, you use <b>synchronized cardioversion</b> to avoid hitting the T-wave.', tip: 'Pulse → sync cardioversion. No pulse → defibrillation. Critical difference!' },
+                            { text: 'Amiodarone 150mg IV over 10 minutes', type: 'suboptimal', fb: 'Amiodarone is appropriate for <b>stable</b> V-Tach. She\'s <b>unstable and deteriorating</b> — you don\'t have 10 minutes. Electricity first.', tip: 'Meds for stable. Electricity for unstable. She needs a shock.' },
+                            { text: 'Adenosine 6mg rapid IVP', type: 'wrong', fb: 'Adenosine is for <b>narrow-complex SVT</b>, not wide-complex V-Tach. Giving adenosine in V-Tach is ineffective and potentially dangerous.', tip: 'Adenosine = narrow SVT. Amiodarone = wide VT (stable). Cardioversion = wide VT (unstable).' }
+                        ]
+                    },
+                    {
+                        narr: '<b>⚡ Synchronized cardioversion at 100J delivered!</b><br><br>The monitor shows the rhythm changing...<br><br><span class="team-say">Nurse: "Rhythm is changing... I see organized complexes... sinus rhythm!"</span><br><span class="team-say">Nurse: "BP coming up — 96/62. She\'s looking better."</span>', q: 'The cardioversion worked! She\'s back in sinus rhythm. What\'s your priority now?', rhy: 'nsr', vitals: { hr: 88, bp: '96/62', spo2: '95%', etco2: '34' },
+                        choices: [
+                            { text: 'Monitor closely, get a 12-lead ECG, consider amiodarone drip to prevent recurrence', type: 'correct', fb: '<b>Exactly right.</b> After cardioversion: monitor for re-entry into V-Tach, get a 12-lead to assess underlying cause, and consider an antiarrhythmic drip (amiodarone) for maintenance.', tip: 'Post-cardioversion: 12-lead ECG, continuous monitoring, consider antiarrhythmic for maintenance. Watch for recurrence.' },
+                            { text: 'She\'s fine now — send her back to her room', type: 'wrong', fb: 'She just had unstable V-Tach — she needs <b>continuous monitoring, workup, and likely ICU</b>. V-Tach can recur at any time.', tip: 'Unstable V-Tach = ICU admission. Never "send back" after a life-threatening arrhythmia.' },
+                            { text: 'Immediately cardiovert again as a preventive measure', type: 'wrong', fb: 'She\'s in <b>sinus rhythm</b> now — there\'s nothing to cardiovert. Shocking a normal rhythm would be harmful.', tip: 'Only cardiovert active tachyarrhythmias. Normal sinus = leave it alone.' },
+                            { text: 'Give another round of CPR', type: 'wrong', fb: 'She has a pulse and an improving blood pressure. CPR on a patient with a pulse <b>causes harm</b>.', tip: 'CPR = for pulseless patients. She has ROSC essentially — support and monitor.' }
+                        ]
+                    },
+                    { narr: '<b>Patient stabilized.</b> 12-lead obtained, amiodarone drip started, ICU bed arranged. Maria is awake and grateful.<br><br>Nicely managed — you recognized instability and acted fast.', q: '', rhy: 'nsr', vitals: { hr: 82, bp: '110/68', spo2: '97%', etco2: '36' }, choices: [] }
+                ]
+            },
+
+            {
+                id: 'slow_drop', num: 3, title: '"Slow & Dropping" — 3° Heart Block', rhy: 'hb3', vitals: { hr: 32, bp: '72/48', spo2: '94%', etco2: '38' },
+                steps: [
+                    {
+                        narr: '<b>Post-cath unit.</b> <b>James W., 72M</b> — inferior STEMI, had RCA stented 2 hours ago.<br><br>His HR has been trending down over 20 minutes. Now: <b>HR 32, BP 72/48.</b><br><em>"I feel woozy... lightheaded."</em><br><br>Monitor shows P-waves and QRS complexes marching independently — <b>no relationship between them.</b>', q: 'What rhythm is this?', rhy: 'hb3', vitals: { hr: 32, bp: '72/48', spo2: '94%', etco2: '38' },
+                        choices: [
+                            { text: '3rd degree (complete) heart block', type: 'correct', fb: '<b>Correct!</b> P-waves and QRS march independently — the atria and ventricles are electrically disconnected. This is a <b>complete heart block</b>, common after inferior MI (RCA supplies the AV node).', tip: '3° block: P-waves at one rate, QRS at another, no relationship. The AV node is completely blocked.' },
+                            { text: '2nd degree Type II (Mobitz II)', type: 'suboptimal', fb: 'Close — both can cause bradycardia. But in Mobitz II, there\'s a <b>consistent PR interval on conducted beats</b> with dropped QRS. Here, P and QRS are <b>completely independent</b> = 3° block.', tip: 'Mobitz II = some P-waves conduct, some don\'t, but PR is constant. 3° block = NO P-waves conduct.' },
+                            { text: 'Sinus bradycardia', type: 'wrong', fb: 'In sinus brady, every P-wave is followed by a QRS with a consistent PR interval — just slow. Here, <b>P-waves and QRS have no relationship</b>.', tip: 'Sinus brady = slow but normal conduction. 3° block = complete disconnect between atria and ventricles.' },
+                            { text: 'Junctional rhythm', type: 'wrong', fb: 'Junctional rhythms may not have visible P-waves. Here you clearly see P-waves — they\'re just <b>not connected</b> to the QRS complexes.', tip: 'Look for P-waves first. If present but unrelated to QRS → heart block.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>3° heart block confirmed.</b> HR 32, BP dropping. Patient is symptomatic (dizzy, hypotensive).<br><br><span class="team-say">Nurse: "He\'s getting worse — what do you want to try?"</span>', q: 'What is the FIRST medication to try for symptomatic bradycardia?', rhy: 'hb3', vitals: { hr: 30, bp: '68/44', spo2: '93%', etco2: '36' },
+                        choices: [
+                            { text: 'Atropine 0.5mg IV — but it likely won\'t work for 3° block', type: 'correct', fb: '<b>Smart answer.</b> Atropine is the first-line drug for bradycardia, but in <b>3° block, the block is below the AV node</b> — atropine works on the AV node, so it\'s often ineffective. You try it anyway while preparing for pacing.', tip: 'Atropine: works above/at AV node. 3° block: the block is BELOW the AV node. Try atropine, but expect to pace.' },
+                            { text: 'Epinephrine 1mg IV push', type: 'wrong', fb: 'Epi 1mg IV is for <b>cardiac arrest</b>, not bradycardia with a pulse. For bradycardic support, you could use an <b>epi infusion (2-10mcg/min)</b>, but that\'s second-line after atropine and pacing.', tip: 'Don\'t give arrest-dose epi to a patient with a pulse. That can cause V-Fib.' },
+                            { text: 'Adenosine 6mg rapid IVP', type: 'wrong', fb: 'Adenosine <b>slows conduction through the AV node</b> — giving it in a heart block would make things WORSE. Adenosine is for <b>SVT</b>.', tip: 'Adenosine = slows the heart. This patient is already too slow. Wrong direction!' },
+                            { text: 'Amiodarone 300mg IV', type: 'wrong', fb: 'Amiodarone is an antiarrhythmic that can <b>worsen bradycardia</b>. It\'s for V-Tach/V-Fib, not for heart blocks.', tip: 'Amiodarone slows the heart. Never give a rate-slowing drug for bradycardia.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>Atropine 0.5mg given.</b><br><br><span class="team-say">Nurse: "No change — still HR 30, BP 66/42."</span><br><span class="team-say">Nurse: "Atropine isn\'t working. What\'s the plan?"</span><br><br>As predicted, atropine is ineffective for <b>infranodal block</b>.', q: 'Atropine failed. What is the next intervention?', rhy: 'hb3', vitals: { hr: 30, bp: '66/42', spo2: '92%', etco2: '34' },
+                        choices: [
+                            { text: 'Transcutaneous pacing (TCP) — set rate 60, increase mA until capture', type: 'correct', fb: '<b>Correct!</b> TCP is your bridge until a transvenous pacemaker can be placed. Set rate to 60 bpm, start at low mA, increase until you see <b>electrical capture</b> (wide QRS after each spike) AND <b>mechanical capture</b> (feel a pulse).', tip: 'TCP: set rate 60-80, start low mA, increase by 10 until electrical capture + palpable pulse. Sedate the patient — pacing is painful!' },
+                            { text: 'Give another dose of atropine', type: 'suboptimal', fb: 'You can try another dose (max 3mg total), but it\'s unlikely to work in a <b>complete infranodal block</b>. Don\'t delay pacing while repeating a drug that already failed.', tip: 'If atropine fails once in 3° block, don\'t rely on it. Move to pacing.' },
+                            { text: 'Defibrillate at 200J', type: 'wrong', fb: 'He has a <b>pulse and an organized rhythm</b> — defibrillation is for pulseless rhythms. Shocking this patient could throw him into a worse rhythm.', tip: 'Defib = pulseless V-Fib/VT. This patient needs pacing, not shocking.' },
+                            { text: 'Start chest compressions', type: 'wrong', fb: 'He has a pulse. CPR is for <b>pulseless</b> patients. His HR is low but his heart IS still beating.', tip: 'Low HR ≠ no HR. He has a pulse → support with pacing, not compressions.' }
+                        ]
+                    },
+                    { narr: '<b>TCP initiated.</b> Rate set to 60, mA increasing...<br><br><span class="team-say">Nurse: "Electrical capture at 70mA... checking pulse... mechanical capture confirmed! BP improving — 92/58."</span><br><br>The patient is now being paced at 60 bpm with a blood pressure. Cardiology is on the way for a transvenous pacer.<br><br>Well done — you managed a tricky bradycardia that didn\'t respond to meds.', q: '', rhy: 'nsr', vitals: { hr: 60, bp: '92/58', spo2: '96%', etco2: '36' }, choices: [] }
+                ]
+            },
+
+            {
+                id: 'postop', num: 4, title: '"Post-Op Crash" — PEA Arrest', rhy: 'pea', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                steps: [
+                    {
+                        narr: '<b>Post-op unit.</b> <b>David K., 58M</b> — s/p colectomy 6 hours ago for colon cancer.<br><br>CNA: <em>"He doesn\'t look right."</em> You find him pale, diaphoretic, abdomen distended.<br><br>Monitor shows what <b>looks like a normal rhythm</b> — narrow complexes, rate ~80. But he\'s barely responsive.', q: 'You see an organized rhythm on the monitor. What must you check?', rhy: 'pea', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                        choices: [
+                            { text: 'Check for a pulse — organized rhythm doesn\'t always mean perfusion', type: 'correct', fb: '<b>Critical thinking!</b> An organized rhythm WITHOUT a pulse = <b>PEA (Pulseless Electrical Activity)</b>. The heart\'s electrical system is firing, but the heart isn\'t effectively pumping.', tip: 'PEA trap: the monitor looks "normal" but the patient has no pulse. ALWAYS check the patient, not just the monitor.' },
+                            { text: 'The rhythm looks fine — probably just post-op pain', type: 'wrong', fb: '<b>Danger!</b> Never assume a patient is okay because the monitor looks good. He\'s pale, diaphoretic, and barely responsive — these are <b>signs of shock</b>.', tip: 'Treat the PATIENT, not the MONITOR. A "normal" rhythm + a dying patient = PEA.' },
+                            { text: 'Start IV fluids for dehydration', type: 'suboptimal', fb: 'Fluids may be needed, but you first need to <b>check for a pulse</b>. If this is PEA, he\'s in cardiac arrest and needs CPR — not just fluids.', tip: 'Assess before you treat. Pulse check takes 10 seconds and changes everything.' },
+                            { text: 'Give a fluid bolus and call the surgeon', type: 'wrong', fb: 'You need to <b>check a pulse first</b>. If he\'s pulseless, calling the surgeon can wait — you need to start CPR NOW.', tip: 'Pulse check first. If pulseless → Code Blue → CPR. Then call the surgeon.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>NO PULSE.</b> Despite organized electrical activity, there is no perfusion. This is <b>PEA (Pulseless Electrical Activity)</b>.', q: 'PEA is a NON-shockable rhythm. What do you do?', rhy: 'pea', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '---' },
+                        choices: [
+                            { text: 'Start CPR + Epi 1mg IV q3-5 min + search for the CAUSE (H\'s & T\'s)', type: 'correct', fb: '<b>Exactly.</b> PEA = CPR + Epi + <b>find and fix the underlying cause.</b> Unlike V-Fib, you can\'t shock PEA. The only way to save this patient is to find <b>why</b> the heart isn\'t pumping and fix it.', tip: 'PEA treatment: CPR, Epi, and HUNT FOR THE CAUSE. The H\'s and T\'s checklist is your guide.' },
+                            { text: 'Defibrillate — any cardiac arrest should be shocked', type: 'wrong', fb: '<b>NO! PEA is NON-shockable.</b> Defibrillation is ONLY for V-Fib and pulseless V-Tach. Shocking PEA wastes time and doesn\'t help.', tip: 'Shockable: V-Fib, pulseless V-Tach. Non-shockable: Asystole, PEA. Know the difference — it\'s a classic exam trap.' },
+                            { text: 'CPR + Amiodarone 300mg IV', type: 'wrong', fb: 'Amiodarone is for <b>V-Fib/V-Tach</b>, not PEA. PEA needs <b>Epi</b> and — most importantly — finding and treating the underlying cause.', tip: 'PEA meds: Epi 1mg q3-5min ONLY. No antiarrhythmics. Focus on the cause.' },
+                            { text: 'Just do CPR and wait for the code team', type: 'suboptimal', fb: 'CPR is right, but you need to <b>actively search for the cause</b>. In PEA, if you don\'t find and fix the reason, CPR alone won\'t bring them back.', tip: 'PEA without cause-hunting = futile CPR. The H\'s and T\'s are your lifeline.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>CPR started, Epi 1mg given.</b> Now you need to figure out WHY he arrested. Think about the clinical picture:<br><br>• Post-op colectomy (6 hours ago)<br>• Pale, diaphoretic<br>• Abdomen <b>distended</b><br>• Was on a PCA (IV morphine) and IV lactated ringers', q: 'Looking at the H\'s and T\'s — what is the MOST LIKELY cause of this PEA arrest?', rhy: 'pea', vitals: { hr: 0, bp: '---/---', spo2: '---', etco2: '10' },
+                        choices: [
+                            { text: 'Hypovolemia — likely post-op hemorrhage (distended abdomen = internal bleeding)', type: 'correct', fb: '<b>Excellent clinical reasoning!</b> Post-op + distended abdomen + pale + diaphoretic = <b>internal hemorrhage</b> until proven otherwise. The fix: <b>massive fluid resuscitation + blood products + surgery</b>.', tip: 'Post-surgical PEA + distended abdomen = think bleeding FIRST. Volume, blood, and get the surgeon back in the OR.' },
+                            { text: 'Tension pneumothorax', type: 'wrong', fb: 'Possible but less likely. Tension PNX presents with <b>tracheal deviation, absent breath sounds on one side, JVD</b>. His main finding is abdominal distension — think <b>bleeding</b>.', tip: 'Tension PNX = unilateral absent breath sounds, tracheal deviation. Abdominal distension = hypovolemia.' },
+                            { text: 'Hyperkalemia', type: 'wrong', fb: 'Hyperkalemia can cause PEA, but the clinical picture (post-op, distended abdomen) points strongly to <b>hemorrhage</b>. No reason to suspect K+ issues.', tip: 'Match the H or T to the clinical picture. Post-op + distension = hemorrhage.' },
+                            { text: 'Cardiac tamponade', type: 'wrong', fb: 'Tamponade is possible post-cardiac surgery but this patient had an <b>abdominal</b> surgery. Distended abdomen = abdominal bleed, not pericardial effusion.', tip: 'Tamponade = muffled heart tones, JVD, hypotension (Beck\'s triad). Not this picture.' }
+                        ]
+                    },
+                    { narr: '<b>Hypovolemia from post-op hemorrhage identified.</b> You order:<br>• Massive fluid resuscitation — NS wide open through 2 large-bore IVs<br>• STAT type & crossmatch for packed RBCs<br>• Notify the surgeon IMMEDIATELY for emergent re-exploration<br><br><span class="alert-say">Blood transfusion started... volume being replaced...</span><br><br><span class="team-say">Nurse: "I\'m feeling a pulse! BP 68/40 and rising!"</span><br><br><b>ROSC achieved</b> by treating the underlying cause. Patient going to OR for surgical hemorrhage control.<br><br>Great work — you identified PEA, didn\'t shock it, and found the cause.', q: '', rhy: 'nsr', vitals: { hr: 102, bp: '82/54', spo2: '93%', etco2: '28' }, choices: [] }
+                ]
+            },
+
+            {
+                id: 'svt_call', num: 5, title: '"The SVT Call"', rhy: 'svt', vitals: { hr: 210, bp: '110/72', spo2: '98%', etco2: '28' },
+                steps: [
+                    {
+                        narr: '<b>ED triage.</b> <b>Ashley T., 28F</b> — no cardiac history. Was at the gym when suddenly felt her heart racing. HR has been 210 for 30 minutes.<br><br>She\'s <b>alert, talking, anxious</b> but not in distress. BP 110/72.<br><br>Monitor: <b>narrow-complex tachycardia, extremely regular, rate 210.</b>', q: 'This narrow-complex, very regular tachycardia at 210 bpm is most likely...', rhy: 'svt', vitals: { hr: 210, bp: '110/72', spo2: '98%', etco2: '28' },
+                        choices: [
+                            { text: 'SVT (supraventricular tachycardia)', type: 'correct', fb: '<b>Correct!</b> Narrow-complex (≤120ms QRS), very regular, sudden onset, rate ~150-250 = classic <b>SVT</b>. In a young patient with no cardiac history, this is the most likely diagnosis.', tip: 'SVT: narrow, regular, fast (often >150), sudden on/off. Most common paroxysmal tachyarrhythmia in young people.' },
+                            { text: 'Ventricular tachycardia (V-Tach)', type: 'wrong', fb: 'V-Tach produces <b>wide</b> QRS complexes (≥120ms). This is <b>narrow-complex</b>, which means the impulse is coming from above the ventricles = supraventricular.', tip: 'Narrow = supraventricular (above ventricles). Wide = ventricular or aberrant conduction.' },
+                            { text: 'Sinus tachycardia', type: 'wrong', fb: 'Sinus tach rarely exceeds 150-160 bpm in a resting patient, and usually has a <b>gradual</b> onset. This started <b>suddenly</b> at 210 — that\'s SVT pattern.', tip: 'Sinus tach: gradual onset, rarely >150 at rest. SVT: sudden onset, often >150. The onset history matters.' },
+                            { text: 'Atrial fibrillation', type: 'wrong', fb: 'A-Fib is <b>irregularly irregular</b> — the R-R intervals vary. This rhythm is <b>very regular</b>. Plus, A-Fib at 210 in a 28-year-old with no history would be unusual.', tip: 'A-Fib = irregular. SVT = regular. Look at the R-R intervals.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>SVT confirmed.</b> Patient is stable — alert, conversational, decent BP.<br><br><span class="team-say">Nurse: "She\'s stable. What do you want to try first?"</span>', q: 'What is the FIRST intervention for STABLE SVT?', rhy: 'svt', vitals: { hr: 210, bp: '108/70', spo2: '98%', etco2: '28' },
+                        choices: [
+                            { text: 'Vagal maneuvers — have her bear down (Valsalva) or try modified Valsalva', type: 'correct', fb: '<b>Right!</b> Vagal maneuvers are first-line for stable SVT. The Valsalva maneuver stimulates the vagus nerve, which slows AV node conduction and can break the re-entrant circuit.', tip: 'Modified Valsalva: have patient strain for 15 sec, then lay flat and lift legs to 45° for 15 sec. Higher success rate than classic Valsalva.' },
+                            { text: 'Adenosine 6mg rapid IVP', type: 'suboptimal', fb: 'Adenosine is correct, but it\'s <b>second-line</b>. Try vagal maneuvers first — they\'re non-invasive and often work. Save adenosine if vagal fails.', tip: 'Algorithm: Vagal → Adenosine 6mg → Adenosine 12mg → Cardioversion. Start simple.' },
+                            { text: 'Synchronized cardioversion', type: 'wrong', fb: 'She\'s <b>stable</b> — cardioversion is for <b>unstable</b> patients. Try vagal maneuvers and medications first.', tip: 'Electricity = last resort for stable patients. Meds and maneuvers come first.' },
+                            { text: 'Metoprolol 5mg IV', type: 'suboptimal', fb: 'Beta-blockers can help, but <b>vagal maneuvers</b> should be attempted first, followed by adenosine. Rate control is a later option if SVT doesn\'t convert.', tip: 'For acute SVT conversion: Vagal → Adenosine. For rate control if those fail: calcium channel blockers or beta-blockers.' }
+                        ]
+                    },
+                    {
+                        narr: '<b>Vagal maneuvers attempted.</b> Modified Valsalva performed.<br><br><span class="team-say">Nurse: "Still SVT at 208. No change."</span><br><span class="team-say">Nurse: "Want to try adenosine?"</span>', q: 'Vagal maneuvers failed. What dose of adenosine?', rhy: 'svt', vitals: { hr: 208, bp: '106/68', spo2: '97%', etco2: '28' },
+                        choices: [
+                            { text: 'Adenosine 6mg rapid IVP — follow immediately with a 20mL NS flush, arm up', type: 'correct', fb: '<b>Perfect!</b> First dose = 6mg. Must be given <b>rapid IVP</b> (adenosine has a half-life of <10 seconds) followed by an immediate 20mL flush. Use the <b>most proximal IV port</b> and raise the arm.', tip: 'Adenosine technique: large-bore IV, closest port to heart, rapid push, immediate flush, arm elevated. Must be FAST or it degrades before reaching the heart.' },
+                            { text: 'Adenosine 12mg rapid IVP', type: 'wrong', fb: '12mg is the <b>second dose</b>. Always start with <b>6mg</b>. If 6mg fails, then escalate to 12mg.', tip: 'Adenosine dosing: 6mg → 12mg → 12mg. Never skip the first dose.' },
+                            { text: 'Adenosine 6mg — infuse slowly over 1 minute', type: 'wrong', fb: '<b>Never infuse adenosine slowly!</b> It has a half-life of <10 seconds — if you give it slowly, it breaks down before reaching the heart. Must be <b>rapid IVP with immediate flush</b>.', tip: 'Adenosine = rapid push only. Slow infusion = drug is destroyed before it works.' },
+                            { text: 'Adenosine 3mg IV to start low', type: 'wrong', fb: '3mg is below therapeutic dose. The AHA-recommended first dose is <b>6mg</b>. Too-low doses are ineffective and waste time.', tip: 'Adenosine: 6mg first, then 12mg if needed. Don\'t underdose.' }
+                        ]
+                    },
+                    { narr: '<b>Adenosine 6mg pushed rapidly.</b><br><br>The monitor briefly shows a flat line (adenosine pauses the heart momentarily)...<br><br>Then: <b>regular rhythm returns at 82 bpm. Narrow QRS. Normal sinus!</b><br><br><span class="team-say">Nurse: "She converted! Sinus rhythm at 82. BP 118/74."</span><br><span class="team-say">Ashley: "Oh my god, that felt so weird! But my heart feels normal now."</span><br><br>SVT successfully converted with first-dose adenosine. Nice work!', q: '', rhy: 'nsr', vitals: { hr: 82, bp: '118/74', spo2: '99%', etco2: '36' }, choices: [] }
+                ]
+            }
+        ];
+
+        /* ── Game State ── */
+        let G = { sc: null, step: 0, results: [], running: false };
+
+        /* ── Screen Management ── */
+        function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); $('ref-toggle').style.display = id === 'game' ? 'block' : 'none' }
+        function toggleRef() { $('ref-panel').classList.toggle('open') }
+
+        /* ── Title Screen ── */
+        function buildMenu() {
+            const c = $('menu-btns'); c.innerHTML = '';
+            const sv = JSON.parse(localStorage.getItem('cr2_prog') || '{}');
+            SCENARIOS.forEach(sc => {
+                const best = sv[sc.id]; const b = document.createElement('button'); b.className = 'menu-btn';
+                b.innerHTML = `<span class="dot" style="background:${sc.rhy === 'vfib' || sc.rhy === 'vtach' ? 'var(--r)' : sc.rhy === 'pea' || sc.rhy === 'hb3' ? 'var(--a)' : 'var(--b)'}"></span><div><div class="lb">${sc.num}. ${sc.title}</div><div class="ds">${best ? 'Best: ' + best : 'Not attempted'}</div></div>`;
+                b.onclick = () => startScenario(sc); c.appendChild(b)
+            })
+        }
+
+        /* ── Start Scenario ── */
+        function startScenario(sc) { G = { sc, step: 0, results: [], running: true }; showScreen('game'); $('g-title').textContent = sc.title; startECG(); showStep() }
+
+        /* ── Show Step ── */
+        function showStep() {
+            const sc = G.sc, s = sc.steps[G.step], area = $('story-area'); area.innerHTML = '';
+            const total = sc.steps.filter(x => x.choices.length > 0).length;
+            const done = G.results.length;
+            $('g-step').textContent = `Step ${done + 1} of ${total}`; $('prog-step').textContent = `Step ${done + 1} of ${total}`;
+            const pct = Math.round((done / total) * 100); $('prog-fill').style.width = pct + '%'; $('prog-pct').textContent = pct + '%';
+            if (s.rhy) setRhy(s.rhy);
+            if (s.vitals) setVitals(s.vitals);
+            // Narrative
+            area.innerHTML += `<div class="narrative">${s.narr}</div>`;
+            // If no choices = end
+            if (!s.choices.length) { setTimeout(() => showDebrief(), 800); return }
+            // Question
+            area.innerHTML += `<div class="question">❓ ${s.q}</div>`;
+            // Choices
+            let html = '<div class="choices">';
+            s.choices.forEach((ch, i) => { html += `<button class="choice-btn" id="ch-${i}" onclick="pick(${i})">${String.fromCharCode(65 + i)}) ${ch.text}</button>` });
+            html += '</div>';
+            area.innerHTML += html; area.scrollTop = 0; beep()
+        }
+
+        /* ── Pick Answer ── */
+        function pick(i) {
+            if (!G.running) return;
+            const s = G.sc.steps[G.step], ch = s.choices[i], btn = $('ch-' + i);
+            // Disable all buttons
+            s.choices.forEach((_, j) => { const b = $('ch-' + j); b.classList.add('disabled'); b.classList.add(s.choices[j].type === 'correct' ? 'correct' : s.choices[j].type === 'suboptimal' ? 'suboptimal' : 'wrong') });
+            // Add tags
+            s.choices.forEach((c, j) => { const b = $('ch-' + j); const tag = c.type === 'correct' ? '<span class="tag tag-correct">✓ BEST</span>' : c.type === 'suboptimal' ? '<span class="tag tag-sub">⚠ OK</span>' : '<span class="tag tag-wrong">✗ NO</span>'; b.innerHTML = tag + b.innerHTML.replace(/^[A-D]\) /, '') });
+            // Record result
+            G.results.push({ step: G.step, picked: i, type: ch.type });
+            // Sound
+            if (ch.type === 'correct') beep(); else if (ch.type === 'wrong') alarm();
+            // Show feedback
+            const area = $('story-area');
+            const cls = ch.type === 'correct' ? 'fb-ok' : ch.type === 'suboptimal' ? 'fb-sub' : 'fb-bad';
+            const title = ch.type === 'correct' ? '✅ Correct!' : ch.type === 'suboptimal' ? '⚠️ Not wrong, but...' : '❌ Not the best choice';
+            let fbHTML = `<div class="feedback ${cls}"><h4>${title}</h4><p>${ch.fb}</p>`;
+            if (ch.tip) fbHTML += `<div class="tip">💡 <b>Key point:</b> ${ch.tip}</div>`;
+            fbHTML += '</div>';
+            fbHTML += `<button class="next-btn" onclick="nextStep()">Continue →</button>`;
+            area.innerHTML += fbHTML;
+            area.scrollTop = area.scrollHeight
+        }
+
+        /* ── Next Step ── */
+        function nextStep() { G.step++; if (G.step >= G.sc.steps.length) { showDebrief(); return } showStep() }
+
+        /* ── Debrief ── */
+        function showDebrief() {
+            G.running = false; stopECG(); showScreen('debrief');
+            const total = G.results.length; let correct = 0, sub = 0, wrong = 0;
+            G.results.forEach(r => { if (r.type === 'correct') correct++; else if (r.type === 'suboptimal') sub++; else wrong++ });
+            const score = Math.round(((correct + sub * 0.5) / total) * 100);
+            let icon, label, msg;
+            if (score >= 90) { icon = '⭐'; label = 'Excellent!'; msg = 'Near-perfect — textbook ACLS leadership.' }
+            else if (score >= 75) { icon = '🟢'; label = 'Strong Response'; msg = 'Solid clinical reasoning — minor areas to refine.' }
+            else if (score >= 60) { icon = '🔵'; label = 'Good Foundation'; msg = 'You know the key concepts. Review the feedback for the gaps.' }
+            else if (score >= 40) { icon = '🟡'; label = 'Keep Learning'; msg = 'Right instincts developing. Try again with the reference panel open!' }
+            else { icon = '🟠'; label = 'Keep Practicing'; msg = 'Everyone starts somewhere. Review the feedback and try again!' }
+            // Save best
+            const sv = JSON.parse(localStorage.getItem('cr2_prog') || '{}'); const prev = sv[G.sc.id];
+            if (!prev || score > parseInt(prev)) sv[G.sc.id] = label + ' (' + score + '%)'; localStorage.setItem('cr2_prog', JSON.stringify(sv));
+            // Build card
+            const c = $('db-card');
+            let h = `<div class="db-grade"><div class="icon">${icon}</div><div class="label">${label}</div><div class="sub">${msg}</div></div>`;
+            h += `<div class="db-score">${score}%</div>`;
+            h += `<div class="db-steps"><h3>📋 Step-by-Step Review</h3>`;
+            G.results.forEach((r, i) => {
+                const s = G.sc.steps[r.step]; const em = r.type === 'correct' ? '✅' : r.type === 'suboptimal' ? '⚠️' : '❌';
+                h += `<div class="db-step"><span class="num">${i + 1}</span><span class="q">${s.q.substring(0, 80)}${s.q.length > 80 ? '...' : ''}</span><span class="res">${em}</span></div>`
+            });
+            h += `</div>`;
+            h += `<div class="db-btns"><button class="btn-pri" onclick="startScenario(SCENARIOS.find(s=>s.id==='${G.sc.id}'))">🔄 Try Again</button><button class="btn-sec" onclick="goHome()">📋 All Scenarios</button></div>`;
+            c.innerHTML = h
+        }
+
+        function goHome() { showScreen('title'); buildMenu() }
+
+        /* ── Init ── */
+        buildMenu();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ACLS: Code Blue Algorithm & Hs and Ts</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0e17;
+            --s: #111827;
+            --s2: #1a2236;
+            --s3: #243049;
+            --br: #2d3a52;
+            --t: #e2e8f0;
+            --td: #8899b0;
+            --tm: #556680;
+            --g: #22c55e;
+            --gd: #166534;
+            --gg: rgba(34, 197, 94, .15);
+            --r: #ef4444;
+            --rd: #7f1d1d;
+            --rg: rgba(239, 68, 68, .12);
+            --a: #f59e0b;
+            --ad: #78350f;
+            --ag: rgba(245, 158, 11, .12);
+            --b: #3b82f6;
+            --bd: #1e3a5f;
+            --bg2: rgba(59, 130, 246, .12);
+            --p: #a855f7;
+            --pd: #581c87;
+            --pg: rgba(168, 85, 247, .12);
+            --h-warm: #ef4444;
+            --h-warm-bg: rgba(239, 68, 68, .06);
+            --h-warm-br: rgba(239, 68, 68, .2);
+            --t-cool: #3b82f6;
+            --t-cool-bg: rgba(59, 130, 246, .06);
+            --t-cool-br: rgba(59, 130, 246, .2);
+            --f: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --m: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+            --rad: 12px;
+            --rs: 8px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--f);
+            background: var(--bg);
+            color: var(--t);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 3rem 1.5rem 2rem;
+            background: radial-gradient(ellipse at center, #111827 0%, var(--bg) 70%);
+            border-bottom: 1px solid var(--br);
+        }
+
+        .hero-icon {
+            font-size: 3rem;
+            margin-bottom: .5rem;
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 8px var(--rg));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 24px var(--rg));
+            }
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            background: linear-gradient(135deg, var(--r), var(--a));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--td);
+            font-size: .95rem;
+            margin-top: .5rem;
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .hero .subtext {
+            color: var(--tm);
+            font-size: .8rem;
+            margin-top: 1rem;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* ── Section Headers ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin: 2.5rem 0 1.25rem;
+            padding-bottom: .75rem;
+            border-bottom: 2px solid var(--br);
+        }
+
+        .section-header .icon {
+            font-size: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: .02em;
+        }
+
+        .section-header .badge {
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .2rem .6rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .badge-red {
+            background: var(--rd);
+            color: var(--r);
+        }
+
+        .badge-blue {
+            background: var(--bd);
+            color: var(--b);
+        }
+
+        .badge-green {
+            background: var(--gd);
+            color: var(--g);
+        }
+
+        /* ══════════════════════════════════
+           SECTION 1: ACLS ALGORITHM FLOWCHART
+        ══════════════════════════════════ */
+        .flowchart {
+            background: var(--s);
+            border: 1px solid var(--br);
+            border-radius: var(--rad);
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .flow-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            min-width: 320px;
+        }
+
+        /* Flow nodes */
+        .flow-node {
+            padding: .6rem 1.2rem;
+            border-radius: var(--rs);
+            font-size: .85rem;
+            font-weight: 600;
+            text-align: center;
+            max-width: 340px;
+            width: 100%;
+            position: relative;
+            border: 2px solid;
+        }
+
+        .flow-node small {
+            display: block;
+            font-weight: 400;
+            font-size: .75rem;
+            opacity: .8;
+        }
+
+        .node-start {
+            background: var(--s2);
+            border-color: var(--tm);
+            color: var(--t);
+        }
+
+        .node-assess {
+            background: var(--s2);
+            border-color: var(--a);
+            color: var(--a);
+        }
+
+        .node-cpr {
+            background: rgba(168, 85, 247, .1);
+            border-color: var(--p);
+            color: var(--p);
+        }
+
+        .node-shock {
+            background: var(--rg);
+            border-color: var(--r);
+            color: var(--r);
+        }
+
+        .node-nonshock {
+            background: var(--ag);
+            border-color: var(--a);
+            color: var(--a);
+        }
+
+        .node-drug {
+            background: var(--bg2);
+            border-color: var(--b);
+            color: var(--b);
+        }
+
+        .node-rosc {
+            background: var(--gg);
+            border-color: var(--g);
+            color: var(--g);
+        }
+
+        /* Arrows */
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--tm);
+            font-size: .75rem;
+            padding: .15rem 0;
+        }
+
+        .flow-arrow::before {
+            content: '';
+            width: 2px;
+            height: 18px;
+            background: var(--br);
+            display: block;
+        }
+
+        .flow-arrow-label {
+            font-size: .7rem;
+            color: var(--td);
+            padding: 0 .5rem;
+            font-weight: 600;
+        }
+
+        /* Decision diamond */
+        .flow-decision {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .flow-decision-box {
+            background: var(--s3);
+            border: 2px solid var(--a);
+            border-radius: var(--rs);
+            padding: .5rem 1rem;
+            font-weight: 700;
+            font-size: .85rem;
+            color: var(--a);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Branch columns */
+        .flow-branches {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 700px;
+            margin-top: .25rem;
+        }
+
+        .flow-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .branch-label {
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: .25rem .75rem;
+            border-radius: 10px;
+            margin-bottom: .25rem;
+        }
+
+        .branch-label-shock {
+            background: var(--rd);
+            color: var(--r);
+        }
+
+        .branch-label-nonshock {
+            background: var(--ad);
+            color: var(--a);
+        }
+
+        .flow-loop {
+            font-size: .7rem;
+            color: var(--tm);
+            font-weight: 600;
+            border: 1px dashed var(--br);
+            border-radius: var(--rs);
+            padding: .3rem .7rem;
+            margin-top: .15rem;
+            text-align: center;
+        }
+
+        /* ROSC */
+        .flow-rosc {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin-top: .25rem;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .rosc-merge {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--g), transparent);
+            margin: .25rem 0;
+        }
+
+        /* Algorithm key */
+        .algo-key {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--br);
+            justify-content: center;
+        }
+
+        .algo-key-item {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            font-size: .75rem;
+            color: var(--td);
+        }
+
+        .algo-key-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        /* ══════════════════════════════════
+           SECTION 2: Hs and Ts CARDS
+        ══════════════════════════════════ */
+        .ht-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .ht-column-header {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .6rem 1rem;
+            border-radius: var(--rs);
+            font-weight: 700;
+            font-size: .9rem;
+            margin-bottom: .25rem;
+        }
+
+        .h-header {
+            background: var(--rg);
+            color: var(--r);
+            border: 1px solid var(--h-warm-br);
+        }
+
+        .t-header {
+            background: var(--bg2);
+            color: var(--b);
+            border: 1px solid var(--t-cool-br);
+        }
+
+        .ht-column-header small {
+            font-weight: 400;
+            font-size: .75rem;
+            opacity: .7;
+        }
+
+        /* Individual card */
+        .ht-card {
+            border-radius: var(--rad);
+            border: 1px solid var(--br);
+            overflow: hidden;
+            transition: all .25s ease;
+            margin-bottom: .5rem;
+            background: var(--s);
+        }
+
+        .ht-card:hover {
+            border-color: var(--tm);
+            transform: translateY(-1px);
+        }
+
+        .ht-card.h-card {
+            border-left: 3px solid var(--r);
+        }
+
+        .ht-card.t-card {
+            border-left: 3px solid var(--b);
+        }
+
+        .ht-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .7rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            gap: .5rem;
+        }
+
+        .ht-card-header:hover {
+            background: var(--s2);
+        }
+
+        .ht-card-title {
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .h-card .ht-card-title {
+            color: var(--r);
+        }
+
+        .t-card .ht-card-title {
+            color: var(--b);
+        }
+
+        .ht-card-toggle {
+            font-size: .75rem;
+            color: var(--tm);
+            transition: transform .2s ease;
+            flex-shrink: 0;
+        }
+
+        .ht-card.open .ht-card-toggle {
+            transform: rotate(180deg);
+        }
+
+        .ht-card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .35s ease, padding .25s ease;
+        }
+
+        .ht-card.open .ht-card-body {
+            max-height: 600px;
+            padding: 0 1rem 1rem;
+        }
+
+        /* Card detail rows */
+        .ht-row {
+            display: flex;
+            gap: .6rem;
+            padding: .45rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            font-size: .82rem;
+            line-height: 1.55;
+        }
+
+        .ht-row:last-child {
+            border-bottom: none;
+        }
+
+        .ht-row-icon {
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+            font-size: .85rem;
+        }
+
+        .ht-row-label {
+            font-weight: 700;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            min-width: 90px;
+            flex-shrink: 0;
+            padding-top: 1px;
+        }
+
+        .h-card .ht-row-label {
+            color: var(--r);
+        }
+
+        .t-card .ht-row-label {
+            color: var(--b);
+        }
+
+        .ht-row-content {
+            color: var(--td);
+            flex: 1;
+        }
+
+        .ht-row-content strong {
+            color: var(--t);
+            font-weight: 600;
+        }
+
+        /* Fix row highlight */
+        .ht-row.fix-row {
+            background: rgba(34, 197, 94, .06);
+            border-radius: var(--rs);
+            padding: .5rem .6rem;
+            margin-top: .25rem;
+            border: 1px solid rgba(34, 197, 94, .15);
+        }
+
+        .ht-row.fix-row .ht-row-label {
+            color: var(--g);
+        }
+
+        .ht-row.fix-row .ht-row-content {
+            color: var(--g);
+        }
+
+        .ht-row.fix-row .ht-row-content strong {
+            color: #4ade80;
+        }
+
+        /* ══════════════════════════════════
+           SECTION 3: RAPID FIRST MOVES
+        ══════════════════════════════════ */
+        .rapid-box {
+            background: var(--s);
+            border: 2px solid var(--g);
+            border-radius: var(--rad);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .rapid-box h3 {
+            color: var(--g);
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: .75rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .rapid-list {
+            list-style: none;
+            counter-reset: rapid;
+        }
+
+        .rapid-list li {
+            counter-increment: rapid;
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            padding: .4rem 0;
+            font-size: .85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+        }
+
+        .rapid-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rapid-list li::before {
+            content: counter(rapid);
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--gd);
+            color: var(--g);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .rapid-list .covers {
+            display: inline;
+            color: var(--tm);
+            font-size: .75rem;
+            font-style: italic;
+        }
+
+        /* ── Drug Table ── */
+        .drug-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .82rem;
+            background: var(--s);
+            border-radius: var(--rad);
+            overflow: hidden;
+            border: 1px solid var(--br);
+        }
+
+        .drug-table th {
+            text-align: left;
+            padding: .5rem .75rem;
+            background: var(--s2);
+            color: var(--tm);
+            font-size: .7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            border-bottom: 1px solid var(--br);
+        }
+
+        .drug-table td {
+            padding: .45rem .75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            color: var(--td);
+        }
+
+        .drug-table td:first-child {
+            color: var(--t);
+            font-weight: 600;
+        }
+
+        .drug-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .drug-table .timing {
+            color: var(--a);
+            font-weight: 600;
+            font-size: .75rem;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--tm);
+            font-size: .78rem;
+            border-top: 1px solid var(--br);
+            margin-top: 2rem;
+        }
+
+        /* ── Expand All Button ── */
+        .expand-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .4rem 1rem;
+            border-radius: var(--rs);
+            background: var(--s2);
+            border: 1px solid var(--br);
+            color: var(--td);
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: var(--f);
+        }
+
+        .expand-all-btn:hover {
+            border-color: var(--b);
+            color: var(--t);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .ht-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-branches {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .flowchart {
+                padding: 1.25rem 1rem;
+            }
+
+            .flow-node {
+                font-size: .8rem;
+                padding: .5rem .8rem;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                color: #111;
+            }
+
+            .ht-card-body {
+                max-height: none !important;
+                padding: 0 1rem 1rem !important;
+            }
+
+            .ht-card-toggle {
+                display: none;
+            }
+
+            .expand-all-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="hero">
+        <div class="hero-icon">🫀</div>
+        <h1>CODE BLUE: ACLS REFERENCE</h1>
+        <p>Algorithm flowchart + Reversible causes of cardiac arrest<br>
+            <strong>PEA / Asystole / Refractory VF/VT</strong>
+        </p>
+        <div class="subtext">Think: "What's causing this arrest that I can FIX right now?"</div>
+    </div>
+
+    <div class="container">
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 1: ACLS ALGORITHM FLOWCHART
+        ═══════════════════════════════════════════ -->
+        <div class="section-header">
+            <span class="icon">📋</span>
+            <h2>Code Blue Algorithm</h2>
+            <span class="badge badge-red">ACLS</span>
+        </div>
+
+        <div class="flowchart">
+            <div class="flow-grid">
+
+                <!-- Start -->
+                <div class="flow-node node-start">
+                    🚨 Patient found unresponsive
+                    <small>Tap & shout → No response</small>
+                </div>
+                <div class="flow-arrow"><span></span></div>
+
+                <!-- Assess -->
+                <div class="flow-node node-assess">
+                    Check pulse ≤ 10 seconds
+                    <small>Carotid or femoral — if NO pulse:</small>
+                </div>
+                <div class="flow-arrow"><span></span></div>
+
+                <!-- CPR + Code -->
+                <div class="flow-node node-cpr">
+                    ⚡ Call CODE BLUE + Start CPR
+                    <small>Hard & fast (100-120/min) · Full recoil · Minimize interruptions</small>
+                </div>
+                <div class="flow-arrow"><span></span></div>
+
+                <!-- Decision: Rhythm check -->
+                <div class="flow-decision-box">
+                    🔍 RHYTHM CHECK — Shockable?
+                </div>
+
+                <!-- Branches -->
+                <div class="flow-branches">
+                    <!-- LEFT: Shockable -->
+                    <div class="flow-branch">
+                        <span class="branch-label branch-label-shock">⚡ YES — SHOCKABLE</span>
+                        <div class="flow-node node-shock" style="font-size:.8rem;">
+                            V-Fib / Pulseless V-Tach
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-shock">
+                            DEFIBRILLATE
+                            <small>200J biphasic → resume CPR immediately</small>
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-drug">
+                            Epi 1mg IV q3-5 min
+                            <small>Give after 2nd shock</small>
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-drug">
+                            Amiodarone 300mg IV
+                            <small>Give after 3rd shock · 2nd dose: 150mg</small>
+                        </div>
+                        <div class="flow-loop">🔄 CPR 2 min → Rhythm check → Repeat</div>
+                    </div>
+
+                    <!-- RIGHT: Non-shockable -->
+                    <div class="flow-branch">
+                        <span class="branch-label branch-label-nonshock">🚫 NO — NON-SHOCKABLE</span>
+                        <div class="flow-node node-nonshock" style="font-size:.8rem;">
+                            Asystole / PEA
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-nonshock">
+                            DO NOT DEFIBRILLATE
+                            <small>CPR only — no shock</small>
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-drug">
+                            Epi 1mg IV q3-5 min
+                            <small>Give ASAP — repeat every cycle</small>
+                        </div>
+                        <div class="flow-arrow"><span></span></div>
+                        <div class="flow-node node-assess">
+                            🔍 SEARCH H's & T's
+                            <small>Find and fix the cause — only way to save them</small>
+                        </div>
+                        <div class="flow-loop">🔄 CPR 2 min → Rhythm check → Repeat</div>
+                    </div>
+                </div>
+
+                <!-- ROSC -->
+                <div class="flow-rosc">
+                    <div class="rosc-merge"></div>
+                    <div class="flow-arrow"><span></span></div>
+                    <div class="flow-node node-rosc" style="max-width:500px;">
+                        🫀 ROSC — Return of Spontaneous Circulation
+                        <small>Secure airway · SpO₂ 92-98% (don't hyperoxogenate!) · 12-lead ECG · SBP >90 · Target temp
+                            management</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key -->
+            <div class="algo-key">
+                <div class="algo-key-item"><span class="algo-key-dot" style="background:var(--r);"></span> Shockable
+                    path</div>
+                <div class="algo-key-item"><span class="algo-key-dot" style="background:var(--a);"></span> Non-shockable
+                    path</div>
+                <div class="algo-key-item"><span class="algo-key-dot" style="background:var(--b);"></span> Medications
+                </div>
+                <div class="algo-key-item"><span class="algo-key-dot" style="background:var(--p);"></span> CPR</div>
+                <div class="algo-key-item"><span class="algo-key-dot" style="background:var(--g);"></span> ROSC</div>
+            </div>
+        </div>
+
+        <!-- Drug Quick-Reference Table -->
+        <div class="section-header" style="margin-top:2rem;">
+            <span class="icon">💊</span>
+            <h2>Drug Doses at a Glance</h2>
+        </div>
+        <table class="drug-table">
+            <tr>
+                <th>Drug</th>
+                <th>Dose</th>
+                <th>Route</th>
+                <th>When</th>
+            </tr>
+            <tr>
+                <td>Epinephrine</td>
+                <td>1 mg</td>
+                <td>IV/IO push</td>
+                <td class="timing">q3-5 min throughout arrest</td>
+            </tr>
+            <tr>
+                <td>Amiodarone (1st)</td>
+                <td>300 mg</td>
+                <td>IV/IO push</td>
+                <td class="timing">After 3rd shock (VF/pVT)</td>
+            </tr>
+            <tr>
+                <td>Amiodarone (2nd)</td>
+                <td>150 mg</td>
+                <td>IV/IO</td>
+                <td class="timing">After 5th shock if still VF</td>
+            </tr>
+            <tr>
+                <td>Atropine</td>
+                <td>0.5 mg (max 3 mg)</td>
+                <td>IV</td>
+                <td class="timing">Symptomatic bradycardia</td>
+            </tr>
+            <tr>
+                <td>Adenosine (1st)</td>
+                <td>6 mg rapid IVP + flush</td>
+                <td>IV</td>
+                <td class="timing">Stable SVT</td>
+            </tr>
+            <tr>
+                <td>Adenosine (2nd)</td>
+                <td>12 mg rapid IVP</td>
+                <td>IV</td>
+                <td class="timing">If 6 mg fails</td>
+            </tr>
+            <tr>
+                <td>Sodium Bicarb</td>
+                <td>1 mEq/kg</td>
+                <td>IV</td>
+                <td class="timing">Known acidosis / hyperK</td>
+            </tr>
+            <tr>
+                <td>Calcium Chloride</td>
+                <td>1-2 g (10% solution)</td>
+                <td>IV slow</td>
+                <td class="timing">Hyperkalemia / Ca²⁺ blocker OD</td>
+            </tr>
+            <tr>
+                <td>Naloxone</td>
+                <td>0.4-2 mg</td>
+                <td>IV/IM/IN</td>
+                <td class="timing">Known/suspected opioid OD</td>
+            </tr>
+            <tr>
+                <td>D50 (Dextrose 50%)</td>
+                <td>25 g (50 mL)</td>
+                <td>IV push</td>
+                <td class="timing">Hypoglycemia</td>
+            </tr>
+            <tr>
+                <td>MgSO₄</td>
+                <td>1-2 g over 5-20 min</td>
+                <td>IV</td>
+                <td class="timing">Torsades de Pointes</td>
+            </tr>
+        </table>
+
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 2: Hs and Ts CARDS
+        ═══════════════════════════════════════════ -->
+        <div class="section-header">
+            <span class="icon">🔍</span>
+            <h2>Reversible Causes — The H's & T's</h2>
+            <button class="expand-all-btn" onclick="toggleAll()">
+                <span id="toggle-icon">▼</span> <span id="toggle-text">Expand All</span>
+            </button>
+        </div>
+
+        <div class="ht-grid">
+            <!-- ═══ LEFT COLUMN: THE H's ═══ -->
+            <div>
+                <div class="ht-column-header h-header">
+                    🟥 THE H's <small>(mostly metabolic / volume)</small>
+                </div>
+
+                <!-- H1: Hypovolemia -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYPOVOLEMIA</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>trauma, GI bleed, AAA rupture, post-op surgery,
+                                    hemorrhage, dehydration</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Look at <strong>neck veins</strong> (flat = empty tank), check
+                                skin turgor, check for <strong>blood in drains/abdomen</strong>, assess urine
+                                output</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Flat neck veins</strong>, narrow pulse pressure,
+                                <strong>PEA with fast narrow QRS</strong>, tachycardia → then pulselessness, cool/clammy
+                                skin</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Volume!</strong> Crystalloid/blood wide open through
+                                large-bore IVs. Find and stop the source of loss. If surgical → get surgeon NOW.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- H2: Hypoxia -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYPOXIA</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>COPD, asthma, CHF, pneumonia, drowning, airway
+                                    obstruction, sedation/opioids</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Check <strong>ETT placement</strong> with waveform capnography
+                                (EtCO₂), listen for <strong>bilateral breath sounds</strong>, check SpO₂, look for chest
+                                rise</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Cyanosis</strong>, low SpO₂, poor chest rise,
+                                absent/unequal breath sounds, <strong>no waveform on capnography</strong></span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Secure the airway.</strong> Confirm ETT placement,
+                                suction if needed, ventilate with 100% O₂. Rule out pneumothorax.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- H3: Hydrogen Ion (Acidosis) -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYDROGEN ION (Acidosis)</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>DKA, renal failure, sepsis, prolonged arrest,
+                                    lactic acidosis, diarrhea</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Get an <strong>ABG</strong> — look at pH. Check <strong>basic
+                                    metabolic panel</strong> (BMP), look for anion gap</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>pH < 7.1</strong>, wide QRS on monitor,
+                                        <strong>Kussmaul respirations</strong> (before arrest), elevated lactate, anion
+                                        gap</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Sodium bicarb 1 mEq/kg IV.</strong> Hyperventilate to
+                                blow off CO₂. Treat the underlying cause (DKA → insulin, sepsis → abx).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- H4: Hyper/Hypokalemia -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYPER / HYPOKALEMIA</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>renal failure, dialysis, diuretics, crush injury,
+                                    burns, insulin use, eating disorder</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content"><strong>STAT K⁺ level</strong> (iSTAT/point-of-care). Look at
+                                the <strong>ECG pattern</strong> — it will tell you which direction</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>HyperK:</strong> peaked T waves → wide QRS → sine wave
+                                → arrest<br>
+                                <strong>HypoK:</strong> flat T, U waves, prolonged QT → Torsades risk</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>HyperK →</strong> Ca²⁺ chloride (stabilize membrane),
+                                insulin + D50, bicarb, kayexalate, consider emergent dialysis<br>
+                                <strong>HypoK →</strong> IV K⁺ replacement (cautious, max 20 mEq/hr peripheral), check
+                                Mg²⁺ too</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- H5: Hypothermia -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYPOTHERMIA</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>cold exposure, drowning, found outdoors, elderly
+                                    found down, massive transfusion</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Check <strong>core temperature</strong> (rectal/esophageal —
+                                not forehead!). Look at ECG for specific changes</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Temp < 30°C / 86°F</strong>, cold skin, <strong>Osborn
+                                            (J) waves on ECG</strong>, stiff muscles, may appear dead — "not dead until
+                                        warm & dead"</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Active rewarming</strong> — warm blankets, warm IV
+                                fluids, Bair Hugger, warm lavage. <strong>Limit defib to 1 attempt if < 30°C</strong>,
+                                        then rewarm first. Hold meds until > 30°C.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- H6: Hypoglycemia -->
+                <div class="ht-card h-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">HYPOGLYCEMIA</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>diabetes, insulin/sulfonylurea use, liver
+                                    failure, sepsis, eating disorder, adrenal insufficiency</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content"><strong>Point-of-care glucose</strong> — one fingerstick, 5
+                                seconds. Should be part of every code workup.</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>BG < 60 mg/dL</strong>, altered mental status before
+                                        arrest, diaphoresis, seizures, no specific ECG pattern</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>D50 (25g dextrose) IV push</strong> — one amp. Recheck
+                                glucose in 15 min. If no IV: glucagon 1mg IM.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ RIGHT COLUMN: THE T's ═══ -->
+            <div>
+                <div class="ht-column-header t-header">
+                    🟦 THE T's <small>(mostly mechanical obstructions)</small>
+                </div>
+
+                <!-- T1: Tension Pneumothorax -->
+                <div class="ht-card t-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">TENSION PNEUMOTHORAX</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>trauma, central line placement, mechanical
+                                    ventilation, COPD/asthma (bleb rupture), CPR rib fractures</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content"><strong>Auscultate both lung fields</strong> — listen for
+                                absent breath sounds unilaterally. Look at neck veins and trachea. <strong>Don't wait
+                                    for CXR!</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Absent breath sounds on one side</strong>, tracheal
+                                deviation (LATE sign), <strong>distended neck veins (JVD)</strong>, hypotension,
+                                difficult to bag</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Needle decompression</strong> — 14g needle, 2nd
+                                intercostal space, midclavicular line, affected side. Then → <strong>chest
+                                    tube</strong>. This is a clinical diagnosis — treat on exam, don't wait for
+                                imaging.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- T2: Tamponade (Cardiac) -->
+                <div class="ht-card t-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">TAMPONADE (Cardiac)</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>chest trauma, pericarditis, post-cardiac surgery,
+                                    cancer (mets to pericardium), renal failure (uremic pericarditis), aortic
+                                    dissection</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content"><strong>Bedside echo/POCUS</strong> — fastest way to confirm.
+                                Look for <strong>pericardial fluid</strong> and right heart collapse. Check Beck's triad
+                                clinically.</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Beck's triad:</strong> JVD + muffled heart sounds +
+                                hypotension. PEA pattern. <strong>Distended neck veins</strong> (unlike hypovolemia!).
+                                Electrical alternans on ECG.</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Pericardiocentesis</strong> (needle drainage) or
+                                emergent <strong>thoracotomy</strong> if traumatic. Needle goes subxiphoid, aimed toward
+                                left shoulder. Even removing 20-50 mL can restore perfusion.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- T3: Toxins / Overdose -->
+                <div class="ht-card t-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">TOXINS / OVERDOSE</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>psych meds, opioids, recreational drugs, suicide
+                                    attempt, accidental ingestion, unknown altered mental status</strong></span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Look for <strong>pill bottles, track marks, patches</strong>.
+                                Check <strong>pupil size</strong> (pinpoint = opioids, dilated = stimulants/TCAs). Smell
+                                breath. Get <strong>tox screen</strong>, 12-lead ECG.</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-label">You'd see</span>
+                            <span class="ht-row-content"><strong>Specific ECG patterns:</strong> TCA → wide QRS + right
+                                axis. Opioid → bradycardia/apnea. Ca-blocker → bradycardia. Digoxin → scooped ST. Scene
+                                clues: paraphernalia, empty bottles.</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>Antidote if known:</strong> naloxone (opioids), bicarb
+                                (TCA — wide QRS), Ca²⁺ (Ca-blocker), digibind (digoxin), flumazenil (benzos — use
+                                cautiously), <strong>lipid emulsion</strong> (local anesthetic toxicity). Call Poison
+                                Control.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- T4: Thrombosis — PE -->
+                <div class="ht-card t-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">THROMBOSIS — PULMONARY (PE)</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>post-op/immobile patient, DVT, cancer, OCP use,
+                                    recent travel, obesity, sudden collapse</strong> — classic scenario: post-op patient
+                                suddenly codes</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content"><strong>Bedside echo</strong> — RV dilation/strain. Check
+                                <strong>neck veins</strong> (distended). Look for <strong>swollen leg</strong> (DVT
+                                source). EtCO₂ suddenly drops during CPR.</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-content"><strong>Sudden PEA</strong> in post-op/immobile patient.
+                                <strong>Distended neck veins</strong>, RV strain on echo, sudden drop in EtCO₂. Before
+                                arrest: sudden dyspnea, pleuritic chest pain, tachycardia.</span>
+                            <span class="ht-row-label">You'd see</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>tPA (fibrinolysis)</strong> — alteplase 50mg IV bolus
+                                during arrest. Or surgical/catheter-directed embolectomy. If giving tPA, continue CPR
+                                for at least <strong>60-90 min</strong> (don't stop early — it takes time to
+                                work).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- T5: Thrombosis — MI -->
+                <div class="ht-card t-card" onclick="toggleCard(this)">
+                    <div class="ht-card-header">
+                        <span class="ht-card-title">THROMBOSIS — CORONARY (MI)</span>
+                        <span class="ht-card-toggle">▼</span>
+                    </div>
+                    <div class="ht-card-body">
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🧠</span>
+                            <span class="ht-row-label">Think if</span>
+                            <span class="ht-row-content">Hx of <strong>chest pain before arrest, known CAD, prior MI,
+                                    cardiac risk factors</strong> (age, DM, HTN, smoking, hyperlipidemia, family
+                                hx)</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">🔍</span>
+                            <span class="ht-row-label">Check by</span>
+                            <span class="ht-row-content">Get a <strong>12-lead ECG</strong> if obtainable (even during
+                                CPR). Look for <strong>STEMI</strong> — ST elevation in contiguous leads. Troponin if
+                                time allows.</span>
+                        </div>
+                        <div class="ht-row">
+                            <span class="ht-row-icon">👀</span>
+                            <span class="ht-row-content"><strong>STEMI pattern</strong> on 12-lead (if obtainable).
+                                Patient may have reported chest pain, diaphoresis, nausea before arrest. Often presents
+                                as <strong>V-Fib arrest</strong>.</span>
+                            <span class="ht-row-label">You'd see</span>
+                        </div>
+                        <div class="ht-row fix-row">
+                            <span class="ht-row-icon">🛠️</span>
+                            <span class="ht-row-label">Fix it</span>
+                            <span class="ht-row-content"><strong>PCI (cath lab)</strong> — can be done during CPR with
+                                mechanical CPR device. Consider tPA if PCI not available. <strong>Don't delay for
+                                    ROSC</strong> — if STEMI + refractory arrest, activate cath lab during the
+                                code.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 3: RAPID FIRST MOVES
+        ═══════════════════════════════════════════ -->
+        <div class="rapid-box">
+            <h3>⚡ RAPID FIRST MOVES IN ANY CODE</h3>
+            <ol class="rapid-list">
+                <li>
+                    <span>Confirm airway + <strong>waveform capnography</strong> <span class="covers">(covers
+                            Hypoxia)</span></span>
+                </li>
+                <li>
+                    <span>Bilateral breath sounds? If absent → <strong>needle decompress</strong> <span
+                            class="covers">(covers Tension Pneumo)</span></span>
+                </li>
+                <li>
+                    <span>IV access + <strong>fluid bolus</strong> <span class="covers">(covers
+                            Hypovolemia)</span></span>
+                </li>
+                <li>
+                    <span>STAT labs: <strong>K⁺, glucose, ABG</strong> <span class="covers">(covers HyperK,
+                            Hypoglycemia, Acidosis)</span></span>
+                </li>
+                <li>
+                    <span>Look at <strong>neck veins</strong>: flat → volume | distended → obstruction <span
+                            class="covers">(Tamponade, PE, Pneumo)</span></span>
+                </li>
+                <li>
+                    <span>Check <strong>temp</strong> <span class="covers">(covers Hypothermia)</span> + <strong>pupil
+                            size</strong> <span class="covers">(covers Toxins)</span></span>
+                </li>
+                <li>
+                    <span>Hx from chart/family: <strong>meds, substances, recent procedures</strong> <span
+                            class="covers">(covers Toxins, PE, MI)</span></span>
+                </li>
+            </ol>
+        </div>
+
+        <!-- ═══ KEY DIFFERENTIATOR BOX ═══ -->
+        <div
+            style="background:var(--s);border:1px solid var(--br);border-radius:var(--rad);padding:1.25rem 1.5rem;margin-bottom:1rem;">
+            <h3
+                style="color:var(--a);font-size:.9rem;font-weight:700;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.04em;">
+                🔑 Quick Differentiator: Neck Veins Tell You Everything
+            </h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:.82rem;">
+                <div
+                    style="background:var(--s2);padding:.75rem;border-radius:var(--rs);border-left:3px solid var(--r);">
+                    <strong style="color:var(--r);">FLAT Neck Veins</strong>
+                    <div style="color:var(--td);margin-top:.3rem;">= Empty tank → think <strong
+                            style="color:var(--t);">VOLUME</strong><br>
+                        Hypovolemia / hemorrhage</div>
+                </div>
+                <div
+                    style="background:var(--s2);padding:.75rem;border-radius:var(--rs);border-left:3px solid var(--b);">
+                    <strong style="color:var(--b);">DISTENDED Neck Veins (JVD)</strong>
+                    <div style="color:var(--td);margin-top:.3rem;">= Obstructed outflow → think <strong
+                            style="color:var(--t);">BLOCKAGE</strong><br>
+                        Tamponade / PE / Tension Pneumo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            🩺 Single file · Works offline · No install needed<br>
+            Built for nursing students, by nursing students
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            card.classList.toggle('open');
+        }
+
+        function toggleAll() {
+            const cards = document.querySelectorAll('.ht-card');
+            const anyOpen = Array.from(cards).some(c => c.classList.contains('open'));
+            cards.forEach(c => {
+                if (anyOpen) c.classList.remove('open');
+                else c.classList.add('open');
+            });
+            document.getElementById('toggle-icon').textContent = anyOpen ? '▼' : '▲';
+            document.getElementById('toggle-text').textContent = anyOpen ? 'Expand All' : 'Collapse All';
+        }
+    </script>
+</body>
+
+</html>
