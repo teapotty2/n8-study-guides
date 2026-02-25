@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,11 @@
             --border: #334155;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -26,8 +31,15 @@
             line-height: 1.6;
         }
 
-        .screen { display: none; min-height: 100vh; padding: 1.5rem; }
-        .screen.active { display: block; }
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .screen.active {
+            display: block;
+        }
 
         /* START SCREEN */
         .start-container {
@@ -71,9 +83,17 @@
             margin-bottom: 0.5rem;
         }
 
-        .mb-gotit { background: var(--gotit); }
-        .mb-unsure { background: var(--unsure); }
-        .mb-missed { background: var(--missed); }
+        .mb-gotit {
+            background: var(--gotit);
+        }
+
+        .mb-unsure {
+            background: var(--unsure);
+        }
+
+        .mb-missed {
+            background: var(--missed);
+        }
 
         .overall-text {
             text-align: center;
@@ -202,8 +222,16 @@
             transition: all 0.2s ease;
         }
 
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         .btn-secondary {
             background: transparent;
@@ -216,7 +244,9 @@
             transition: all 0.2s ease;
         }
 
-        .btn-secondary:hover { background: rgba(220, 38, 38, 0.1); }
+        .btn-secondary:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
 
         .btn-due {
             background: linear-gradient(135deg, #dc2626, #991b1b);
@@ -229,8 +259,15 @@
             transition: all 0.2s ease;
         }
 
-        .btn-due:hover { transform: translateY(-2px); }
-        .btn-due:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-due:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-due:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         .btn-weak {
             background: var(--missed);
@@ -242,8 +279,14 @@
             cursor: pointer;
         }
 
-        .btn-weak:hover { background: #ef4444; }
-        .btn-weak:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-weak:hover {
+            background: #ef4444;
+        }
+
+        .btn-weak:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .btn-reset {
             background: transparent;
@@ -255,7 +298,10 @@
             font-size: 0.85rem;
         }
 
-        .btn-reset:hover { border-color: var(--missed); color: var(--missed); }
+        .btn-reset:hover {
+            border-color: var(--missed);
+            color: var(--missed);
+        }
 
         /* CARD SCREEN */
         .card-screen {
@@ -275,7 +321,10 @@
             gap: 1rem;
         }
 
-        .progress-section { flex: 1; min-width: 200px; }
+        .progress-section {
+            flex: 1;
+            min-width: 200px;
+        }
 
         .progress-text {
             font-size: 0.9rem;
@@ -320,11 +369,30 @@
             margin-left: 0.5rem;
         }
 
-        .sr-box1 { background: #ef4444; color: white; }
-        .sr-box2 { background: #f97316; color: white; }
-        .sr-box3 { background: #eab308; color: #0f172a; }
-        .sr-box4 { background: #22c55e; color: #0f172a; }
-        .sr-box5 { background: #06b6d4; color: #0f172a; }
+        .sr-box1 {
+            background: #ef4444;
+            color: white;
+        }
+
+        .sr-box2 {
+            background: #f97316;
+            color: white;
+        }
+
+        .sr-box3 {
+            background: #eab308;
+            color: #0f172a;
+        }
+
+        .sr-box4 {
+            background: #22c55e;
+            color: #0f172a;
+        }
+
+        .sr-box5 {
+            background: #06b6d4;
+            color: #0f172a;
+        }
 
         /* Flashcard */
         .flashcard {
@@ -344,7 +412,9 @@
             transform-style: preserve-3d;
         }
 
-        .flashcard.flipped .card-inner { transform: rotateY(180deg); }
+        .flashcard.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
 
         .card-face {
             position: absolute;
@@ -360,7 +430,9 @@
             padding: 2rem;
         }
 
-        .card-back { transform: rotateY(180deg); }
+        .card-back {
+            transform: rotateY(180deg);
+        }
 
         .card-content {
             flex: 1;
@@ -371,7 +443,9 @@
             text-align: center;
         }
 
-        .card-front .card-content { font-size: 1.35rem; }
+        .card-front .card-content {
+            font-size: 1.35rem;
+        }
 
         .flip-hint {
             text-align: center;
@@ -446,7 +520,9 @@
             margin-bottom: 1.5rem;
         }
 
-        .conf-controls.visible { display: flex; }
+        .conf-controls.visible {
+            display: flex;
+        }
 
         .conf-btn {
             flex: 1;
@@ -462,15 +538,37 @@
             gap: 0.25rem;
         }
 
-        .conf-btn:hover { transform: translateY(-3px); }
+        .conf-btn:hover {
+            transform: translateY(-3px);
+        }
 
-        .conf-missed { background: var(--missed); color: white; }
-        .conf-unsure { background: var(--unsure); color: #0f172a; }
-        .conf-gotit { background: var(--gotit); color: #0f172a; }
+        .conf-missed {
+            background: var(--missed);
+            color: white;
+        }
 
-        .conf-icon { font-size: 1.5rem; }
-        .conf-label { font-weight: 600; }
-        .conf-key { font-size: 0.75rem; opacity: 0.8; }
+        .conf-unsure {
+            background: var(--unsure);
+            color: #0f172a;
+        }
+
+        .conf-gotit {
+            background: var(--gotit);
+            color: #0f172a;
+        }
+
+        .conf-icon {
+            font-size: 1.5rem;
+        }
+
+        .conf-label {
+            font-weight: 600;
+        }
+
+        .conf-key {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
 
         /* Navigation */
         .nav-row {
@@ -521,15 +619,35 @@
             min-width: 120px;
         }
 
-        .stat-value { font-size: 2.5rem; font-weight: 700; }
-        .stat-label { font-size: 0.9rem; color: var(--muted); }
-        .stat-pct { font-size: 1.1rem; margin-top: 0.25rem; }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
 
-        .stat-gotit .stat-value { color: var(--gotit); }
-        .stat-unsure .stat-value { color: var(--unsure); }
-        .stat-missed .stat-value { color: var(--missed); }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
 
-        .breakdown-section, .weak-section {
+        .stat-pct {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-gotit .stat-value {
+            color: var(--gotit);
+        }
+
+        .stat-unsure .stat-value {
+            color: var(--unsure);
+        }
+
+        .stat-missed .stat-value {
+            color: var(--missed);
+        }
+
+        .breakdown-section,
+        .weak-section {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
@@ -537,7 +655,8 @@
             text-align: left;
         }
 
-        .breakdown-section h3, .weak-section h3 {
+        .breakdown-section h3,
+        .weak-section h3 {
             color: var(--primary);
             margin-bottom: 1rem;
         }
@@ -549,7 +668,10 @@
             margin-bottom: 0.75rem;
         }
 
-        .cat-stat-name { flex: 0 0 150px; font-size: 0.9rem; }
+        .cat-stat-name {
+            flex: 0 0 150px;
+            font-size: 0.9rem;
+        }
 
         .cat-stat-bar {
             flex: 1;
@@ -560,12 +682,27 @@
             display: flex;
         }
 
-        .bar-seg { height: 100%; }
-        .bar-gotit { background: var(--gotit); }
-        .bar-unsure { background: var(--unsure); }
-        .bar-missed { background: var(--missed); }
+        .bar-seg {
+            height: 100%;
+        }
 
-        .cat-stat-pct { flex: 0 0 50px; text-align: right; font-size: 0.9rem; }
+        .bar-gotit {
+            background: var(--gotit);
+        }
+
+        .bar-unsure {
+            background: var(--unsure);
+        }
+
+        .bar-missed {
+            background: var(--missed);
+        }
+
+        .cat-stat-pct {
+            flex: 0 0 50px;
+            text-align: right;
+            font-size: 0.9rem;
+        }
 
         .weak-item {
             display: flex;
@@ -574,7 +711,9 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .weak-item:last-child { border-bottom: none; }
+        .weak-item:last-child {
+            border-bottom: none;
+        }
 
         .results-actions {
             display: flex;
@@ -585,434 +724,453 @@
 
         /* Responsive */
         @media (max-width: 600px) {
-            .card-content { font-size: 1.1rem; }
-            .card-front .card-content { font-size: 1.2rem; }
-            .conf-btn { padding: 0.75rem; }
-            .cat-grid { grid-template-columns: 1fr; }
+            .card-content {
+                font-size: 1.1rem;
+            }
+
+            .card-front .card-content {
+                font-size: 1.2rem;
+            }
+
+            .conf-btn {
+                padding: 0.75rem;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<!-- START SCREEN -->
-<div id="screen-start" class="screen active">
-    <div class="start-container">
-        <h1>ECG & ACLS Mastery</h1>
-        <p class="subtitle">120 flashcards across 12 categories — ECG interpretation, arrhythmias, ACLS algorithms, emergency meds & clinical decisions</p>
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screen active">
+        <div class="start-container">
+            <h1>ECG & ACLS Mastery</h1>
+            <p class="subtitle">120 flashcards across 12 categories — ECG interpretation, arrhythmias, ACLS algorithms,
+                emergency meds & clinical decisions</p>
 
-        <div id="progress-summary"></div>
+            <div id="progress-summary"></div>
 
-        <div class="cat-grid" id="cat-grid"></div>
+            <div class="cat-grid" id="cat-grid"></div>
 
-        <div class="options-row">
-            <label class="toggle-label">
-                <input type="checkbox" id="chk-shuffle" checked> Shuffle cards
-            </label>
-            <label class="toggle-label">
-                <input type="checkbox" id="chk-multi"> Multi-select categories
-            </label>
-            <label class="toggle-label">
-                <input type="checkbox" id="chk-answer-first"> Type answer first
-            </label>
-        </div>
-
-        <div class="start-actions">
-            <button class="btn-due" id="btn-due" onclick="studyDue()">Due for Review (0)</button>
-            <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
-            <button class="btn-primary" onclick="startAll()">Study All Cards</button>
-            <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
-        </div>
-    </div>
-</div>
-
-<!-- CARD SCREEN -->
-<div id="screen-card" class="screen">
-    <div class="card-screen">
-        <div class="card-header">
-            <div class="progress-section">
-                <div class="progress-text">
-                    <span id="cur-num">1</span> / <span id="tot-num">0</span>
-                    <span class="requeue-badge" id="requeue-info" style="display:none;"></span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
-                </div>
+            <div class="options-row">
+                <label class="toggle-label">
+                    <input type="checkbox" id="chk-shuffle" checked> Shuffle cards
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="chk-multi"> Multi-select categories
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="chk-answer-first"> Type answer first
+                </label>
             </div>
-            <span class="cat-badge" id="cur-cat">Category</span>
-        </div>
 
-        <div class="flashcard" id="flashcard" onclick="handleFlashcardClick(event)">
-            <div class="card-inner">
-                <div class="card-face card-front">
-                    <div class="card-content" id="front-content"></div>
-                    <div id="answer-input-area"></div>
-                    <div class="flip-hint" id="flip-hint">SPACE or click to flip</div>
-                </div>
-                <div class="card-face card-back">
-                    <div class="card-content" id="back-content"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="conf-controls" id="conf-controls">
-            <button class="conf-btn conf-missed" onclick="rate('missed')">
-                <span class="conf-icon">&#10007;</span>
-                <span class="conf-label">Missed</span>
-                <span class="conf-key">Press 1</span>
-            </button>
-            <button class="conf-btn conf-unsure" onclick="rate('unsure')">
-                <span class="conf-icon">~</span>
-                <span class="conf-label">Unsure</span>
-                <span class="conf-key">Press 2</span>
-            </button>
-            <button class="conf-btn conf-gotit" onclick="rate('gotit')">
-                <span class="conf-icon">&#10003;</span>
-                <span class="conf-label">Got It</span>
-                <span class="conf-key">Press 3</span>
-            </button>
-        </div>
-
-        <div class="nav-row">
-            <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
-            <div class="kb-hints">
-                <kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd> Exit
+            <div class="start-actions">
+                <button class="btn-due" id="btn-due" onclick="studyDue()">Due for Review (0)</button>
+                <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+                <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+                <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- RESULTS SCREEN -->
-<div id="screen-results" class="screen">
-    <div class="results-container">
-        <h1>Session Complete</h1>
+    <!-- CARD SCREEN -->
+    <div id="screen-card" class="screen">
+        <div class="card-screen">
+            <div class="card-header">
+                <div class="progress-section">
+                    <div class="progress-text">
+                        <span id="cur-num">1</span> / <span id="tot-num">0</span>
+                        <span class="requeue-badge" id="requeue-info" style="display:none;"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <span class="cat-badge" id="cur-cat">Category</span>
+            </div>
 
-        <div class="stats-row" id="stats-row"></div>
+            <div class="flashcard" id="flashcard" onclick="handleFlashcardClick(event)">
+                <div class="card-inner">
+                    <div class="card-face card-front">
+                        <div class="card-content" id="front-content"></div>
+                        <div id="answer-input-area"></div>
+                        <div class="flip-hint" id="flip-hint">SPACE or click to flip</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-content" id="back-content"></div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="breakdown-section" id="breakdown-section">
-            <h3>By Category</h3>
-            <div id="cat-breakdown"></div>
-        </div>
+            <div class="conf-controls" id="conf-controls">
+                <button class="conf-btn conf-missed" onclick="rate('missed')">
+                    <span class="conf-icon">&#10007;</span>
+                    <span class="conf-label">Missed</span>
+                    <span class="conf-key">Press 1</span>
+                </button>
+                <button class="conf-btn conf-unsure" onclick="rate('unsure')">
+                    <span class="conf-icon">~</span>
+                    <span class="conf-label">Unsure</span>
+                    <span class="conf-key">Press 2</span>
+                </button>
+                <button class="conf-btn conf-gotit" onclick="rate('gotit')">
+                    <span class="conf-icon">&#10003;</span>
+                    <span class="conf-label">Got It</span>
+                    <span class="conf-key">Press 3</span>
+                </button>
+            </div>
 
-        <div class="weak-section" id="weak-section" style="display:none;">
-            <h3>Focus Areas</h3>
-            <div id="weak-list"></div>
-        </div>
-
-        <div class="results-actions">
-            <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
-            <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
-            <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+            <div class="nav-row">
+                <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+                <div class="kb-hints">
+                    <kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd> Exit
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-// ===================== DATA =====================
-const STORAGE_KEY = 'ecg-acls-fc-v1';
-const SR_KEY = 'ecg-acls-sr-v1';
+    <!-- RESULTS SCREEN -->
+    <div id="screen-results" class="screen">
+        <div class="results-container">
+            <h1>Session Complete</h1>
 
-const categories = {
-    'fundamentals': { name: 'ECG Fundamentals', color: '#3b82f6' },
-    'analysis': { name: 'Systematic Analysis', color: '#06b6d4' },
-    'electrolytes': { name: 'Electrolytes & Heart', color: '#8b5cf6' },
-    'sinus': { name: 'Sinus Rhythms', color: '#10b981' },
-    'atrial': { name: 'Atrial Arrhythmias', color: '#f97316' },
-    'junctional': { name: 'Junctional Rhythms', color: '#14b8a6' },
-    'ventricular': { name: 'Ventricular Arrhythmias', color: '#ef4444' },
-    'blocks': { name: 'Heart Blocks', color: '#6366f1' },
-    'acls': { name: 'ACLS Algorithms', color: '#dc2626' },
-    'meds': { name: 'Emergency Meds', color: '#eab308' },
-    'devices': { name: 'Devices & Interventions', color: '#ec4899' },
-    'decisions': { name: 'Clinical Decisions', color: '#b91c1c' }
-};
+            <div class="stats-row" id="stats-row"></div>
 
-const cards = [
-    // ===== FUNDAMENTALS (~12 cards) =====
-    { id: 1, cat: 'fundamentals', q: 'What does one small box on ECG paper represent in time and voltage?', a: '<strong>Time:</strong> 0.04 seconds. <strong>Voltage:</strong> 0.1 mV. Standard paper speed is 25 mm/sec.', tip: '5 small boxes = 1 large box = 0.20 seconds. This is the foundation for all interval measurements.' },
-    { id: 2, cat: 'fundamentals', q: 'What does one LARGE box on ECG paper represent?', a: '<strong>Time:</strong> 0.20 seconds. <strong>Voltage:</strong> 0.5 mV. Each large box contains 5 small boxes.', tip: '5 large boxes = 1 second. 30 large boxes = 6-second strip.' },
-    { id: 3, cat: 'fundamentals', q: 'What does the P wave represent on ECG?', a: '<strong>Atrial depolarization.</strong> Normal P wave is upright in Lead II, duration &le;0.11 sec, amplitude &le;2.5 mm.', tip: 'Absent P waves = A-fib. Inverted P waves = junctional rhythm. Peaked P waves = right atrial enlargement.' },
-    { id: 4, cat: 'fundamentals', q: 'What does the QRS complex represent and what is normal duration?', a: '<strong>Ventricular depolarization.</strong> Normal QRS is &lt;0.12 sec (3 small boxes).', tip: 'Wide QRS (&ge;0.12) = bundle branch block or ventricular origin rhythm.' },
-    { id: 5, cat: 'fundamentals', q: 'What does the T wave represent?', a: '<strong>Ventricular repolarization.</strong> Normally upright in most leads, same direction as QRS.', tip: 'Peaked T = hyperkalemia. Inverted T = ischemia. Flat T = hypokalemia.' },
-    { id: 6, cat: 'fundamentals', q: 'What is the normal PR interval and what does it represent?', a: '<strong>0.12&ndash;0.20 sec</strong> (3&ndash;5 small boxes). Represents conduction time from SA node through AV node to ventricles.', tip: '&gt;0.20 = AV block. &lt;0.12 = accessory pathway (WPW) or junctional origin.' },
-    { id: 7, cat: 'fundamentals', q: 'What is the normal QT interval and why does prolonged QT matter?', a: 'Normal QT: <strong>0.36&ndash;0.44 sec</strong> (varies with heart rate). Prolonged QT increases risk of <strong>Torsades de Pointes</strong> (a lethal polymorphic VT).', tip: 'Many meds prolong QT: antiarrhythmics, antibiotics (azithromycin, ciprofloxacin), antipsychotics, methadone.' },
-    { id: 8, cat: 'fundamentals', q: 'What is the cardiac conduction pathway in order?', a: '<strong>SA node &rarr; internodal pathways &rarr; AV node &rarr; Bundle of His &rarr; Right & Left bundle branches &rarr; Purkinje fibers</strong>', tip: 'Intrinsic rates: SA node 60&ndash;100, AV node 40&ndash;60, Purkinje 20&ndash;40 bpm.' },
-    { id: 9, cat: 'fundamentals', q: 'What happens during the ABSOLUTE refractory period and where is it on the ECG?', a: 'The cell <strong>CANNOT depolarize</strong> regardless of stimulus strength. Corresponds to the <strong>QRS through early T wave</strong>.', tip: 'This is why synchronized cardioversion times shock to the R wave — it falls in the absolute refractory period.' },
-    { id: 10, cat: 'fundamentals', q: 'What happens during the RELATIVE refractory period and why is it dangerous?', a: 'The cell CAN depolarize but requires a <strong>stronger stimulus</strong>. Corresponds to the <strong>T wave</strong>. Shocking here can trigger <strong>V-fib</strong>.', tip: 'This "vulnerable period" is why defibrillation is unsynchronized (pulseless = no R wave to sync to) but cardioversion MUST be synchronized.' },
-    { id: 11, cat: 'fundamentals', q: 'What are the three electrical properties of cardiac cells?', a: '<strong>Automaticity</strong> (generate impulse spontaneously), <strong>Excitability</strong> (respond to stimulus), <strong>Conductivity</strong> (transmit impulse cell-to-cell).', tip: 'Enhanced automaticity causes ectopic beats like PACs and PVCs.' },
-    { id: 12, cat: 'fundamentals', q: 'What does the ST segment represent and what do changes indicate?', a: 'Period between ventricular depolarization and repolarization. Should be <strong>isoelectric</strong> (flat at baseline). <strong>Elevation = injury (STEMI)</strong>. <strong>Depression = ischemia</strong>.', tip: 'ST elevation in &ge;2 contiguous leads = STEMI = cath lab activation.' },
+            <div class="breakdown-section" id="breakdown-section">
+                <h3>By Category</h3>
+                <div id="cat-breakdown"></div>
+            </div>
 
-    // ===== SYSTEMATIC ANALYSIS (~8 cards) =====
-    { id: 13, cat: 'analysis', q: 'What is the systematic 12-step approach to ECG analysis?', a: '1) Rate 2) Rhythm regularity 3) P waves present? 4) PR interval 5) QRS duration 6) P:QRS ratio 7) ST segment 8) T waves 9) QT interval 10) U waves 11) Axis 12) Overall impression', tip: 'Use the SAME system every time — consistency prevents missed findings.' },
-    { id: 14, cat: 'analysis', q: 'How do you calculate heart rate using the 300 method?', a: 'Find an R wave on a bold line. Count large boxes to the next R wave. <strong>300 &divide; # large boxes = HR</strong>. Sequence: 300, 150, 100, 75, 60, 50.', tip: 'Only works for REGULAR rhythms. Quick and accurate for regular rates.' },
-    { id: 15, cat: 'analysis', q: 'How do you calculate heart rate using the 6-second method?', a: 'Count R waves in a 6-second strip (30 large boxes) and <strong>multiply by 10</strong>.', tip: 'Works for BOTH regular and irregular rhythms — most versatile method.' },
-    { id: 16, cat: 'analysis', q: 'How do you determine if a rhythm is regular or irregular?', a: 'Measure <strong>R-R intervals</strong>. If they are equal (within 1&ndash;2 small boxes), the rhythm is regular. Unequal R-R = irregular.', tip: 'Use calipers or mark two R waves on paper, then march across the strip.' },
-    { id: 17, cat: 'analysis', q: 'What does a 1:1 P:QRS ratio mean? What about many:1?', a: '<strong>1:1</strong> = every P wave has a QRS = normal conduction. <strong>Many:1</strong> = more P waves than QRS = some kind of block or flutter.', tip: 'In A-fib, P:QRS ratio is undefined because there are no true P waves.' },
-    { id: 18, cat: 'analysis', q: 'What is the 1500 method for precise heart rate calculation?', a: '<strong>1500 &divide; # small boxes between R waves = HR</strong>. Most precise method for regular rhythms.', tip: 'Based on 1500 small boxes per minute at standard paper speed.' },
-    { id: 19, cat: 'analysis', q: 'How do you determine if a rhythm is sinus in origin?', a: 'Must have: <strong>upright P waves in Lead II</strong>, consistent P wave morphology, 1:1 P:QRS ratio, and normal PR interval (0.12&ndash;0.20 sec).', tip: 'If any of these are missing, the rhythm is NOT sinus.' },
-    { id: 20, cat: 'analysis', q: 'What does "regularity irregular" mean and which rhythm is the classic example?', a: '<strong>Irregularly irregular</strong> = no pattern to the irregularity. Classic example: <strong>A-fib</strong>. <strong>Regularly irregular</strong> = predictable pattern (e.g., Wenckebach — progressive lengthening then drop).', tip: 'If the rhythm is irregularly irregular with no P waves, it is A-fib until proven otherwise.' },
+            <div class="weak-section" id="weak-section" style="display:none;">
+                <h3>Focus Areas</h3>
+                <div id="weak-list"></div>
+            </div>
 
-    // ===== ELECTROLYTES & HEART (~15 cards) =====
-    { id: 21, cat: 'electrolytes', q: 'What ECG changes does hyperkalemia (K+ &gt;5.5) cause?', a: 'Progressive changes: <strong>Tall peaked T waves &rarr; flattened P waves &rarr; widened QRS &rarr; sine wave pattern &rarr; asystole</strong>.', tip: 'K+ &gt;6.5 is an EMERGENCY. First treatment: calcium gluconate (Kalcinate) to stabilize the myocardium.' },
-    { id: 22, cat: 'electrolytes', q: 'What is the emergency treatment sequence for severe hyperkalemia?', a: '1) <strong>Calcium gluconate</strong> (cardioprotective — give FIRST) 2) <strong>Regular insulin (Humulin R) + D50</strong> 3) <strong>Albuterol (Proventil)</strong> nebulizer 4) <strong>Sodium bicarbonate</strong> 5) <strong>Sodium polystyrene sulfonate (Kayexalate)</strong> 6) <strong>Dialysis</strong> (definitive)', tip: 'Steps 1&ndash;4 are TEMPORARY — they shift K+ into cells. Only Kayexalate and dialysis actually remove K+ from the body.' },
-    { id: 23, cat: 'electrolytes', q: 'What ECG changes does hypokalemia (K+ &lt;3.5) cause?', a: '<strong>Flattened T waves, ST depression, prominent U waves.</strong> If K+ &lt;2.0: prolonged QT interval.', tip: 'A new U wave on ECG = check potassium IMMEDIATELY.' },
-    { id: 24, cat: 'electrolytes', q: 'What is a U wave and what electrolyte abnormality causes it?', a: 'A small deflection after the T wave representing <strong>Purkinje fiber repolarization</strong> (normally not visible). Most commonly caused by <strong>hypokalemia</strong>.', tip: 'U waves can also appear with bradycardia, digoxin (Lanoxin) use, and hypomagnesemia.' },
-    { id: 25, cat: 'electrolytes', q: 'What ECG change does hypocalcemia cause?', a: '<strong>Prolonged QT interval</strong> (specifically, a prolonged ST segment).', tip: 'Prolonged QT from any cause increases risk of Torsades de Pointes.' },
-    { id: 26, cat: 'electrolytes', q: 'What ECG change does hypercalcemia cause?', a: '<strong>Shortened QT interval</strong> (specifically, shortened ST segment). Opposite of hypocalcemia.', tip: 'Severe hypercalcemia can also cause heart blocks and cardiac arrest.' },
-    { id: 27, cat: 'electrolytes', q: 'Why is potassium the most critical electrolyte for cardiac rhythm?', a: 'K+ controls the <strong>resting membrane potential</strong> of cardiac cells. Abnormal K+ directly alters depolarization and repolarization, causing <strong>life-threatening arrhythmias</strong>.', tip: 'Always check K+ when you see new ECG changes — hypo and hyper are both dangerous.' },
-    { id: 28, cat: 'electrolytes', q: 'What are the nursing priorities for IV potassium replacement?', a: '<strong>Never IV push</strong> — always dilute and infuse. Max rate: <strong>10&ndash;20 mEq/hour</strong> peripherally. Requires <strong>cardiac monitoring</strong>. Burns on infusion — use large vein.', tip: 'Oral potassium is SAFER and preferred when the patient can take PO.' },
-    { id: 29, cat: 'electrolytes', q: 'How does hypomagnesemia affect the heart?', a: 'Causes <strong>increased cardiac excitability</strong>, refractory hypokalemia (can\'t correct K+ without fixing Mg first), and <strong>Torsades de Pointes</strong>.', tip: 'Always check Mg when K+ is persistently low despite replacement.' },
-    { id: 30, cat: 'electrolytes', q: 'What medications commonly cause hypokalemia?', a: '<strong>Loop diuretics</strong> — furosemide (Lasix), bumetanide (Bumex). <strong>Thiazide diuretics</strong> — hydrochlorothiazide (Microzide). Also: corticosteroids, insulin.', tip: 'Patients on loop diuretics need routine K+ monitoring and often K+ supplements.' },
-    { id: 31, cat: 'electrolytes', q: 'What medications commonly cause hyperkalemia?', a: '<strong>ACE inhibitors</strong> — lisinopril (Zestril). <strong>ARBs</strong> — losartan (Cozaar). <strong>K+-sparing diuretics</strong> — spironolactone (Aldactone). Also: NSAIDs, trimethoprim.', tip: 'Patients on ACE/ARB + spironolactone need close K+ monitoring.' },
-    { id: 32, cat: 'electrolytes', q: 'What is the relationship between digoxin (Lanoxin) and potassium?', a: 'Digoxin and K+ compete for the same binding site on the Na+/K+ ATPase pump. <strong>Hypokalemia increases digoxin toxicity</strong> (more drug binds). <strong>Hyperkalemia decreases digoxin effect.</strong>', tip: 'Always check K+ before giving digoxin. Hold if K+ &lt;3.5 and notify provider.' },
-    { id: 33, cat: 'electrolytes', q: 'What are the signs of digoxin (Lanoxin) toxicity?', a: '<strong>GI:</strong> Nausea, vomiting, anorexia. <strong>Neuro:</strong> Visual changes (yellow-green halos, blurred vision). <strong>Cardiac:</strong> Bradycardia, heart blocks, junctional rhythms.', tip: 'Therapeutic level: 0.5&ndash;2.0 ng/mL. If toxic, hold drug and check K+ level.' },
-    { id: 34, cat: 'electrolytes', q: 'Why must you correct electrolytes before cardioversion?', a: 'Electrolyte imbalances (especially K+, Mg2+, Ca2+) alter the <strong>myocardial refractory period</strong>. Shocking a heart with abnormal electrolytes increases risk of <strong>refractory arrhythmias or VF</strong>.', tip: 'Pre-cardioversion checklist: check and correct K+, Mg, Ca, and review QT interval.' },
-    { id: 35, cat: 'electrolytes', q: 'What is calcium gluconate\'s role in hyperkalemia treatment?', a: '<strong>Membrane stabilizer</strong> — does NOT lower K+ level. Raises the threshold potential of cardiac cells, <strong>protecting the heart</strong> from the electrical effects of high K+ while other treatments work.', tip: 'Given first because it works in MINUTES. Effect lasts 30&ndash;60 min. Buy time for insulin/glucose.' },
+            <div class="results-actions">
+                <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
+                <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+                <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+            </div>
+        </div>
+    </div>
 
-    // ===== SINUS RHYTHMS (~8 cards) =====
-    { id: 36, cat: 'sinus', q: 'What are the criteria for Normal Sinus Rhythm (NSR)?', a: '<strong>Rate:</strong> 60&ndash;100 bpm. <strong>Rhythm:</strong> Regular. <strong>P waves:</strong> Upright, uniform, one before each QRS. <strong>PR:</strong> 0.12&ndash;0.20 sec. <strong>QRS:</strong> &lt;0.12 sec. <strong>P:QRS:</strong> 1:1.', tip: 'This is the "normal" — memorize it cold so everything else is a deviation.' },
-    { id: 37, cat: 'sinus', q: 'What defines Sinus Bradycardia and when is treatment needed?', a: '<strong>Same as NSR but rate &lt;60 bpm.</strong> Treat only if <strong>symptomatic</strong> (hypotension, AMS, chest pain, shock).', tip: 'Athletes can have resting HR in the 40s — totally normal. Treat the PATIENT, not the number.' },
-    { id: 38, cat: 'sinus', q: 'What defines Sinus Tachycardia and how is it treated?', a: '<strong>Same as NSR but rate &gt;100 bpm</strong> (usually &lt;150). It is a <strong>response</strong>, not a primary arrhythmia. Treat the <strong>underlying cause</strong> (pain, fever, hypovolemia, anxiety).', tip: 'Sinus tach is never treated by shocking or antiarrhythmics — find and fix the cause.' },
-    { id: 39, cat: 'sinus', q: 'What is Sinus Arrhythmia?', a: 'Normal sinus rhythm with <strong>slight R-R variation that correlates with respiration</strong> — rate increases with inspiration, decreases with expiration.', tip: 'Common in young adults. Considered NORMAL and benign — no treatment needed.' },
-    { id: 40, cat: 'sinus', q: 'What is Sick Sinus Syndrome (SSS)?', a: 'SA node dysfunction causing <strong>alternating bradycardia and tachycardia</strong> (tachy-brady syndrome). May include sinus pauses and chronotropic incompetence.', tip: 'Treatment: permanent pacemaker. More common in elderly due to SA node cell loss.' },
-    { id: 41, cat: 'sinus', q: 'What medications commonly cause sinus bradycardia?', a: '<strong>Beta-blockers</strong> — metoprolol (Lopressor). <strong>Calcium channel blockers</strong> — diltiazem (Cardizem), verapamil (Calan). <strong>Digoxin (Lanoxin).</strong> <strong>Amiodarone (Cordarone).</strong>', tip: 'Always check the med list when a patient has new bradycardia.' },
-    { id: 42, cat: 'sinus', q: 'What is the first-line treatment for symptomatic sinus bradycardia?', a: '<strong>Atropine 0.5 mg IV</strong> every 3&ndash;5 min, max 3 mg. If atropine fails: <strong>transcutaneous pacing</strong>, then dopamine (Intropin) or epinephrine (Adrenalin) drip.', tip: 'Atropine blocks the vagus nerve (parasympathetic), allowing the SA node to fire faster.' },
-    { id: 43, cat: 'sinus', q: 'What common causes of sinus tachycardia should the nurse assess for?', a: '<strong>Pain, fever, hypovolemia, anemia, hypoxia, anxiety, PE, medications</strong> (albuterol, caffeine, stimulants), heart failure, hyperthyroidism.', tip: 'Sinus tach is always a SYMPTOM, not the disease. Fix the cause, the rate follows.' },
+    <script>
+        // ===================== DATA =====================
+        const STORAGE_KEY = 'ecg-acls-fc-v1';
+        const SR_KEY = 'ecg-acls-sr-v1';
 
-    // ===== ATRIAL ARRHYTHMIAS (~12 cards) =====
-    { id: 44, cat: 'atrial', q: 'What are the ECG characteristics of PACs (Premature Atrial Complexes)?', a: '<strong>Early beat</strong> that interrupts regular rhythm. P wave may look different from sinus P waves. <strong>PR:</strong> 0.12&ndash;0.20. <strong>QRS:</strong> Normal. <strong>P:QRS:</strong> 1:1.', tip: 'Patient may say "my heart skipped a beat." &gt;6 PACs/min may herald A-fib.' },
-    { id: 45, cat: 'atrial', q: 'What causes PACs?', a: '<strong>Caffeine, alcohol, nicotine, anxiety, stress, hypokalemia.</strong> Often seen with tachycardia.', tip: 'Infrequent PACs = no treatment. Frequent PACs = treat underlying cause and monitor for A-fib.' },
-    { id: 46, cat: 'atrial', q: 'What are the ECG characteristics of Atrial Flutter?', a: '<strong>Atrial rate:</strong> 250&ndash;350 bpm. <strong>"Sawtooth" F (flutter) waves.</strong> <strong>Ventricular rate:</strong> depends on AV conduction ratio (2:1, 3:1, 4:1). <strong>Rhythm:</strong> Usually regular. <strong>QRS:</strong> Normal.', tip: 'Discriminator: if you can count organized flutter waves at ~300/min = flutter. Chaotic baseline = fib.' },
-    { id: 47, cat: 'atrial', q: 'What is the treatment for atrial flutter?', a: '<strong>Rate control:</strong> beta-blockers, CCBs. <strong>Cardioversion</strong> (very effective for flutter). <strong>Catheter ablation</strong> for recurrence. <strong>Anticoagulation</strong> (stroke risk similar to A-fib).', tip: 'Flutter responds very well to cardioversion — often lower energy needed than A-fib.' },
-    { id: 48, cat: 'atrial', q: 'What is the hallmark ECG finding of Atrial Fibrillation?', a: '<strong>Irregularly irregular rhythm</strong> with <strong>NO P waves</strong> — replaced by chaotic fibrillatory (f) waves. Atrial rate 300&ndash;600; ventricular 120&ndash;200 uncontrolled.', tip: 'A-fib is the MOST COMMON sustained arrhythmia. Loss of atrial kick = 25&ndash;30% reduction in CO.' },
-    { id: 49, cat: 'atrial', q: 'What are the A-Fib classifications?', a: '<strong>Paroxysmal:</strong> Self-terminates &lt;7 days. <strong>Persistent:</strong> &gt;7 days. <strong>Long-standing persistent:</strong> &gt;12 months. <strong>Permanent:</strong> Decision made not to restore sinus. <strong>Nonvalvular:</strong> No mitral stenosis or mechanical valve.', tip: 'Classification guides treatment intensity and anticoagulation strategy.' },
-    { id: 50, cat: 'atrial', q: 'What are the two main treatment strategies for A-Fib?', a: '<strong>Rate control</strong> (HR &lt;80): beta-blockers — metoprolol (Lopressor), CCBs — diltiazem (Cardizem). <strong>Rhythm control</strong> (restore sinus): flecainide, amiodarone (Cordarone), cardioversion. <strong>PLUS anticoagulation</strong> for stroke prevention.', tip: 'Anticoagulation is critical regardless of rate vs rhythm strategy. DOACs preferred for nonvalvular A-fib.' },
-    { id: 51, cat: 'atrial', q: 'Why must you anticoagulate BEFORE cardioverting A-fib &gt;48 hours?', a: 'Blood stasis in fibrillating atria allows <strong>clot formation</strong>. Restoring organized contraction can <strong>dislodge clots &rarr; stroke</strong>. Must anticoagulate for ~3 weeks first, or do <strong>TEE</strong> to rule out atrial thrombus.', tip: 'This is an exam favorite — "cardiovert A-fib immediately" is WRONG if &gt;48 hours without anticoagulation.' },
-    { id: 52, cat: 'atrial', q: 'What is SVT (Supraventricular Tachycardia) and how is it treated?', a: 'Rapid rhythm (&gt;150 bpm) originating above the ventricles. <strong>Narrow QRS</strong>, often no visible P waves. Treatment sequence: <strong>vagal maneuvers &rarr; adenosine (Adenocard) 6 mg rapid IV push &rarr; 12 mg if needed</strong>.', tip: 'Adenosine half-life is only 6&ndash;10 seconds — must give rapid push via proximal IV + 20 mL NS flush.' },
-    { id: 53, cat: 'atrial', q: 'What are vagal maneuvers and how do they work?', a: 'Stimulate the vagus nerve to slow AV conduction. Include: <strong>carotid sinus massage, Valsalva maneuver, bearing down, cold water to face (diving reflex)</strong>.', tip: 'Before carotid massage: listen for bruits. NEVER massage both sides simultaneously.' },
-    { id: 54, cat: 'atrial', q: 'What is WPW (Wolff-Parkinson-White) syndrome?', a: 'An <strong>accessory conduction pathway</strong> (Bundle of Kent) bypasses the AV node. ECG shows: <strong>short PR (&lt;0.12), delta wave</strong> (slurred QRS upstroke), wide QRS.', tip: 'AVOID AV nodal blockers (adenosine, digoxin, CCBs) in WPW with A-fib — can cause V-fib.' },
-    { id: 55, cat: 'atrial', q: 'What is an apical-radial pulse deficit and when do you see it?', a: 'Apical HR is <strong>higher</strong> than radial pulse because some cardiac contractions are too weak to generate a palpable pulse. Classic in <strong>A-fib</strong>.', tip: 'Two nurses count simultaneously: one at apex with stethoscope, one at radial artery. Difference = pulse deficit.' },
+        const categories = {
+            'fundamentals': { name: 'ECG Fundamentals', color: '#3b82f6' },
+            'analysis': { name: 'Systematic Analysis', color: '#06b6d4' },
+            'electrolytes': { name: 'Electrolytes & Heart', color: '#8b5cf6' },
+            'sinus': { name: 'Sinus Rhythms', color: '#10b981' },
+            'atrial': { name: 'Atrial Arrhythmias', color: '#f97316' },
+            'junctional': { name: 'Junctional Rhythms', color: '#14b8a6' },
+            'ventricular': { name: 'Ventricular Arrhythmias', color: '#ef4444' },
+            'blocks': { name: 'Heart Blocks', color: '#6366f1' },
+            'acls': { name: 'ACLS Algorithms', color: '#dc2626' },
+            'meds': { name: 'Emergency Meds', color: '#eab308' },
+            'devices': { name: 'Devices & Interventions', color: '#ec4899' },
+            'decisions': { name: 'Clinical Decisions', color: '#b91c1c' }
+        };
 
-    // ===== JUNCTIONAL RHYTHMS (~6 cards) =====
-    { id: 56, cat: 'junctional', q: 'What defines a Junctional Escape Rhythm?', a: '<strong>Rate:</strong> 40&ndash;60 bpm. <strong>Rhythm:</strong> Regular. <strong>P wave:</strong> Inverted (before/after QRS) or absent. <strong>PR:</strong> &lt;0.12 sec if P present. <strong>QRS:</strong> Normal.', tip: 'The AV junction takes over as pacemaker when the SA node fails.' },
-    { id: 57, cat: 'junctional', q: 'Where can P waves appear in junctional rhythms?', a: 'Three positions: <strong>1) Before QRS</strong> (inverted, short PR &lt;0.12). <strong>2) Hidden IN the QRS</strong> (not visible). <strong>3) After QRS</strong> (inverted, in ST segment).', tip: 'All because the impulse travels RETROGRADE (backward) through the atria.' },
-    { id: 58, cat: 'junctional', q: 'What is Accelerated Junctional Rhythm?', a: 'Same characteristics as junctional escape but rate <strong>60&ndash;100 bpm</strong>. The AV junction is firing faster than its intrinsic rate but not pathologically fast.', tip: 'Often caused by digoxin (Lanoxin) toxicity, post-cardiac surgery, or inferior MI.' },
-    { id: 59, cat: 'junctional', q: 'What is Junctional Tachycardia?', a: 'Junctional rhythm at rate <strong>100&ndash;180 bpm</strong>. Same P wave characteristics as other junctional rhythms.', tip: 'Think digoxin toxicity! Also seen with myocarditis and post-cardiac surgery.' },
-    { id: 60, cat: 'junctional', q: 'What causes junctional rhythms?', a: '<strong>SA node dysfunction, digoxin (Lanoxin) toxicity, inferior MI, post-cardiac surgery, increased vagal tone, beta-blocker/CCB excess.</strong>', tip: 'Digoxin toxicity is the most testable cause of junctional rhythms.' },
-    { id: 61, cat: 'junctional', q: 'How do you distinguish sinus bradycardia from junctional escape rhythm?', a: '<strong>P waves.</strong> Sinus bradycardia has <strong>upright P waves before each QRS</strong> with normal PR (0.12&ndash;0.20). Junctional has <strong>inverted P waves</strong> (or absent/hidden) with PR &lt;0.12 if visible.', tip: 'Both are slow — the P wave morphology and PR interval are the key discriminators.' },
+        const cards = [
+            // ===== FUNDAMENTALS (~12 cards) =====
+            { id: 1, cat: 'fundamentals', q: 'What does one small box on ECG paper represent in time and voltage?', a: '<strong>Time:</strong> 0.04 seconds. <strong>Voltage:</strong> 0.1 mV. Standard paper speed is 25 mm/sec.', tip: '5 small boxes = 1 large box = 0.20 seconds. This is the foundation for all interval measurements.' },
+            { id: 2, cat: 'fundamentals', q: 'What does one LARGE box on ECG paper represent?', a: '<strong>Time:</strong> 0.20 seconds. <strong>Voltage:</strong> 0.5 mV. Each large box contains 5 small boxes.', tip: '5 large boxes = 1 second. 30 large boxes = 6-second strip.' },
+            { id: 3, cat: 'fundamentals', q: 'What does the P wave represent on ECG?', a: '<strong>Atrial depolarization.</strong> Normal P wave is upright in Lead II, duration &le;0.11 sec, amplitude &le;2.5 mm.', tip: 'Absent P waves = A-fib. Inverted P waves = junctional rhythm. Peaked P waves = right atrial enlargement.' },
+            { id: 4, cat: 'fundamentals', q: 'What does the QRS complex represent and what is normal duration?', a: '<strong>Ventricular depolarization.</strong> Normal QRS is &lt;0.12 sec (3 small boxes).', tip: 'Wide QRS (&ge;0.12) = bundle branch block or ventricular origin rhythm.' },
+            { id: 5, cat: 'fundamentals', q: 'What does the T wave represent?', a: '<strong>Ventricular repolarization.</strong> Normally upright in most leads, same direction as QRS.', tip: 'Peaked T = hyperkalemia. Inverted T = ischemia. Flat T = hypokalemia.' },
+            { id: 6, cat: 'fundamentals', q: 'What is the normal PR interval and what does it represent?', a: '<strong>0.12&ndash;0.20 sec</strong> (3&ndash;5 small boxes). Represents conduction time from SA node through AV node to ventricles.', tip: '&gt;0.20 = AV block. &lt;0.12 = accessory pathway (WPW) or junctional origin.' },
+            { id: 7, cat: 'fundamentals', q: 'What is the normal QT interval and why does prolonged QT matter?', a: 'Normal QT: <strong>0.36&ndash;0.44 sec</strong> (varies with heart rate). Prolonged QT increases risk of <strong>Torsades de Pointes</strong> (a lethal polymorphic VT).', tip: 'Many meds prolong QT: antiarrhythmics, antibiotics (azithromycin, ciprofloxacin), antipsychotics, methadone.' },
+            { id: 8, cat: 'fundamentals', q: 'What is the cardiac conduction pathway in order?', a: '<strong>SA node &rarr; internodal pathways &rarr; AV node &rarr; Bundle of His &rarr; Right & Left bundle branches &rarr; Purkinje fibers</strong>', tip: 'Intrinsic rates: SA node 60&ndash;100, AV node 40&ndash;60, Purkinje 20&ndash;40 bpm.' },
+            { id: 9, cat: 'fundamentals', q: 'What happens during the ABSOLUTE refractory period and where is it on the ECG?', a: 'The cell <strong>CANNOT depolarize</strong> regardless of stimulus strength. Corresponds to the <strong>QRS through early T wave</strong>.', tip: 'This is why synchronized cardioversion times shock to the R wave — it falls in the absolute refractory period.' },
+            { id: 10, cat: 'fundamentals', q: 'What happens during the RELATIVE refractory period and why is it dangerous?', a: 'The cell CAN depolarize but requires a <strong>stronger stimulus</strong>. Corresponds to the <strong>T wave</strong>. Shocking here can trigger <strong>V-fib</strong>.', tip: 'This "vulnerable period" is why defibrillation is unsynchronized (pulseless = no R wave to sync to) but cardioversion MUST be synchronized.' },
+            { id: 11, cat: 'fundamentals', q: 'What are the three electrical properties of cardiac cells?', a: '<strong>Automaticity</strong> (generate impulse spontaneously), <strong>Excitability</strong> (respond to stimulus), <strong>Conductivity</strong> (transmit impulse cell-to-cell).', tip: 'Enhanced automaticity causes ectopic beats like PACs and PVCs.' },
+            { id: 12, cat: 'fundamentals', q: 'What does the ST segment represent and what do changes indicate?', a: 'Period between ventricular depolarization and repolarization. Should be <strong>isoelectric</strong> (flat at baseline). <strong>Elevation = injury (STEMI)</strong>. <strong>Depression = ischemia</strong>.', tip: 'ST elevation in &ge;2 contiguous leads = STEMI = cath lab activation.' },
 
-    // ===== VENTRICULAR ARRHYTHMIAS (~12 cards) =====
-    { id: 62, cat: 'ventricular', q: 'What are PVCs and what ECG features identify them?', a: '<strong>Premature ventricular beats</strong> with <strong>wide, bizarre QRS</strong> (&ge;0.12 sec), no preceding P wave, followed by a <strong>compensatory pause</strong>.', tip: 'Unifocal PVCs (same shape) are less concerning than multifocal (different shapes).' },
-    { id: 63, cat: 'ventricular', q: 'What PVC patterns are concerning and why?', a: '<strong>Bigeminy</strong> (every other beat), <strong>trigeminy</strong> (every 3rd), <strong>couplets</strong> (2 in a row), <strong>R-on-T phenomenon</strong> (PVC falls on T wave &rarr; can trigger V-fib). <strong>Multifocal PVCs</strong> = multiple irritable foci.', tip: '3 or more PVCs in a row at &gt;100 bpm = V-tach.' },
-    { id: 64, cat: 'ventricular', q: 'What defines Ventricular Tachycardia (V-Tach)?', a: '<strong>3+ PVCs in a row at rate &gt;100 bpm.</strong> Wide, bizarre QRS. Usually regular. Can be <strong>monomorphic</strong> (uniform QRS) or <strong>polymorphic</strong> (varying QRS).', tip: 'V-Tach is a MEDICAL EMERGENCY regardless of pulse status.' },
-    { id: 65, cat: 'ventricular', q: 'How is monomorphic V-Tach WITH a pulse treated?', a: '<strong>Stable:</strong> Amiodarone (Cordarone) 150 mg IV over 10 min. <strong>Unstable</strong> (hypotension, AMS, chest pain): <strong>Synchronized cardioversion</strong>.', tip: 'WITH pulse = can sync. Key: if the patient deteriorates to pulseless at any time, switch to defibrillation.' },
-    { id: 66, cat: 'ventricular', q: 'How is PULSELESS V-Tach treated?', a: '<strong>CPR + Defibrillation</strong> (unsynchronized) + ACLS algorithm: <strong>epinephrine (Adrenalin) 1 mg IV q3&ndash;5 min</strong> + <strong>amiodarone (Cordarone) 300 mg IV</strong>, then 150 mg.', tip: 'Pulseless VT is treated the SAME as V-fib — both are shockable rhythms.' },
-    { id: 67, cat: 'ventricular', q: 'What is Torsades de Pointes and what causes it?', a: 'A <strong>polymorphic VT</strong> with QRS complexes "twisting" around the isoelectric line. Preceded by <strong>prolonged QT</strong>. Causes: hypokalemia, hypomagnesemia, medications (haloperidol, ciprofloxacin, azithromycin, methadone).', tip: 'Treatment: IV magnesium sulfate (MgSO4) 1&ndash;2g over 5&ndash;20 min — EVEN IF Mg level is normal.' },
-    { id: 68, cat: 'ventricular', q: 'What is V-Fib and what is the treatment?', a: 'Rapid, chaotic quivering with <strong>NO organized cardiac activity</strong>. No pulse, unconscious. Treatment: <strong>IMMEDIATE defibrillation + CPR</strong>.', tip: 'Every minute of delay in defibrillation decreases survival by 7&ndash;10%.' },
-    { id: 69, cat: 'ventricular', q: 'How do you distinguish V-Fib from asystole?', a: '<strong>V-fib</strong> = chaotic, disorganized waveform. <strong>Asystole</strong> = flat line. Always confirm asystole in <strong>2 leads</strong> to rule out fine V-fib or lead disconnection.', tip: 'V-fib is SHOCKABLE. Asystole is NOT. Getting this wrong = wrong treatment.' },
-    { id: 70, cat: 'ventricular', q: 'What is PEA (Pulseless Electrical Activity)?', a: 'Organized electrical activity on the monitor but <strong>NO palpable pulse</strong>. The heart has rhythm but no effective mechanical contraction.', tip: 'PEA is NOT shockable. Treatment: CPR + epinephrine + aggressively search and treat H\'s and T\'s.' },
-    { id: 71, cat: 'ventricular', q: 'What is asystole and how is it treated?', a: '<strong>Complete absence of electrical activity</strong> — flat line. Confirm in 2 leads. Treatment: <strong>CPR + epinephrine 1 mg IV q3&ndash;5 min + treat reversible causes</strong> (H\'s and T\'s).', tip: 'NEVER defibrillate asystole — there is no electrical activity to reset.' },
-    { id: 72, cat: 'ventricular', q: 'What is an Idioventricular Rhythm?', a: 'Ventricular escape rhythm at <strong>20&ndash;40 bpm</strong>. Wide QRS, no P waves. The ventricles take over as the last-resort pacemaker when SA and AV node fail.', tip: 'Accelerated idioventricular rhythm (AIVR) at 40&ndash;100 bpm is common after reperfusion (good sign post-thrombolytics).' },
-    { id: 73, cat: 'ventricular', q: 'What is the "R-on-T" phenomenon and why is it dangerous?', a: 'A PVC that falls on the T wave of the preceding beat, hitting during the <strong>relative refractory period (vulnerable period)</strong>. Can trigger <strong>V-fib or V-tach</strong>.', tip: 'This is the same reason cardioversion must be SYNCHRONIZED — to avoid shocking during the T wave.' },
+            // ===== SYSTEMATIC ANALYSIS (~8 cards) =====
+            { id: 13, cat: 'analysis', q: 'What is the systematic 12-step approach to ECG analysis?', a: '1) Rate 2) Rhythm regularity 3) P waves present? 4) PR interval 5) QRS duration 6) P:QRS ratio 7) ST segment 8) T waves 9) QT interval 10) U waves 11) Axis 12) Overall impression', tip: 'Use the SAME system every time — consistency prevents missed findings.' },
+            { id: 14, cat: 'analysis', q: 'How do you calculate heart rate using the 300 method?', a: 'Find an R wave on a bold line. Count large boxes to the next R wave. <strong>300 &divide; # large boxes = HR</strong>. Sequence: 300, 150, 100, 75, 60, 50.', tip: 'Only works for REGULAR rhythms. Quick and accurate for regular rates.' },
+            { id: 15, cat: 'analysis', q: 'How do you calculate heart rate using the 6-second method?', a: 'Count R waves in a 6-second strip (30 large boxes) and <strong>multiply by 10</strong>.', tip: 'Works for BOTH regular and irregular rhythms — most versatile method.' },
+            { id: 16, cat: 'analysis', q: 'How do you determine if a rhythm is regular or irregular?', a: 'Measure <strong>R-R intervals</strong>. If they are equal (within 1&ndash;2 small boxes), the rhythm is regular. Unequal R-R = irregular.', tip: 'Use calipers or mark two R waves on paper, then march across the strip.' },
+            { id: 17, cat: 'analysis', q: 'What does a 1:1 P:QRS ratio mean? What about many:1?', a: '<strong>1:1</strong> = every P wave has a QRS = normal conduction. <strong>Many:1</strong> = more P waves than QRS = some kind of block or flutter.', tip: 'In A-fib, P:QRS ratio is undefined because there are no true P waves.' },
+            { id: 18, cat: 'analysis', q: 'What is the 1500 method for precise heart rate calculation?', a: '<strong>1500 &divide; # small boxes between R waves = HR</strong>. Most precise method for regular rhythms.', tip: 'Based on 1500 small boxes per minute at standard paper speed.' },
+            { id: 19, cat: 'analysis', q: 'How do you determine if a rhythm is sinus in origin?', a: 'Must have: <strong>upright P waves in Lead II</strong>, consistent P wave morphology, 1:1 P:QRS ratio, and normal PR interval (0.12&ndash;0.20 sec).', tip: 'If any of these are missing, the rhythm is NOT sinus.' },
+            { id: 20, cat: 'analysis', q: 'What does "regularity irregular" mean and which rhythm is the classic example?', a: '<strong>Irregularly irregular</strong> = no pattern to the irregularity. Classic example: <strong>A-fib</strong>. <strong>Regularly irregular</strong> = predictable pattern (e.g., Wenckebach — progressive lengthening then drop).', tip: 'If the rhythm is irregularly irregular with no P waves, it is A-fib until proven otherwise.' },
 
-    // ===== HEART BLOCKS (~10 cards) =====
-    { id: 74, cat: 'blocks', q: 'What defines 1st Degree AV Block?', a: '<strong>PR interval &gt;0.20 sec but CONSTANT.</strong> All P waves conduct (1:1 ratio). Rhythm regular. QRS usually normal.', tip: 'Usually benign. Common causes: beta-blockers, CCBs, digoxin (Lanoxin), aging.' },
-    { id: 75, cat: 'blocks', q: 'What defines 2nd Degree AV Block Type I (Wenckebach)?', a: '<strong>PR interval gets progressively LONGER</strong> until a QRS is dropped, then the cycle repeats. Pattern: 3:2, 4:3, 5:4.', tip: '"Longer, longer, longer, DROP — that\'s a Wenckebach." Usually benign, often from inferior MI or medications.' },
-    { id: 76, cat: 'blocks', q: 'What defines 2nd Degree AV Block Type II (Mobitz II)?', a: '<strong>PR interval is CONSTANT</strong> for conducted beats. <strong>Sudden dropped QRS</strong> without warning. Usually <strong>wide QRS</strong>. More dangerous than Type I.', tip: 'Can progress suddenly to complete heart block. Often requires pacemaker. Caused by anterior MI.' },
-    { id: 77, cat: 'blocks', q: 'What defines 3rd Degree (Complete) Heart Block?', a: '<strong>NO atrial impulses conduct through AV node.</strong> Atria and ventricles beat <strong>independently</strong> (AV dissociation). P waves march through with no relationship to QRS.', tip: 'The PR intervals are COMPLETELY VARIABLE — that\'s the hallmark.' },
-    { id: 78, cat: 'blocks', q: 'How is 3rd Degree Heart Block treated?', a: '<strong>Atropine</strong> (may help if block is at AV node level). <strong>Transcutaneous pacing</strong> as bridge. <strong>Permanent pacemaker</strong> is definitive treatment.', tip: 'Atropine often FAILS in 3rd degree block because the problem is below the AV node.' },
-    { id: 79, cat: 'blocks', q: 'How do you distinguish Mobitz I from Mobitz II?', a: '<strong>Mobitz I:</strong> PR gets LONGER before drop, narrow QRS, grouped beating. <strong>Mobitz II:</strong> PR is CONSTANT, sudden drop, usually WIDE QRS.', tip: 'Mobitz I = benign. Mobitz II = dangerous. The PR interval behavior is the key.' },
-    { id: 80, cat: 'blocks', q: 'What is a Bundle Branch Block (BBB) and how does it look on ECG?', a: 'Delay in conduction through right or left bundle branch. <strong>QRS &ge;0.12 sec (wide)</strong>. RBBB: "rabbit ears" (RSR\') in V1. LBBB: broad, notched R in lateral leads (I, aVL, V5&ndash;V6).', tip: 'New LBBB can mimic STEMI and may be treated as acute MI.' },
-    { id: 81, cat: 'blocks', q: 'Why is atropine often ineffective for infranodal blocks (Mobitz II, 3rd degree)?', a: 'Atropine works by <strong>blocking vagal (parasympathetic) tone at the AV node</strong>. Infranodal blocks are BELOW the AV node — atropine can\'t reach the problem. Go straight to <strong>pacing</strong>.', tip: 'This is a high-yield NCLEX/ACLS concept — know when atropine works and when it doesn\'t.' },
-    { id: 82, cat: 'blocks', q: 'Which heart block requires the most urgent intervention?', a: '<strong>Mobitz Type II and 3rd Degree</strong> — both can cause hemodynamic instability and can progress to (or already are) complete loss of AV conduction. Both typically need <strong>pacing</strong>.', tip: 'Mobitz II can deteriorate to 3rd degree without warning. Don\'t wait for symptoms.' },
-    { id: 83, cat: 'blocks', q: 'In 3rd degree block, how do you know if the escape rhythm is junctional vs ventricular?', a: '<strong>Junctional escape:</strong> Rate 40&ndash;60, narrow QRS. <strong>Ventricular escape:</strong> Rate 20&ndash;40, wide QRS. Ventricular escape is more dangerous (slower, less reliable).', tip: 'Wide QRS in 3rd degree = worse prognosis. Needs pacing more urgently.' },
+            // ===== ELECTROLYTES & HEART (~15 cards) =====
+            { id: 21, cat: 'electrolytes', q: 'What ECG changes does hyperkalemia (K+ &gt;5.5) cause?', a: 'Progressive changes: <strong>Tall peaked T waves &rarr; flattened P waves &rarr; widened QRS &rarr; sine wave pattern &rarr; asystole</strong>.', tip: 'K+ &gt;6.5 is an EMERGENCY. First treatment: calcium gluconate (Kalcinate) to stabilize the myocardium.' },
+            { id: 22, cat: 'electrolytes', q: 'What is the emergency treatment sequence for severe hyperkalemia?', a: '1) <strong>Calcium gluconate</strong> (cardioprotective — give FIRST) 2) <strong>Regular insulin (Humulin R) + D50</strong> 3) <strong>Albuterol (Proventil)</strong> nebulizer 4) <strong>Sodium bicarbonate</strong> 5) <strong>Sodium polystyrene sulfonate (Kayexalate)</strong> 6) <strong>Dialysis</strong> (definitive)', tip: 'Steps 1&ndash;4 are TEMPORARY — they shift K+ into cells. Only Kayexalate and dialysis actually remove K+ from the body.' },
+            { id: 23, cat: 'electrolytes', q: 'What ECG changes does hypokalemia (K+ &lt;3.5) cause?', a: '<strong>Flattened T waves, ST depression, prominent U waves.</strong> If K+ &lt;2.0: prolonged QT interval.', tip: 'A new U wave on ECG = check potassium IMMEDIATELY.' },
+            { id: 24, cat: 'electrolytes', q: 'What is a U wave and what electrolyte abnormality causes it?', a: 'A small deflection after the T wave representing <strong>Purkinje fiber repolarization</strong> (normally not visible). Most commonly caused by <strong>hypokalemia</strong>.', tip: 'U waves can also appear with bradycardia, digoxin (Lanoxin) use, and hypomagnesemia.' },
+            { id: 25, cat: 'electrolytes', q: 'What ECG change does hypocalcemia cause?', a: '<strong>Prolonged QT interval</strong> (specifically, a prolonged ST segment).', tip: 'Prolonged QT from any cause increases risk of Torsades de Pointes.' },
+            { id: 26, cat: 'electrolytes', q: 'What ECG change does hypercalcemia cause?', a: '<strong>Shortened QT interval</strong> (specifically, shortened ST segment). Opposite of hypocalcemia.', tip: 'Severe hypercalcemia can also cause heart blocks and cardiac arrest.' },
+            { id: 27, cat: 'electrolytes', q: 'Why is potassium the most critical electrolyte for cardiac rhythm?', a: 'K+ controls the <strong>resting membrane potential</strong> of cardiac cells. Abnormal K+ directly alters depolarization and repolarization, causing <strong>life-threatening arrhythmias</strong>.', tip: 'Always check K+ when you see new ECG changes — hypo and hyper are both dangerous.' },
+            { id: 28, cat: 'electrolytes', q: 'What are the nursing priorities for IV potassium replacement?', a: '<strong>Never IV push</strong> — always dilute and infuse. Max rate: <strong>10&ndash;20 mEq/hour</strong> peripherally. Requires <strong>cardiac monitoring</strong>. Burns on infusion — use large vein.', tip: 'Oral potassium is SAFER and preferred when the patient can take PO.' },
+            { id: 29, cat: 'electrolytes', q: 'How does hypomagnesemia affect the heart?', a: 'Causes <strong>increased cardiac excitability</strong>, refractory hypokalemia (can\'t correct K+ without fixing Mg first), and <strong>Torsades de Pointes</strong>.', tip: 'Always check Mg when K+ is persistently low despite replacement.' },
+            { id: 30, cat: 'electrolytes', q: 'What medications commonly cause hypokalemia?', a: '<strong>Loop diuretics</strong> — furosemide (Lasix), bumetanide (Bumex). <strong>Thiazide diuretics</strong> — hydrochlorothiazide (Microzide). Also: corticosteroids, insulin.', tip: 'Patients on loop diuretics need routine K+ monitoring and often K+ supplements.' },
+            { id: 31, cat: 'electrolytes', q: 'What medications commonly cause hyperkalemia?', a: '<strong>ACE inhibitors</strong> — lisinopril (Zestril). <strong>ARBs</strong> — losartan (Cozaar). <strong>K+-sparing diuretics</strong> — spironolactone (Aldactone). Also: NSAIDs, trimethoprim.', tip: 'Patients on ACE/ARB + spironolactone need close K+ monitoring.' },
+            { id: 32, cat: 'electrolytes', q: 'What is the relationship between digoxin (Lanoxin) and potassium?', a: 'Digoxin and K+ compete for the same binding site on the Na+/K+ ATPase pump. <strong>Hypokalemia increases digoxin toxicity</strong> (more drug binds). <strong>Hyperkalemia decreases digoxin effect.</strong>', tip: 'Always check K+ before giving digoxin. Hold if K+ &lt;3.5 and notify provider.' },
+            { id: 33, cat: 'electrolytes', q: 'What are the signs of digoxin (Lanoxin) toxicity?', a: '<strong>GI:</strong> Nausea, vomiting, anorexia. <strong>Neuro:</strong> Visual changes (yellow-green halos, blurred vision). <strong>Cardiac:</strong> Bradycardia, heart blocks, junctional rhythms.', tip: 'Therapeutic level: 0.5&ndash;2.0 ng/mL. If toxic, hold drug and check K+ level.' },
+            { id: 34, cat: 'electrolytes', q: 'Why must you correct electrolytes before cardioversion?', a: 'Electrolyte imbalances (especially K+, Mg2+, Ca2+) alter the <strong>myocardial refractory period</strong>. Shocking a heart with abnormal electrolytes increases risk of <strong>refractory arrhythmias or VF</strong>.', tip: 'Pre-cardioversion checklist: check and correct K+, Mg, Ca, and review QT interval.' },
+            { id: 35, cat: 'electrolytes', q: 'What is calcium gluconate\'s role in hyperkalemia treatment?', a: '<strong>Membrane stabilizer</strong> — does NOT lower K+ level. Raises the threshold potential of cardiac cells, <strong>protecting the heart</strong> from the electrical effects of high K+ while other treatments work.', tip: 'Given first because it works in MINUTES. Effect lasts 30&ndash;60 min. Buy time for insulin/glucose.' },
 
-    // ===== ACLS ALGORITHMS (~12 cards) =====
-    { id: 84, cat: 'acls', q: 'What are the H\'s and T\'s (reversible causes of cardiac arrest)?', a: '<strong>H\'s:</strong> Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia. <strong>T\'s:</strong> Tension pneumothorax, Tamponade (cardiac), Toxins/drugs, Thrombosis (pulmonary/coronary).', tip: 'Systematically consider these during EVERY code. Treating rhythm without addressing cause = failure.' },
-    { id: 85, cat: 'acls', q: 'What are the two shockable rhythms in cardiac arrest?', a: '<strong>Ventricular Fibrillation (V-Fib)</strong> and <strong>Pulseless Ventricular Tachycardia (pVT)</strong>.', tip: 'Asystole and PEA are NOT shockable — treated with CPR + epinephrine + H\'s and T\'s only.' },
-    { id: 86, cat: 'acls', q: 'What is the cardiac arrest algorithm for shockable rhythms (VF/pVT)?', a: '<strong>CPR &rarr; Shock &rarr; CPR 2 min &rarr; Shock &rarr; Epi 1 mg &rarr; CPR 2 min &rarr; Shock &rarr; Amiodarone 300 mg &rarr; CPR 2 min &rarr; repeat</strong>', tip: 'Epinephrine q3&ndash;5 min throughout. Amiodarone 2nd dose: 150 mg. Reassess rhythm every 2 min.' },
-    { id: 87, cat: 'acls', q: 'What is the cardiac arrest algorithm for non-shockable rhythms (Asystole/PEA)?', a: '<strong>CPR &rarr; Epi 1 mg ASAP &rarr; CPR 2 min &rarr; Epi q3&ndash;5 min &rarr; aggressively search H\'s and T\'s</strong>. No defibrillation. No amiodarone.', tip: 'Epinephrine is the ONLY drug for non-shockable rhythms. Finding and fixing the cause is the real treatment.' },
-    { id: 88, cat: 'acls', q: 'What are the parameters for high-quality CPR?', a: '<strong>Rate:</strong> 100&ndash;120/min. <strong>Depth:</strong> &ge;2 inches (5 cm) adults. <strong>Full chest recoil.</strong> <strong>Minimize interruptions</strong> (&lt;10 sec). <strong>Switch compressor every 2 min.</strong>', tip: 'Push hard, push fast, let chest fully recoil, don\'t stop. Compression fraction goal &gt;80%.' },
-    { id: 89, cat: 'acls', q: 'What is the tachycardia algorithm for UNSTABLE patients?', a: '<strong>Unstable</strong> (hypotension, AMS, chest pain, acute HF) = <strong>Synchronized cardioversion immediately</strong>, regardless of QRS width.', tip: 'Unstable = don\'t waste time on drugs. Shock first.' },
-    { id: 90, cat: 'acls', q: 'What is the tachycardia algorithm for STABLE patients?', a: '<strong>Narrow QRS (&lt;0.12):</strong> Vagal maneuvers &rarr; Adenosine (Adenocard) 6 mg rapid IV push &rarr; 12 mg &rarr; Beta-blocker/CCB. <strong>Wide QRS (&ge;0.12):</strong> Assume VT &rarr; Amiodarone (Cordarone) 150 mg IV over 10 min.', tip: 'Wide + regular = VT until proven otherwise. Wide + irregular = consider A-fib with aberrancy or WPW.' },
-    { id: 91, cat: 'acls', q: 'What is the bradycardia algorithm?', a: '<strong>HR &lt;50 + symptomatic</strong> (hypotension, AMS, shock, chest pain) &rarr; <strong>Atropine 0.5 mg IV</strong> q3&ndash;5 min (max 3 mg). If fails &rarr; <strong>Transcutaneous pacing</strong> + dopamine or epi drip.', tip: 'Asymptomatic bradycardia = monitor only. Atropine may fail in infranodal blocks — go to pacing.' },
-    { id: 92, cat: 'acls', q: 'What is the compression-to-ventilation ratio in adult CPR?', a: '<strong>30:2</strong> for both 1-rescuer and 2-rescuer CPR (without advanced airway). <strong>With advanced airway:</strong> continuous compressions + 1 breath every 6 seconds (10 breaths/min).', tip: '5 cycles of 30:2 = approximately 2 minutes.' },
-    { id: 93, cat: 'acls', q: 'What should happen immediately after each defibrillation?', a: '<strong>Resume CPR immediately</strong> — start with compressions. Do NOT stop to check rhythm until 5 cycles (~2 min) are completed.', tip: 'The heart needs perfusion to recover after shock. Even a successful shock needs CPR to maintain flow.' },
-    { id: 94, cat: 'acls', q: 'What is ROSC and what are the signs?', a: '<strong>Return of Spontaneous Circulation.</strong> Signs: palpable pulse, measurable BP, sudden increase in ETCO2 (&ge;40 mmHg), arterial waveform on monitor.', tip: 'Post-ROSC care: 12-lead ECG, targeted temperature management (32&ndash;36°C), avoid hyperoxia, treat cause.' },
-    { id: 95, cat: 'acls', q: 'What is Targeted Temperature Management (TTM) post-cardiac arrest?', a: 'Cooling to <strong>32&ndash;36°C</strong> for patients who don\'t follow commands after ROSC. Phases: Initial cooling (0&ndash;8 hr), Maintenance (24 hr), Rewarming (6&ndash;18 hr at 0.25°C/hr).', tip: '20% mortality increase per hour of delay in cooling. Optimizes neurological outcomes.' },
+            // ===== SINUS RHYTHMS (~8 cards) =====
+            { id: 36, cat: 'sinus', q: 'What are the criteria for Normal Sinus Rhythm (NSR)?', a: '<strong>Rate:</strong> 60&ndash;100 bpm. <strong>Rhythm:</strong> Regular. <strong>P waves:</strong> Upright, uniform, one before each QRS. <strong>PR:</strong> 0.12&ndash;0.20 sec. <strong>QRS:</strong> &lt;0.12 sec. <strong>P:QRS:</strong> 1:1.', tip: 'This is the "normal" — memorize it cold so everything else is a deviation.' },
+            { id: 37, cat: 'sinus', q: 'What defines Sinus Bradycardia and when is treatment needed?', a: '<strong>Same as NSR but rate &lt;60 bpm.</strong> Treat only if <strong>symptomatic</strong> (hypotension, AMS, chest pain, shock).', tip: 'Athletes can have resting HR in the 40s — totally normal. Treat the PATIENT, not the number.' },
+            { id: 38, cat: 'sinus', q: 'What defines Sinus Tachycardia and how is it treated?', a: '<strong>Same as NSR but rate &gt;100 bpm</strong> (usually &lt;150). It is a <strong>response</strong>, not a primary arrhythmia. Treat the <strong>underlying cause</strong> (pain, fever, hypovolemia, anxiety).', tip: 'Sinus tach is never treated by shocking or antiarrhythmics — find and fix the cause.' },
+            { id: 39, cat: 'sinus', q: 'What is Sinus Arrhythmia?', a: 'Normal sinus rhythm with <strong>slight R-R variation that correlates with respiration</strong> — rate increases with inspiration, decreases with expiration.', tip: 'Common in young adults. Considered NORMAL and benign — no treatment needed.' },
+            { id: 40, cat: 'sinus', q: 'What is Sick Sinus Syndrome (SSS)?', a: 'SA node dysfunction causing <strong>alternating bradycardia and tachycardia</strong> (tachy-brady syndrome). May include sinus pauses and chronotropic incompetence.', tip: 'Treatment: permanent pacemaker. More common in elderly due to SA node cell loss.' },
+            { id: 41, cat: 'sinus', q: 'What medications commonly cause sinus bradycardia?', a: '<strong>Beta-blockers</strong> — metoprolol (Lopressor). <strong>Calcium channel blockers</strong> — diltiazem (Cardizem), verapamil (Calan). <strong>Digoxin (Lanoxin).</strong> <strong>Amiodarone (Cordarone).</strong>', tip: 'Always check the med list when a patient has new bradycardia.' },
+            { id: 42, cat: 'sinus', q: 'What is the first-line treatment for symptomatic sinus bradycardia?', a: '<strong>Atropine 0.5 mg IV</strong> every 3&ndash;5 min, max 3 mg. If atropine fails: <strong>transcutaneous pacing</strong>, then dopamine (Intropin) or epinephrine (Adrenalin) drip.', tip: 'Atropine blocks the vagus nerve (parasympathetic), allowing the SA node to fire faster.' },
+            { id: 43, cat: 'sinus', q: 'What common causes of sinus tachycardia should the nurse assess for?', a: '<strong>Pain, fever, hypovolemia, anemia, hypoxia, anxiety, PE, medications</strong> (albuterol, caffeine, stimulants), heart failure, hyperthyroidism.', tip: 'Sinus tach is always a SYMPTOM, not the disease. Fix the cause, the rate follows.' },
 
-    // ===== EMERGENCY MEDICATIONS (~10 cards) =====
-    { id: 96, cat: 'meds', q: 'What is the dose and role of epinephrine (Adrenalin) in cardiac arrest?', a: '<strong>1 mg IV/IO every 3&ndash;5 min</strong> (1:10,000 concentration). Alpha effects cause <strong>vasoconstriction</strong> (improves coronary and cerebral perfusion). Flush with 20 mL + elevate extremity.', tip: 'Given in ALL cardiac arrest rhythms — shockable and non-shockable.' },
-    { id: 97, cat: 'meds', q: 'What is the dose of amiodarone (Cordarone) in cardiac arrest vs stable VT?', a: '<strong>Cardiac arrest:</strong> 300 mg IV push first dose, 150 mg second dose. <strong>Stable VT (with pulse):</strong> 150 mg IV over 10 minutes.', tip: 'Amiodarone is used ONLY for shockable rhythms (VF/pVT) in arrest. Not for asystole or PEA.' },
-    { id: 98, cat: 'meds', q: 'What is atropine and when is it used?', a: '<strong>Anticholinergic</strong> — blocks vagal (parasympathetic) tone. <strong>Dose: 0.5 mg IV q3&ndash;5 min, max 3 mg.</strong> Used for <strong>symptomatic bradycardia</strong>.', tip: 'Not effective for infranodal blocks (Mobitz II, 3rd degree). Minimum dose is 0.5 mg — lower doses can paradoxically worsen bradycardia.' },
-    { id: 99, cat: 'meds', q: 'What is adenosine (Adenocard) and how is it given?', a: '<strong>Slows AV node conduction</strong> — used for SVT. <strong>6 mg rapid IV push</strong> followed by 20 mL NS flush. If no effect: <strong>12 mg</strong> (can repeat 12 mg once).', tip: 'Half-life: 6&ndash;10 SECONDS. Must give through proximal IV, rapid push. Warn patient about brief chest tightness / "sense of doom."' },
-    { id: 100, cat: 'meds', q: 'What is the dose and role of magnesium sulfate in Torsades de Pointes?', a: '<strong>1&ndash;2 g IV over 5&ndash;20 min</strong> (or IV push if pulseless). Stabilizes cardiac cell membranes. Given <strong>even if serum Mg is normal</strong>.', tip: 'Magnesium is THE drug for Torsades. Regular defibrillation often fails without correcting the underlying cause.' },
-    { id: 101, cat: 'meds', q: 'What vasopressor is used for post-arrest hypotension or bradycardia drips?', a: '<strong>Dopamine (Intropin)</strong> 5&ndash;20 mcg/kg/min or <strong>Epinephrine (Adrenalin)</strong> 2&ndash;10 mcg/min infusion. Both increase HR and BP.', tip: 'Used when atropine fails for bradycardia, or to maintain BP after ROSC.' },
-    { id: 102, cat: 'meds', q: 'What is lidocaine (Xylocaine) and when is it used in ACLS?', a: '<strong>Class IB antiarrhythmic.</strong> Alternative to amiodarone for VF/pVT. <strong>Dose:</strong> 1&ndash;1.5 mg/kg IV, can repeat 0.5&ndash;0.75 mg/kg.', tip: 'Amiodarone is preferred over lidocaine in current ACLS guidelines.' },
-    { id: 103, cat: 'meds', q: 'What is the role of sodium bicarbonate in cardiac arrest?', a: 'Used for <strong>severe metabolic acidosis, hyperkalemia, or tricyclic antidepressant overdose</strong>. NOT routine in all arrests. <strong>Dose: 1 mEq/kg IV.</strong>', tip: 'Too much bicarb causes metabolic alkalosis and shifts the O2 dissociation curve left (worse O2 delivery).' },
-    { id: 104, cat: 'meds', q: 'What are the key nursing considerations for amiodarone (Cordarone)?', a: 'Monitor for <strong>hypotension</strong> (vasodilation) and <strong>bradycardia</strong>. Long-term side effects: <strong>pulmonary toxicity, thyroid dysfunction, hepatotoxicity, corneal deposits</strong>. Half-life: 40&ndash;55 days.', tip: 'Long half-life means side effects persist long after stopping the drug. Baseline PFTs, TFTs, LFTs, eye exam.' },
-    { id: 105, cat: 'meds', q: 'Why should you never give calcium channel blockers or digoxin to WPW patients in A-fib?', a: 'These drugs slow AV node conduction but <strong>do NOT slow the accessory pathway</strong>. More impulses travel the fast pathway, potentially triggering <strong>V-fib</strong>.', tip: 'WPW + A-fib = use procainamide (Pronestyl) or amiodarone (Cordarone) instead.' },
+            // ===== ATRIAL ARRHYTHMIAS (~12 cards) =====
+            { id: 44, cat: 'atrial', q: 'What are the ECG characteristics of PACs (Premature Atrial Complexes)?', a: '<strong>Early beat</strong> that interrupts regular rhythm. P wave may look different from sinus P waves. <strong>PR:</strong> 0.12&ndash;0.20. <strong>QRS:</strong> Normal. <strong>P:QRS:</strong> 1:1.', tip: 'Patient may say "my heart skipped a beat." &gt;6 PACs/min may herald A-fib.' },
+            { id: 45, cat: 'atrial', q: 'What causes PACs?', a: '<strong>Caffeine, alcohol, nicotine, anxiety, stress, hypokalemia.</strong> Often seen with tachycardia.', tip: 'Infrequent PACs = no treatment. Frequent PACs = treat underlying cause and monitor for A-fib.' },
+            { id: 46, cat: 'atrial', q: 'What are the ECG characteristics of Atrial Flutter?', a: '<strong>Atrial rate:</strong> 250&ndash;350 bpm. <strong>"Sawtooth" F (flutter) waves.</strong> <strong>Ventricular rate:</strong> depends on AV conduction ratio (2:1, 3:1, 4:1). <strong>Rhythm:</strong> Usually regular. <strong>QRS:</strong> Normal.', tip: 'Discriminator: if you can count organized flutter waves at ~300/min = flutter. Chaotic baseline = fib.' },
+            { id: 47, cat: 'atrial', q: 'What is the treatment for atrial flutter?', a: '<strong>Rate control:</strong> beta-blockers, CCBs. <strong>Cardioversion</strong> (very effective for flutter). <strong>Catheter ablation</strong> for recurrence. <strong>Anticoagulation</strong> (stroke risk similar to A-fib).', tip: 'Flutter responds very well to cardioversion — often lower energy needed than A-fib.' },
+            { id: 48, cat: 'atrial', q: 'What is the hallmark ECG finding of Atrial Fibrillation?', a: '<strong>Irregularly irregular rhythm</strong> with <strong>NO P waves</strong> — replaced by chaotic fibrillatory (f) waves. Atrial rate 300&ndash;600; ventricular 120&ndash;200 uncontrolled.', tip: 'A-fib is the MOST COMMON sustained arrhythmia. Loss of atrial kick = 25&ndash;30% reduction in CO.' },
+            { id: 49, cat: 'atrial', q: 'What are the A-Fib classifications?', a: '<strong>Paroxysmal:</strong> Self-terminates &lt;7 days. <strong>Persistent:</strong> &gt;7 days. <strong>Long-standing persistent:</strong> &gt;12 months. <strong>Permanent:</strong> Decision made not to restore sinus. <strong>Nonvalvular:</strong> No mitral stenosis or mechanical valve.', tip: 'Classification guides treatment intensity and anticoagulation strategy.' },
+            { id: 50, cat: 'atrial', q: 'What are the two main treatment strategies for A-Fib?', a: '<strong>Rate control</strong> (HR &lt;80): beta-blockers — metoprolol (Lopressor), CCBs — diltiazem (Cardizem). <strong>Rhythm control</strong> (restore sinus): flecainide, amiodarone (Cordarone), cardioversion. <strong>PLUS anticoagulation</strong> for stroke prevention.', tip: 'Anticoagulation is critical regardless of rate vs rhythm strategy. DOACs preferred for nonvalvular A-fib.' },
+            { id: 51, cat: 'atrial', q: 'Why must you anticoagulate BEFORE cardioverting A-fib &gt;48 hours?', a: 'Blood stasis in fibrillating atria allows <strong>clot formation</strong>. Restoring organized contraction can <strong>dislodge clots &rarr; stroke</strong>. Must anticoagulate for ~3 weeks first, or do <strong>TEE</strong> to rule out atrial thrombus.', tip: 'This is an exam favorite — "cardiovert A-fib immediately" is WRONG if &gt;48 hours without anticoagulation.' },
+            { id: 52, cat: 'atrial', q: 'What is SVT (Supraventricular Tachycardia) and how is it treated?', a: 'Rapid rhythm (&gt;150 bpm) originating above the ventricles. <strong>Narrow QRS</strong>, often no visible P waves. Treatment sequence: <strong>vagal maneuvers &rarr; adenosine (Adenocard) 6 mg rapid IV push &rarr; 12 mg if needed</strong>.', tip: 'Adenosine half-life is only 6&ndash;10 seconds — must give rapid push via proximal IV + 20 mL NS flush.' },
+            { id: 53, cat: 'atrial', q: 'What are vagal maneuvers and how do they work?', a: 'Stimulate the vagus nerve to slow AV conduction. Include: <strong>carotid sinus massage, Valsalva maneuver, bearing down, cold water to face (diving reflex)</strong>.', tip: 'Before carotid massage: listen for bruits. NEVER massage both sides simultaneously.' },
+            { id: 54, cat: 'atrial', q: 'What is WPW (Wolff-Parkinson-White) syndrome?', a: 'An <strong>accessory conduction pathway</strong> (Bundle of Kent) bypasses the AV node. ECG shows: <strong>short PR (&lt;0.12), delta wave</strong> (slurred QRS upstroke), wide QRS.', tip: 'AVOID AV nodal blockers (adenosine, digoxin, CCBs) in WPW with A-fib — can cause V-fib.' },
+            { id: 55, cat: 'atrial', q: 'What is an apical-radial pulse deficit and when do you see it?', a: 'Apical HR is <strong>higher</strong> than radial pulse because some cardiac contractions are too weak to generate a palpable pulse. Classic in <strong>A-fib</strong>.', tip: 'Two nurses count simultaneously: one at apex with stethoscope, one at radial artery. Difference = pulse deficit.' },
 
-    // ===== DEVICES & INTERVENTIONS (~8 cards) =====
-    { id: 106, cat: 'devices', q: 'What is the key difference between cardioversion and defibrillation?', a: '<strong>Cardioversion:</strong> SYNCHRONIZED with R wave (SYNC mode ON). Used for organized rhythms WITH a pulse. <strong>Defibrillation:</strong> UNSYNCHRONIZED (immediate shock). Used for VF/pulseless VT.', tip: 'Always verify SYNC mode is ON before cardioversion. After each synchronized shock, SYNC mode may need to be reactivated.' },
-    { id: 107, cat: 'devices', q: 'Why must cardioversion be synchronized with the R wave?', a: 'Shocking during the <strong>T wave (relative refractory period)</strong> can <strong>induce V-fib</strong>. SYNC mode ensures the shock hits during the <strong>R wave (absolute refractory period)</strong>.', tip: 'If SYNC mode won\'t capture the R wave (as in V-fib), switch to unsynchronized defibrillation.' },
-    { id: 108, cat: 'devices', q: 'What are the three types of pacemakers by insertion method?', a: '<strong>Transcutaneous:</strong> External pads on chest — EMERGENCY, temporary, painful. <strong>Transvenous:</strong> Wire through vein to RV — temporary bridge. <strong>Permanent:</strong> Implanted device — long-term for SSS, heart blocks.', tip: 'Transcutaneous pacing requires sedation/analgesia. Pads go anterior-posterior.' },
-    { id: 109, cat: 'devices', q: 'What does the pacemaker code VVI mean?', a: '<strong>V</strong> = Paces Ventricle. <strong>V</strong> = Senses Ventricle. <strong>I</strong> = Inhibits when senses native beat (backs off when heart beats on its own).', tip: 'DDD = "the smart one" — paces both, senses both, dual response. Most physiologic.' },
-    { id: 110, cat: 'devices', q: 'What is "failure to capture" on a pacemaker?', a: 'Pacing spike is present but <strong>NO QRS follows</strong>. Causes: lead dislodgement, battery depletion, inadequate output (mA too low), fibrosis at lead tip.', tip: 'Fix: increase mA output, check lead position, check battery.' },
-    { id: 111, cat: 'devices', q: 'What is "failure to sense" (undersensing)?', a: 'Pacing spikes appear <strong>despite adequate intrinsic rhythm</strong> — the pacer doesn\'t see the patient\'s own beats. Risk of competing rhythms.', tip: 'Fix: increase sensitivity setting. Competing rhythms can cause R-on-T phenomenon.' },
-    { id: 112, cat: 'devices', q: 'What is an ICD (Implantable Cardioverter-Defibrillator) and when is it indicated?', a: 'Combination device that senses lethal rhythms and delivers <strong>internal shock</strong>. Also has pacing function. Indications: survived VF/VT arrest, <strong>EF &lt;35%</strong>, high risk for sudden cardiac death.', tip: 'If ICD fires repeatedly &rarr; place magnet over device to temporarily disable shocks, call electrophysiology.' },
-    { id: 113, cat: 'devices', q: 'What patient education is needed after pacemaker/ICD placement?', a: '<strong>Carry ID card.</strong> Avoid MRI (unless MRI-conditional). Keep cell phone on opposite side. No diathermy. Regular device checks. Report hiccups (diaphragm stimulation).', tip: 'No contact sports with ICD. Avoid strong magnets. Airport security wand — don\'t linger over device.' },
+            // ===== JUNCTIONAL RHYTHMS (~6 cards) =====
+            { id: 56, cat: 'junctional', q: 'What defines a Junctional Escape Rhythm?', a: '<strong>Rate:</strong> 40&ndash;60 bpm. <strong>Rhythm:</strong> Regular. <strong>P wave:</strong> Inverted (before/after QRS) or absent. <strong>PR:</strong> &lt;0.12 sec if P present. <strong>QRS:</strong> Normal.', tip: 'The AV junction takes over as pacemaker when the SA node fails.' },
+            { id: 57, cat: 'junctional', q: 'Where can P waves appear in junctional rhythms?', a: 'Three positions: <strong>1) Before QRS</strong> (inverted, short PR &lt;0.12). <strong>2) Hidden IN the QRS</strong> (not visible). <strong>3) After QRS</strong> (inverted, in ST segment).', tip: 'All because the impulse travels RETROGRADE (backward) through the atria.' },
+            { id: 58, cat: 'junctional', q: 'What is Accelerated Junctional Rhythm?', a: 'Same characteristics as junctional escape but rate <strong>60&ndash;100 bpm</strong>. The AV junction is firing faster than its intrinsic rate but not pathologically fast.', tip: 'Often caused by digoxin (Lanoxin) toxicity, post-cardiac surgery, or inferior MI.' },
+            { id: 59, cat: 'junctional', q: 'What is Junctional Tachycardia?', a: 'Junctional rhythm at rate <strong>100&ndash;180 bpm</strong>. Same P wave characteristics as other junctional rhythms.', tip: 'Think digoxin toxicity! Also seen with myocarditis and post-cardiac surgery.' },
+            { id: 60, cat: 'junctional', q: 'What causes junctional rhythms?', a: '<strong>SA node dysfunction, digoxin (Lanoxin) toxicity, inferior MI, post-cardiac surgery, increased vagal tone, beta-blocker/CCB excess.</strong>', tip: 'Digoxin toxicity is the most testable cause of junctional rhythms.' },
+            { id: 61, cat: 'junctional', q: 'How do you distinguish sinus bradycardia from junctional escape rhythm?', a: '<strong>P waves.</strong> Sinus bradycardia has <strong>upright P waves before each QRS</strong> with normal PR (0.12&ndash;0.20). Junctional has <strong>inverted P waves</strong> (or absent/hidden) with PR &lt;0.12 if visible.', tip: 'Both are slow — the P wave morphology and PR interval are the key discriminators.' },
 
-    // ===== CLINICAL DECISIONS (~8 cards) =====
-    { id: 114, cat: 'decisions', q: 'Patient is PULSELESS — what is the decision tree?', a: '1) <strong>Start CPR + call code</strong>. 2) Attach monitor. 3) <strong>Shockable?</strong> YES (VF/pVT): Defibrillate &rarr; CPR &rarr; Epi &rarr; Amiodarone. NO (Asystole/PEA): CPR &rarr; Epi ASAP &rarr; Search H\'s and T\'s.', tip: 'The FIRST action is always CPR. Don\'t delay compressions for anything.' },
-    { id: 115, cat: 'decisions', q: 'Patient has TACHYCARDIA — how do you decide on treatment?', a: '1) Pulse? No &rarr; cardiac arrest algorithm. 2) <strong>Unstable?</strong> Yes &rarr; synchronized cardioversion. 3) <strong>Stable + narrow QRS:</strong> Vagal &rarr; adenosine &rarr; CCB/BB. 4) <strong>Stable + wide QRS:</strong> Assume VT &rarr; amiodarone.', tip: 'Unstable signs: hypotension, AMS, chest pain, acute HF. When in doubt, treat as unstable.' },
-    { id: 116, cat: 'decisions', q: 'Patient has BRADYCARDIA — how do you decide on treatment?', a: 'HR &lt;50 + <strong>symptomatic?</strong> YES: Atropine 0.5 mg IV. If fails: transcutaneous pacing + vasopressors. <strong>NO symptoms:</strong> Monitor, document, notify provider.', tip: 'Symptoms = hypotension, AMS, shock, ischemic chest pain. Treat the patient, not the number.' },
-    { id: 117, cat: 'decisions', q: 'When do you use synchronized cardioversion vs defibrillation?', a: '<strong>Synchronized:</strong> Patient has a PULSE + unstable tachyarrhythmia (A-fib, flutter, SVT, stable VT). <strong>Defibrillation:</strong> PULSELESS VF or VT.', tip: 'Memory aid: Pulse = Sync. Pulseless = no sync (defibrillate).' },
-    { id: 118, cat: 'decisions', q: 'What three things should you NEVER defibrillate?', a: '1) <strong>Asystole</strong> (no electrical activity to reset). 2) <strong>PEA</strong> (organized rhythm, no mechanical contraction). 3) <strong>A patient with a pulse</strong> (could CAUSE VF).', tip: 'If the monitor shows a flat line, confirm in 2 leads before calling asystole — could be lead disconnect or fine VF.' },
-    { id: 119, cat: 'decisions', q: 'What are the signs of instability that require immediate cardioversion?', a: '<strong>Hypotension, altered mental status, signs of shock, ischemic chest pain, acute heart failure.</strong> If ANY of these are present with tachycardia, cardiovert immediately.', tip: 'Don\'t waste time with medications when the patient is crashing — electricity works faster than drugs.' },
-    { id: 120, cat: 'decisions', q: 'What is closed-loop communication in a code and why is it critical?', a: '1) Sender gives order: "Give 1 mg Epi IV push." 2) Receiver confirms: "Giving 1 mg Epi IV push." 3) Sender verifies: "That\'s correct." <strong>Prevents medication errors during high-stress situations.</strong>', tip: 'Also assign clear roles: compressor, airway, med admin, time keeper, recorder, team leader.' },
-    { id: 121, cat: 'decisions', q: 'When should you consider stopping resuscitation efforts?', a: 'No ROSC after <strong>prolonged effort</strong> with all reversible causes addressed, ETCO2 &lt;10 mmHg after 20 min of CPR, no shockable rhythm, no reversible cause found. <strong>Team leader makes the decision.</strong>', tip: 'This is a team decision. Consider: time down, initial rhythm, comorbidities, and whether all H\'s and T\'s have been addressed.' }
-];
+            // ===== VENTRICULAR ARRHYTHMIAS (~12 cards) =====
+            { id: 62, cat: 'ventricular', q: 'What are PVCs and what ECG features identify them?', a: '<strong>Premature ventricular beats</strong> with <strong>wide, bizarre QRS</strong> (&ge;0.12 sec), no preceding P wave, followed by a <strong>compensatory pause</strong>.', tip: 'Unifocal PVCs (same shape) are less concerning than multifocal (different shapes).' },
+            { id: 63, cat: 'ventricular', q: 'What PVC patterns are concerning and why?', a: '<strong>Bigeminy</strong> (every other beat), <strong>trigeminy</strong> (every 3rd), <strong>couplets</strong> (2 in a row), <strong>R-on-T phenomenon</strong> (PVC falls on T wave &rarr; can trigger V-fib). <strong>Multifocal PVCs</strong> = multiple irritable foci.', tip: '3 or more PVCs in a row at &gt;100 bpm = V-tach.' },
+            { id: 64, cat: 'ventricular', q: 'What defines Ventricular Tachycardia (V-Tach)?', a: '<strong>3+ PVCs in a row at rate &gt;100 bpm.</strong> Wide, bizarre QRS. Usually regular. Can be <strong>monomorphic</strong> (uniform QRS) or <strong>polymorphic</strong> (varying QRS).', tip: 'V-Tach is a MEDICAL EMERGENCY regardless of pulse status.' },
+            { id: 65, cat: 'ventricular', q: 'How is monomorphic V-Tach WITH a pulse treated?', a: '<strong>Stable:</strong> Amiodarone (Cordarone) 150 mg IV over 10 min. <strong>Unstable</strong> (hypotension, AMS, chest pain): <strong>Synchronized cardioversion</strong>.', tip: 'WITH pulse = can sync. Key: if the patient deteriorates to pulseless at any time, switch to defibrillation.' },
+            { id: 66, cat: 'ventricular', q: 'How is PULSELESS V-Tach treated?', a: '<strong>CPR + Defibrillation</strong> (unsynchronized) + ACLS algorithm: <strong>epinephrine (Adrenalin) 1 mg IV q3&ndash;5 min</strong> + <strong>amiodarone (Cordarone) 300 mg IV</strong>, then 150 mg.', tip: 'Pulseless VT is treated the SAME as V-fib — both are shockable rhythms.' },
+            { id: 67, cat: 'ventricular', q: 'What is Torsades de Pointes and what causes it?', a: 'A <strong>polymorphic VT</strong> with QRS complexes "twisting" around the isoelectric line. Preceded by <strong>prolonged QT</strong>. Causes: hypokalemia, hypomagnesemia, medications (haloperidol, ciprofloxacin, azithromycin, methadone).', tip: 'Treatment: IV magnesium sulfate (MgSO4) 1&ndash;2g over 5&ndash;20 min — EVEN IF Mg level is normal.' },
+            { id: 68, cat: 'ventricular', q: 'What is V-Fib and what is the treatment?', a: 'Rapid, chaotic quivering with <strong>NO organized cardiac activity</strong>. No pulse, unconscious. Treatment: <strong>IMMEDIATE defibrillation + CPR</strong>.', tip: 'Every minute of delay in defibrillation decreases survival by 7&ndash;10%.' },
+            { id: 69, cat: 'ventricular', q: 'How do you distinguish V-Fib from asystole?', a: '<strong>V-fib</strong> = chaotic, disorganized waveform. <strong>Asystole</strong> = flat line. Always confirm asystole in <strong>2 leads</strong> to rule out fine V-fib or lead disconnection.', tip: 'V-fib is SHOCKABLE. Asystole is NOT. Getting this wrong = wrong treatment.' },
+            { id: 70, cat: 'ventricular', q: 'What is PEA (Pulseless Electrical Activity)?', a: 'Organized electrical activity on the monitor but <strong>NO palpable pulse</strong>. The heart has rhythm but no effective mechanical contraction.', tip: 'PEA is NOT shockable. Treatment: CPR + epinephrine + aggressively search and treat H\'s and T\'s.' },
+            { id: 71, cat: 'ventricular', q: 'What is asystole and how is it treated?', a: '<strong>Complete absence of electrical activity</strong> — flat line. Confirm in 2 leads. Treatment: <strong>CPR + epinephrine 1 mg IV q3&ndash;5 min + treat reversible causes</strong> (H\'s and T\'s).', tip: 'NEVER defibrillate asystole — there is no electrical activity to reset.' },
+            { id: 72, cat: 'ventricular', q: 'What is an Idioventricular Rhythm?', a: 'Ventricular escape rhythm at <strong>20&ndash;40 bpm</strong>. Wide QRS, no P waves. The ventricles take over as the last-resort pacemaker when SA and AV node fail.', tip: 'Accelerated idioventricular rhythm (AIVR) at 40&ndash;100 bpm is common after reperfusion (good sign post-thrombolytics).' },
+            { id: 73, cat: 'ventricular', q: 'What is the "R-on-T" phenomenon and why is it dangerous?', a: 'A PVC that falls on the T wave of the preceding beat, hitting during the <strong>relative refractory period (vulnerable period)</strong>. Can trigger <strong>V-fib or V-tach</strong>.', tip: 'This is the same reason cardioversion must be SYNCHRONIZED — to avoid shocking during the T wave.' },
 
-// ===================== STATE =====================
-let state = {
-    deck: [],
-    idx: 0,
-    flipped: false,
-    results: {},
-    overflow: [],
-    totalOriginal: 0
-};
+            // ===== HEART BLOCKS (~10 cards) =====
+            { id: 74, cat: 'blocks', q: 'What defines 1st Degree AV Block?', a: '<strong>PR interval &gt;0.20 sec but CONSTANT.</strong> All P waves conduct (1:1 ratio). Rhythm regular. QRS usually normal.', tip: 'Usually benign. Common causes: beta-blockers, CCBs, digoxin (Lanoxin), aging.' },
+            { id: 75, cat: 'blocks', q: 'What defines 2nd Degree AV Block Type I (Wenckebach)?', a: '<strong>PR interval gets progressively LONGER</strong> until a QRS is dropped, then the cycle repeats. Pattern: 3:2, 4:3, 5:4.', tip: '"Longer, longer, longer, DROP — that\'s a Wenckebach." Usually benign, often from inferior MI or medications.' },
+            { id: 76, cat: 'blocks', q: 'What defines 2nd Degree AV Block Type II (Mobitz II)?', a: '<strong>PR interval is CONSTANT</strong> for conducted beats. <strong>Sudden dropped QRS</strong> without warning. Usually <strong>wide QRS</strong>. More dangerous than Type I.', tip: 'Can progress suddenly to complete heart block. Often requires pacemaker. Caused by anterior MI.' },
+            { id: 77, cat: 'blocks', q: 'What defines 3rd Degree (Complete) Heart Block?', a: '<strong>NO atrial impulses conduct through AV node.</strong> Atria and ventricles beat <strong>independently</strong> (AV dissociation). P waves march through with no relationship to QRS.', tip: 'The PR intervals are COMPLETELY VARIABLE — that\'s the hallmark.' },
+            { id: 78, cat: 'blocks', q: 'How is 3rd Degree Heart Block treated?', a: '<strong>Atropine</strong> (may help if block is at AV node level). <strong>Transcutaneous pacing</strong> as bridge. <strong>Permanent pacemaker</strong> is definitive treatment.', tip: 'Atropine often FAILS in 3rd degree block because the problem is below the AV node.' },
+            { id: 79, cat: 'blocks', q: 'How do you distinguish Mobitz I from Mobitz II?', a: '<strong>Mobitz I:</strong> PR gets LONGER before drop, narrow QRS, grouped beating. <strong>Mobitz II:</strong> PR is CONSTANT, sudden drop, usually WIDE QRS.', tip: 'Mobitz I = benign. Mobitz II = dangerous. The PR interval behavior is the key.' },
+            { id: 80, cat: 'blocks', q: 'What is a Bundle Branch Block (BBB) and how does it look on ECG?', a: 'Delay in conduction through right or left bundle branch. <strong>QRS &ge;0.12 sec (wide)</strong>. RBBB: "rabbit ears" (RSR\') in V1. LBBB: broad, notched R in lateral leads (I, aVL, V5&ndash;V6).', tip: 'New LBBB can mimic STEMI and may be treated as acute MI.' },
+            { id: 81, cat: 'blocks', q: 'Why is atropine often ineffective for infranodal blocks (Mobitz II, 3rd degree)?', a: 'Atropine works by <strong>blocking vagal (parasympathetic) tone at the AV node</strong>. Infranodal blocks are BELOW the AV node — atropine can\'t reach the problem. Go straight to <strong>pacing</strong>.', tip: 'This is a high-yield NCLEX/ACLS concept — know when atropine works and when it doesn\'t.' },
+            { id: 82, cat: 'blocks', q: 'Which heart block requires the most urgent intervention?', a: '<strong>Mobitz Type II and 3rd Degree</strong> — both can cause hemodynamic instability and can progress to (or already are) complete loss of AV conduction. Both typically need <strong>pacing</strong>.', tip: 'Mobitz II can deteriorate to 3rd degree without warning. Don\'t wait for symptoms.' },
+            { id: 83, cat: 'blocks', q: 'In 3rd degree block, how do you know if the escape rhythm is junctional vs ventricular?', a: '<strong>Junctional escape:</strong> Rate 40&ndash;60, narrow QRS. <strong>Ventricular escape:</strong> Rate 20&ndash;40, wide QRS. Ventricular escape is more dangerous (slower, less reliable).', tip: 'Wide QRS in 3rd degree = worse prognosis. Needs pacing more urgently.' },
 
-let savedProgress = {};
-let srData = {};
-let selectedCats = new Set();
+            // ===== ACLS ALGORITHMS (~12 cards) =====
+            { id: 84, cat: 'acls', q: 'What are the H\'s and T\'s (reversible causes of cardiac arrest)?', a: '<strong>H\'s:</strong> Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia. <strong>T\'s:</strong> Tension pneumothorax, Tamponade (cardiac), Toxins/drugs, Thrombosis (pulmonary/coronary).', tip: 'Systematically consider these during EVERY code. Treating rhythm without addressing cause = failure.' },
+            { id: 85, cat: 'acls', q: 'What are the two shockable rhythms in cardiac arrest?', a: '<strong>Ventricular Fibrillation (V-Fib)</strong> and <strong>Pulseless Ventricular Tachycardia (pVT)</strong>.', tip: 'Asystole and PEA are NOT shockable — treated with CPR + epinephrine + H\'s and T\'s only.' },
+            { id: 86, cat: 'acls', q: 'What is the cardiac arrest algorithm for shockable rhythms (VF/pVT)?', a: '<strong>CPR &rarr; Shock &rarr; CPR 2 min &rarr; Shock &rarr; Epi 1 mg &rarr; CPR 2 min &rarr; Shock &rarr; Amiodarone 300 mg &rarr; CPR 2 min &rarr; repeat</strong>', tip: 'Epinephrine q3&ndash;5 min throughout. Amiodarone 2nd dose: 150 mg. Reassess rhythm every 2 min.' },
+            { id: 87, cat: 'acls', q: 'What is the cardiac arrest algorithm for non-shockable rhythms (Asystole/PEA)?', a: '<strong>CPR &rarr; Epi 1 mg ASAP &rarr; CPR 2 min &rarr; Epi q3&ndash;5 min &rarr; aggressively search H\'s and T\'s</strong>. No defibrillation. No amiodarone.', tip: 'Epinephrine is the ONLY drug for non-shockable rhythms. Finding and fixing the cause is the real treatment.' },
+            { id: 88, cat: 'acls', q: 'What are the parameters for high-quality CPR?', a: '<strong>Rate:</strong> 100&ndash;120/min. <strong>Depth:</strong> &ge;2 inches (5 cm) adults. <strong>Full chest recoil.</strong> <strong>Minimize interruptions</strong> (&lt;10 sec). <strong>Switch compressor every 2 min.</strong>', tip: 'Push hard, push fast, let chest fully recoil, don\'t stop. Compression fraction goal &gt;80%.' },
+            { id: 89, cat: 'acls', q: 'What is the tachycardia algorithm for UNSTABLE patients?', a: '<strong>Unstable</strong> (hypotension, AMS, chest pain, acute HF) = <strong>Synchronized cardioversion immediately</strong>, regardless of QRS width.', tip: 'Unstable = don\'t waste time on drugs. Shock first.' },
+            { id: 90, cat: 'acls', q: 'What is the tachycardia algorithm for STABLE patients?', a: '<strong>Narrow QRS (&lt;0.12):</strong> Vagal maneuvers &rarr; Adenosine (Adenocard) 6 mg rapid IV push &rarr; 12 mg &rarr; Beta-blocker/CCB. <strong>Wide QRS (&ge;0.12):</strong> Assume VT &rarr; Amiodarone (Cordarone) 150 mg IV over 10 min.', tip: 'Wide + regular = VT until proven otherwise. Wide + irregular = consider A-fib with aberrancy or WPW.' },
+            { id: 91, cat: 'acls', q: 'What is the bradycardia algorithm?', a: '<strong>HR &lt;50 + symptomatic</strong> (hypotension, AMS, shock, chest pain) &rarr; <strong>Atropine 0.5 mg IV</strong> q3&ndash;5 min (max 3 mg). If fails &rarr; <strong>Transcutaneous pacing</strong> + dopamine or epi drip.', tip: 'Asymptomatic bradycardia = monitor only. Atropine may fail in infranodal blocks — go to pacing.' },
+            { id: 92, cat: 'acls', q: 'What is the compression-to-ventilation ratio in adult CPR?', a: '<strong>30:2</strong> for both 1-rescuer and 2-rescuer CPR (without advanced airway). <strong>With advanced airway:</strong> continuous compressions + 1 breath every 6 seconds (10 breaths/min).', tip: '5 cycles of 30:2 = approximately 2 minutes.' },
+            { id: 93, cat: 'acls', q: 'What should happen immediately after each defibrillation?', a: '<strong>Resume CPR immediately</strong> — start with compressions. Do NOT stop to check rhythm until 5 cycles (~2 min) are completed.', tip: 'The heart needs perfusion to recover after shock. Even a successful shock needs CPR to maintain flow.' },
+            { id: 94, cat: 'acls', q: 'What is ROSC and what are the signs?', a: '<strong>Return of Spontaneous Circulation.</strong> Signs: palpable pulse, measurable BP, sudden increase in ETCO2 (&ge;40 mmHg), arterial waveform on monitor.', tip: 'Post-ROSC care: 12-lead ECG, targeted temperature management (32&ndash;36°C), avoid hyperoxia, treat cause.' },
+            { id: 95, cat: 'acls', q: 'What is Targeted Temperature Management (TTM) post-cardiac arrest?', a: 'Cooling to <strong>32&ndash;36°C</strong> for patients who don\'t follow commands after ROSC. Phases: Initial cooling (0&ndash;8 hr), Maintenance (24 hr), Rewarming (6&ndash;18 hr at 0.25°C/hr).', tip: '20% mortality increase per hour of delay in cooling. Optimizes neurological outcomes.' },
 
-// ===================== STORAGE =====================
-function loadProgress() {
-    try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        savedProgress = data ? JSON.parse(data) : {};
-    } catch (e) { savedProgress = {}; }
-}
+            // ===== EMERGENCY MEDICATIONS (~10 cards) =====
+            { id: 96, cat: 'meds', q: 'What is the dose and role of epinephrine (Adrenalin) in cardiac arrest?', a: '<strong>1 mg IV/IO every 3&ndash;5 min</strong> (1:10,000 concentration). Alpha effects cause <strong>vasoconstriction</strong> (improves coronary and cerebral perfusion). Flush with 20 mL + elevate extremity.', tip: 'Given in ALL cardiac arrest rhythms — shockable and non-shockable.' },
+            { id: 97, cat: 'meds', q: 'What is the dose of amiodarone (Cordarone) in cardiac arrest vs stable VT?', a: '<strong>Cardiac arrest:</strong> 300 mg IV push first dose, 150 mg second dose. <strong>Stable VT (with pulse):</strong> 150 mg IV over 10 minutes.', tip: 'Amiodarone is used ONLY for shockable rhythms (VF/pVT) in arrest. Not for asystole or PEA.' },
+            { id: 98, cat: 'meds', q: 'What is atropine and when is it used?', a: '<strong>Anticholinergic</strong> — blocks vagal (parasympathetic) tone. <strong>Dose: 0.5 mg IV q3&ndash;5 min, max 3 mg.</strong> Used for <strong>symptomatic bradycardia</strong>.', tip: 'Not effective for infranodal blocks (Mobitz II, 3rd degree). Minimum dose is 0.5 mg — lower doses can paradoxically worsen bradycardia.' },
+            { id: 99, cat: 'meds', q: 'What is adenosine (Adenocard) and how is it given?', a: '<strong>Slows AV node conduction</strong> — used for SVT. <strong>6 mg rapid IV push</strong> followed by 20 mL NS flush. If no effect: <strong>12 mg</strong> (can repeat 12 mg once).', tip: 'Half-life: 6&ndash;10 SECONDS. Must give through proximal IV, rapid push. Warn patient about brief chest tightness / "sense of doom."' },
+            { id: 100, cat: 'meds', q: 'What is the dose and role of magnesium sulfate in Torsades de Pointes?', a: '<strong>1&ndash;2 g IV over 5&ndash;20 min</strong> (or IV push if pulseless). Stabilizes cardiac cell membranes. Given <strong>even if serum Mg is normal</strong>.', tip: 'Magnesium is THE drug for Torsades. Regular defibrillation often fails without correcting the underlying cause.' },
+            { id: 101, cat: 'meds', q: 'What vasopressor is used for post-arrest hypotension or bradycardia drips?', a: '<strong>Dopamine (Intropin)</strong> 5&ndash;20 mcg/kg/min or <strong>Epinephrine (Adrenalin)</strong> 2&ndash;10 mcg/min infusion. Both increase HR and BP.', tip: 'Used when atropine fails for bradycardia, or to maintain BP after ROSC.' },
+            { id: 102, cat: 'meds', q: 'What is lidocaine (Xylocaine) and when is it used in ACLS?', a: '<strong>Class IB antiarrhythmic.</strong> Alternative to amiodarone for VF/pVT. <strong>Dose:</strong> 1&ndash;1.5 mg/kg IV, can repeat 0.5&ndash;0.75 mg/kg.', tip: 'Amiodarone is preferred over lidocaine in current ACLS guidelines.' },
+            { id: 103, cat: 'meds', q: 'What is the role of sodium bicarbonate in cardiac arrest?', a: 'Used for <strong>severe metabolic acidosis, hyperkalemia, or tricyclic antidepressant overdose</strong>. NOT routine in all arrests. <strong>Dose: 1 mEq/kg IV.</strong>', tip: 'Too much bicarb causes metabolic alkalosis and shifts the O2 dissociation curve left (worse O2 delivery).' },
+            { id: 104, cat: 'meds', q: 'What are the key nursing considerations for amiodarone (Cordarone)?', a: 'Monitor for <strong>hypotension</strong> (vasodilation) and <strong>bradycardia</strong>. Long-term side effects: <strong>pulmonary toxicity, thyroid dysfunction, hepatotoxicity, corneal deposits</strong>. Half-life: 40&ndash;55 days.', tip: 'Long half-life means side effects persist long after stopping the drug. Baseline PFTs, TFTs, LFTs, eye exam.' },
+            { id: 105, cat: 'meds', q: 'Why should you never give calcium channel blockers or digoxin to WPW patients in A-fib?', a: 'These drugs slow AV node conduction but <strong>do NOT slow the accessory pathway</strong>. More impulses travel the fast pathway, potentially triggering <strong>V-fib</strong>.', tip: 'WPW + A-fib = use procainamide (Pronestyl) or amiodarone (Cordarone) instead.' },
 
-function saveProgress() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress)); } catch (e) {}
-}
+            // ===== DEVICES & INTERVENTIONS (~8 cards) =====
+            { id: 106, cat: 'devices', q: 'What is the key difference between cardioversion and defibrillation?', a: '<strong>Cardioversion:</strong> SYNCHRONIZED with R wave (SYNC mode ON). Used for organized rhythms WITH a pulse. <strong>Defibrillation:</strong> UNSYNCHRONIZED (immediate shock). Used for VF/pulseless VT.', tip: 'Always verify SYNC mode is ON before cardioversion. After each synchronized shock, SYNC mode may need to be reactivated.' },
+            { id: 107, cat: 'devices', q: 'Why must cardioversion be synchronized with the R wave?', a: 'Shocking during the <strong>T wave (relative refractory period)</strong> can <strong>induce V-fib</strong>. SYNC mode ensures the shock hits during the <strong>R wave (absolute refractory period)</strong>.', tip: 'If SYNC mode won\'t capture the R wave (as in V-fib), switch to unsynchronized defibrillation.' },
+            { id: 108, cat: 'devices', q: 'What are the three types of pacemakers by insertion method?', a: '<strong>Transcutaneous:</strong> External pads on chest — EMERGENCY, temporary, painful. <strong>Transvenous:</strong> Wire through vein to RV — temporary bridge. <strong>Permanent:</strong> Implanted device — long-term for SSS, heart blocks.', tip: 'Transcutaneous pacing requires sedation/analgesia. Pads go anterior-posterior.' },
+            { id: 109, cat: 'devices', q: 'What does the pacemaker code VVI mean?', a: '<strong>V</strong> = Paces Ventricle. <strong>V</strong> = Senses Ventricle. <strong>I</strong> = Inhibits when senses native beat (backs off when heart beats on its own).', tip: 'DDD = "the smart one" — paces both, senses both, dual response. Most physiologic.' },
+            { id: 110, cat: 'devices', q: 'What is "failure to capture" on a pacemaker?', a: 'Pacing spike is present but <strong>NO QRS follows</strong>. Causes: lead dislodgement, battery depletion, inadequate output (mA too low), fibrosis at lead tip.', tip: 'Fix: increase mA output, check lead position, check battery.' },
+            { id: 111, cat: 'devices', q: 'What is "failure to sense" (undersensing)?', a: 'Pacing spikes appear <strong>despite adequate intrinsic rhythm</strong> — the pacer doesn\'t see the patient\'s own beats. Risk of competing rhythms.', tip: 'Fix: increase sensitivity setting. Competing rhythms can cause R-on-T phenomenon.' },
+            { id: 112, cat: 'devices', q: 'What is an ICD (Implantable Cardioverter-Defibrillator) and when is it indicated?', a: 'Combination device that senses lethal rhythms and delivers <strong>internal shock</strong>. Also has pacing function. Indications: survived VF/VT arrest, <strong>EF &lt;35%</strong>, high risk for sudden cardiac death.', tip: 'If ICD fires repeatedly &rarr; place magnet over device to temporarily disable shocks, call electrophysiology.' },
+            { id: 113, cat: 'devices', q: 'What patient education is needed after pacemaker/ICD placement?', a: '<strong>Carry ID card.</strong> Avoid MRI (unless MRI-conditional). Keep cell phone on opposite side. No diathermy. Regular device checks. Report hiccups (diaphragm stimulation).', tip: 'No contact sports with ICD. Avoid strong magnets. Airport security wand — don\'t linger over device.' },
 
-function loadSR() {
-    try {
-        const data = localStorage.getItem(SR_KEY);
-        srData = data ? JSON.parse(data) : {};
-    } catch (e) { srData = {}; }
-}
+            // ===== CLINICAL DECISIONS (~8 cards) =====
+            { id: 114, cat: 'decisions', q: 'Patient is PULSELESS — what is the decision tree?', a: '1) <strong>Start CPR + call code</strong>. 2) Attach monitor. 3) <strong>Shockable?</strong> YES (VF/pVT): Defibrillate &rarr; CPR &rarr; Epi &rarr; Amiodarone. NO (Asystole/PEA): CPR &rarr; Epi ASAP &rarr; Search H\'s and T\'s.', tip: 'The FIRST action is always CPR. Don\'t delay compressions for anything.' },
+            { id: 115, cat: 'decisions', q: 'Patient has TACHYCARDIA — how do you decide on treatment?', a: '1) Pulse? No &rarr; cardiac arrest algorithm. 2) <strong>Unstable?</strong> Yes &rarr; synchronized cardioversion. 3) <strong>Stable + narrow QRS:</strong> Vagal &rarr; adenosine &rarr; CCB/BB. 4) <strong>Stable + wide QRS:</strong> Assume VT &rarr; amiodarone.', tip: 'Unstable signs: hypotension, AMS, chest pain, acute HF. When in doubt, treat as unstable.' },
+            { id: 116, cat: 'decisions', q: 'Patient has BRADYCARDIA — how do you decide on treatment?', a: 'HR &lt;50 + <strong>symptomatic?</strong> YES: Atropine 0.5 mg IV. If fails: transcutaneous pacing + vasopressors. <strong>NO symptoms:</strong> Monitor, document, notify provider.', tip: 'Symptoms = hypotension, AMS, shock, ischemic chest pain. Treat the patient, not the number.' },
+            { id: 117, cat: 'decisions', q: 'When do you use synchronized cardioversion vs defibrillation?', a: '<strong>Synchronized:</strong> Patient has a PULSE + unstable tachyarrhythmia (A-fib, flutter, SVT, stable VT). <strong>Defibrillation:</strong> PULSELESS VF or VT.', tip: 'Memory aid: Pulse = Sync. Pulseless = no sync (defibrillate).' },
+            { id: 118, cat: 'decisions', q: 'What three things should you NEVER defibrillate?', a: '1) <strong>Asystole</strong> (no electrical activity to reset). 2) <strong>PEA</strong> (organized rhythm, no mechanical contraction). 3) <strong>A patient with a pulse</strong> (could CAUSE VF).', tip: 'If the monitor shows a flat line, confirm in 2 leads before calling asystole — could be lead disconnect or fine VF.' },
+            { id: 119, cat: 'decisions', q: 'What are the signs of instability that require immediate cardioversion?', a: '<strong>Hypotension, altered mental status, signs of shock, ischemic chest pain, acute heart failure.</strong> If ANY of these are present with tachycardia, cardiovert immediately.', tip: 'Don\'t waste time with medications when the patient is crashing — electricity works faster than drugs.' },
+            { id: 120, cat: 'decisions', q: 'What is closed-loop communication in a code and why is it critical?', a: '1) Sender gives order: "Give 1 mg Epi IV push." 2) Receiver confirms: "Giving 1 mg Epi IV push." 3) Sender verifies: "That\'s correct." <strong>Prevents medication errors during high-stress situations.</strong>', tip: 'Also assign clear roles: compressor, airway, med admin, time keeper, recorder, team leader.' },
+            { id: 121, cat: 'decisions', q: 'When should you consider stopping resuscitation efforts?', a: 'No ROSC after <strong>prolonged effort</strong> with all reversible causes addressed, ETCO2 &lt;10 mmHg after 20 min of CPR, no shockable rhythm, no reversible cause found. <strong>Team leader makes the decision.</strong>', tip: 'This is a team decision. Consider: time down, initial rhythm, comorbidities, and whether all H\'s and T\'s have been addressed.' },
 
-function saveSR() {
-    try { localStorage.setItem(SR_KEY, JSON.stringify(srData)); } catch (e) {}
-}
+            // ===== CAUSE-FOCUSED CARDS =====
+            { id: 122, cat: 'atrial', q: 'What are the causes of Atrial Flutter?', a: '<strong>CAD, heart failure, valvular disease</strong> (especially mitral), <strong>pulmonary embolism</strong>, and <strong>post-cardiac surgery</strong>.', tip: 'Flutter shares many causes with A-Fib but is more commonly seen post-cardiac surgery. The re-entry circuit in flutter is usually in the right atrium (cavotricuspid isthmus).' },
+            { id: 123, cat: 'atrial', q: 'What are the causes and risk factors for Atrial Fibrillation?', a: '<strong>Heart failure, valvular disease</strong> (especially mitral stenosis), <strong>hypertension, CAD, hyperthyroidism</strong>, alcohol use ("holiday heart"), obesity, sleep apnea, post-cardiac surgery, pulmonary disease (COPD, PE), and <strong>advancing age</strong>.', tip: 'A-Fib is the MOST COMMON sustained arrhythmia. Remember: anything that stretches or damages the atria can cause A-Fib. Always check TSH — hyperthyroidism is a reversible cause.' },
+            { id: 124, cat: 'ventricular', q: 'What are the causes of Ventricular Tachycardia?', a: '<strong>MI / ischemia</strong> (most common), <strong>cardiomyopathy</strong> (dilated, hypertrophic), <strong>electrolyte imbalances</strong> (hypoK, hypoMg), <strong>drug toxicity</strong> (digoxin, cocaine), <strong>prolonged QT interval</strong>, and heart failure.', tip: 'From the slides (W1 Slides 58–62): Always check electrolytes in new V-Tach — hypoK and hypoMg are correctable causes. Scar tissue from old MI creates re-entry circuits that trigger V-Tach.' },
+            { id: 125, cat: 'ventricular', q: 'What are the causes of PVCs (Premature Ventricular Complexes)?', a: '<strong>MI, ischemia, heart failure</strong>, <strong>hypokalemia, hypomagnesemia</strong>, <strong>hypoxia, acidosis</strong>, <strong>caffeine, nicotine, cocaine</strong>, and <strong>digoxin toxicity</strong>.', tip: 'From the slides (W1 Slides 58–62): Occasional PVCs need no treatment. But &gt;6/min, multifocal, couplets, or R-on-T patterns are dangerous — correct K⁺ and Mg²⁺ first, then consider amiodarone or lidocaine.' }
+        ];
 
-function getSRCard(cardId) {
-    if (!srData[cardId]) {
-        srData[cardId] = { box: 1, nextReview: new Date().toISOString().split('T')[0], streak: 0 };
-    }
-    return srData[cardId];
-}
+        // ===================== STATE =====================
+        let state = {
+            deck: [],
+            idx: 0,
+            flipped: false,
+            results: {},
+            overflow: [],
+            totalOriginal: 0
+        };
 
-function updateSR(cardId, confidence) {
-    const sr = getSRCard(cardId);
-    const today = new Date();
-    const intervals = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30 };
+        let savedProgress = {};
+        let srData = {};
+        let selectedCats = new Set();
 
-    if (confidence === 'gotit') {
-        sr.streak++;
-        sr.box = Math.min(sr.box + 1, 5);
-        const days = intervals[sr.box];
-        const next = new Date(today);
-        next.setDate(next.getDate() + days);
-        sr.nextReview = next.toISOString().split('T')[0];
-    } else if (confidence === 'unsure') {
-        sr.streak = 0;
-        // Stay in same box, review tomorrow
-        const next = new Date(today);
-        next.setDate(next.getDate() + 1);
-        sr.nextReview = next.toISOString().split('T')[0];
-    } else if (confidence === 'missed') {
-        sr.streak = 0;
-        sr.box = 1;
-        const next = new Date(today);
-        next.setDate(next.getDate() + 1);
-        sr.nextReview = next.toISOString().split('T')[0];
-    }
+        // ===================== STORAGE =====================
+        function loadProgress() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                savedProgress = data ? JSON.parse(data) : {};
+            } catch (e) { savedProgress = {}; }
+        }
 
-    srData[cardId] = sr;
-    saveSR();
-}
+        function saveProgress() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress)); } catch (e) { }
+        }
 
-function getDueCards() {
-    loadSR();
-    const today = new Date().toISOString().split('T')[0];
-    return cards.filter(c => {
-        const sr = srData[c.id];
-        if (!sr) return true; // Never seen = due
-        return sr.nextReview <= today;
-    });
-}
+        function loadSR() {
+            try {
+                const data = localStorage.getItem(SR_KEY);
+                srData = data ? JSON.parse(data) : {};
+            } catch (e) { srData = {}; }
+        }
 
-function getDueCountForCat(catId) {
-    const today = new Date().toISOString().split('T')[0];
-    return cards.filter(c => {
-        if (c.cat !== catId) return false;
-        const sr = srData[c.id];
-        if (!sr) return true;
-        return sr.nextReview <= today;
-    }).length;
-}
+        function saveSR() {
+            try { localStorage.setItem(SR_KEY, JSON.stringify(srData)); } catch (e) { }
+        }
 
-function saveSessionResults() {
-    Object.entries(state.results).forEach(([cardId, result]) => {
-        savedProgress[cardId] = result;
-        updateSR(parseInt(cardId), result);
-    });
-    saveProgress();
-}
+        function getSRCard(cardId) {
+            if (!srData[cardId]) {
+                srData[cardId] = { box: 1, nextReview: new Date().toISOString().split('T')[0], streak: 0 };
+            }
+            return srData[cardId];
+        }
 
-function resetProgress() {
-    if (confirm('Reset all progress including spaced repetition data? This cannot be undone.')) {
-        savedProgress = {};
-        srData = {};
-        saveProgress();
-        saveSR();
-        renderStartScreen();
-    }
-}
+        function updateSR(cardId, confidence) {
+            const sr = getSRCard(cardId);
+            const today = new Date();
+            const intervals = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30 };
 
-// ===================== SCREENS =====================
-function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + name).classList.add('active');
-    if (name === 'start') renderStartScreen();
-}
+            if (confidence === 'gotit') {
+                sr.streak++;
+                sr.box = Math.min(sr.box + 1, 5);
+                const days = intervals[sr.box];
+                const next = new Date(today);
+                next.setDate(next.getDate() + days);
+                sr.nextReview = next.toISOString().split('T')[0];
+            } else if (confidence === 'unsure') {
+                sr.streak = 0;
+                // Stay in same box, review tomorrow
+                const next = new Date(today);
+                next.setDate(next.getDate() + 1);
+                sr.nextReview = next.toISOString().split('T')[0];
+            } else if (confidence === 'missed') {
+                sr.streak = 0;
+                sr.box = 1;
+                const next = new Date(today);
+                next.setDate(next.getDate() + 1);
+                sr.nextReview = next.toISOString().split('T')[0];
+            }
 
-function renderStartScreen() {
-    loadProgress();
-    loadSR();
+            srData[cardId] = sr;
+            saveSR();
+        }
 
-    // Calculate overall progress
-    const total = cards.length;
-    let gotit = 0, unsure = 0, missed = 0, unseen = 0;
-    cards.forEach(c => {
-        const status = savedProgress[c.id];
-        if (status === 'gotit') gotit++;
-        else if (status === 'unsure') unsure++;
-        else if (status === 'missed') missed++;
-        else unseen++;
-    });
+        function getDueCards() {
+            loadSR();
+            const today = new Date().toISOString().split('T')[0];
+            return cards.filter(c => {
+                const sr = srData[c.id];
+                if (!sr) return true; // Never seen = due
+                return sr.nextReview <= today;
+            });
+        }
 
-    const progressDiv = document.getElementById('progress-summary');
-    if (gotit + unsure + missed > 0) {
-        const gpct = (gotit / total * 100).toFixed(1);
-        const upct = (unsure / total * 100).toFixed(1);
-        const mpct = (missed / total * 100).toFixed(1);
-        progressDiv.innerHTML = `
+        function getDueCountForCat(catId) {
+            const today = new Date().toISOString().split('T')[0];
+            return cards.filter(c => {
+                if (c.cat !== catId) return false;
+                const sr = srData[c.id];
+                if (!sr) return true;
+                return sr.nextReview <= today;
+            }).length;
+        }
+
+        function saveSessionResults() {
+            Object.entries(state.results).forEach(([cardId, result]) => {
+                savedProgress[cardId] = result;
+                updateSR(parseInt(cardId), result);
+            });
+            saveProgress();
+        }
+
+        function resetProgress() {
+            if (confirm('Reset all progress including spaced repetition data? This cannot be undone.')) {
+                savedProgress = {};
+                srData = {};
+                saveProgress();
+                saveSR();
+                renderStartScreen();
+            }
+        }
+
+        // ===================== SCREENS =====================
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + name).classList.add('active');
+            if (name === 'start') renderStartScreen();
+        }
+
+        function renderStartScreen() {
+            loadProgress();
+            loadSR();
+
+            // Calculate overall progress
+            const total = cards.length;
+            let gotit = 0, unsure = 0, missed = 0, unseen = 0;
+            cards.forEach(c => {
+                const status = savedProgress[c.id];
+                if (status === 'gotit') gotit++;
+                else if (status === 'unsure') unsure++;
+                else if (status === 'missed') missed++;
+                else unseen++;
+            });
+
+            const progressDiv = document.getElementById('progress-summary');
+            if (gotit + unsure + missed > 0) {
+                const gpct = (gotit / total * 100).toFixed(1);
+                const upct = (unsure / total * 100).toFixed(1);
+                const mpct = (missed / total * 100).toFixed(1);
+                progressDiv.innerHTML = `
             <h3>Overall Progress</h3>
             <div class="overall-bar">
                 <div class="mb-gotit" style="width:${gpct}%"></div>
@@ -1021,37 +1179,37 @@ function renderStartScreen() {
             </div>
             <div class="overall-text">${gotit} mastered · ${unsure} unsure · ${missed} missed · ${unseen} unseen</div>
         `;
-        progressDiv.style.display = 'block';
-    } else {
-        progressDiv.style.display = 'none';
-    }
+                progressDiv.style.display = 'block';
+            } else {
+                progressDiv.style.display = 'none';
+            }
 
-    // Render category grid
-    const grid = document.getElementById('cat-grid');
-    grid.innerHTML = '';
+            // Render category grid
+            const grid = document.getElementById('cat-grid');
+            grid.innerHTML = '';
 
-    Object.entries(categories).forEach(([catId, cat]) => {
-        const catCards = cards.filter(c => c.cat === catId);
-        const catTotal = catCards.length;
-        let cg = 0, cu = 0, cm = 0;
-        catCards.forEach(c => {
-            const status = savedProgress[c.id];
-            if (status === 'gotit') cg++;
-            else if (status === 'unsure') cu++;
-            else if (status === 'missed') cm++;
-        });
+            Object.entries(categories).forEach(([catId, cat]) => {
+                const catCards = cards.filter(c => c.cat === catId);
+                const catTotal = catCards.length;
+                let cg = 0, cu = 0, cm = 0;
+                catCards.forEach(c => {
+                    const status = savedProgress[c.id];
+                    if (status === 'gotit') cg++;
+                    else if (status === 'unsure') cu++;
+                    else if (status === 'missed') cm++;
+                });
 
-        const masteryPct = catTotal > 0 ? (cg / catTotal * 100).toFixed(0) : 0;
-        const gpct = catTotal > 0 ? (cg / catTotal * 100) : 0;
-        const upct = catTotal > 0 ? (cu / catTotal * 100) : 0;
-        const mpct = catTotal > 0 ? (cm / catTotal * 100) : 0;
-        const dueCount = getDueCountForCat(catId);
+                const masteryPct = catTotal > 0 ? (cg / catTotal * 100).toFixed(0) : 0;
+                const gpct = catTotal > 0 ? (cg / catTotal * 100) : 0;
+                const upct = catTotal > 0 ? (cu / catTotal * 100) : 0;
+                const mpct = catTotal > 0 ? (cm / catTotal * 100) : 0;
+                const dueCount = getDueCountForCat(catId);
 
-        const btn = document.createElement('div');
-        btn.className = 'cat-btn';
-        btn.dataset.cat = catId;
-        btn.style.setProperty('--cat-color', cat.color);
-        btn.innerHTML = `
+                const btn = document.createElement('div');
+                btn.className = 'cat-btn';
+                btn.dataset.cat = catId;
+                btn.style.setProperty('--cat-color', cat.color);
+                btn.innerHTML = `
             <span class="cat-name">
                 <span class="cat-dot" style="background:${cat.color}"></span>
                 ${cat.name}
@@ -1067,322 +1225,322 @@ function renderStartScreen() {
                 <div class="cat-mastery-text">${masteryPct}% mastered</div>
             </div>
         `;
-        btn.addEventListener('click', () => toggleCategory(catId, btn));
-        grid.appendChild(btn);
-    });
+                btn.addEventListener('click', () => toggleCategory(catId, btn));
+                grid.appendChild(btn);
+            });
 
-    // Update action buttons
-    const weakCount = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure').length;
-    const weakBtn = document.getElementById('btn-weak');
-    weakBtn.textContent = `Study Weak Cards (${weakCount})`;
-    weakBtn.disabled = weakCount === 0;
+            // Update action buttons
+            const weakCount = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure').length;
+            const weakBtn = document.getElementById('btn-weak');
+            weakBtn.textContent = `Study Weak Cards (${weakCount})`;
+            weakBtn.disabled = weakCount === 0;
 
-    const dueCards = getDueCards();
-    const dueBtn = document.getElementById('btn-due');
-    dueBtn.textContent = `Due for Review (${dueCards.length})`;
-    dueBtn.disabled = dueCards.length === 0;
+            const dueCards = getDueCards();
+            const dueBtn = document.getElementById('btn-due');
+            dueBtn.textContent = `Due for Review (${dueCards.length})`;
+            dueBtn.disabled = dueCards.length === 0;
 
-    selectedCats.clear();
-}
-
-function toggleCategory(catId, btn) {
-    const multiSelect = document.getElementById('chk-multi').checked;
-
-    if (multiSelect) {
-        if (selectedCats.has(catId)) {
-            selectedCats.delete(catId);
-            btn.classList.remove('selected');
-        } else {
-            selectedCats.add(catId);
-            btn.classList.add('selected');
+            selectedCats.clear();
         }
-    } else {
-        startSession([catId]);
-    }
-}
 
-// ===================== SESSION =====================
-function startSession(catIds) {
-    loadProgress();
+        function toggleCategory(catId, btn) {
+            const multiSelect = document.getElementById('chk-multi').checked;
 
-    let sessionCards = cards.filter(c => catIds.includes(c.cat));
+            if (multiSelect) {
+                if (selectedCats.has(catId)) {
+                    selectedCats.delete(catId);
+                    btn.classList.remove('selected');
+                } else {
+                    selectedCats.add(catId);
+                    btn.classList.add('selected');
+                }
+            } else {
+                startSession([catId]);
+            }
+        }
 
-    if (document.getElementById('chk-shuffle').checked) {
-        sessionCards = shuffleArray([...sessionCards]);
-    }
+        // ===================== SESSION =====================
+        function startSession(catIds) {
+            loadProgress();
 
-    state = {
-        deck: sessionCards.map(c => c.id),
-        idx: 0,
-        flipped: false,
-        results: {},
-        overflow: [],
-        totalOriginal: sessionCards.length
-    };
+            let sessionCards = cards.filter(c => catIds.includes(c.cat));
 
-    if (state.deck.length === 0) {
-        alert('No cards in selected categories.');
-        return;
-    }
+            if (document.getElementById('chk-shuffle').checked) {
+                sessionCards = shuffleArray([...sessionCards]);
+            }
 
-    showScreen('card');
-    displayCard();
-}
+            state = {
+                deck: sessionCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: sessionCards.length
+            };
 
-function startAll() {
-    if (selectedCats.size > 0) {
-        startSession([...selectedCats]);
-    } else {
-        startSession(Object.keys(categories));
-    }
-}
+            if (state.deck.length === 0) {
+                alert('No cards in selected categories.');
+                return;
+            }
 
-function studyWeak() {
-    loadProgress();
-    const weakCards = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure');
+            showScreen('card');
+            displayCard();
+        }
 
-    if (weakCards.length === 0) {
-        alert('No weak cards to study!');
-        return;
-    }
+        function startAll() {
+            if (selectedCats.size > 0) {
+                startSession([...selectedCats]);
+            } else {
+                startSession(Object.keys(categories));
+            }
+        }
 
-    let sessionCards = document.getElementById('chk-shuffle').checked
-        ? shuffleArray([...weakCards])
-        : weakCards;
+        function studyWeak() {
+            loadProgress();
+            const weakCards = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure');
 
-    state = {
-        deck: sessionCards.map(c => c.id),
-        idx: 0,
-        flipped: false,
-        results: {},
-        overflow: [],
-        totalOriginal: sessionCards.length
-    };
+            if (weakCards.length === 0) {
+                alert('No weak cards to study!');
+                return;
+            }
 
-    showScreen('card');
-    displayCard();
-}
+            let sessionCards = document.getElementById('chk-shuffle').checked
+                ? shuffleArray([...weakCards])
+                : weakCards;
 
-function studyDue() {
-    const dueCards = getDueCards();
+            state = {
+                deck: sessionCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: sessionCards.length
+            };
 
-    if (dueCards.length === 0) {
-        alert('No cards due for review!');
-        return;
-    }
+            showScreen('card');
+            displayCard();
+        }
 
-    let sessionCards = document.getElementById('chk-shuffle').checked
-        ? shuffleArray([...dueCards])
-        : dueCards;
+        function studyDue() {
+            const dueCards = getDueCards();
 
-    state = {
-        deck: sessionCards.map(c => c.id),
-        idx: 0,
-        flipped: false,
-        results: {},
-        overflow: [],
-        totalOriginal: sessionCards.length
-    };
+            if (dueCards.length === 0) {
+                alert('No cards due for review!');
+                return;
+            }
 
-    showScreen('card');
-    displayCard();
-}
+            let sessionCards = document.getElementById('chk-shuffle').checked
+                ? shuffleArray([...dueCards])
+                : dueCards;
 
-function exitSession() {
-    saveSessionResults();
-    showScreen('start');
-}
+            state = {
+                deck: sessionCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: sessionCards.length
+            };
 
-// ===================== CARD DISPLAY =====================
-function displayCard() {
-    if (state.idx >= state.deck.length) {
-        if (state.overflow.length > 0) {
-            state.deck = state.deck.concat(state.overflow);
-            state.overflow = [];
-        } else {
+            showScreen('card');
+            displayCard();
+        }
+
+        function exitSession() {
             saveSessionResults();
-            showResults();
-            return;
+            showScreen('start');
         }
-    }
 
-    const cardId = state.deck[state.idx];
-    const card = cards.find(c => c.id === cardId);
-    const cat = categories[card.cat];
-    const answerFirst = document.getElementById('chk-answer-first').checked;
+        // ===================== CARD DISPLAY =====================
+        function displayCard() {
+            if (state.idx >= state.deck.length) {
+                if (state.overflow.length > 0) {
+                    state.deck = state.deck.concat(state.overflow);
+                    state.overflow = [];
+                } else {
+                    saveSessionResults();
+                    showResults();
+                    return;
+                }
+            }
 
-    // Front content
-    document.getElementById('front-content').innerHTML = card.q;
+            const cardId = state.deck[state.idx];
+            const card = cards.find(c => c.id === cardId);
+            const cat = categories[card.cat];
+            const answerFirst = document.getElementById('chk-answer-first').checked;
 
-    // Answer-first input
-    const inputArea = document.getElementById('answer-input-area');
-    if (answerFirst) {
-        inputArea.innerHTML = `
+            // Front content
+            document.getElementById('front-content').innerHTML = card.q;
+
+            // Answer-first input
+            const inputArea = document.getElementById('answer-input-area');
+            if (answerFirst) {
+                inputArea.innerHTML = `
             <div class="answer-input-wrap">
                 <input type="text" id="user-answer" placeholder="Type your answer..." autocomplete="off">
                 <button onclick="flipCard()">Check</button>
             </div>
         `;
-        document.getElementById('flip-hint').textContent = 'Type your answer, then press Enter or click Check';
-        setTimeout(() => {
-            const input = document.getElementById('user-answer');
-            if (input) input.focus();
-        }, 100);
-    } else {
-        inputArea.innerHTML = '';
-        document.getElementById('flip-hint').textContent = 'SPACE or click to flip';
-    }
+                document.getElementById('flip-hint').textContent = 'Type your answer, then press Enter or click Check';
+                setTimeout(() => {
+                    const input = document.getElementById('user-answer');
+                    if (input) input.focus();
+                }, 100);
+            } else {
+                inputArea.innerHTML = '';
+                document.getElementById('flip-hint').textContent = 'SPACE or click to flip';
+            }
 
-    // Back content
-    let backHtml = `<div class="answer-text">${card.a}</div>`;
-    if (card.tip) {
-        backHtml += `<div class="exam-tip">${card.tip}</div>`;
-    }
-    document.getElementById('back-content').innerHTML = backHtml;
+            // Back content
+            let backHtml = `<div class="answer-text">${card.a}</div>`;
+            if (card.tip) {
+                backHtml += `<div class="exam-tip">${card.tip}</div>`;
+            }
+            document.getElementById('back-content').innerHTML = backHtml;
 
-    // Category badge with SR box info
-    loadSR();
-    const sr = srData[cardId];
-    let badgeHtml = cat.name;
-    if (sr && sr.box) {
-        badgeHtml += ` <span class="sr-badge sr-box${sr.box}">Box ${sr.box}</span>`;
-    }
-    document.getElementById('cur-cat').innerHTML = badgeHtml;
-    document.getElementById('cur-cat').style.borderColor = cat.color;
+            // Category badge with SR box info
+            loadSR();
+            const sr = srData[cardId];
+            let badgeHtml = cat.name;
+            if (sr && sr.box) {
+                badgeHtml += ` <span class="sr-badge sr-box${sr.box}">Box ${sr.box}</span>`;
+            }
+            document.getElementById('cur-cat').innerHTML = badgeHtml;
+            document.getElementById('cur-cat').style.borderColor = cat.color;
 
-    document.getElementById('cur-num').textContent = state.idx + 1;
-    document.getElementById('tot-num').textContent = state.deck.length;
+            document.getElementById('cur-num').textContent = state.idx + 1;
+            document.getElementById('tot-num').textContent = state.deck.length;
 
-    const pct = (state.idx / state.totalOriginal * 100);
-    document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
+            const pct = (state.idx / state.totalOriginal * 100);
+            document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
 
-    // Show requeue info if past original deck
-    const requeueInfo = document.getElementById('requeue-info');
-    if (state.idx >= state.totalOriginal) {
-        requeueInfo.textContent = 'Review';
-        requeueInfo.style.display = 'inline';
-    } else {
-        requeueInfo.style.display = 'none';
-    }
+            // Show requeue info if past original deck
+            const requeueInfo = document.getElementById('requeue-info');
+            if (state.idx >= state.totalOriginal) {
+                requeueInfo.textContent = 'Review';
+                requeueInfo.style.display = 'inline';
+            } else {
+                requeueInfo.style.display = 'none';
+            }
 
-    state.flipped = false;
-    document.getElementById('flashcard').classList.remove('flipped');
-    document.getElementById('conf-controls').classList.remove('visible');
-}
+            state.flipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('conf-controls').classList.remove('visible');
+        }
 
-function handleFlashcardClick(event) {
-    // Don't flip if clicking the input or button in answer-first mode
-    if (event.target.closest('.answer-input-wrap')) return;
-    flipCard();
-}
+        function handleFlashcardClick(event) {
+            // Don't flip if clicking the input or button in answer-first mode
+            if (event.target.closest('.answer-input-wrap')) return;
+            flipCard();
+        }
 
-function flipCard() {
-    // If flipping to the back for the first time, capture typed answer
-    if (!state.flipped) {
-        const answerFirst = document.getElementById('chk-answer-first').checked;
-        if (answerFirst) {
-            const userInput = document.getElementById('user-answer');
-            const typed = userInput ? userInput.value.trim() : '';
-            if (typed) {
-                const backContent = document.getElementById('back-content');
-                const existingTyped = backContent.querySelector('.typed-answer-display');
-                if (!existingTyped) {
-                    const typedDiv = document.createElement('div');
-                    typedDiv.className = 'typed-answer-display';
-                    typedDiv.innerHTML = `<strong>Your answer:</strong> ${typed.replace(/</g, '&lt;').replace(/>/g, '&gt;')}`;
-                    backContent.insertBefore(typedDiv, backContent.firstChild);
+        function flipCard() {
+            // If flipping to the back for the first time, capture typed answer
+            if (!state.flipped) {
+                const answerFirst = document.getElementById('chk-answer-first').checked;
+                if (answerFirst) {
+                    const userInput = document.getElementById('user-answer');
+                    const typed = userInput ? userInput.value.trim() : '';
+                    if (typed) {
+                        const backContent = document.getElementById('back-content');
+                        const existingTyped = backContent.querySelector('.typed-answer-display');
+                        if (!existingTyped) {
+                            const typedDiv = document.createElement('div');
+                            typedDiv.className = 'typed-answer-display';
+                            typedDiv.innerHTML = `<strong>Your answer:</strong> ${typed.replace(/</g, '&lt;').replace(/>/g, '&gt;')}`;
+                            backContent.insertBefore(typedDiv, backContent.firstChild);
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    state.flipped = !state.flipped;
-    document.getElementById('flashcard').classList.toggle('flipped', state.flipped);
-    document.getElementById('conf-controls').classList.toggle('visible', state.flipped);
-}
-
-function rate(confidence) {
-    if (!state.flipped) return;
-
-    const cardId = state.deck[state.idx];
-    state.results[cardId] = confidence;
-
-    if (confidence === 'missed') {
-        const offset = 5 + Math.floor(Math.random() * 3);
-        const insertAt = state.idx + offset;
-        if (insertAt < state.deck.length) {
-            state.deck.splice(insertAt, 0, cardId);
-        } else {
-            state.overflow.push(cardId);
-        }
-    } else if (confidence === 'unsure') {
-        const offset = 8 + Math.floor(Math.random() * 3);
-        const insertAt = state.idx + offset;
-        if (insertAt < state.deck.length) {
-            state.deck.splice(insertAt, 0, cardId);
-        } else {
-            state.overflow.push(cardId);
-        }
-    }
-
-    state.idx++;
-    displayCard();
-}
-
-// ===================== RESULTS =====================
-function showResults() {
-    showScreen('results');
-
-    let gotit = 0, unsure = 0, missed = 0;
-    const catStats = {};
-
-    Object.entries(state.results).forEach(([cardId, result]) => {
-        const card = cards.find(c => c.id === parseInt(cardId));
-        if (!catStats[card.cat]) {
-            catStats[card.cat] = { gotit: 0, unsure: 0, missed: 0 };
+            state.flipped = !state.flipped;
+            document.getElementById('flashcard').classList.toggle('flipped', state.flipped);
+            document.getElementById('conf-controls').classList.toggle('visible', state.flipped);
         }
 
-        if (result === 'gotit') { gotit++; catStats[card.cat].gotit++; }
-        else if (result === 'unsure') { unsure++; catStats[card.cat].unsure++; }
-        else if (result === 'missed') { missed++; catStats[card.cat].missed++; }
-    });
+        function rate(confidence) {
+            if (!state.flipped) return;
 
-    const total = gotit + unsure + missed;
+            const cardId = state.deck[state.idx];
+            state.results[cardId] = confidence;
 
-    document.getElementById('stats-row').innerHTML = `
+            if (confidence === 'missed') {
+                const offset = 5 + Math.floor(Math.random() * 3);
+                const insertAt = state.idx + offset;
+                if (insertAt < state.deck.length) {
+                    state.deck.splice(insertAt, 0, cardId);
+                } else {
+                    state.overflow.push(cardId);
+                }
+            } else if (confidence === 'unsure') {
+                const offset = 8 + Math.floor(Math.random() * 3);
+                const insertAt = state.idx + offset;
+                if (insertAt < state.deck.length) {
+                    state.deck.splice(insertAt, 0, cardId);
+                } else {
+                    state.overflow.push(cardId);
+                }
+            }
+
+            state.idx++;
+            displayCard();
+        }
+
+        // ===================== RESULTS =====================
+        function showResults() {
+            showScreen('results');
+
+            let gotit = 0, unsure = 0, missed = 0;
+            const catStats = {};
+
+            Object.entries(state.results).forEach(([cardId, result]) => {
+                const card = cards.find(c => c.id === parseInt(cardId));
+                if (!catStats[card.cat]) {
+                    catStats[card.cat] = { gotit: 0, unsure: 0, missed: 0 };
+                }
+
+                if (result === 'gotit') { gotit++; catStats[card.cat].gotit++; }
+                else if (result === 'unsure') { unsure++; catStats[card.cat].unsure++; }
+                else if (result === 'missed') { missed++; catStats[card.cat].missed++; }
+            });
+
+            const total = gotit + unsure + missed;
+
+            document.getElementById('stats-row').innerHTML = `
         <div class="stat-card stat-gotit">
             <div class="stat-value">${gotit}</div>
             <div class="stat-label">Got It</div>
-            <div class="stat-pct">${total > 0 ? (gotit/total*100).toFixed(0) : 0}%</div>
+            <div class="stat-pct">${total > 0 ? (gotit / total * 100).toFixed(0) : 0}%</div>
         </div>
         <div class="stat-card stat-unsure">
             <div class="stat-value">${unsure}</div>
             <div class="stat-label">Unsure</div>
-            <div class="stat-pct">${total > 0 ? (unsure/total*100).toFixed(0) : 0}%</div>
+            <div class="stat-pct">${total > 0 ? (unsure / total * 100).toFixed(0) : 0}%</div>
         </div>
         <div class="stat-card stat-missed">
             <div class="stat-value">${missed}</div>
             <div class="stat-label">Missed</div>
-            <div class="stat-pct">${total > 0 ? (missed/total*100).toFixed(0) : 0}%</div>
+            <div class="stat-pct">${total > 0 ? (missed / total * 100).toFixed(0) : 0}%</div>
         </div>
     `;
 
-    // Category breakdown
-    let breakdownHtml = '';
-    const weakAreas = [];
+            // Category breakdown
+            let breakdownHtml = '';
+            const weakAreas = [];
 
-    Object.entries(catStats).forEach(([catId, stats]) => {
-        const cat = categories[catId];
-        const catTotal = stats.gotit + stats.unsure + stats.missed;
-        const gpct = (stats.gotit / catTotal * 100);
-        const upct = (stats.unsure / catTotal * 100);
-        const mpct = (stats.missed / catTotal * 100);
+            Object.entries(catStats).forEach(([catId, stats]) => {
+                const cat = categories[catId];
+                const catTotal = stats.gotit + stats.unsure + stats.missed;
+                const gpct = (stats.gotit / catTotal * 100);
+                const upct = (stats.unsure / catTotal * 100);
+                const mpct = (stats.missed / catTotal * 100);
 
-        if (gpct < 60) {
-            weakAreas.push({ name: cat.name, pct: gpct.toFixed(0) });
-        }
+                if (gpct < 60) {
+                    weakAreas.push({ name: cat.name, pct: gpct.toFixed(0) });
+                }
 
-        breakdownHtml += `
+                breakdownHtml += `
             <div class="cat-stat-row">
                 <div class="cat-stat-name">${cat.name}</div>
                 <div class="cat-stat-bar">
@@ -1393,118 +1551,119 @@ function showResults() {
                 <div class="cat-stat-pct">${gpct.toFixed(0)}%</div>
             </div>
         `;
-    });
+            });
 
-    document.getElementById('cat-breakdown').innerHTML = breakdownHtml;
+            document.getElementById('cat-breakdown').innerHTML = breakdownHtml;
 
-    // Weak areas
-    const weakSection = document.getElementById('weak-section');
-    if (weakAreas.length > 0) {
-        let weakHtml = '';
-        weakAreas.forEach(w => {
-            weakHtml += `<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`;
-        });
-        document.getElementById('weak-list').innerHTML = weakHtml;
-        weakSection.style.display = 'block';
-    } else {
-        weakSection.style.display = 'none';
-    }
-
-    document.getElementById('btn-review-missed').disabled = missed === 0;
-}
-
-function reviewMissed() {
-    const missedIds = Object.entries(state.results)
-        .filter(([_, r]) => r === 'missed')
-        .map(([id]) => parseInt(id));
-
-    if (missedIds.length === 0) return;
-
-    const missedCards = cards.filter(c => missedIds.includes(c.id));
-
-    state = {
-        deck: missedCards.map(c => c.id),
-        idx: 0,
-        flipped: false,
-        results: {},
-        overflow: [],
-        totalOriginal: missedCards.length
-    };
-
-    showScreen('card');
-    displayCard();
-}
-
-function reviewMissedAndUnsure() {
-    const reviewIds = Object.entries(state.results)
-        .filter(([_, r]) => r === 'missed' || r === 'unsure')
-        .map(([id]) => parseInt(id));
-
-    if (reviewIds.length === 0) return;
-
-    const reviewCards = cards.filter(c => reviewIds.includes(c.id));
-
-    state = {
-        deck: shuffleArray(reviewCards.map(c => c.id)),
-        idx: 0,
-        flipped: false,
-        results: {},
-        overflow: [],
-        totalOriginal: reviewCards.length
-    };
-
-    showScreen('card');
-    displayCard();
-}
-
-// ===================== UTILITIES =====================
-function shuffleArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-// ===================== KEYBOARD =====================
-document.addEventListener('keydown', (e) => {
-    const cardScreen = document.getElementById('screen-card');
-    const resultsScreen = document.getElementById('screen-results');
-
-    if (cardScreen.classList.contains('active')) {
-        // Don't intercept if typing in answer-first input
-        if (e.target.tagName === 'INPUT') {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                flipCard();
+            // Weak areas
+            const weakSection = document.getElementById('weak-section');
+            if (weakAreas.length > 0) {
+                let weakHtml = '';
+                weakAreas.forEach(w => {
+                    weakHtml += `<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`;
+                });
+                document.getElementById('weak-list').innerHTML = weakHtml;
+                weakSection.style.display = 'block';
+            } else {
+                weakSection.style.display = 'none';
             }
-            return;
+
+            document.getElementById('btn-review-missed').disabled = missed === 0;
         }
 
-        if (e.key === ' ' || e.key === 'Spacebar') {
-            e.preventDefault();
-            flipCard();
-        } else if (e.key === '1') {
-            rate('missed');
-        } else if (e.key === '2') {
-            rate('unsure');
-        } else if (e.key === '3') {
-            rate('gotit');
-        } else if (e.key === 'Escape') {
-            exitSession();
-        }
-    } else if (resultsScreen.classList.contains('active')) {
-        if (e.key === 'Escape' || e.key === 'Enter') {
-            showScreen('start');
-        }
-    }
-});
+        function reviewMissed() {
+            const missedIds = Object.entries(state.results)
+                .filter(([_, r]) => r === 'missed')
+                .map(([id]) => parseInt(id));
 
-// ===================== INIT =====================
-loadProgress();
-loadSR();
-renderStartScreen();
-</script>
+            if (missedIds.length === 0) return;
+
+            const missedCards = cards.filter(c => missedIds.includes(c.id));
+
+            state = {
+                deck: missedCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: missedCards.length
+            };
+
+            showScreen('card');
+            displayCard();
+        }
+
+        function reviewMissedAndUnsure() {
+            const reviewIds = Object.entries(state.results)
+                .filter(([_, r]) => r === 'missed' || r === 'unsure')
+                .map(([id]) => parseInt(id));
+
+            if (reviewIds.length === 0) return;
+
+            const reviewCards = cards.filter(c => reviewIds.includes(c.id));
+
+            state = {
+                deck: shuffleArray(reviewCards.map(c => c.id)),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: reviewCards.length
+            };
+
+            showScreen('card');
+            displayCard();
+        }
+
+        // ===================== UTILITIES =====================
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // ===================== KEYBOARD =====================
+        document.addEventListener('keydown', (e) => {
+            const cardScreen = document.getElementById('screen-card');
+            const resultsScreen = document.getElementById('screen-results');
+
+            if (cardScreen.classList.contains('active')) {
+                // Don't intercept if typing in answer-first input
+                if (e.target.tagName === 'INPUT') {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        flipCard();
+                    }
+                    return;
+                }
+
+                if (e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    flipCard();
+                } else if (e.key === '1') {
+                    rate('missed');
+                } else if (e.key === '2') {
+                    rate('unsure');
+                } else if (e.key === '3') {
+                    rate('gotit');
+                } else if (e.key === 'Escape') {
+                    exitSession();
+                }
+            } else if (resultsScreen.classList.contains('active')) {
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    showScreen('start');
+                }
+            }
+        });
+
+        // ===================== INIT =====================
+        loadProgress();
+        loadSR();
+        renderStartScreen();
+    </script>
 
 </body>
+
 </html>
