@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiac Arrhythmia — Cause & Treatment Flashcards</title>
+    <style>
+        :root {
+            --gotit: #4ade80;
+            --unsure: #fbbf24;
+            --missed: #f87171;
+            --primary: #dc2626;
+            --primary-hover: #b91c1c;
+            --muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .screen {
+            display: none;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        #progress-summary {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        #progress-summary h3 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .overall-bar {
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-gotit {
+            height: 100%;
+            background: var(--gotit);
+        }
+
+        .mb-unsure {
+            height: 100%;
+            background: var(--unsure);
+        }
+
+        .mb-missed {
+            height: 100%;
+            background: var(--missed);
+        }
+
+        .overall-text {
+            font-size: 0.85rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--cat-color, var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.selected {
+            border-color: var(--cat-color, var(--primary));
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .cat-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .cat-count {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .cat-mastery {
+            margin-top: 0.5rem;
+        }
+
+        .cat-mastery-bar {
+            height: 4px;
+            background: #475569;
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .cat-mastery-text {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        .due-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .options-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .start-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled,
+        .btn-weak:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .btn-due {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-due:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-weak {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-weak:hover {
+            background: #ef4444;
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-reset:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .sr-badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .sr-box1 {
+            background: var(--missed);
+            color: white;
+        }
+
+        .sr-box2 {
+            background: #fb923c;
+            color: white;
+        }
+
+        .sr-box3 {
+            background: var(--unsure);
+            color: #0f172a;
+        }
+
+        .sr-box4 {
+            background: #a3e635;
+            color: #0f172a;
+        }
+
+        .sr-box5 {
+            background: var(--gotit);
+            color: #0f172a;
+        }
+
+        .card-screen {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .progress-section {
+            flex: 1;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .requeue-badge {
+            background: #6366f1;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .cat-badge {
+            background: var(--card-bg);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .flashcard {
+            perspective: 1200px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            min-height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .card-front .card-content {
+            font-size: 1.35rem;
+        }
+
+        .flip-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        .answer-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .exam-tip {
+            background: rgba(220, 38, 38, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .typed-answer-display {
+            background: rgba(99, 102, 241, 0.15);
+            border-left: 3px solid #818cf8;
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+            color: #c7d2fe;
+        }
+
+        .answer-input-wrap {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .answer-input-wrap input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: #0f172a;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .answer-input-wrap input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .answer-input-wrap button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .conf-controls {
+            display: none;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .conf-controls.visible {
+            display: flex;
+        }
+
+        .conf-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .conf-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .conf-missed {
+            background: var(--missed);
+            color: white;
+        }
+
+        .conf-unsure {
+            background: var(--unsure);
+            color: #0f172a;
+        }
+
+        .conf-gotit {
+            background: var(--gotit);
+            color: #0f172a;
+        }
+
+        .conf-icon {
+            font-size: 1.5rem;
+        }
+
+        .conf-label {
+            font-weight: 600;
+        }
+
+        .conf-key {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .kb-hints {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .kb-hints kbd {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin: 0 0.25rem;
+        }
+
+        .results-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .results-container h1 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .stat-pct {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-gotit .stat-value {
+            color: var(--gotit);
+        }
+
+        .stat-unsure .stat-value {
+            color: var(--unsure);
+        }
+
+        .stat-missed .stat-value {
+            color: var(--missed);
+        }
+
+        .breakdown-section,
+        .weak-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .breakdown-section h3,
+        .weak-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .cat-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cat-stat-name {
+            flex: 0 0 150px;
+            font-size: 0.9rem;
+        }
+
+        .cat-stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .bar-seg {
+            height: 100%;
+        }
+
+        .bar-gotit {
+            background: var(--gotit);
+        }
+
+        .bar-unsure {
+            background: var(--unsure);
+        }
+
+        .bar-missed {
+            background: var(--missed);
+        }
+
+        .cat-stat-pct {
+            flex: 0 0 50px;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .weak-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .weak-item:last-child {
+            border-bottom: none;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            .card-content {
+                font-size: 1.1rem;
+            }
+
+            .card-front .card-content {
+                font-size: 1.2rem;
+            }
+
+            .conf-btn {
+                padding: 0.75rem;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screen active">
+        <div class="start-container">
+            <h1>Cardiac Arrhythmias</h1>
+            <p class="subtitle">Cause & Treatment flashcards across all arrhythmias from the cardiac lecture — sinus
+                rhythms, atrial, junctional, ventricular & heart blocks</p>
+            <div id="progress-summary"></div>
+            <div class="cat-grid" id="cat-grid"></div>
+            <div class="options-row">
+                <label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-answer-first"> Type answer first</label>
+            </div>
+            <div class="start-actions">
+                <button class="btn-due" id="btn-due" onclick="studyDue()">Due for Review (0)</button>
+                <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+                <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+                <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD SCREEN -->
+    <div id="screen-card" class="screen">
+        <div class="card-screen">
+            <div class="card-header">
+                <div class="progress-section">
+                    <div class="progress-text">
+                        <span id="cur-num">1</span> / <span id="tot-num">0</span>
+                        <span class="requeue-badge" id="requeue-info" style="display:none;"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <span class="cat-badge" id="cur-cat">Category</span>
+            </div>
+            <div class="flashcard" id="flashcard" onclick="handleFlashcardClick(event)">
+                <div class="card-inner">
+                    <div class="card-face card-front">
+                        <div class="card-content" id="front-content"></div>
+                        <div id="answer-input-area"></div>
+                        <div class="flip-hint" id="flip-hint">SPACE or click to flip</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-content" id="back-content"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="conf-controls" id="conf-controls">
+                <button class="conf-btn conf-missed" onclick="rate('missed')"><span
+                        class="conf-icon">&#10007;</span><span class="conf-label">Missed</span><span
+                        class="conf-key">Press 1</span></button>
+                <button class="conf-btn conf-unsure" onclick="rate('unsure')"><span class="conf-icon">~</span><span
+                        class="conf-label">Unsure</span><span class="conf-key">Press 2</span></button>
+                <button class="conf-btn conf-gotit" onclick="rate('gotit')"><span class="conf-icon">&#10003;</span><span
+                        class="conf-label">Got It</span><span class="conf-key">Press 3</span></button>
+            </div>
+            <div class="nav-row">
+                <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+                <div class="kb-hints"><kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd>
+                    Exit</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="screen-results" class="screen">
+        <div class="results-container">
+            <h1>Session Complete</h1>
+            <div class="stats-row" id="stats-row"></div>
+            <div class="breakdown-section" id="breakdown-section">
+                <h3>By Category</h3>
+                <div id="cat-breakdown"></div>
+            </div>
+            <div class="weak-section" id="weak-section" style="display:none;">
+                <h3>Focus Areas</h3>
+                <div id="weak-list"></div>
+            </div>
+            <div class="results-actions">
+                <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
+                <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+                <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'arrhythmia-ct-fc-v1';
+        const SR_KEY = 'arrhythmia-ct-sr-v1';
+
+        const categories = {
+            'sinus': { name: 'Sinus Rhythms', color: '#10b981' },
+            'atrial': { name: 'Atrial Arrhythmias', color: '#f97316' },
+            'junctional': { name: 'Junctional Rhythms', color: '#14b8a6' },
+            'ventricular': { name: 'Ventricular Arrhythmias', color: '#ef4444' },
+            'blocks': { name: 'Heart Blocks', color: '#6366f1' }
+        };
+
+        const cards = [
+            // ===== SINUS RHYTHMS =====
+            {
+                id: 1, cat: 'sinus', q: 'What are the <strong>causes</strong> of Sinus Bradycardia?',
+                a: '<strong>Sleep, athletic training, hypothyroidism, vagal stimulation, suctioning, severe pain, increased ICP.</strong><br><br><strong>Medications:</strong> Beta blockers, calcium channel blockers, antiarrhythmics.<br><br><strong>Sick Sinus Syndrome</strong> (SA node dysfunction).',
+                tip: 'From Slide 48: Risks include increased BMI, right and left bundle branch block, increased age, and HTN.'
+            },
+            {
+                id: 2, cat: 'sinus', q: 'What is the <strong>treatment</strong> for Sinus Bradycardia?',
+                a: '<strong>Treat only if symptomatic</strong> (hypotension, AMS, shock, ischemic chest discomfort).<br><br>1. <strong>Atropine 0.5 mg IV</strong> q3–5 min (max 3 mg)<br>2. If persistent: <strong>transcutaneous pacing</strong><br>3. Catecholamines: <strong>dopamine or epinephrine</strong> drip',
+                tip: 'From Slide 48: Atropine blocks vagal (parasympathetic) tone, allowing the SA node to fire faster. Athletes may have resting HR in the 40s — treat the patient, not the number.'
+            },
+            {
+                id: 3, cat: 'sinus', q: 'What are the <strong>causes</strong> of Sinus Tachycardia?',
+                a: '<strong>Physiologic or psychological stress, acute blood loss, shock, hyper/hypovolemia, HF, fever, pain, exercise.</strong><br><br><strong>Substances:</strong> Caffeine, nicotine, amphetamines, cocaine.<br><br><strong>Other:</strong> Anxiety, medications.',
+                tip: 'From Slide 49: Sinus tachycardia is a SYMPTOM, not the primary problem. Always look for the underlying cause before treating the rate.'
+            },
+            {
+                id: 4, cat: 'sinus', q: 'What is the <strong>treatment</strong> for Sinus Tachycardia?',
+                a: '<strong>Identify and treat the underlying cause</strong> — this is the priority.<br><br>1. <strong>Vagal maneuvers</strong> (gagging, bearing down, coughing, cold stimulus)<br>2. <strong>Adenosine</strong> if SVT suspected<br>3. <strong>Beta blockers / CCBs</strong> if hemodynamically stable<br>4. <strong>Synchronized cardioversion</strong> if unstable',
+                tip: 'From Slide 49: Never treat sinus tach with antiarrhythmics without addressing the cause — giving a beta blocker to someone who is bleeding can be fatal.'
+            },
+
+            // ===== ATRIAL ARRHYTHMIAS =====
+            {
+                id: 5, cat: 'atrial', q: 'What are the <strong>causes</strong> of PACs (Premature Atrial Complexes)?',
+                a: '<strong>Caffeine, alcohol, nicotine, anxiety, hypokalemia.</strong><br><br>Often seen with tachycardia.',
+                tip: 'From Slide 51: Patient may say "my heart skipped a beat." More than 6 PACs/min may indicate worsening state or onset of A-fib.'
+            },
+            {
+                id: 6, cat: 'atrial', q: 'What is the <strong>treatment</strong> for PACs?',
+                a: 'If <strong>infrequent → no treatment</strong> necessary.<br><br>If <strong>>6/min → may herald onset of atrial fibrillation;</strong> treat underlying cause (reduce caffeine, correct hypokalemia).',
+                tip: 'From Slide 51: Monitor closely if frequent — PACs can be the early warning sign of A-fib.'
+            },
+            {
+                id: 7, cat: 'atrial', q: 'What are the <strong>causes</strong> of Atrial Flutter?',
+                a: '<strong>Conduction defect in the atrium.</strong><br><br>Associated with: <strong>CAD, heart failure, valvular disease, pulmonary embolism, post-cardiac surgery.</strong>',
+                tip: 'From Slides 58-59: The re-entry circuit in flutter is usually in the right atrium. If all impulses were conducted, the ventricular rate would be 250-400 = V-fib.'
+            },
+            {
+                id: 8, cat: 'atrial', q: 'What is the <strong>treatment</strong> for Atrial Flutter?',
+                a: '1. <strong>Vagal maneuvers</strong><br>2. <strong>Adenosine</strong> (short half-life 6-10 sec) — rapid IV push with arm elevated + 20 mL NS flush<br>3. <strong>Rate and rhythm control</strong> (beta blockers, CCBs)<br>4. <strong>Antithrombotic therapy</strong><br>5. <strong>Cardioversion</strong> (very effective for flutter)',
+                tip: 'From Slide 59: Transitory asystole may occur with adenosine — warn the patient. Flutter responds very well to cardioversion, often needing lower energy than A-fib.'
+            },
+            {
+                id: 9, cat: 'atrial', q: 'What are the <strong>causes and risk factors</strong> for Atrial Fibrillation?',
+                a: '<strong>Increasing age, hypertension, diabetes, obesity, valvular heart disease</strong> (especially mitral), <strong>heart failure, obstructive sleep apnea, alcohol abuse</strong> ("holiday heart"), <strong>hyperthyroidism, MI, smoking, cardiothoracic surgery.</strong><br><br>Also: exercise, increased pulse pressure, European ancestry, family history.',
+                tip: 'From Slides 53-54: A-fib is the MOST COMMON sustained arrhythmia (2.7-6.1 million Americans). Results from abnormal impulse formation → rapid, disorganized twitching of atrial musculature.'
+            },
+            {
+                id: 10, cat: 'atrial', q: 'What is the <strong>treatment</strong> for Atrial Fibrillation?',
+                a: '<strong>Rate Control:</strong> Goal HR <80 bpm — metoprolol, atenolol, esmolol (beta blockers) or verapamil, diltiazem (CCBs).<br><br><strong>Rhythm Control:</strong> Flecainide, amiodarone, "pill in the pocket." Cardioversion if hemodynamically unstable.<br><br><strong>Anticoagulation:</strong> DOACs preferred for nonvalvular A-fib. Warfarin for mechanical valves (weekly INR).<br><br><strong>Surgical:</strong> Catheter ablation, Maze/Mini-Maze procedure.',
+                tip: 'From Slides 55-57: A-fib >48 hours MUST be anticoagulated before cardioversion attempts — stagnant blood forms clots → stroke risk. 25-50% of A-fib patients have psychological effects (anxiety, depression).'
+            },
+            {
+                id: 11, cat: 'atrial', q: 'Why must you <strong>anticoagulate before cardioverting</strong> A-fib > 48 hours?',
+                a: 'Blood <strong>stasis in fibrillating atria</strong> allows <strong>clot formation</strong>. Restoring organized contraction can <strong>dislodge clots → stroke.</strong><br><br>Must anticoagulate for ~3 weeks first, or do a <strong>TEE</strong> to rule out atrial thrombus.',
+                tip: 'From Slide 56: This is a high-yield exam point — "cardiovert A-fib immediately" is WRONG if >48 hours without prior anticoagulation.'
+            },
+            {
+                id: 12, cat: 'atrial', q: 'What is <strong>SVT</strong> and how is it treated?',
+                a: 'Rapid rhythm <strong>>150 bpm</strong> originating above the ventricles. Narrow QRS, often no visible P waves.<br><br><strong>Treatment sequence:</strong><br>1. <strong>Vagal maneuvers</strong><br>2. <strong>Adenosine 6 mg rapid IV push</strong> → 12 mg if needed<br>3. Beta blockers / CCBs if stable<br>4. <strong>Synchronized cardioversion</strong> if unstable',
+                tip: 'Adenosine half-life is only 6-10 seconds — must give rapid push via proximal IV + 20 mL NS flush. Warn patient about brief chest tightness and "sense of doom."'
+            },
+
+            // ===== JUNCTIONAL RHYTHMS =====
+            {
+                id: 13, cat: 'junctional', q: 'What are the <strong>causes</strong> of Junctional Rhythms?',
+                a: '<strong>Digitalis (digoxin) toxicity</strong> — most testable cause!<br><br><strong>Acute MI</strong> (especially inferior MI)<br><br><strong>Other:</strong> SA node dysfunction, post-cardiac surgery, increased vagal tone, beta-blocker/CCB excess.',
+                tip: 'From Slide 60: AV node becomes pacemaker of the heart when SA node fails. Junctional tachycardia (70-120 bpm) is also associated with myocardial ischemia, hypokalemia, and COPD.'
+            },
+            {
+                id: 14, cat: 'junctional', q: 'What is the <strong>treatment</strong> for Junctional Rhythms?',
+                a: '<strong>Usually no treatment needed.</strong><br><br>If symptomatic (reduced cardiac output):<br>1. <strong>Atropine</strong> if symptomatic<br>2. Treat same as sinus bradycardia<br>3. <strong>Stop offending medications</strong> (especially digoxin)<br>4. May need <strong>pacemaker</strong>',
+                tip: 'From Slide 60: May result in reduced cardiac output due to loss of atrial kick. If that occurs, treatment is same as for symptomatic bradycardia.'
+            },
+            {
+                id: 15, cat: 'junctional', q: 'What are the <strong>causes</strong> of PJCs (Premature Junctional Complexes)?',
+                a: '<strong>Digitalis toxicity, heart failure, CAD.</strong><br><br>Less common than PACs. Rarely produces problems.',
+                tip: 'From Slide 61: An impulse starts in the AV node before the next normal impulse. May be missing a P wave, or P wave may follow the QRS.'
+            },
+
+            // ===== VENTRICULAR ARRHYTHMIAS =====
+            {
+                id: 16, cat: 'ventricular', q: 'What are the <strong>causes</strong> of PVCs?',
+                a: '<strong>Caffeine, nicotine, alcohol, cardiac ischemia or infarction, digitalis toxicity, acidosis, electrolyte imbalances</strong> (especially <strong>hypokalemia</strong>).<br><br>May increase with age.',
+                tip: 'From Slide 63: Patient may say their heart "skipped a beat." Unifocal PVCs (one shape) are less concerning than multifocal (different shapes).'
+            },
+            {
+                id: 17, cat: 'ventricular', q: 'What is the <strong>treatment</strong> for PVCs?',
+                a: '<strong>Occasional PVCs → no treatment.</strong><br><br>If persistent and frequent:<br>1. <strong>Correct K⁺ and Mg²⁺</strong><br>2. <strong>Amiodarone or beta blockers</strong><br>3. Long-term medication usually NOT indicated<br><br><strong>Dangerous patterns</strong> (bigeminy, couplets, R-on-T, multifocal) → treat aggressively.',
+                tip: 'From Slide 63: 3 or more PVCs in a row at >100 bpm = V-Tach. R-on-T phenomenon can trigger V-fib.'
+            },
+            {
+                id: 18, cat: 'ventricular', q: 'What are the <strong>causes</strong> of Ventricular Tachycardia?',
+                a: '<strong>MI / ischemia</strong> (most common cause)<br><strong>Hypokalemia, hypomagnesemia</strong><br><strong>CHF, valvular disease</strong><br><strong>Hypoxemia</strong><br><strong>Drug toxicity</strong> (digoxin, cocaine)<br><strong>Prolonged QT interval</strong><br><br>Low EF and large MI are at greater risk.',
+                tip: 'From Slide 65: V-Tach is a MEDICAL EMERGENCY. Scar tissue from old MI creates re-entry circuits that trigger V-Tach. Always check electrolytes.'
+            },
+            {
+                id: 19, cat: 'ventricular', q: 'What is the <strong>treatment</strong> for Ventricular Tachycardia?',
+                a: '<strong>With pulse + stable:</strong> Amiodarone 150 mg IV over 10 min<br><br><strong>Monomorphic with pulse + unstable:</strong> Synchronized cardioversion<br><br><strong>PULSELESS:</strong> Follow Code Blue algorithm — CPR + defibrillation + epi 1 mg q3-5 min + amiodarone 300 mg IV<br><br><strong>Recurrent VT + EF <35%:</strong> ICD placement',
+                tip: 'From Slide 65: Typically patient is unresponsive and pulseless. First question: "Does the patient have a pulse?" — this determines the entire treatment pathway.'
+            },
+            {
+                id: 20, cat: 'ventricular', q: 'What are the <strong>causes</strong> of Torsades de Pointes?',
+                a: 'Preceded by <strong>prolonged QT interval</strong> (congenital or acquired).<br><br><strong>Medications:</strong> IV Haldol, Cipro (ciprofloxacin), Zithromax (azithromycin), lithium, methadone<br><br><strong>Electrolytes:</strong> Hypokalemia, hypocalcemia, hypomagnesemia',
+                tip: 'From Slide 66: Torsades = "twisting of the peaks." It is a polymorphic VT — NOT the same as regular V-Tach. Many hospital medications can prolong QT.'
+            },
+            {
+                id: 21, cat: 'ventricular', q: 'What is the <strong>treatment</strong> for Torsades de Pointes?',
+                a: '<strong>1st line: IV Magnesium Sulfate (IVPB)</strong> — even if Mg level is normal!<br><br><strong>Correct electrolytes</strong> (K⁺, Ca²⁺, Mg²⁺)<br><br><strong>Overdrive pacing</strong><br><br><strong>If pulseless:</strong> CPR + defibrillate + IVPB Mag Sulfate<br><br>⚠️ Do NOT give amiodarone — it prolongs QT and makes it WORSE!',
+                tip: 'From Slide 66: This is one of the most commonly tested points — amiodarone is WRONG for Torsades because it caused the problem (prolonged QT). The answer is always magnesium.'
+            },
+            {
+                id: 22, cat: 'ventricular', q: 'What are the <strong>causes</strong> of Ventricular Fibrillation?',
+                a: '<strong>CAD, MI, unsuccessful treatment of VT, valvular heart disease, acid-base abnormalities, electrolyte abnormalities.</strong><br><br>Most common dysrhythmia with cardiac arrest.',
+                tip: 'From Slide 67: Rapid, disorganized rhythm with ineffective quivering of ventricles. No coordinated heartbeat, lack of cardiac output — death is imminent without immediate defib.'
+            },
+            {
+                id: 23, cat: 'ventricular', q: 'What is the <strong>treatment</strong> for Ventricular Fibrillation?',
+                a: '<strong>IMMEDIATE defibrillation!</strong> (unsynchronized)<br><br>Follow Code Blue / BLS/ACLS algorithm:<br>1. High-quality CPR<br>2. Defibrillate<br>3. Epinephrine 1 mg IV q3-5 min<br>4. Amiodarone 300 mg IV (2nd dose: 150 mg)<br>5. Identify reversible causes (H\'s and T\'s)',
+                tip: 'From Slide 67: Every minute of delay in defibrillation decreases survival by 7-10%. V-Fib is a SHOCKABLE rhythm. No pulse, no cardiac output — act immediately.'
+            },
+            {
+                id: 24, cat: 'ventricular', q: 'What is <strong>Asystole</strong> and how is it treated?',
+                a: '<strong>Flatline</strong> — absent QRS complexes. Confirm in <strong>2 different leads</strong> (rule out fine V-fib or lead disconnect).<br><br><strong>Treatment:</strong><br>1. High-quality CPR<br>2. Follow BLS/ACLS algorithm<br>3. Epinephrine 1 mg IV q3-5 min<br>4. Consider H\'s and T\'s<br><br>⚠️ Do <strong>NOT</strong> defibrillate — no electrical activity to reset!',
+                tip: 'From Slide 69: No heartbeat, no pulse, no respirations. Act immediately or death is imminent. Treat same as PEA.'
+            },
+            {
+                id: 25, cat: 'ventricular', q: 'What is <strong>PEA</strong> and how is it treated?',
+                a: '<strong>Pulseless Electrical Activity:</strong> Organized rhythm on the monitor BUT <strong>no palpable pulse.</strong><br><br><strong>Treatment:</strong> Same as asystole — CPR + epinephrine. Do <strong>NOT</strong> defibrillate.<br><br><strong>Aggressively search for and treat H\'s and T\'s!</strong>',
+                tip: 'The heart has electrical signals but no effective mechanical pumping. Finding and fixing the reversible cause is the real treatment.'
+            },
+            {
+                id: 26, cat: 'ventricular', q: 'What is <strong>Idioventricular Rhythm</strong> and how is it treated?',
+                a: 'Ventricular escape rhythm at <strong>20-40 bpm</strong>. Impulse from Purkinje fibers due to complete heart block.<br><br><strong>Sign of impending death.</strong><br><br><strong>Treatment:</strong> Same as asystole/PEA — IV epi, atropine, vasopressors, emergency transcutaneous pacing. Possible pacer, but typically palliative care.',
+                tip: 'From Slide 68: Accelerated idioventricular rhythm (>40 bpm) may be seen after reperfusion — this is actually a good sign post-thrombolytics.'
+            },
+
+            // ===== HEART BLOCKS =====
+            {
+                id: 27, cat: 'blocks', q: 'What are the <strong>causes</strong> of 1st Degree AV Block?',
+                a: '<strong>Beta blockers, calcium channel blockers, digoxin, inferior MI.</strong><br><br>Also: aging.',
+                tip: 'From Slide 72: PR interval >0.20 sec but CONSTANT. All P waves conduct (1:1). Usually benign — just monitor.'
+            },
+            {
+                id: 28, cat: 'blocks', q: 'What is the <strong>treatment</strong> for 1st Degree AV Block?',
+                a: '<strong>Usually none — benign.</strong><br><br>Review medications that may prolong AV conduction. Observe and document PR interval. Monitor for progression to higher-degree blocks.',
+                tip: 'From Slide 72: No immediate treatment needed, but don\'t ignore it — monitor for worsening.'
+            },
+            {
+                id: 29, cat: 'blocks', q: 'What are the <strong>causes</strong> of 2nd Degree Type I (Wenckebach)?',
+                a: '<strong>Beta blockers, calcium channel blockers, digoxin, inferior MI.</strong>',
+                tip: 'From Slide 73: "Longer, longer, longer, DROP — that\'s a Wenckebach!" PR progressively lengthens until a QRS is dropped, then the cycle repeats.'
+            },
+            {
+                id: 30, cat: 'blocks', q: 'What is the <strong>treatment</strong> for 2nd Degree Type I (Wenckebach)?',
+                a: '<strong>None if asymptomatic</strong> — address the underlying cause.<br><br>If symptomatic: <strong>Atropine.</strong><br><br>Monitor for progression to Type II.',
+                tip: 'From Slide 73: Usually benign. Key difference from Type II: Wenckebach has a predictable pattern and is less dangerous.'
+            },
+            {
+                id: 31, cat: 'blocks', q: 'What are the <strong>causes</strong> of 2nd Degree Type II (Mobitz II)?',
+                a: '<strong>Anterior MI, cardiac surgery, myocarditis, hyperkalemia.</strong><br><br><strong>Medications:</strong> Beta blockers, calcium channel blockers, digoxin.',
+                tip: 'From Slide 74: More DANGEROUS than Type I — occurs lower in the conduction system (Bundle of His) and can suddenly progress to complete heart block.'
+            },
+            {
+                id: 32, cat: 'blocks', q: 'What is the <strong>treatment</strong> for 2nd Degree Type II (Mobitz II)?',
+                a: 'Address underlying cause.<br><br>If symptomatic: <strong>Temporary pacing → permanent pacemaker.</strong><br><br>⚠️ Atropine is <strong>less effective</strong> here (block is below the AV node).',
+                tip: 'From Slide 74: Pacemaker usually required. Can progress suddenly to complete heart block without warning — don\'t wait for symptoms.'
+            },
+            {
+                id: 33, cat: 'blocks', q: 'What are the <strong>causes</strong> of 3rd Degree (Complete) Heart Block?',
+                a: '<strong>MI, deterioration of 2nd degree block, digoxin toxicity, acidosis.</strong><br><br>Two impulses stimulate the heart independently — one for the ventricles and one for the atria (AV dissociation).',
+                tip: 'From Slide 75: No atrial impulse is conducted through the AV node into the ventricles. Patient may be lightheaded, have fatigue, bradycardia, chest pain.'
+            },
+            {
+                id: 34, cat: 'blocks', q: 'What is the <strong>treatment</strong> for 3rd Degree (Complete) Heart Block?',
+                a: '1. <strong>IV Atropine</strong> (may not work if block is below AV node)<br>2. If not responsive: <strong>transcutaneous pacing</strong><br>3. <strong>Permanent pacemaker</strong> (definitive treatment)<br><br>If no pulse: treat same as asystole.',
+                tip: 'From Slide 75: Atropine works at the AV node level — if the escape rhythm has a wide QRS (ventricular origin), atropine is useless. Go straight to pacing.'
+            }
+        ];
+
+        // ===================== STATE =====================
+        let state = { deck: [], idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: 0 };
+        let savedProgress = {}, srData = {}, selectedCats = new Set();
+
+        // ===================== STORAGE =====================
+        function loadProgress() { try { const d = localStorage.getItem(STORAGE_KEY); savedProgress = d ? JSON.parse(d) : {}; } catch (e) { savedProgress = {}; } }
+        function saveProgress() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress)); } catch (e) { } }
+        function loadSR() { try { const d = localStorage.getItem(SR_KEY); srData = d ? JSON.parse(d) : {}; } catch (e) { srData = {}; } }
+        function saveSR() { try { localStorage.setItem(SR_KEY, JSON.stringify(srData)); } catch (e) { } }
+        function getSRCard(id) { if (!srData[id]) srData[id] = { box: 1, nextReview: new Date().toISOString().split('T')[0], streak: 0 }; return srData[id]; }
+        function updateSR(cardId, conf) {
+            const sr = getSRCard(cardId), today = new Date(), intervals = { 1: 1, 2: 3, 3: 7, 4: 14, 5: 30 };
+            if (conf === 'gotit') { sr.streak++; sr.box = Math.min(sr.box + 1, 5); const n = new Date(today); n.setDate(n.getDate() + intervals[sr.box]); sr.nextReview = n.toISOString().split('T')[0]; }
+            else if (conf === 'unsure') { sr.streak = 0; const n = new Date(today); n.setDate(n.getDate() + 1); sr.nextReview = n.toISOString().split('T')[0]; }
+            else { sr.streak = 0; sr.box = 1; const n = new Date(today); n.setDate(n.getDate() + 1); sr.nextReview = n.toISOString().split('T')[0]; }
+            srData[cardId] = sr; saveSR();
+        }
+        function getDueCards() { loadSR(); const t = new Date().toISOString().split('T')[0]; return cards.filter(c => { const s = srData[c.id]; if (!s) return true; return s.nextReview <= t; }); }
+        function getDueCountForCat(catId) { const t = new Date().toISOString().split('T')[0]; return cards.filter(c => { if (c.cat !== catId) return false; const s = srData[c.id]; if (!s) return true; return s.nextReview <= t; }).length; }
+        function saveSessionResults() { Object.entries(state.results).forEach(([id, r]) => { savedProgress[id] = r; updateSR(parseInt(id), r); }); saveProgress(); }
+        function resetProgress() { if (confirm('Reset all progress? This cannot be undone.')) { savedProgress = {}; srData = {}; saveProgress(); saveSR(); renderStartScreen(); } }
+
+        // ===================== SCREENS =====================
+        function showScreen(n) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + n).classList.add('active'); if (n === 'start') renderStartScreen(); }
+        function renderStartScreen() {
+            loadProgress(); loadSR();
+            const total = cards.length; let g = 0, u = 0, m = 0, un = 0;
+            cards.forEach(c => { const s = savedProgress[c.id]; if (s === 'gotit') g++; else if (s === 'unsure') u++; else if (s === 'missed') m++; else un++; });
+            const pd = document.getElementById('progress-summary');
+            if (g + u + m > 0) { pd.innerHTML = `<h3>Overall Progress</h3><div class="overall-bar"><div class="mb-gotit" style="width:${(g / total * 100).toFixed(1)}%"></div><div class="mb-unsure" style="width:${(u / total * 100).toFixed(1)}%"></div><div class="mb-missed" style="width:${(m / total * 100).toFixed(1)}%"></div></div><div class="overall-text">${g} mastered · ${u} unsure · ${m} missed · ${un} unseen</div>`; pd.style.display = 'block'; } else pd.style.display = 'none';
+            const grid = document.getElementById('cat-grid'); grid.innerHTML = '';
+            Object.entries(categories).forEach(([catId, cat]) => {
+                const cc = cards.filter(c => c.cat === catId), ct = cc.length; let cg = 0, cu = 0, cm = 0;
+                cc.forEach(c => { const s = savedProgress[c.id]; if (s === 'gotit') cg++; else if (s === 'unsure') cu++; else if (s === 'missed') cm++; });
+                const mp = ct > 0 ? (cg / ct * 100).toFixed(0) : 0, gp = ct > 0 ? (cg / ct * 100) : 0, up = ct > 0 ? (cu / ct * 100) : 0, mpp = ct > 0 ? (cm / ct * 100) : 0, dc = getDueCountForCat(catId);
+                const btn = document.createElement('div'); btn.className = 'cat-btn'; btn.dataset.cat = catId; btn.style.setProperty('--cat-color', cat.color);
+                btn.innerHTML = `<span class="cat-name"><span class="cat-dot" style="background:${cat.color}"></span>${cat.name}</span><span class="cat-count">${ct} cards</span>${dc > 0 ? `<span class="due-badge">${dc}</span>` : ''}<div class="cat-mastery"><div class="cat-mastery-bar"><div class="mb-gotit" style="width:${gp}%"></div><div class="mb-unsure" style="width:${up}%"></div><div class="mb-missed" style="width:${mpp}%"></div></div><div class="cat-mastery-text">${mp}% mastered</div></div>`;
+                btn.addEventListener('click', () => toggleCategory(catId, btn)); grid.appendChild(btn);
+            });
+            const wc = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure').length;
+            const wb = document.getElementById('btn-weak'); wb.textContent = `Study Weak Cards (${wc})`; wb.disabled = wc === 0;
+            const duc = getDueCards(); const db = document.getElementById('btn-due'); db.textContent = `Due for Review (${duc.length})`; db.disabled = duc.length === 0;
+            selectedCats.clear();
+        }
+        function toggleCategory(catId, btn) { if (document.getElementById('chk-multi').checked) { if (selectedCats.has(catId)) { selectedCats.delete(catId); btn.classList.remove('selected'); } else { selectedCats.add(catId); btn.classList.add('selected'); } } else startSession([catId]); }
+
+        // ===================== SESSION =====================
+        function startSession(catIds) { loadProgress(); let sc = cards.filter(c => catIds.includes(c.cat)); if (document.getElementById('chk-shuffle').checked) sc = shuffleArray([...sc]); state = { deck: sc.map(c => c.id), idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: sc.length }; if (!state.deck.length) { alert('No cards in selected categories.'); return; } showScreen('card'); displayCard(); }
+        function startAll() { selectedCats.size > 0 ? startSession([...selectedCats]) : startSession(Object.keys(categories)); }
+        function studyWeak() { loadProgress(); const w = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure'); if (!w.length) { alert('No weak cards!'); return; } let sc = document.getElementById('chk-shuffle').checked ? shuffleArray([...w]) : w; state = { deck: sc.map(c => c.id), idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: sc.length }; showScreen('card'); displayCard(); }
+        function studyDue() { const d = getDueCards(); if (!d.length) { alert('No cards due!'); return; } let sc = document.getElementById('chk-shuffle').checked ? shuffleArray([...d]) : d; state = { deck: sc.map(c => c.id), idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: sc.length }; showScreen('card'); displayCard(); }
+        function exitSession() { saveSessionResults(); showScreen('start'); }
+
+        // ===================== CARD DISPLAY =====================
+        function displayCard() {
+            if (state.idx >= state.deck.length) { if (state.overflow.length > 0) { state.deck = state.deck.concat(state.overflow); state.overflow = []; } else { saveSessionResults(); showResults(); return; } }
+            const cardId = state.deck[state.idx], card = cards.find(c => c.id === cardId), cat = categories[card.cat], af = document.getElementById('chk-answer-first').checked;
+            document.getElementById('front-content').innerHTML = card.q;
+            const ia = document.getElementById('answer-input-area');
+            if (af) { ia.innerHTML = `<div class="answer-input-wrap"><input type="text" id="user-answer" placeholder="Type your answer..." autocomplete="off"><button onclick="flipCard()">Check</button></div>`; document.getElementById('flip-hint').textContent = 'Type your answer, then press Enter'; setTimeout(() => { const i = document.getElementById('user-answer'); if (i) i.focus(); }, 100); } else { ia.innerHTML = ''; document.getElementById('flip-hint').textContent = 'SPACE or click to flip'; }
+            let bh = `<div class="answer-text">${card.a}</div>`; if (card.tip) bh += `<div class="exam-tip">${card.tip}</div>`;
+            document.getElementById('back-content').innerHTML = bh;
+            loadSR(); const sr = srData[cardId]; let badge = cat.name; if (sr && sr.box) badge += ` <span class="sr-badge sr-box${sr.box}">Box ${sr.box}</span>`;
+            document.getElementById('cur-cat').innerHTML = badge; document.getElementById('cur-cat').style.borderColor = cat.color;
+            document.getElementById('cur-num').textContent = state.idx + 1; document.getElementById('tot-num').textContent = state.deck.length;
+            document.getElementById('prog-fill').style.width = Math.min(state.idx / state.totalOriginal * 100, 100) + '%';
+            const ri = document.getElementById('requeue-info'); if (state.idx >= state.totalOriginal) { ri.textContent = 'Review'; ri.style.display = 'inline'; } else ri.style.display = 'none';
+            state.flipped = false; document.getElementById('flashcard').classList.remove('flipped'); document.getElementById('conf-controls').classList.remove('visible');
+        }
+        function handleFlashcardClick(e) { if (e.target.closest('.answer-input-wrap')) return; flipCard(); }
+        function flipCard() {
+            if (!state.flipped) { const af = document.getElementById('chk-answer-first').checked; if (af) { const ui = document.getElementById('user-answer'); const t = ui ? ui.value.trim() : ''; if (t) { const bc = document.getElementById('back-content'); if (!bc.querySelector('.typed-answer-display')) { const d = document.createElement('div'); d.className = 'typed-answer-display'; d.innerHTML = `<strong>Your answer:</strong> ${t.replace(/</g, '&lt;').replace(/>/g, '&gt;')}`; bc.insertBefore(d, bc.firstChild); } } } }
+            state.flipped = !state.flipped; document.getElementById('flashcard').classList.toggle('flipped', state.flipped); document.getElementById('conf-controls').classList.toggle('visible', state.flipped);
+        }
+        function rate(conf) {
+            if (!state.flipped) return; const cardId = state.deck[state.idx]; state.results[cardId] = conf;
+            if (conf === 'missed') { const o = 5 + Math.floor(Math.random() * 3), i = state.idx + o; if (i < state.deck.length) state.deck.splice(i, 0, cardId); else state.overflow.push(cardId); }
+            else if (conf === 'unsure') { const o = 8 + Math.floor(Math.random() * 3), i = state.idx + o; if (i < state.deck.length) state.deck.splice(i, 0, cardId); else state.overflow.push(cardId); }
+            state.idx++; displayCard();
+        }
+
+        // ===================== RESULTS =====================
+        function showResults() {
+            showScreen('results'); let g = 0, u = 0, m = 0; const cs = {};
+            Object.entries(state.results).forEach(([id, r]) => { const c = cards.find(x => x.id === parseInt(id)); if (!cs[c.cat]) cs[c.cat] = { gotit: 0, unsure: 0, missed: 0 }; if (r === 'gotit') { g++; cs[c.cat].gotit++; } else if (r === 'unsure') { u++; cs[c.cat].unsure++; } else { m++; cs[c.cat].missed++; } });
+            const t = g + u + m;
+            document.getElementById('stats-row').innerHTML = `<div class="stat-card stat-gotit"><div class="stat-value">${g}</div><div class="stat-label">Got It</div><div class="stat-pct">${t > 0 ? (g / t * 100).toFixed(0) : 0}%</div></div><div class="stat-card stat-unsure"><div class="stat-value">${u}</div><div class="stat-label">Unsure</div><div class="stat-pct">${t > 0 ? (u / t * 100).toFixed(0) : 0}%</div></div><div class="stat-card stat-missed"><div class="stat-value">${m}</div><div class="stat-label">Missed</div><div class="stat-pct">${t > 0 ? (m / t * 100).toFixed(0) : 0}%</div></div>`;
+            let bh = ''; const wa = [];
+            Object.entries(cs).forEach(([catId, s]) => { const cat = categories[catId], ct = s.gotit + s.unsure + s.missed, gp = s.gotit / ct * 100, up = s.unsure / ct * 100, mp = s.missed / ct * 100; if (gp < 60) wa.push({ name: cat.name, pct: gp.toFixed(0) }); bh += `<div class="cat-stat-row"><div class="cat-stat-name">${cat.name}</div><div class="cat-stat-bar"><div class="bar-seg bar-gotit" style="width:${gp}%"></div><div class="bar-seg bar-unsure" style="width:${up}%"></div><div class="bar-seg bar-missed" style="width:${mp}%"></div></div><div class="cat-stat-pct">${gp.toFixed(0)}%</div></div>`; });
+            document.getElementById('cat-breakdown').innerHTML = bh;
+            const ws = document.getElementById('weak-section'); if (wa.length > 0) { document.getElementById('weak-list').innerHTML = wa.map(w => `<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`).join(''); ws.style.display = 'block'; } else ws.style.display = 'none';
+            document.getElementById('btn-review-missed').disabled = m === 0;
+        }
+        function reviewMissed() { const mi = Object.entries(state.results).filter(([_, r]) => r === 'missed').map(([id]) => parseInt(id)); if (!mi.length) return; const mc = cards.filter(c => mi.includes(c.id)); state = { deck: mc.map(c => c.id), idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: mc.length }; showScreen('card'); displayCard(); }
+        function reviewMissedAndUnsure() { const ri = Object.entries(state.results).filter(([_, r]) => r === 'missed' || r === 'unsure').map(([id]) => parseInt(id)); if (!ri.length) return; const rc = cards.filter(c => ri.includes(c.id)); state = { deck: shuffleArray(rc.map(c => c.id)), idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: rc.length }; showScreen('card'); displayCard(); }
+
+        // ===================== UTILITIES =====================
+        function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+        // ===================== KEYBOARD =====================
+        document.addEventListener('keydown', (e) => {
+            const cs = document.getElementById('screen-card'), rs = document.getElementById('screen-results');
+            if (cs.classList.contains('active')) { if (e.target.tagName === 'INPUT') { if (e.key === 'Enter') { e.preventDefault(); flipCard(); } return; } if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); flipCard(); } else if (e.key === '1') rate('missed'); else if (e.key === '2') rate('unsure'); else if (e.key === '3') rate('gotit'); else if (e.key === 'Escape') exitSession(); }
+            else if (rs.classList.contains('active')) { if (e.key === 'Escape' || e.key === 'Enter') showScreen('start'); }
+        });
+
+        // ===================== INIT =====================
+        loadProgress(); loadSR(); renderStartScreen();
+    </script>
+</body>
+
+</html>
