@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiac Medications & Treatments - Study Guide</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #3182ce;
+            --text: #1a202c;
+            --light-bg: #f7fafc;
+            --border: #e2e8f0;
+            --pearl-bg: #ebf8ff;
+            --pearl-border: #3182ce;
+            --warning-bg: #fff5f5;
+            --warning-border: #c53030;
+            --memory-bg: #faf5ff;
+            --memory-border: #805ad5;
+            --sidebar-width: 220px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: #fff;
+        }
+
+        .page-wrapper { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            background: var(--light-bg);
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar-inner {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+        }
+
+        .sidebar-inner::-webkit-scrollbar { width: 6px; }
+        .sidebar-inner::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .sidebar-inner::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        .nav-toc { background: transparent; padding: 0; border-radius: 0; margin-bottom: 0; }
+
+        .nav-toc h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-size: 1.1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .nav-toc ul { list-style: none; margin: 0; padding: 0; columns: 1; }
+        .nav-toc li { margin-bottom: 0.4rem; }
+
+        .nav-toc a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: block;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-toc a:hover {
+            background: var(--pearl-bg);
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .content-inner { max-width: 900px; width: 100%; }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            border-bottom: 4px solid var(--accent);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin: 2.5rem 0 1.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 1.15rem;
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        .source-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .source-tag.heavy { background: var(--primary); }
+
+        .callout {
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .pearl { background: var(--pearl-bg); border-color: var(--pearl-border); }
+        .pearl::before {
+            content: "💎 Clinical Pearl";
+            display: block;
+            font-weight: 700;
+            color: var(--pearl-border);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning { background: var(--warning-bg); border-color: var(--warning-border); }
+        .warning::before {
+            content: "⚠️ Critical Safety";
+            display: block;
+            font-weight: 700;
+            color: var(--warning-border);
+            margin-bottom: 0.5rem;
+        }
+
+        .memory { background: var(--memory-bg); border-color: var(--memory-border); }
+        .memory::before {
+            content: "🧠 Memory Aid";
+            display: block;
+            font-weight: 700;
+            color: var(--memory-border);
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) { background: var(--light-bg); }
+
+        ul, ol { margin: 1rem 0 1rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+
+        .formula-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+        }
+
+        .formula-box small {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .key-value { font-weight: 700; color: var(--secondary); }
+        .highlight { background: #fefcbf; padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        details {
+            margin: 0.75rem 0;
+            padding: 0.75rem 1rem;
+            background: var(--light-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        details[open] summary { margin-bottom: 0.5rem; }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: calc(-1 * var(--sidebar-width));
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            .sidebar.open { left: 0; }
+            .sidebar-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .main-content { padding: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 1rem; }
+            h1 { font-size: 1.8rem; }
+            .formula-box { font-size: 1.2rem; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <nav class="nav-toc">
+                <h3>Contents</h3>
+                <ul>
+                    <li><a href="#hemodynamics">1. Hemodynamic Drugs</a></li>
+                    <li><a href="#inotropes">2. Inotropes & Chronotropes</a></li>
+                    <li><a href="#anticoagulants">3. Anticoagulants</a></li>
+                    <li><a href="#nitroglycerin">4. Nitroglycerin Deep Dive</a></li>
+                    <li><a href="#mona">5. MONA & ACS Meds</a></li>
+                    <li><a href="#antiarrhythmics">6. Antiarrhythmics</a></li>
+                    <li><a href="#cholesterol">7. Cholesterol Meds</a></li>
+                    <li><a href="#hypertension">8. Hypertension Meds</a></li>
+                    <li><a href="#heartfailure">9. Heart Failure Meds</a></li>
+                    <li><a href="#emergency">10. Emergency & Code Drugs</a></li>
+                    <li><a href="#practice">Practice Questions</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+
+    <main class="main-content">
+        <div class="content-inner">
+
+<h1>Cardiac Medications & Treatments</h1>
+<p><em>A focused study guide covering drug classes, dosing, nursing considerations, and exam-critical details from N8 cardiac lecture content</em></p>
+
+<!-- SECTION 1 -->
+<section id="hemodynamics">
+<h2>1. Hemodynamic Drugs <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<div class="formula-box">
+A B C D
+<small>ACE/ARBs &bull; Beta-blockers &bull; Calcium Channel Blockers &bull; Diuretics</small>
+</div>
+
+<h3>1.1 Preload Reducers</h3>
+<table>
+    <tr><th>Drug</th><th>Mechanism</th><th>Key Nursing Points</th></tr>
+    <tr><td>Nitroglycerin (NTG)</td><td>Venodilation &rarr; &darr; preload &rarr; &darr; myocardial O<sub>2</sub> demand</td><td>Hold if SBP &lt;90; 3-dose SL protocol</td></tr>
+    <tr><td>Nitroprusside</td><td>Arterial + venous dilation (both preload and afterload)</td><td>Cyanide toxicity risk; wrap IV bag in foil (light-sensitive)</td></tr>
+</table>
+
+<h3>1.2 Afterload Reducers</h3>
+<table>
+    <tr><th>Class</th><th>Examples</th><th>Key Points</th></tr>
+    <tr><td>ACE Inhibitors (-pril)</td><td>Lisinopril, enalapril, captopril</td><td>Dry cough, angioedema risk, monitor K+ (hyperkalemia)</td></tr>
+    <tr><td>ARBs (-sartan)</td><td>Losartan, valsartan</td><td>Same benefits as ACE, no cough; use if ACE-intolerant</td></tr>
+</table>
+
+<h3>1.3 Beta-Blockers (-olol)</h3>
+<p>Metoprolol, atenolol, carvedilol, labetalol. Decrease HR, contractility, and BP.</p>
+
+<div class="callout warning">
+<strong>Hold parameters:</strong> HR &lt;60 bpm or SBP &lt;100 mmHg. Always check HR and BP before administering.
+</div>
+
+<h3>1.4 Calcium Channel Blockers</h3>
+<table>
+    <tr><th>Type</th><th>Examples</th><th>Primary Effect</th></tr>
+    <tr><td>Dihydropyridine (DHP)</td><td>Amlodipine, nifedipine</td><td>Primarily BP reduction (vasodilation)</td></tr>
+    <tr><td>Non-DHP</td><td>Diltiazem, verapamil</td><td>BP reduction + rate control (slow AV node)</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>Non-DHP = Node-blockers.</strong> Diltiazem and verapamil also slow the heart — they're used for A-fib rate control.
+</div>
+
+<h3>1.5 Vasopressors</h3>
+<table>
+    <tr><th>Drug</th><th>Mechanism</th><th>Use</th></tr>
+    <tr><td>Norepinephrine (Levophed)</td><td>Alpha-1 + some beta-1 &rarr; vasoconstriction + modest inotropy</td><td>First-line for septic shock; central line only</td></tr>
+    <tr><td>Vasopressin</td><td>V1 receptor &rarr; vasoconstriction (non-catecholamine)</td><td>Adjunct in cardiac arrest and septic shock</td></tr>
+    <tr><td>Phenylephrine</td><td>Pure alpha-1 agonist &rarr; &uarr; SVR</td><td>Hypotension without tachycardia; may cause reflex bradycardia</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>"Levophed — Leave 'em dead."</strong> Potent vasopressor — handle with care, always via central line, monitor closely.
+</div>
+
+<div class="callout pearl">
+<strong>Preload = volume coming IN</strong> (NTG reduces it). <strong>Afterload = resistance going OUT</strong> (nitroprusside, ACE, ARBs reduce it).
+</div>
+</section>
+
+<!-- SECTION 2 -->
+<section id="inotropes">
+<h2>2. Inotropes & Chronotropes <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>2.1 Key Definitions</h3>
+<table>
+    <tr><th>Term</th><th>Meaning</th><th>Positive Example</th><th>Negative Example</th></tr>
+    <tr><td><strong>Inotropy</strong></td><td>Contractility</td><td>Digoxin, dobutamine</td><td>Beta-blockers, non-DHP CCBs</td></tr>
+    <tr><td><strong>Chronotropy</strong></td><td>Heart rate</td><td>Atropine, epinephrine</td><td>Beta-blockers, diltiazem</td></tr>
+    <tr><td><strong>Dromotropy</strong></td><td>Conduction speed</td><td>Atropine</td><td>Adenosine, amiodarone</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>"Chrono = time = rate. Dromo = running = conduction speed."</strong>
+</div>
+
+<h3>2.2 Positive Inotropes</h3>
+<table>
+    <tr><th>Drug</th><th>Mechanism</th><th>Clinical Use</th><th>Key Nursing Points</th></tr>
+    <tr><td>Digoxin</td><td>Inhibits Na/K-ATPase &rarr; &uarr; intracellular Ca &rarr; &uarr; contractility</td><td>HF, A-fib rate control</td><td>Therapeutic: 0.5-2.0 ng/mL; hold if HR &lt;60; check K+</td></tr>
+    <tr><td>Dobutamine</td><td>Beta-1 agonist &rarr; &uarr; contractility</td><td>Acute decompensated HF</td><td>May cause tachycardia; monitor HR</td></tr>
+    <tr><td>Milrinone</td><td>PDE-3 inhibitor ("inodilator")</td><td>Acute HF</td><td>&uarr; contractility AND vasodilation</td></tr>
+    <tr><td>Dopamine</td><td>Dose-dependent: renal &rarr; cardiac &rarr; vasopressor</td><td>Multiple uses</td><td>Low: renal; Moderate: cardiac; High: vasopressor</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>Dopamine doses:</strong> "Dope Low = kidneys flow" (1-5 mcg/kg/min), Moderate = cardiac pump (5-10), High = squeeze vessels (10-20).
+</div>
+
+<div class="callout warning">
+<strong>Digoxin toxicity signs:</strong> N/V, anorexia, visual disturbances (yellow-green halos), bradycardia, heart block. <strong>Hypokalemia increases toxicity</strong> — always check K+ level. Antidote: <strong>Digoxin immune Fab (DigiFab)</strong>.
+</div>
+</section>
+
+<!-- SECTION 3 -->
+<section id="anticoagulants">
+<h2>3. Anticoagulants & Antiplatelets <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>3.1 Anticoagulants</h3>
+<table>
+    <tr><th>Drug</th><th>Route</th><th>Monitoring</th><th>Goal</th><th>Antidote</th></tr>
+    <tr><td>Heparin (UFH)</td><td>IV drip</td><td>aPTT</td><td>1.5-2.5x normal (~60-80s)</td><td>Protamine sulfate</td></tr>
+    <tr><td>Enoxaparin (Lovenox)</td><td>SubQ</td><td>Anti-Xa (if needed)</td><td>No routine monitoring</td><td>Protamine (partial)</td></tr>
+    <tr><td>Warfarin (Coumadin)</td><td>Oral</td><td>PT/INR</td><td>INR 2-3 (standard); 2.5-3.5 (mechanical valve)</td><td>Vitamin K, FFP, PCC</td></tr>
+    <tr><td>DOACs (rivaroxaban, apixaban)</td><td>Oral</td><td>No routine monitoring</td><td>N/A</td><td>Andexanet alfa; idarucizumab (dabigatran)</td></tr>
+</table>
+
+<div class="callout pearl">
+<strong>Heparin dose adjustment:</strong> aPTT &lt;50s &rarr; increase dose. aPTT &gt;100s &rarr; HOLD and recheck. Goal window: 60-80 seconds.
+</div>
+
+<h3>3.2 Antiplatelets</h3>
+<table>
+    <tr><th>Drug</th><th>Mechanism</th><th>Use</th></tr>
+    <tr><td>Aspirin</td><td>COX inhibitor &rarr; blocks thromboxane A2</td><td>ACS: 162-325mg CHEW; maintenance: 81mg daily</td></tr>
+    <tr><td>Clopidogrel (Plavix)</td><td>P2Y12 inhibitor</td><td>DAPT post-stent (aspirin + Plavix for 6-12 months)</td></tr>
+    <tr><td>GP IIb/IIIa inhibitors</td><td>Block platelet aggregation</td><td>During PCI (abciximab, eptifibatide, tirofiban)</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>"Clot in the vessel = anticoagulant. Clot on the platelet = antiplatelet."</strong>
+</div>
+
+<div class="callout warning">
+<strong>Monitor for bleeding:</strong> gums, bruising, petechiae, black tarry stools (melena), hematuria, prolonged bleeding from cuts. Patient education is critical.
+</div>
+</section>
+
+<!-- SECTION 4 -->
+<section id="nitroglycerin">
+<h2>4. Nitroglycerin — Deep Dive <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<div class="formula-box">
+NTG = Needs To Go to veins
+<small>Primarily a venodilator &rarr; decreases preload &rarr; decreases myocardial O<sub>2</sub> demand</small>
+</div>
+
+<h3>4.1 Mechanism</h3>
+<p>Releases nitric oxide &rarr; relaxes vascular smooth muscle &rarr; <strong>venodilation (primarily)</strong> &rarr; decreased preload &rarr; decreased myocardial oxygen demand. Think: "Decreases the heart's workload."</p>
+
+<h3>4.2 Sublingual Protocol</h3>
+<ol>
+    <li>1 tablet sublingual — wait 5 minutes</li>
+    <li>If no relief: 2nd tablet — wait 5 minutes</li>
+    <li>If no relief: 3rd tablet — <strong>call 911 / activate emergency response</strong></li>
+</ol>
+<p>Patient should <strong>sit or lie down</strong> before taking (hypotension risk).</p>
+
+<h3>4.3 Routes & Administration</h3>
+<table>
+    <tr><th>Route</th><th>Key Points</th></tr>
+    <tr><td>Sublingual tablets</td><td>Should tingle/burn under tongue if potent</td></tr>
+    <tr><td>Sublingual spray</td><td>No storage concerns like tablets</td></tr>
+    <tr><td>IV drip</td><td>For unstable angina, acute HF, HTN emergency. Use glass bottles + non-PVC tubing (NTG absorbs into plastic)</td></tr>
+    <tr><td>Transdermal patch</td><td>12 hours on / 12 hours off. Rotate sites. Apply to hairless, clean, dry skin</td></tr>
+</table>
+
+<h3>4.4 Storage</h3>
+<p>Dark glass bottle, tightly closed, replace every <strong>6 months</strong>. Keep away from heat, light, and moisture.</p>
+
+<h3>4.5 Side Effects</h3>
+<ul>
+    <li><strong>Headache</strong> (#1 most common — vasodilation of cerebral vessels; shows drug is working)</li>
+    <li>Hypotension, dizziness, flushing</li>
+    <li>Reflex tachycardia</li>
+</ul>
+
+<div class="callout warning">
+<strong>ABSOLUTE CONTRAINDICATION:</strong> PDE-5 inhibitors (sildenafil/Viagra, tadalafil/Cialis) within 24-48 hours. Can cause <strong>fatal hypotension</strong>. ALWAYS ask about erectile dysfunction medications before giving NTG.
+</div>
+
+<div class="callout warning">
+<strong>Hold NTG if:</strong> SBP &lt;90 mmHg, PDE-5 inhibitor use, or suspected right ventricular infarction (these patients are preload-dependent — NTG can crash their BP).
+</div>
+
+<div class="callout pearl">
+<strong>Nitrate-free interval:</strong> 12h on / 12h off for patches prevents tolerance development.
+</div>
+</section>
+
+<!-- SECTION 5 -->
+<section id="mona">
+<h2>5. MONA & ACS Medications <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<div class="formula-box">
+M O N A
+<small>Morphine &bull; Oxygen &bull; Nitroglycerin &bull; Aspirin</small>
+</div>
+
+<h3>5.1 Classic MONA (Updated Thinking)</h3>
+<table>
+    <tr><th>Drug</th><th>Current Recommendation</th></tr>
+    <tr><td><strong>Morphine</strong></td><td>Use cautiously — only if pain not controlled by NTG. Can increase mortality, cause hypotension/respiratory depression</td></tr>
+    <tr><td><strong>Oxygen</strong></td><td>Only if SpO<sub>2</sub> &lt;94%. Routine O<sub>2</sub> not recommended</td></tr>
+    <tr><td><strong>Nitroglycerin</strong></td><td>Sublingual for chest pain (if no contraindications)</td></tr>
+    <tr><td><strong>Aspirin</strong></td><td>162-325mg CHEW immediately — first drug given</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>VOMIT = what NOT to give routinely:</strong> Vasopressors, Oxygen (if SpO2 &gt;94%), Morphine, IV fluids (if not hypotensive), Trendelenburg.
+</div>
+
+<h3>5.2 ACS Treatment Sequence</h3>
+<ol>
+    <li><strong>Aspirin 162-325mg</strong> — CHEW immediately (speeds absorption by 50%)</li>
+    <li><strong>NTG sublingual</strong> — for chest pain relief</li>
+    <li><strong>Heparin</strong> (UFH or enoxaparin) — prevents clot extension</li>
+    <li><strong>Beta-blocker within 24h</strong> (metoprolol) — reduces mortality, limits infarct size</li>
+    <li><strong>ACE inhibitor within 24h</strong> — reduces remodeling</li>
+    <li><strong>High-intensity statin at discharge</strong> (atorvastatin 80mg) — regardless of baseline cholesterol</li>
+</ol>
+
+<h3>5.3 Reperfusion Timing</h3>
+<div class="callout pearl">
+<strong>"Time is muscle"</strong> — every minute of delay = more myocardial death.
+<ul>
+    <li><strong>STEMI door-to-balloon:</strong> &lt;90 minutes (PCI)</li>
+    <li><strong>STEMI door-to-needle:</strong> &lt;30 minutes (fibrinolytics, if PCI not available)</li>
+</ul>
+</div>
+</section>
+
+<!-- SECTION 6 -->
+<section id="antiarrhythmics">
+<h2>6. Antiarrhythmic Medications <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>6.1 Key Emergency Antiarrhythmics</h3>
+<table>
+    <tr><th>Drug</th><th>Dose</th><th>Indication</th><th>Key Points</th></tr>
+    <tr><td><strong>Atropine</strong></td><td>0.5mg IV q3-5min, max 3mg</td><td>Symptomatic bradycardia</td><td>Blocks vagus nerve (parasympatholytic) &rarr; &uarr; HR. NOT for Mobitz II or 3rd-degree block</td></tr>
+    <tr><td><strong>Adenosine</strong></td><td>6mg rapid IV push, then 12mg</td><td>SVT</td><td>Rapid push + 20mL NS flush; half-life &lt;10 seconds. Warn patient about brief "heart stopping" feeling</td></tr>
+    <tr><td><strong>Amiodarone</strong></td><td>300mg IV push (arrest), 150mg (2nd)</td><td>VT/VF, A-fib</td><td>"Amio does everything" — multiple ion channels. Long-term: pulmonary, thyroid, liver, eye toxicity</td></tr>
+    <tr><td><strong>Magnesium sulfate</strong></td><td>1-2g IV</td><td>Torsades de pointes</td><td>Drug of choice for polymorphic VT with long QT</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>"Adenosine = reset button for SVT."</strong> Must use closest IV port with rapid push — half-life is &lt;10 seconds!
+</div>
+
+<h3>6.2 A-fib Management</h3>
+<table>
+    <tr><th>Strategy</th><th>Goal</th><th>Drugs</th></tr>
+    <tr><td><strong>Rate control</strong></td><td>Control how FAST ventricles beat</td><td>Metoprolol, diltiazem, digoxin</td></tr>
+    <tr><td><strong>Rhythm control</strong></td><td>Restore NORMAL sinus rhythm</td><td>Amiodarone, flecainide, sotalol</td></tr>
+</table>
+
+<div class="callout warning">
+<strong>Amiodarone long-term side effects:</strong> Pulmonary fibrosis (PFTs), thyroid dysfunction (TFTs), hepatotoxicity (LFTs), corneal deposits (eye exam), photosensitivity, "blue-gray" skin discoloration. Requires baseline and ongoing monitoring.
+</div>
+
+<div class="callout pearl">
+<strong>Atropine won't work for infranodal blocks</strong> (Mobitz Type II, 3rd-degree with wide QRS) because it works on vagal tone at the SA/AV node level. These patients need <strong>transcutaneous pacing</strong>.
+</div>
+</section>
+
+<!-- SECTION 7 -->
+<section id="cholesterol">
+<h2>7. Cholesterol Medications <span class="source-tag">SLIDES</span></h2>
+
+<h3>7.1 The 6 Lipid-Lowering Drug Classes</h3>
+<table>
+    <tr><th>#</th><th>Class</th><th>Example(s)</th><th>Primary Effect</th><th>Key Side Effect</th></tr>
+    <tr><td>1</td><td><strong>Statins</strong> (HMG-CoA reductase inhibitors)</td><td>Atorvastatin, rosuvastatin</td><td>&darr; LDL (FIRST LINE)</td><td>Rhabdomyolysis (muscle pain, dark urine)</td></tr>
+    <tr><td>2</td><td><strong>Niacin</strong> (vitamin B3)</td><td>Niacin</td><td>&uarr; HDL, &darr; LDL/TG</td><td>Flushing (take ASA 30 min before)</td></tr>
+    <tr><td>3</td><td><strong>Fibrates</strong></td><td>Gemfibrozil, fenofibrate</td><td>&darr; Triglycerides</td><td>Myopathy (worse with statins)</td></tr>
+    <tr><td>4</td><td><strong>Bile acid sequestrants</strong></td><td>Cholestyramine, colesevelam</td><td>&darr; LDL (bind bile in gut)</td><td>GI upset, constipation</td></tr>
+    <tr><td>5</td><td><strong>Cholesterol absorption inhibitors</strong></td><td>Ezetimibe</td><td>&darr; LDL (blocks intestinal absorption)</td><td>Generally well-tolerated</td></tr>
+    <tr><td>6</td><td><strong>PCSK9 inhibitors</strong></td><td>Evolocumab, alirocumab</td><td>Powerful &darr; LDL (SubQ injection)</td><td>Injection site reactions</td></tr>
+</table>
+
+<h3>7.2 Targets</h3>
+<ul>
+    <li><strong>LDL goal:</strong> &lt;100 mg/dL (general); &lt;70 mg/dL (high risk / post-ACS)</li>
+    <li><strong>HDL:</strong> higher is better (&gt;40 men, &gt;50 women)</li>
+    <li><strong>Triglycerides:</strong> &lt;150 mg/dL</li>
+</ul>
+
+<div class="callout memory">
+<strong>HDL = "Happy" (want HIGH). LDL = "Lousy" (want LOW).</strong> Statins = Standard of care.
+</div>
+
+<div class="callout pearl">
+<strong>Statin nursing considerations:</strong> Take at bedtime (peak cholesterol synthesis at night — newer statins like atorvastatin can be taken anytime). Monitor LFTs. Report unexplained muscle pain immediately (check CK level for rhabdomyolysis).
+</div>
+</section>
+
+<!-- SECTION 8 -->
+<section id="hypertension">
+<h2>8. Hypertension Medications <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>8.1 First-Line Drug Classes</h3>
+<p>ACE/ARBs, CCBs, thiazide diuretics (ABCD mnemonic).</p>
+
+<h3>8.2 Special Populations</h3>
+<table>
+    <tr><th>Population</th><th>Preferred Drug(s)</th><th>Rationale</th></tr>
+    <tr><td>African American</td><td>CCB or thiazide</td><td>ACE/ARBs less effective as monotherapy</td></tr>
+    <tr><td>Diabetes</td><td>ACE/ARB</td><td>Renal protection (reduce proteinuria)</td></tr>
+    <tr><td>Pregnancy</td><td>Labetalol, nifedipine, methyldopa</td><td>ACE/ARBs are TERATOGENIC</td></tr>
+</table>
+
+<div class="callout warning">
+<strong>ACE/ARBs in pregnancy = TERATOGENIC.</strong> Never prescribe to pregnant patients.
+</div>
+
+<h3>8.3 Hypertensive Crisis</h3>
+<table>
+    <tr><th>Type</th><th>Definition</th><th>Treatment</th><th>BP Goal</th></tr>
+    <tr><td><strong>Emergency</strong></td><td>BP &gt;180/120 WITH organ damage</td><td>IV drugs: nicardipine, clevidipine, labetalol IV, nitroprusside</td><td>Reduce MAP by no more than 25% in first hour</td></tr>
+    <tr><td><strong>Urgency</strong></td><td>BP &gt;180/120 WITHOUT organ damage</td><td>Oral agents: captopril, clonidine, labetalol PO</td><td>Reduce over 24-48 hours</td></tr>
+</table>
+
+<div class="callout warning">
+<strong>Never drop BP too fast</strong> — risk of watershed infarction (stroke), MI, and acute kidney injury from sudden hypoperfusion. Gradual reduction: 25% in first hour, normalize over 24-48h.
+</div>
+
+<h3>8.4 Additional Drug Notes</h3>
+<ul>
+    <li><strong>Thiazide diuretics:</strong> Hypokalemia, hyponatremia, hyperglycemia, hyperuricemia, hypercalcemia</li>
+    <li><strong>Clonidine:</strong> Central alpha-2 agonist. Rebound hypertension if stopped abruptly</li>
+    <li><strong>Resistant HTN:</strong> BP above goal despite 3+ drugs at max dose including a diuretic — rule out secondary causes</li>
+</ul>
+</section>
+
+<!-- SECTION 9 -->
+<section id="heartfailure">
+<h2>9. Heart Failure Medications <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>9.1 Core HF Drug Therapy</h3>
+<table>
+    <tr><th>Drug Class</th><th>Example</th><th>Role</th><th>Key Points</th></tr>
+    <tr><td>Loop diuretics</td><td>Furosemide (Lasix)</td><td>First-line for volume overload</td><td>Monitor K+, daily weights, I&O. IV is 2x more potent than PO</td></tr>
+    <tr><td>ACE/ARBs</td><td>Lisinopril, valsartan</td><td>Cornerstone — reduce afterload, slow remodeling</td><td>Monitor K+, creatinine, BP</td></tr>
+    <tr><td>Beta-blockers</td><td>Carvedilol, metoprolol succinate</td><td>Mortality benefit (long-term)</td><td>"Start low, go slow" — don't start in acute decompensation</td></tr>
+    <tr><td>Aldosterone antagonists</td><td>Spironolactone, eplerenone</td><td>Mortality benefit in HFrEF</td><td>K+-sparing — monitor for hyperkalemia</td></tr>
+    <tr><td>Digoxin</td><td>Digoxin</td><td>Symptom improvement</td><td>Does NOT reduce mortality</td></tr>
+    <tr><td>ARNI</td><td>Sacubitril/valsartan (Entresto)</td><td>Superior to ACE alone in HFrEF</td><td>36-hour washout from ACE before starting</td></tr>
+    <tr><td>SGLT2 inhibitors</td><td>Dapagliflozin, empagliflozin</td><td>Mortality benefit in HFrEF</td><td>Originally diabetes drugs — now standard HF therapy</td></tr>
+    <tr><td>Hydralazine + ISDN</td><td>BiDil</td><td>Alternative to ACE/ARB</td><td>Especially effective in African American patients</td></tr>
+</table>
+
+<div class="formula-box">
+1 kg weight gain = 1 liter fluid retention
+<small>Report &gt;2 lbs overnight or &gt;5 lbs in a week</small>
+</div>
+
+<h3>9.2 Non-Pharmacologic Management</h3>
+<ul>
+    <li><strong>Sodium restriction:</strong> &lt;2g (2000mg) per day</li>
+    <li><strong>DASH diet:</strong> Fruits, vegetables, whole grains, low-fat dairy</li>
+    <li><strong>Daily weights:</strong> Same time, same scale, same clothing</li>
+    <li><strong>Fluid restriction:</strong> If severe HF (typically 1.5-2L/day)</li>
+    <li><strong>I&O monitoring</strong></li>
+</ul>
+
+<div class="callout pearl">
+<strong>"Start low, go slow"</strong> with beta-blockers in HF. They improve long-term outcomes but can worsen acute symptoms. Never initiate during acute decompensation.
+</div>
+</section>
+
+<!-- SECTION 10 -->
+<section id="emergency">
+<h2>10. Emergency & Code Medications <span class="source-tag heavy">HEAVY IN SLIDES</span></h2>
+
+<h3>10.1 Cardiac Arrest Drugs</h3>
+<table>
+    <tr><th>Drug</th><th>Dose</th><th>Indication</th><th>Key Points</th></tr>
+    <tr><td><strong>Epinephrine</strong></td><td>1mg IV/IO q3-5min</td><td>ALL arrest rhythms (VF, pVT, PEA, asystole)</td><td>"Epi for everything in a code"</td></tr>
+    <tr><td><strong>Amiodarone</strong></td><td>300mg (1st), 150mg (2nd)</td><td>VF/pVT refractory to defibrillation</td><td>Given AFTER 3rd shock + epi</td></tr>
+    <tr><td><strong>Sodium bicarbonate</strong></td><td>1 mEq/kg</td><td>Hyperkalemia, TCA OD, prolonged arrest with acidosis</td><td>NOT routine in all arrests</td></tr>
+    <tr><td><strong>Magnesium sulfate</strong></td><td>1-2g IV</td><td>Torsades de pointes</td><td>Also treat hypomagnesemia</td></tr>
+    <tr><td><strong>Calcium chloride/gluconate</strong></td><td>Per protocol</td><td>Hyperkalemia, CCB overdose</td><td>CaCl is 3x more potent than gluconate</td></tr>
+</table>
+
+<div class="callout memory">
+<strong>"Epi for everything in a code"</strong> — 1mg IV/IO q3-5min regardless of rhythm. It's the universal cardiac arrest drug.
+</div>
+
+<h3>10.2 Bradycardia Drugs</h3>
+<ul>
+    <li><strong>Atropine:</strong> 0.5mg IV q3-5min, max 3mg (for symptomatic bradycardia only — NOT for arrest)</li>
+    <li><strong>Dopamine:</strong> 5-20 mcg/kg/min (if atropine fails)</li>
+    <li><strong>Epinephrine infusion:</strong> 2-10 mcg/min (alternative to dopamine)</li>
+</ul>
+
+<h3>10.3 Vasopressors in Emergencies</h3>
+<ul>
+    <li><strong>Norepinephrine:</strong> First-line for septic shock</li>
+    <li><strong>Dopamine:</strong> Alternative to norepinephrine</li>
+    <li><strong>Vasopressin:</strong> Adjunct pressor (non-catecholamine)</li>
+</ul>
+
+<h3>10.4 Thrombolytics</h3>
+<table>
+    <tr><th>Drug</th><th>Use</th><th>Timing</th></tr>
+    <tr><td>Alteplase (tPA)</td><td>STEMI, ischemic stroke, massive PE</td><td>Stroke: door-to-needle &lt;60 min (within 3-4.5h window)</td></tr>
+    <tr><td>Tenecteplase</td><td>STEMI (preferred — single IV bolus)</td><td>STEMI: door-to-needle &lt;30 min</td></tr>
+</table>
+
+<div class="callout warning">
+<strong>Thrombolytic contraindications:</strong> Active bleeding, recent surgery, hemorrhagic stroke, uncontrolled HTN, known bleeding disorders. These drugs DISSOLVE clots — bleeding risk is the #1 concern.
+</div>
+
+<h3>10.5 Epinephrine for Anaphylaxis</h3>
+<p><strong>0.3-0.5mg IM (1:1000)</strong> into lateral thigh. Repeat q5-15 min if needed. Note: different dose/route than cardiac arrest (which is 1mg IV of 1:10,000).</p>
+
+<div class="callout warning">
+<strong>Know your H's and T's — treat the CAUSE, not just push drugs.</strong>
+<ul>
+    <li><strong>H's:</strong> Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia</li>
+    <li><strong>T's:</strong> Tension pneumothorax, Tamponade, Toxins, Thrombosis (PE/MI)</li>
+</ul>
+</div>
+</section>
+
+<!-- PRACTICE QUESTIONS -->
+<section id="practice">
+<h2>Practice Questions</h2>
+<p><em>NCLEX-style questions covering key medications across all sections.</em></p>
+
+<details>
+    <summary>1. A patient with chest pain has taken 3 sublingual NTG tablets without relief. The nurse should:</summary>
+    <p><strong>Answer: Activate emergency response / call 911.</strong> After 3 doses at 5-minute intervals with no relief, this suggests possible MI requiring emergent intervention (PCI or fibrinolytics).</p>
+</details>
+
+<details>
+    <summary>2. Before giving NTG, what medication history must the nurse assess?</summary>
+    <p><strong>Answer: PDE-5 inhibitor use (sildenafil/Viagra, tadalafil/Cialis) within 24-48 hours.</strong> Concurrent use can cause severe, potentially fatal hypotension.</p>
+</details>
+
+<details>
+    <summary>3. A patient on heparin has an aPTT of 110 seconds. The nurse should:</summary>
+    <p><strong>Answer: HOLD the heparin infusion and notify the provider.</strong> aPTT &gt;100s indicates excessive anticoagulation. Recheck aPTT after holding. Antidote: protamine sulfate if active bleeding.</p>
+</details>
+
+<details>
+    <summary>4. A patient on digoxin has a heart rate of 54 bpm. The nurse should:</summary>
+    <p><strong>Answer: HOLD the digoxin and notify the provider.</strong> Hold parameter is HR &lt;60. Check dig level (therapeutic: 0.5-2.0 ng/mL) and potassium level (hypokalemia increases toxicity).</p>
+</details>
+
+<details>
+    <summary>5. Which lab value increases the risk of digoxin toxicity?</summary>
+    <p><strong>Answer: Hypokalemia (low K+).</strong> Digoxin and potassium compete for the same binding sites. When K+ is low, more digoxin binds &rarr; increased toxicity risk.</p>
+</details>
+
+<details>
+    <summary>6. An African American patient with HTN. Which first-line drug is preferred?</summary>
+    <p><strong>Answer: Calcium channel blocker (amlodipine) or thiazide diuretic.</strong> ACE/ARBs are less effective as monotherapy in this population. Can still be added as combination therapy.</p>
+</details>
+
+<details>
+    <summary>7. During a code, the patient is in VF. After the 3rd shock and epinephrine, which drug is given?</summary>
+    <p><strong>Answer: Amiodarone 300mg IV push.</strong> For refractory VF/pVT after defibrillation. Second dose is 150mg.</p>
+</details>
+
+<details>
+    <summary>8. A patient asks why their statin should be taken at bedtime. The nurse explains:</summary>
+    <p><strong>Answer: Cholesterol synthesis peaks at night, so taking the statin at bedtime maximizes its effectiveness.</strong> Note: Newer statins like atorvastatin and rosuvastatin have longer half-lives and can be taken at any time.</p>
+</details>
+
+<details>
+    <summary>9. A patient on warfarin has an INR of 5.2 with no signs of bleeding. The nurse anticipates:</summary>
+    <p><strong>Answer: Hold warfarin and administer low-dose vitamin K (1-2.5mg PO).</strong> Recheck INR. If INR &gt;9 without bleeding, higher-dose vitamin K may be needed. For active bleeding: FFP or PCC for rapid reversal.</p>
+</details>
+
+<details>
+    <summary>10. A patient in heart failure gains 4 pounds overnight. Priority nursing action?</summary>
+    <p><strong>Answer: Notify the provider immediately.</strong> Weight gain &gt;2 lbs overnight suggests fluid retention/worsening HF. Expect orders for increased diuretic dose. Assess for edema, lung sounds, dyspnea.</p>
+</details>
+
+<details>
+    <summary>11. Adenosine must be given via rapid IV push because:</summary>
+    <p><strong>Answer: Its half-life is less than 10 seconds.</strong> If given slowly, the drug is metabolized before reaching the heart. Must use proximal IV site and follow immediately with 20mL NS flush.</p>
+</details>
+
+<details>
+    <summary>12. A patient is prescribed an ACE inhibitor and develops a persistent dry cough. The nurse expects:</summary>
+    <p><strong>Answer: Switch to an ARB.</strong> Dry cough is a common ACE side effect (caused by bradykinin accumulation). ARBs have similar benefits without the cough.</p>
+</details>
+
+<details>
+    <summary>13. Which HF medication does NOT reduce mortality?</summary>
+    <p><strong>Answer: Digoxin.</strong> Digoxin improves symptoms and reduces hospitalizations but does NOT reduce mortality. Drugs that DO reduce mortality: ACE/ARBs, beta-blockers, aldosterone antagonists, ARNI (Entresto), SGLT2 inhibitors.</p>
+</details>
+
+<details>
+    <summary>14. Atropine is ineffective for which type of heart block?</summary>
+    <p><strong>Answer: Infranodal blocks (Mobitz Type II, third-degree with wide QRS).</strong> Atropine works by blocking vagal tone at the SA/AV node. Infranodal blocks are below the AV node, so atropine won't help. These patients need transcutaneous pacing.</p>
+</details>
+
+<details>
+    <summary>15. A patient in hypertensive emergency (BP 220/130). How quickly should BP be lowered?</summary>
+    <p><strong>Answer: Reduce MAP by no more than 25% in the first hour.</strong> Dropping BP too fast risks watershed infarction (stroke), MI, and acute kidney injury. Then normalize gradually over 24-48 hours.</p>
+</details>
+
+</section>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+</script>
+
+</body>
+</html>
