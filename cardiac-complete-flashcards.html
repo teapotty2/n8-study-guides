@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiac Study Guide — Complete Flashcards</title>
+    <style>
+        :root {
+            --gotit: #4ade80;
+            --unsure: #fbbf24;
+            --missed: #f87171;
+            --primary: #22d3ee;
+            --muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* START SCREEN */
+        .start-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .start-container h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        #progress-summary {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        #progress-summary h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .overall-bar {
+            height: 12px;
+            background: #475569;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-gotit {
+            background: var(--gotit);
+        }
+
+        .mb-unsure {
+            background: var(--unsure);
+        }
+
+        .mb-missed {
+            background: var(--missed);
+        }
+
+        .overall-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        /* Category Grid */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--cat-color, var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.selected {
+            border-color: var(--cat-color, var(--primary));
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .cat-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .cat-count {
+            font-size: 0.85rem;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .cat-mastery-bar {
+            height: 6px;
+            background: #475569;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .cat-mastery-text {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Options Row */
+        .options-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .toggle-label input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .start-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #0f172a;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #06b6d4;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .btn-weak {
+            background: var(--missed);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-weak:hover {
+            background: #ef4444;
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-reset:hover {
+            border-color: var(--missed);
+            color: var(--missed);
+        }
+
+        /* CARD SCREEN */
+        .card-screen {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 3rem);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .progress-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .requeue-badge {
+            background: var(--unsure);
+            color: #0f172a;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .cat-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Flashcard */
+        .flashcard {
+            flex: 1;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            min-height: 350px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .card-front .card-content {
+            font-size: 1.35rem;
+        }
+
+        .flip-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        .answer-text {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .exam-tip {
+            background: rgba(34, 211, 238, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Confidence Controls */
+        .conf-controls {
+            display: none;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .conf-controls.visible {
+            display: flex;
+        }
+
+        .conf-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .conf-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .conf-missed {
+            background: var(--missed);
+            color: white;
+        }
+
+        .conf-unsure {
+            background: var(--unsure);
+            color: #0f172a;
+        }
+
+        .conf-gotit {
+            background: var(--gotit);
+            color: #0f172a;
+        }
+
+        .conf-icon {
+            font-size: 1.5rem;
+        }
+
+        .conf-label {
+            font-weight: 600;
+        }
+
+        .conf-key {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .kb-hints {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .kb-hints kbd {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin: 0 0.25rem;
+        }
+
+        /* RESULTS SCREEN */
+        .results-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .results-container h1 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .stat-pct {
+            font-size: 1.1rem;
+            margin-top: 0.25rem;
+        }
+
+        .stat-gotit .stat-value {
+            color: var(--gotit);
+        }
+
+        .stat-unsure .stat-value {
+            color: var(--unsure);
+        }
+
+        .stat-missed .stat-value {
+            color: var(--missed);
+        }
+
+        .breakdown-section,
+        .weak-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .breakdown-section h3,
+        .weak-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .cat-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cat-stat-name {
+            flex: 0 0 150px;
+            font-size: 0.9rem;
+        }
+
+        .cat-stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .bar-seg {
+            height: 100%;
+        }
+
+        .bar-gotit {
+            background: var(--gotit);
+        }
+
+        .bar-unsure {
+            background: var(--unsure);
+        }
+
+        .bar-missed {
+            background: var(--missed);
+        }
+
+        .cat-stat-pct {
+            flex: 0 0 50px;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .weak-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .weak-item:last-child {
+            border-bottom: none;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card-content {
+                font-size: 1.1rem;
+            }
+
+            .card-front .card-content {
+                font-size: 1.2rem;
+            }
+
+            .conf-btn {
+                padding: 0.75rem;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- START SCREEN -->
+    <div id="screen-start" class="screen active">
+        <div class="start-container">
+            <h1>Cardiac Medications & Treatments</h1>
+            <p class="subtitle">200 flashcards covering hemodynamics, cardiac assessment, CAD, angina &amp; ACS, procedures, heart failure, shock &amp; sepsis, arrhythmias &amp; devices, pharmacology, and vascular disorders</p>
+
+            <div id="progress-summary"></div>
+
+            <div class="cat-grid" id="cat-grid"></div>
+
+            <div class="options-row">
+                <label class="toggle-label">
+                    <input type="checkbox" id="chk-shuffle" checked> Shuffle cards
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="chk-multi"> Multi-select categories
+                </label>
+            </div>
+
+            <div class="start-actions">
+                <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+                <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+                <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD SCREEN -->
+    <div id="screen-card" class="screen">
+        <div class="card-screen">
+            <div class="card-header">
+                <div class="progress-section">
+                    <div class="progress-text">
+                        <span id="cur-num">1</span> / <span id="tot-num">0</span>
+                        <span class="requeue-badge" id="requeue-info" style="display:none;"></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <span class="cat-badge" id="cur-cat">Category</span>
+            </div>
+
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-inner">
+                    <div class="card-face card-front">
+                        <div class="card-content" id="front-content"></div>
+                        <div class="flip-hint">SPACE or click to flip</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-content" id="back-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conf-controls" id="conf-controls">
+                <button class="conf-btn conf-missed" onclick="rate('missed')">
+                    <span class="conf-icon">&#10007;</span>
+                    <span class="conf-label">Missed</span>
+                    <span class="conf-key">Press 1</span>
+                </button>
+                <button class="conf-btn conf-unsure" onclick="rate('unsure')">
+                    <span class="conf-icon">~</span>
+                    <span class="conf-label">Unsure</span>
+                    <span class="conf-key">Press 2</span>
+                </button>
+                <button class="conf-btn conf-gotit" onclick="rate('gotit')">
+                    <span class="conf-icon">&#10003;</span>
+                    <span class="conf-label">Got It</span>
+                    <span class="conf-key">Press 3</span>
+                </button>
+            </div>
+
+            <div class="nav-row">
+                <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+                <div class="kb-hints">
+                    <kbd>Space</kbd> Flip <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate <kbd>Esc</kbd> Exit
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS SCREEN -->
+    <div id="screen-results" class="screen">
+        <div class="results-container">
+            <h1>Session Complete</h1>
+
+            <div class="stats-row" id="stats-row"></div>
+
+            <div class="breakdown-section" id="breakdown-section">
+                <h3>By Category</h3>
+                <div id="cat-breakdown"></div>
+            </div>
+
+            <div class="weak-section" id="weak-section" style="display:none;">
+                <h3>Focus Areas</h3>
+                <div id="weak-list"></div>
+            </div>
+
+            <div class="results-actions">
+                <button class="btn-primary" id="btn-review-missed" onclick="reviewMissed()">Review Missed Cards</button>
+                <button class="btn-secondary" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+                <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===================== DATA =====================
+        const STORAGE_KEY = 'cardiac-complete-flashcards';
+
+const categories = {
+    'hemodynamics': { name: 'Hemodynamics & Preload/Afterload', color: '#10b981' },
+    'assessment': { name: 'Cardiac Assessment & Monitoring', color: '#8b5cf6' },
+    'cad-angina': { name: 'CAD, Angina & ACS', color: '#ef4444' },
+    'procedures': { name: 'Procedures & Interventions', color: '#f97316' },
+    'hf-shock': { name: 'Heart Failure & Shock', color: '#ec4899' },
+    'infection': { name: 'Cardiac Infections & Inflammation', color: '#14b8a6' },
+    'arrhythmia': { name: 'Arrhythmias, Devices & ACLS', color: '#3b82f6' },
+    'pharmacology': { name: 'Cardiac Pharmacology', color: '#eab308' },
+    'vascular': { name: 'Vascular & Peripheral Disorders', color: '#a855f7' },
+    'sepsis-dic': { name: 'Sepsis, DIC & Critical Care', color: '#b91c1c' }
+};
+
+const cards = [
+    // ===== HEMODYNAMICS (1-20) =====
+    { id: 1, cat: 'hemodynamics', q: 'What is afterload?', a: 'Resistance to ejection of blood from the ventricle. Affected by SVR.', tip: 'High afterload → decreased CO (heart pumps against more resistance).' },
+    { id: 2, cat: 'hemodynamics', q: 'What increases afterload?', a: 'HTN, vasoconstriction, vasopressors (norepinephrine/Levophed), stress, nicotine, CAD.', tip: 'Think: anything that increases SVR.' },
+    { id: 3, cat: 'hemodynamics', q: 'ABCD mnemonic for drugs that decrease afterload?', a: 'ACE inhibitors & ARBs, Beta blockers (carvedilol), Calcium channel blockers, Diuretics.', tip: 'Carvedilol also has negative chronotropic/inotropic effects.' },
+    { id: 4, cat: 'hemodynamics', q: 'What is preload?', a: 'Degree of stretch of the cardiac muscle at end of diastole (volume-dependent).', tip: 'Think: volume IN before contraction.' },
+    { id: 5, cat: 'hemodynamics', q: 'What increases preload?', a: 'Fluid overload, high sodium, renal failure, HF, IV fluids, pulmonary edema.', tip: 'Anything that increases circulating volume.' },
+    { id: 6, cat: 'hemodynamics', q: 'What decreases preload?', a: 'Diuretics, low sodium, hypovolemia, hemorrhage, dehydration.', tip: 'Less fluid = less stretch = less preload.' },
+    { id: 7, cat: 'hemodynamics', q: 'Name 4 positive inotropes.', a: 'Digoxin, Dobutamine, Dopamine, Milrinone.', tip: 'Used in HF and cardiogenic shock — increase contractility.' },
+    { id: 8, cat: 'hemodynamics', q: 'Name 3 negative inotropes.', a: 'Beta blockers, Calcium channel blockers, Acetylcholine (vagus nerve).', tip: 'Decrease contractility — heart squeezes weaker.' },
+    { id: 9, cat: 'hemodynamics', q: 'Vasodilators — name 2.', a: 'Nitroglycerin and Nitroprusside.', tip: 'Decrease preload and/or afterload.' },
+    { id: 10, cat: 'hemodynamics', q: 'Vasopressors — name 3.', a: 'Norepinephrine (Levophed), Dopamine, Epinephrine.', tip: 'Increase BP via vasoconstriction.' },
+    { id: 11, cat: 'hemodynamics', q: 'CO = ? Normal value?', a: 'CO = HR × SV. Normal: 4–8 L/min.', tip: 'SV affected by preload, afterload, contractility.' },
+    { id: 12, cat: 'hemodynamics', q: 'What is Cardiac Index (CI)?', a: 'CI = CO ÷ BSA. Normal: 2.5–4.0 L/min/m². More accurate than CO.', tip: 'Accounts for body size.' },
+    { id: 13, cat: 'hemodynamics', q: 'Frank-Starling Law?', a: 'Increased preload (stretch) = increased SV… up to a point. Overstretched = HF.', tip: 'Like a rubber band — stretch helps until it snaps.' },
+    { id: 14, cat: 'hemodynamics', q: 'What is normal pulse pressure? Formula?', a: '~40 mmHg. PP = SBP − DBP (e.g., 120−80 = 40).', tip: 'Narrow PP is an EARLY indicator of shock.' },
+    { id: 15, cat: 'hemodynamics', q: 'Narrow pulse pressure (<40) — causes?', a: 'Cardiogenic shock, HF, hypovolemia — compensatory mechanism.', tip: 'Heart trying to maintain perfusion.' },
+    { id: 16, cat: 'hemodynamics', q: 'Wide pulse pressure — causes?', a: 'Anxiety, bradycardia, vasodilation (septic shock), fever.', tip: 'Think vasodilation and high output states.' },
+    { id: 17, cat: 'hemodynamics', q: 'MAP formula? Normal? Critical threshold?', a: 'MAP = (SBP + 2×DBP) ÷ 3. Normal: 70–100. Keep ≥65 for organ perfusion.', tip: 'Below 65 = organs begin to fail.' },
+    { id: 18, cat: 'hemodynamics', q: 'Signs of end-organ hypoperfusion (MAP <65)?', a: 'Brain: AMS. Kidneys: oliguria. Heart: tachycardia. Lungs: tachypnea. Skin: cool/mottled. GI: elevated lactate.', tip: 'LACTATE is #1 lab marker (>2 mmol/L = hypoperfusion).' },
+    { id: 19, cat: 'hemodynamics', q: 'What is CVP? Normal range?', a: 'Central Venous Pressure. Normal: 2–6 mmHg. >6 = hypervolemia/HF. <2 = hypovolemia.', tip: 'Reflects right heart preload.' },
+    { id: 20, cat: 'hemodynamics', q: 'Phlebostatic axis — where is it?', a: '4th intercostal space, mid-axillary line. Used to zero the A-line.', tip: 'Must zero the line for accurate readings.' },
+
+    // ===== CARDIAC ASSESSMENT (21-36) =====
+    { id: 21, cat: 'assessment', q: 'How to assess JVD?', a: 'Place patient in semi-Fowler\'s (35°) and observe internal jugular vein.', tip: 'JVD = sign of right-sided HF or fluid overload.' },
+    { id: 22, cat: 'assessment', q: 'What is orthostatic hypotension?', a: '≥20 mmHg drop in SBP or ≥10 mmHg drop in DBP within 3 min of standing.', tip: 'Assess: supine → sitting → standing.' },
+    { id: 23, cat: 'assessment', q: 'S1 ("LUB") — what does it represent?', a: 'Closure of mitral & tricuspid (AV) valves. Marks START of systole. Best heard at apex.', tip: 'AV valves close → systole begins.' },
+    { id: 24, cat: 'assessment', q: 'S2 ("DUB") — what does it represent?', a: 'Closure of aortic & pulmonic (semilunar) valves. Marks END of systole.', tip: 'Semilunar valves close → diastole begins.' },
+    { id: 25, cat: 'assessment', q: 'S3 ("Kentucky") — pathologic meaning?', a: 'Volume overload / HF in adults. Heard right AFTER S2 in early diastole.', tip: 'S3 = "slosh" of blood into dilated ventricle. Normal in children.' },
+    { id: 26, cat: 'assessment', q: 'S4 ("Tennessee") — pathologic meaning?', a: 'Stiff/noncompliant ventricle (HTN, CAD, aortic stenosis). Heard right BEFORE S1.', tip: 'S4 = "atrial kick" against resistance.' },
+    { id: 27, cat: 'assessment', q: 'S3 + S4 together = ?', a: 'Summation gallop = severe HF.', tip: 'Both extra sounds present = bad prognosis.' },
+    { id: 28, cat: 'assessment', q: 'Troponin — when does it rise, peak, and normalize?', a: 'Rises: 2–4 hrs. Peaks: 12–24 hrs. Normal: 7–14 days. Gold standard for MI.', tip: 'ANY elevation = myocardial cell death.' },
+    { id: 29, cat: 'assessment', q: 'CK-MB — when is it most useful?', a: 'Best for detecting RE-INFARCTION. Rises 3–6 hrs, peaks 12–24 hrs, normal 24–48 hrs.', tip: 'Returns to normal fast → can detect 2nd MI.' },
+    { id: 30, cat: 'assessment', q: 'BNP — what does it diagnose?', a: 'Heart failure (NOT MI). Released when ventricles stretched. >100 pg/mL = suggests HF.', tip: 'Also differentiates cardiac vs pulmonary dyspnea.' },
+    { id: 31, cat: 'assessment', q: 'Myoglobin — why is it useful?', a: 'EARLIEST marker to rise (1–2 hrs) but NOT cardiac-specific. Used to RULE OUT MI.', tip: 'If negative at 4–8 hrs, MI unlikely.' },
+    { id: 32, cat: 'assessment', q: 'Exam tip: Troponin vs Myoglobin vs CK-MB vs BNP?', a: 'Troponin = most SPECIFIC. Myoglobin = EARLIEST. CK-MB = RE-INFARCTION. BNP = HEART FAILURE.', tip: 'Classic NCLEX distinction!' },
+    { id: 33, cat: 'assessment', q: 'TTE vs TEE — what are they used for?', a: 'Diagnostic cardiac imaging to rule out clots. Performed BEFORE cath, thrombolytics, or cardioversion.', tip: 'TEE = transesophageal (clearer images).' },
+    { id: 34, cat: 'assessment', q: 'Systolic murmurs are caused by?', a: 'Stenosis of semilunar valves OR regurgitation of AV valves.', tip: 'Think: blood trying to get OUT during systole.' },
+    { id: 35, cat: 'assessment', q: 'Diastolic murmurs are caused by?', a: 'Stenosis of AV valves OR regurgitation of semilunar valves.', tip: 'Think: blood shouldn\'t be flowing back during diastole.' },
+    { id: 36, cat: 'assessment', q: 'Pulsus paradoxus — what is it and what condition?', a: '≥10 mmHg drop in SBP during inspiration. Classic for cardiac tamponade.', tip: 'Use Korotkoff sounds with manual BP to detect.' },
+
+    // ===== CAD, ANGINA & ACS (37-56) =====
+    { id: 37, cat: 'cad-angina', q: 'CAD risk factors — non-modifiable?', a: 'Family history, age (>45 men, >55 women), gender, race.', tip: 'Men at risk at 45; women at 55.' },
+    { id: 38, cat: 'cad-angina', q: 'CAD risk factors — modifiable?', a: 'Cholesterol (LDL <100, HDL >40), tobacco, HTN, diabetes.', tip: 'These you can change!' },
+    { id: 39, cat: 'cad-angina', q: 'Women atypical MI symptoms?', a: 'Indigestion, N/V, epigastric pain, palpitations, numbness, jaw/arm pain, upper back pain, SOB.', tip: 'Women often don\'t present with classic chest pain.' },
+    { id: 40, cat: 'cad-angina', q: 'Stable angina vs unstable angina?', a: 'Stable: predictable, on exertion, relieved by rest/NTG. Unstable: increasing frequency, NOT relieved by rest or NTG.', tip: 'Unstable angina = medical emergency → treat as ACS.' },
+    { id: 41, cat: 'cad-angina', q: 'Sublingual NTG protocol for chest pain?', a: '1 tab SL → wait 5 min → 2nd dose → wait 5 min → 3rd dose → if pain persists, CALL 911.', tip: 'NTG vasodilates coronary vessels.' },
+    { id: 42, cat: 'cad-angina', q: 'MONA for angina treatment?', a: 'M=Morphine (pain), O=Oxygen (decrease workload), N=Nitroglycerin (vasodilation), A=Aspirin (antiplatelet).', tip: 'O₂ only if SpO₂ <94%; morphine used cautiously.' },
+    { id: 43, cat: 'cad-angina', q: 'Beta blockers for CAD — examples and caution?', a: 'Metoprolol, Bisoprolol (cardio-selective β1). Caution: can mask hypoglycemia in diabetics.', tip: 'Hold if HR <60 or SBP <100.' },
+    { id: 44, cat: 'cad-angina', q: 'STEMI vs NSTEMI — key difference?', a: 'STEMI: complete occlusion → transmural MI → ST elevation. NSTEMI: partial occlusion → subendocardial MI → ST depression/T-wave changes.', tip: 'ECG within 10 min of ED arrival for chest pain.' },
+    { id: 45, cat: 'cad-angina', q: 'Critical time benchmarks — ED to ECG?', a: '≤10 minutes.', tip: 'Fastest step in the chain.' },
+    { id: 46, cat: 'cad-angina', q: 'Door-to-needle time (thrombolytics)?', a: '≤30 minutes.', tip: 'If PCI not available.' },
+    { id: 47, cat: 'cad-angina', q: 'Door-to-balloon time (PCI)?', a: '≤60 minutes (some guidelines say <90 min).', tip: '"Time is muscle" — every minute = more death.' },
+    { id: 48, cat: 'cad-angina', q: 'Absolute contraindications to thrombolytics?', a: 'Active internal bleeding, hemorrhagic stroke (ever), ischemic stroke <3 mo, intracranial neoplasm/AVM, suspected aortic dissection.', tip: 'If contraindicated → PCI instead.' },
+    { id: 49, cat: 'cad-angina', q: 'Relative contraindications to thrombolytics?', a: 'Uncontrolled HTN (>180/110), anticoagulant use, recent surgery <3 wk, pregnancy, active peptic ulcer, CPR >10 min.', tip: 'Weigh risk vs benefit.' },
+    { id: 50, cat: 'cad-angina', q: 'Most common complication post-CABG?', a: 'Atrial fibrillation (A-fib).', tip: 'Monitor rhythm closely after surgery.' },
+    { id: 51, cat: 'cad-angina', q: 'Post-inferior wall MI — most anticipated arrhythmia?', a: 'Bradycardia (RCA supplies SA/AV nodes).', tip: 'RCA = right coronary artery.' },
+    { id: 52, cat: 'cad-angina', q: 'Anterior septal MI with cardiogenic shock — first-line inotrope?', a: 'Dobutamine (increases contractility without significantly increasing SVR).', tip: 'Do NOT confuse: dopamine ≠ dobutamine.' },
+    { id: 53, cat: 'cad-angina', q: 'Pre-thrombolytic V-Tach — priority action?', a: 'Notify provider and prepare antiarrhythmic meds (Amiodarone).', tip: 'Don\'t ignore PVCs → short runs of V-Tach.' },
+    { id: 54, cat: 'cad-angina', q: 'Pericarditis — classic presentation?', a: 'Sharp pleuritic chest pain, WORSE with inspiration/lying flat, RELIEVED by sitting up and leaning FORWARD.', tip: 'Pericardial friction rub on auscultation.' },
+    { id: 55, cat: 'cad-angina', q: 'Pericarditis vs MI on ECG?', a: 'Pericarditis: diffuse ST elevation in MULTIPLE leads, saddle-shaped. MI: localized ST changes.', tip: 'Pericarditis also has friction rub; MI does not.' },
+    { id: 56, cat: 'cad-angina', q: 'Pericarditis treatment?', a: 'NSAIDs (ibuprofen) + Colchicine (first-line). Corticosteroids if NSAIDs contraindicated. AVOID anticoagulants.', tip: 'Anticoagulants risk hemopericardium → tamponade.' },
+
+    // ===== PROCEDURES (57-68) =====
+    { id: 57, cat: 'procedures', q: 'Cardiac cath — pre-procedure care?', a: 'Fast 8–12 hrs, educate: keep leg straight 6 hrs (femoral). Assess for renal insufficiency (CIN risk).', tip: 'N-acetylcysteine + IV fluids prevent CIN.' },
+    { id: 58, cat: 'procedures', q: 'Cardiac cath — post-procedure care?', a: 'Assess peripheral pulses, temp/color/cap refill of extremity, bed rest 2–6 hrs, HOB ≤30°, monitor creatinine.', tip: 'Watch for bleeding at access site.' },
+    { id: 59, cat: 'procedures', q: 'Radial vs femoral cath — key differences?', a: 'Radial: deflate air band q30min × 6 hrs, restrict strenuous wrist use. Femoral: leg straight 6 hrs, no submerging site.', tip: 'Radial = faster recovery.' },
+    { id: 60, cat: 'procedures', q: 'Cardiac ablation — what is it?', a: 'Radiofrequency or cryo energy destroys heart tissue causing dysrhythmias. Used for A-fib, SVT, flutter, WPW.', tip: 'Key difference from cath: tissue is DESTROYED, not just visualized.' },
+    { id: 61, cat: 'procedures', q: 'Post-ablation complications to monitor?', a: 'Cardiac tamponade (Beck\'s triad), stroke/TIA, pulmonary vein stenosis, phrenic nerve injury (hiccups), AV block.', tip: 'Watch for Beck\'s Triad — perforation risk.' },
+    { id: 62, cat: 'procedures', q: 'Mechanical heart valve — key nursing consideration?', a: 'HIGH thromboemboli risk → LIFELONG anticoagulation + prophylactic antibiotics.', tip: 'Infection risk is also elevated.' },
+    { id: 63, cat: 'procedures', q: 'Tissue (bioprosthetic) valve — key advantage?', a: 'LOW thromboemboli risk → NO long-term anticoagulation. BEST for childbearing-age patients.', tip: 'Avoids anticoagulants during pregnancy.' },
+    { id: 64, cat: 'procedures', q: 'Autograft vs heterograft valves?', a: 'Autograft: patient\'s own tissue, no anticoag, lasts 20+ yrs. Heterograft (xenograft): animal tissue, no lifelong anticoag.', tip: 'Autograft = best longevity.' },
+    { id: 65, cat: 'procedures', q: 'Pacemaker and airport security?', a: 'Patients may walk through screening quickly. Handheld wand devices can interfere — request pat-down instead.', tip: 'Never pass wand over pacemaker site.' },
+    { id: 66, cat: 'procedures', q: 'Pacemaker: failure to capture?', a: 'Pacer spike present but NO QRS follows. Action: assess patient, print ECG strip, increase milliamps (mA).', tip: 'Document the event.' },
+    { id: 67, cat: 'procedures', q: 'Targeted Temperature Management (TTM) — target and phases?', a: 'Target: 32–36°C. Phases: 1) Initial cooling (0–8 hrs), 2) Maintenance (24 hrs), 3) Rewarming (6–18 hrs).', tip: 'Every hour of delay = 20% increased mortality.' },
+    { id: 68, cat: 'procedures', q: 'TTM candidates?', a: 'Patients NOT following commands after ROSC. Slows cerebral metabolism, decreases O₂ consumption, lessens cerebral edema.', tip: 'Better neurologic recovery.' },
+
+    // ===== HEART FAILURE & SHOCK (69-90) =====
+    { id: 69, cat: 'hf-shock', q: 'Classic sign of heart failure?', a: 'Paroxysmal Nocturnal Dyspnea (PND) — waking up at night short of breath.', tip: 'Also: orthopnea, DOE.' },
+    { id: 70, cat: 'hf-shock', q: 'Left-sided HF signs?', a: 'S3 gallop, pink frothy sputum, crackles, dyspnea, orthopnea, PND, dry cough, low O₂, oliguria.', tip: 'Backward failure INTO LUNGS.' },
+    { id: 71, cat: 'hf-shock', q: 'Right-sided HF signs?', a: 'JVD, peripheral pitting edema, weight gain, ascites, hepatomegaly, sacral edema (bedrest).', tip: 'Backward failure into SYSTEMIC circulation.' },
+    { id: 72, cat: 'hf-shock', q: 'Cardiogenic shock — presentation?', a: 'LOW BP (hypotension), HIGH HR (tachycardia), "impending doom."', tip: 'First-line inotrope: dobutamine.' },
+    { id: 73, cat: 'hf-shock', q: 'Cardiogenic shock — treatment?', a: 'Dobutamine/dopamine (inotropes), norepinephrine (vasopressor), aspirin, Plavix, heparin.', tip: 'Support contractility AND perfusion.' },
+    { id: 74, cat: 'hf-shock', q: 'Beck\'s Triad for cardiac tamponade?', a: '1) Hypotension, 2) Narrow pulse pressure (<40), 3) Distant/muffled heart sounds.', tip: 'Also: JVD, pulsus paradoxus.' },
+    { id: 75, cat: 'hf-shock', q: 'Tamponade S/S in MVA (chest hit steering wheel)?', a: 'Chest pain, hypoxia, tachypnea, dyspnea, dizziness, syncope, AMS.', tip: 'Tachypnea = high RR (not HR!).' },
+    { id: 76, cat: 'hf-shock', q: 'Pulmonary edema — clinical manifestations?', a: 'Anxiety, dyspnea, cool/clammy skin, moist noisy respirations, frothy blood-tinged sputum, decreased LOC.', tip: 'From LV failure → blood backs into lungs.' },
+    { id: 77, cat: 'hf-shock', q: 'Pulmonary edema — positioning and treatment?', a: 'UPRIGHT with legs DANGLING (reduce preload). O₂ nonrebreather, IV furosemide, NTG, monitor I&O.', tip: 'Easier to PREVENT than treat.' },
+    { id: 78, cat: 'hf-shock', q: '5 classifications of shock?', a: 'Hypovolemic, Cardiogenic, Septic, Neurogenic, Anaphylactic.', tip: 'All share: hypoperfusion, hypermetabolism, inflammation.' },
+    { id: 79, cat: 'hf-shock', q: 'Compensatory stage of shock?', a: 'SNS activates: vasoconstriction, ↑HR, ↑contractility. Cool/clammy skin, decreased urine, confusion.', tip: 'Best prognosis if treated here.' },
+    { id: 80, cat: 'hf-shock', q: 'Progressive stage of shock?', a: 'Compensatory mechanisms fail. BP/MAP drop. SBP <100, HR >150, mottled skin, UO <0.5 mL/kg/hr, metabolic acidosis.', tip: 'Risk of ARDS, AKI, DIC.' },
+    { id: 81, cat: 'hf-shock', q: 'Irreversible stage of shock?', a: 'Organ damage so severe patient doesn\'t respond to treatment. Complete organ failure.', tip: 'Mortality extremely high.' },
+    { id: 82, cat: 'hf-shock', q: 'Dilated cardiomyopathy (DCM)?', a: 'MOST COMMON type. Chambers enlarge/weaken. Causes: pregnancy, HTN, viral, chemo, chronic alcohol.', tip: 'Leads to heart failure.' },
+    { id: 83, cat: 'hf-shock', q: 'Hypertrophic cardiomyopathy (HCM) — key fact?', a: 'LV thickens → reduced blood flow. Leading cause of sudden cardiac death in young ATHLETES.', tip: 'Avoid hot tubs, saunas (alter preload).' },
+    { id: 84, cat: 'hf-shock', q: 'Restrictive cardiomyopathy (RCM)?', a: 'LEAST COMMON. Heart muscle stiff → can\'t fill. Causes: cancer treatment, radiation, scleroderma.', tip: 'Problem is filling, not squeezing.' },
+    { id: 85, cat: 'hf-shock', q: 'Scenario: hold vs give — patient with mechanical valve, DVT, tachycardia, hypotension, platelets 75,000. GIVE what?', a: 'Adenosine 12mg (tachycardia, failed 6mg). IV fluid bolus (hypotensive).', tip: 'Treat the immediate life threats.' },
+    { id: 86, cat: 'hf-shock', q: 'Same scenario — HOLD what and why?', a: 'Hold heparin (suspect HIT), ASA (low plts + bleeding risk), lisinopril (hypotensive), Lasix (hypotensive), SCDs on affected leg (DVT → PE risk).', tip: 'Low plts = hold bleeders. Low BP = hold BP-lowerers.' },
+    { id: 87, cat: 'hf-shock', q: 'Narrowing pulse pressure — clinical significance?', a: 'EARLIER indicator of shock than SBP drop. Normal PP = 30–40 mmHg.', tip: 'Watch trends, not just single readings.' },
+    { id: 88, cat: 'hf-shock', q: 'Pulseless V-Tach on sync cardioversion → converts to pulseless V-Tach. Priority?', a: 'Switch to UNSYNCHRONIZED defibrillation. Pulseless = ALWAYS unsync.', tip: 'Never sync for pulseless rhythms.' },
+    { id: 89, cat: 'hf-shock', q: 'Medical management of valve disease?', a: 'Diuretics, anticoagulants, beta blockers.', tip: 'Surgery if medical management fails.' },
+    { id: 90, cat: 'hf-shock', q: '1st degree AV block — ECG finding?', a: 'PR interval >0.20 sec (e.g., 0.22 sec). Normal PR: 0.12–0.20 sec.', tip: 'Often seen with history of MI.' },
+
+    // ===== CARDIAC INFECTIONS (91-96) =====
+    { id: 91, cat: 'infection', q: 'Myocarditis — what is it and treatment?', a: 'Inflammation/infection of myocardium. Treatment: IV antibiotics once infection identified.', tip: 'Can lead to HF if untreated.' },
+    { id: 92, cat: 'infection', q: 'Rheumatic fever — cause and treatment?', a: 'Caused by Group A Strep (GAS) pharyngitis. Tx: Penicillin or Amoxicillin.', tip: 'S/S: sore throat, fever, red/swollen tonsils with white patches.' },
+    { id: 93, cat: 'infection', q: 'Infective endocarditis — key prevention?', a: 'Prophylactic antibiotics BEFORE dental procedures (in high-risk patients).', tip: 'High-risk = prosthetic valves, previous IE, congenital heart disease.' },
+    { id: 94, cat: 'infection', q: 'Dressler syndrome?', a: 'Pericarditis occurring post-MI. Autoimmune inflammatory response.', tip: 'Treat like regular pericarditis: NSAIDs + colchicine.' },
+    { id: 95, cat: 'infection', q: 'CLABSI prevention bundle?', a: 'Hand hygiene, scrub the hub (15–30 sec), maximal sterile barriers, optimal site selection, remove ASAP, daily CHG baths.', tip: 'Evidence-based practice bundle.' },
+    { id: 96, cat: 'infection', q: 'Digoxin toxicity — signs and hold parameters?', a: 'N/V, anorexia, yellow-green halos, blurred vision. Hold if HR <60. Check K+ (hypokalemia ↑ toxicity).', tip: 'Check apical HR × 1 full minute before giving.' },
+
+    // ===== ARRHYTHMIAS, DEVICES & ACLS (97-120) =====
+    { id: 97, cat: 'arrhythmia', q: 'H\'s of cardiac arrest?', a: 'Hypovolemia, Hypoxia, Hydrogen ion (acidosis), Hypo/Hyperkalemia, Hypothermia, Hypo/Hyperglycemia.', tip: 'Think REVERSIBLE CAUSES.' },
+    { id: 98, cat: 'arrhythmia', q: 'T\'s of cardiac arrest?', a: 'Tension pneumothorax, Tamponade (cardiac), Toxins, Thrombosis (pulmonary and/or coronary).', tip: 'Treat the cause, not just push drugs.' },
+    { id: 99, cat: 'arrhythmia', q: 'Epinephrine dose in cardiac arrest?', a: '1 mg IV push q3–5 min for ALL arrest rhythms.', tip: 'Follow with 20 mL saline flush.' },
+    { id: 100, cat: 'arrhythmia', q: 'Amiodarone in cardiac arrest?', a: '1st dose: 300 mg IV bolus. 2nd dose: 150 mg in 3–5 min. For pulseless VT/VF refractory to shock.', tip: 'Given AFTER 3rd shock + epi.' },
+    { id: 101, cat: 'arrhythmia', q: 'Atropine — dose, max, and indication?', a: '1 mg IV push, may repeat to max 3 mg. For symptomatic bradycardia.', tip: 'NOT recommended for asystole/PEA.' },
+    { id: 102, cat: 'arrhythmia', q: 'Sodium bicarbonate in a code?', a: '1 mEq/kg IV for refractory metabolic acidosis. Risk of rebound alkalosis.', tip: 'NOT routine — only for specific indications.' },
+    { id: 103, cat: 'arrhythmia', q: 'Magnesium sulfate — when used?', a: 'Torsades de Pointes. 1–2 g in 10 mL D5W over 5–20 min.', tip: 'Polymorphic VT with long QT.' },
+    { id: 104, cat: 'arrhythmia', q: 'Code Blue first responder actions?', a: 'Check responsiveness, check pulse/respirations (<10 sec), call for help, flatten patient, start CPR 100–120/min, depth 2 inches.', tip: 'Circulation is MOST important.' },
+    { id: 105, cat: 'arrhythmia', q: 'CPR quality standards?', a: '100–120 compressions/min, depth 2 inches, full chest recoil, switch compressors every 2 min.', tip: 'Only stop for 10-sec rhythm/pulse check.' },
+    { id: 106, cat: 'arrhythmia', q: 'Second responder in Code Blue?', a: 'Bring crash cart, attach defib pads, select AED/defib mode, assess rhythm.', tip: 'Continue CPR while charging defibrillator.' },
+    { id: 107, cat: 'arrhythmia', q: 'Hyperkalemia cocktail?', a: 'Ca gluconate/chloride (membrane stabilizer), IV insulin + D50 (shifts K+ in), NaHCO₃, albuterol, Kayexalate (removes K+).', tip: 'Ca chloride = NOT calcium carbonate (Tums).' },
+    { id: 108, cat: 'arrhythmia', q: 'Rate control drugs for A-fib?', a: 'Metoprolol, diltiazem, digoxin — slow ventricular rate.', tip: 'Control how FAST ventricles beat.' },
+    { id: 109, cat: 'arrhythmia', q: 'Rhythm control drugs for A-fib?', a: 'Amiodarone, flecainide, sotalol — restore sinus rhythm.', tip: 'Try to restore NORMAL rhythm.' },
+
+    // ===== PHARMACOLOGY (110-150) =====
+    { id: 110, cat: 'pharmacology', q: 'Anticoagulant monitoring: DOACs?', a: 'Do NOT require routine daily monitoring. Examples: Pradaxa (dabigatran), Eliquis (apixaban).', tip: 'Advantage over warfarin.' },
+    { id: 111, cat: 'pharmacology', q: 'aPTT monitors which drug? Therapeutic range?', a: 'Heparin drip. Therapeutic: 1.5–2.5× control. Reversal: protamine sulfate.', tip: '<50 sec = increase dose; >100 sec = decrease dose.' },
+    { id: 112, cat: 'pharmacology', q: 'PT/INR monitors which drug? Therapeutic range?', a: 'Warfarin (Coumadin). Standard INR: 2–3. Mechanical valves: 2.5–3.5. Reversal: Vitamin K.', tip: 'Exams test the distinction between ranges.' },
+    { id: 113, cat: 'pharmacology', q: 'NTG storage rules?', a: 'Dark glass bottle, tightly closed, replace every 6 months. Keep away from heat/light/moisture.', tip: 'Should tingle/burn under tongue if still potent.' },
+    { id: 114, cat: 'pharmacology', q: 'NTG contraindications?', a: 'SBP <90, PDE-5 inhibitor use (Viagra/Cialis) within 24–48 hrs, right ventricular infarction.', tip: 'ALWAYS ask about erectile dysfunction meds.' },
+    { id: 115, cat: 'pharmacology', q: 'NTG patch rules?', a: 'Hairless clean dry skin, rotate sites, 12 hrs on / 12 hrs off.', tip: 'Nitrate-free interval prevents tolerance.' },
+    { id: 116, cat: 'pharmacology', q: 'ACE inhibitor side effect and contraindication?', a: 'Side effect: dry nonproductive cough (bradykinin). Do NOT give first-line to African American patients.', tip: 'Use CCBs + thiazide diuretics instead for AA patients.' },
+    { id: 117, cat: 'pharmacology', q: 'African American patients — preferred HTN drugs?', a: 'CCBs + thiazide diuretics. ACE/ARBs less effective, higher angioedema risk.', tip: 'Can still add ACE/ARB as combination.' },
+    { id: 118, cat: 'pharmacology', q: 'HTN crisis — BP threshold and treatment?', a: 'BP >180/120. Reduce by no more than 25% in first hour. IV vasodilators: nicardipine, clevidipine, labetalol, nitroprusside.', tip: 'EXCEPT for AAA — reduce more aggressively.' },
+    { id: 119, cat: 'pharmacology', q: 'DASH diet components?', a: 'Low sodium, whole grains, fresh vegetables & fruit, lean proteins, nuts/seeds/legumes, low-fat dairy.', tip: 'Lifestyle modification for HTN.' },
+    { id: 120, cat: 'pharmacology', q: 'Lifestyle modifications to decrease BP?', a: 'Alcohol moderation, DASH diet, weight reduction, stress reduction, exercise, Mediterranean/plant-based diet.', tip: 'Non-pharmacologic interventions first.' },
+    { id: 121, cat: 'pharmacology', q: 'Beta blockers for CAD — what do they mask in diabetics?', a: 'Hypoglycemia — they block the sympathetic response (tachycardia, tremor) that normally alerts to low blood sugar.', tip: 'Teach diabetic patients to check glucose regularly.' },
+    { id: 122, cat: 'pharmacology', q: 'Aspirin dose for ACS?', a: '162–325 mg — have patient CHEW for rapid absorption. Maintenance: 81 mg daily.', tip: 'Don\'t delay aspirin for anything.' },
+    { id: 123, cat: 'pharmacology', q: 'Dual antiplatelet therapy (DAPT)?', a: 'Aspirin + clopidogrel (Plavix). Standard post-stent placement for 6–12 months.', tip: 'P2Y12 inhibitor + aspirin.' },
+    { id: 124, cat: 'pharmacology', q: 'Alteplase (tPA) — 3 main uses?', a: 'STEMI (if PCI unavailable), ischemic stroke (<3–4.5 hrs), massive PE.', tip: 'Tenecteplase = single bolus alternative.' },
+    { id: 125, cat: 'pharmacology', q: 'Dobutamine vs dopamine?', a: 'Dobutamine: β1 inotrope, increases contractility, first-line for cardiogenic shock. Dopamine: dose-dependent (renal → cardiac → vasopressor).', tip: 'They are SEPARATE drugs.' },
+    { id: 126, cat: 'pharmacology', q: 'Statins — most serious side effect?', a: 'Rhabdomyolysis — muscle breakdown → myoglobin → kidney damage. Signs: severe muscle pain, dark urine.', tip: 'Report unexplained muscle pain; check CK.' },
+    { id: 127, cat: 'pharmacology', q: 'Niacin (B3) — unique benefit?', a: 'Best at raising HDL ("good cholesterol"). Side effect: flushing.', tip: 'Take aspirin 30 min before to reduce flushing.' },
+    { id: 128, cat: 'pharmacology', q: 'Fibrates — primary effect?', a: 'Lower triglycerides. Examples: gemfibrozil, fenofibrate.', tip: '↑ myopathy risk when combined with statins.' },
+    { id: 129, cat: 'pharmacology', q: 'Adenosine — dose, technique, indication?', a: '6 mg rapid IV push → 12 mg if needed. Proximal IV + 20 mL NS flush. For SVT.', tip: 'Half-life <10 sec — must be rapid push.' },
+    { id: 130, cat: 'pharmacology', q: 'Amiodarone long-term side effects?', a: 'Pulmonary fibrosis, thyroid dysfunction, corneal deposits, photosensitivity, hepatotoxicity, "blue-gray" skin.', tip: 'Baseline PFTs, TFTs, LFTs, eye exam.' },
+    { id: 131, cat: 'pharmacology', q: 'Heparin-induced thrombocytopenia (HIT) — when to suspect?', a: 'Platelet drop >50% from baseline 5–10 days after starting heparin. STOP all heparin immediately.', tip: 'Paradoxically causes clotting, not bleeding.' },
+    { id: 132, cat: 'pharmacology', q: 'Warfarin antidote?', a: 'Vitamin K (phytonadione). Takes 24–48 hrs. For emergent bleeding: FFP or PCC (Kcentra).', tip: 'INR 5.2 no bleeding → hold warfarin + low-dose vitamin K.' },
+    { id: 133, cat: 'pharmacology', q: 'Calcium gluconate vs calcium chloride?', a: 'Both stabilize cardiac membrane in hyperkalemia. Chloride is 3× more potent. NOT calcium carbonate (Tums).', tip: 'Lecture may say "carbonate" — the IV options are gluconate or chloride.' },
+    { id: 134, cat: 'pharmacology', q: 'Milrinone — what makes it unique?', a: '"Inodilator" — increases contractility AND causes vasodilation. Used in acute decompensated HF.', tip: 'Both inotrope + vasodilator.' },
+    { id: 135, cat: 'pharmacology', q: 'Dopamine dose-dependent effects?', a: 'Low (1–5): renal vasodilation. Moderate (5–10): cardiac (inotropic). High (10–20): vasopressor (alpha).', tip: '"Dope Low = kidneys flow."' },
+    { id: 136, cat: 'pharmacology', q: 'Norepinephrine (Levophed) — indication?', a: 'First-line vasopressor for septic shock. Potent vasoconstrictor.', tip: '"Leave \'em dead" — use via central line.' },
+    { id: 137, cat: 'pharmacology', q: 'Epinephrine dose for anaphylaxis vs cardiac arrest?', a: 'Anaphylaxis: 0.3–0.5 mg IM (1:1000). Cardiac arrest: 1 mg IV (1:10,000).', tip: 'Different concentration AND route.' },
+    { id: 138, cat: 'pharmacology', q: 'Digoxin — does it reduce mortality in HF?', a: 'NO — improves symptoms and reduces hospitalizations but does NOT reduce mortality.', tip: 'Still useful for symptom management.' },
+    { id: 139, cat: 'pharmacology', q: 'SGLT2 inhibitors in HF?', a: 'Dapagliflozin, empagliflozin — mortality benefit in HFrEF even without diabetes.', tip: 'Originally diabetes drugs, now standard HF therapy.' },
+    { id: 140, cat: 'pharmacology', q: 'Entresto — what is it?', a: 'Sacubitril/valsartan — ARNI. Superior to ACE alone in HFrEF.', tip: '36-hour washout from ACE before starting.' },
+    { id: 141, cat: 'pharmacology', q: 'Furosemide IV vs PO potency?', a: 'IV is ~2× more potent. 40 mg IV ≈ 80 mg PO.', tip: 'Use IV for acute decompensated HF.' },
+    { id: 142, cat: 'pharmacology', q: 'Spironolactone — class and HF benefit?', a: 'Aldosterone antagonist (K+-sparing diuretic). Mortality benefit in HFrEF.', tip: 'Monitor K+ — hyperkalemia risk with ACE/ARB.' },
+    { id: 143, cat: 'pharmacology', q: 'Hydralazine + isosorbide dinitrate — when used?', a: 'Alternative to ACE/ARB, especially effective in African American patients with HFrEF.', tip: 'BiDil = fixed-dose combination.' },
+    { id: 144, cat: 'pharmacology', q: 'HF sodium restriction?', a: '<2 g (2000 mg) sodium per day.', tip: 'Read labels; avoid canned/processed foods.' },
+    { id: 145, cat: 'pharmacology', q: 'When to report weight gain in HF?', a: '>2 lbs overnight or >5 lbs in a week.', tip: 'Weigh same time daily, same scale, same clothing.' },
+    { id: 146, cat: 'pharmacology', q: 'NTG IV drip — special considerations?', a: 'Use glass bottles and non-PVC tubing (NTG absorbs into PVC plastic).', tip: 'Used for unstable angina, acute HF, hypertensive emergency.' },
+    { id: 147, cat: 'pharmacology', q: 'NTG mechanism of action?', a: 'Releases nitric oxide → relaxes vascular smooth muscle → venodilation → decreases preload → decreases O₂ demand.', tip: 'Primarily a preload reducer.' },
+    { id: 148, cat: 'pharmacology', q: 'Pericarditis — which drugs to AVOID?', a: 'Anticoagulants — risk of hemopericardium leading to tamponade.', tip: 'Use NSAIDs + colchicine instead.' },
+    { id: 149, cat: 'pharmacology', q: 'Nitroprusside — unique risk?', a: 'Cyanide toxicity with prolonged use. Also: potent arterial AND venous dilator (both preload + afterload).', tip: 'Wrap IV bag in foil (light-sensitive).' },
+    { id: 150, cat: 'pharmacology', q: 'Phenylephrine — mechanism?', a: 'Pure alpha-1 agonist → vasoconstriction → increases SVR/BP. No beta effects.', tip: 'Reflex bradycardia may occur.' },
+
+    // ===== VASCULAR (151-170) =====
+    { id: 151, cat: 'vascular', q: 'Aortic aneurysm (AAA) — risk factors?', a: 'Male >65, smoking, HTN, atherosclerosis, family history, Marfan syndrome.', tip: 'Often asymptomatic until rupture.' },
+    { id: 152, cat: 'vascular', q: 'AAA signs?', a: 'Pulsatile abdominal mass (do NOT palpate aggressively), back/flank pain, abdominal pain.', tip: '"Silent killer" until rupture.' },
+    { id: 153, cat: 'vascular', q: 'Aortic dissection/rupture signs?', a: 'Sudden severe "tearing/ripping" chest/back pain, hypotension, tachycardia, unequal BP in arms, absent pulses.', tip: 'Hemorrhagic shock → death.' },
+    { id: 154, cat: 'vascular', q: 'AAA/dissection BP management?', a: 'AGGRESSIVE reduction (unlike HTN crisis 25% rule). Target SBP 100–120. First-line: IV beta blocker (esmolol, labetalol).', tip: 'This is the exception to the 25% rule.' },
+    { id: 155, cat: 'vascular', q: 'Raynaud\'s phenomenon — demographics and triggers?', a: '5× more common in women, onset <30. Triggers: cold, stress, nicotine. Colors: white → blue → red.', tip: 'Associated with scleroderma, SLE, RA.' },
+    { id: 156, cat: 'vascular', q: 'Raynaud\'s nursing management?', a: 'Protect from cold (wear gloves), avoid nicotine/decongestants, avoid stress, CCBs for symptom relief.', tip: 'Even grocery store freezer section can trigger attacks.' },
+    { id: 157, cat: 'vascular', q: 'Virchow\'s Triad (3 causes of DVT)?', a: '1) Endothelial damage (trauma/surgery), 2) Venous stasis (bedrest/HF/obesity), 3) Altered coagulation (cancer/OCP/pregnancy).', tip: 'DVT can lead to PE.' },
+    { id: 158, cat: 'vascular', q: 'DVT prevention strategies?', a: 'Early ambulation, SCDs (NOT on leg with existing DVT), anticoagulant prophylaxis, weight loss, smoking cessation.', tip: 'Never compress a leg with DVT → PE risk.' },
+    { id: 159, cat: 'vascular', q: 'PE signs and symptoms?', a: 'Dyspnea, pleuritic chest pain, tachypnea, cough. Treatment: anticoagulation.', tip: 'PE = life-threatening DVT complication.' },
+    { id: 160, cat: 'vascular', q: 'Arterial ulcers — characteristics?', a: 'Small, circular, ACUTE PAIN. Caused by ischemia. Position: dangle legs for relief.', tip: 'Arterial = painful, small, dangle.' },
+    { id: 161, cat: 'vascular', q: 'Venous ulcers — characteristics?', a: 'Large, superficial, heavy drainage, PAINLESS. 6–12 months to heal. ELEVATE legs, compression stockings.', tip: 'Venous = painless, large, elevate.' },
+    { id: 162, cat: 'vascular', q: 'Arterial vs venous ulcers — key differentiator?', a: 'Arterial = PAINFUL, small, dangle. Venous = PAINLESS, large, elevate.', tip: 'Classic exam question!' },
+    { id: 163, cat: 'vascular', q: 'Mitral valve prolapse (MVP)?', a: 'Most common valve disorder (2.5%, more common in women). Can lead to mitral regurgitation → HF.', tip: 'Often asymptomatic.' },
+    { id: 164, cat: 'vascular', q: 'Mitral stenosis?', a: 'Usually from rheumatic endocarditis. First symptom: DOE. Low-pitched diastolic murmur at apex.', tip: 'Diastolic = filling problem.' },
+    { id: 165, cat: 'vascular', q: 'Aortic stenosis?', a: 'Narrowing between LV and aorta. Loud harsh systolic murmur at right 2nd ICS. May hear S4.', tip: 'Systolic = ejection problem.' },
+    { id: 166, cat: 'vascular', q: 'Aortic regurgitation?', a: 'Backward flow into LV during diastole. Caused by rheumatic endocarditis. High-pitched diastolic murmur at 3rd–4th ICS, left sternal border.', tip: 'Blood flowing backward when it shouldn\'t.' },
+
+    // ===== SEPSIS, DIC & CRITICAL CARE (167-200) =====
+    { id: 167, cat: 'sepsis-dic', q: 'Sepsis bundle (Hour-1) — 5 interventions?', a: '1) Measure lactate, 2) Blood cultures BEFORE antibiotics, 3) Broad-spectrum antibiotics, 4) 30 mL/kg crystalloid, 5) Vasopressors (norepi) if hypotensive.', tip: 'All within 1 hour.' },
+    { id: 168, cat: 'sepsis-dic', q: 'SIRS criteria (need 2+)?', a: 'Temp >38°C or <36°C, HR >90, RR >20, WBC >12K or <4K ("left shift" = immature WBCs).', tip: 'SIRS + suspected infection = Sepsis.' },
+    { id: 169, cat: 'sepsis-dic', q: 'SIRS → Sepsis → Septic Shock progression?', a: 'SIRS alone isn\'t necessarily infectious. SIRS + infection = Sepsis. Sepsis + refractory hypotension (despite fluids) = Septic Shock.', tip: 'Exams test this progression.' },
+    { id: 170, cat: 'sepsis-dic', q: 'DIC — what is it?', a: 'Decrease in clotting factors and platelets → simultaneous clotting AND bleeding. Almost always secondary to sepsis.', tip: 'Both clotting and bleeding at same time.' },
+    { id: 171, cat: 'sepsis-dic', q: 'DIC expected labs?', a: 'LOW platelets (<100K), decreased fibrinogen (<200), prolonged PT/PTT (>15 sec), elevated D-dimer (>2).', tip: 'D-dimer = clot breakdown.' },
+    { id: 172, cat: 'sepsis-dic', q: 'First-line vasopressor for septic shock?', a: 'Norepinephrine (Levophed).', tip: 'Give via central line.' },
+    { id: 173, cat: 'sepsis-dic', q: 'Lactate — significance?', a: '#1 lab marker for tissue hypoperfusion. >2 mmol/L = tissues not getting enough O₂.', tip: 'Elevated lactate = bad.' },
+    { id: 174, cat: 'sepsis-dic', q: 'Code Blue — CPR only stops for?', a: '10-second rhythm/pulse check. Continue CPR while defibrillator charging.', tip: 'Every minute of delay decreases survival.' },
+    { id: 175, cat: 'sepsis-dic', q: 'Switch compressors every?', a: '2 minutes (5 cycles) or when fatigued.', tip: 'Use closed-loop communication throughout.' },
+    { id: 176, cat: 'sepsis-dic', q: 'AAA BP exception — why different from HTN crisis?', a: 'HTN crisis: reduce only 25% in first hour. AAA: reduce AGGRESSIVELY to SBP 100–120 because rupture is imminent.', tip: 'Speed matters with aortic emergencies.' },
+    { id: 177, cat: 'sepsis-dic', q: 'Arrhythmogenic RV cardiomyopathy (ARVC)?', a: 'Sudden cardiac death may be the FIRST sign.', tip: 'No warning symptoms.' },
+    { id: 178, cat: 'sepsis-dic', q: 'Calcium in a code — indications?', a: 'Hyperkalemia, CCB overdose, hypermagnesemia. Stabilizes cardiac membrane.', tip: 'Ca chloride is 3× more potent than gluconate.' },
+    { id: 179, cat: 'sepsis-dic', q: 'Atropine in asystole/PEA — still used?', a: 'NO — removed from ACLS algorithm. Still used for symptomatic bradycardia only.', tip: 'Don\'t waste time on atropine in flatline.' },
+    { id: 180, cat: 'sepsis-dic', q: 'Tenecteplase vs alteplase?', a: 'Tenecteplase = single IV bolus (easier). Alteplase = 60–90 min infusion. Same efficacy.', tip: 'Tenecteplase preferred in STEMI for simplicity.' },
+    { id: 181, cat: 'sepsis-dic', q: 'Dopamine infusion for bradycardia — when?', a: 'When atropine ineffective and transcutaneous pacing unavailable. 5–20 mcg/kg/min.', tip: 'Alternative: epi infusion 2–10 mcg/min.' },
+    { id: 182, cat: 'sepsis-dic', q: 'Septic shock presentation vs cardiogenic shock?', a: 'Septic: warm/vasodilated early (distributive), wide PP. Cardiogenic: cold/clammy, narrow PP, pump failure.', tip: 'Different mechanisms, both need vasopressors.' },
+    { id: 183, cat: 'sepsis-dic', q: 'Neurogenic shock — unique finding?', a: 'Bradycardia + hypotension (loss of sympathetic tone from spinal cord injury). Warm/dry skin.', tip: 'Unlike other shock types that show tachycardia.' },
+    { id: 184, cat: 'sepsis-dic', q: 'Anaphylactic shock — first-line treatment?', a: 'Epinephrine 0.3–0.5 mg IM (1:1000) into lateral thigh. Repeat q5–15 min.', tip: 'IM, not IV. Different concentration from code dose.' },
+    { id: 185, cat: 'sepsis-dic', q: 'Thiazide diuretics — electrolyte concerns?', a: 'Hypokalemia, hyponatremia, hyperglycemia, hyperuricemia, hypercalcemia.', tip: 'Hypo-K and hypo-Na are the big ones.' },
+    { id: 186, cat: 'sepsis-dic', q: 'Clonidine — mechanism and risk?', a: 'Central alpha-2 agonist → reduces sympathetic outflow → lowers BP. Risk: rebound HTN if stopped abruptly.', tip: 'Used for hypertensive urgency.' },
+    { id: 187, cat: 'sepsis-dic', q: 'Resistant hypertension — definition?', a: 'BP above goal despite 3+ drugs at max doses, including a diuretic.', tip: 'Rule out secondary causes.' },
+    { id: 188, cat: 'sepsis-dic', q: 'Hypertensive emergency vs urgency?', a: 'Emergency: >180/120 WITH organ damage → IV drugs. Urgency: >180/120 WITHOUT organ damage → oral drugs.', tip: 'Key distinction for treatment approach.' },
+    { id: 189, cat: 'sepsis-dic', q: 'Safe HTN drugs in pregnancy?', a: 'Labetalol, nifedipine, methyldopa.', tip: 'ACE/ARBs are TERATOGENIC — never in pregnancy.' },
+    { id: 190, cat: 'sepsis-dic', q: 'HTN drugs for diabetic patients?', a: 'ACE/ARBs — provide renal protection (reduce proteinuria).', tip: 'Monitor K+ and creatinine.' },
+    { id: 191, cat: 'sepsis-dic', q: 'Target LDL for high-risk patients?', a: '<70 mg/dL (post-ACS). General: <100 mg/dL.', tip: 'HDL = "Happy" (high), LDL = "Lousy" (low).' },
+    { id: 192, cat: 'sepsis-dic', q: 'PCSK9 inhibitors?', a: 'SubQ injection q2–4 weeks (evolocumab, alirocumab). Very potent LDL reduction.', tip: 'When statins alone insufficient.' },
+    { id: 193, cat: 'sepsis-dic', q: 'Bile acid sequestrants?', a: 'Bind bile acids in GI tract → liver uses cholesterol to make more bile → LDL decreases.', tip: 'GI side effects common (constipation, bloating).' },
+    { id: 194, cat: 'sepsis-dic', q: 'GP IIb/IIIa inhibitors?', a: 'Abciximab, eptifibatide — used during PCI to prevent acute thrombosis.', tip: 'Monitor for bleeding.' },
+    { id: 195, cat: 'sepsis-dic', q: 'Enoxaparin (Lovenox) — key points?', a: 'SubQ injection. No routine monitoring needed. Do NOT rub injection site; rotate abdomen.', tip: 'Anti-Xa if obese/renal impairment.' },
+    { id: 196, cat: 'sepsis-dic', q: 'ACE inhibitor timing post-MI?', a: 'Within 24 hours — reduces remodeling and mortality.', tip: 'Monitor BP, K+, creatinine.' },
+    { id: 197, cat: 'sepsis-dic', q: 'Statin timing post-ACS?', a: 'High-intensity statin at discharge (atorvastatin 80 mg or rosuvastatin 20–40 mg).', tip: 'Regardless of baseline cholesterol.' },
+    { id: 198, cat: 'sepsis-dic', q: 'When should statins be taken?', a: 'At bedtime — cholesterol synthesis peaks at night.', tip: 'Newer statins can be taken anytime.' },
+    { id: 199, cat: 'sepsis-dic', q: 'Morphine in ACS — benefit and risk?', a: 'Benefit: pain relief, reduces sympathetic drive. Risk: hypotension, respiratory depression, may ↑ mortality.', tip: 'Use only if NTG fails to control pain.' },
+    { id: 200, cat: 'sepsis-dic', q: 'What does VOMIT stand for (things to avoid in ACS)?', a: 'Vasopressors, Oxygen (if SpO₂ >94%), Morphine (routine), IV fluids (if not hypotensive), Trendelenburg.', tip: 'Evidence-based update to classic MONA.' }
+];
+
+        // ===================== STATE =====================
+        let state = {
+            deck: [],
+            idx: 0,
+            flipped: false,
+            results: {},
+            overflow: [],
+            totalOriginal: 0
+        };
+
+        let savedProgress = {};
+        let selectedCats = new Set();
+
+        // ===================== STORAGE =====================
+        function loadProgress() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                savedProgress = data ? JSON.parse(data) : {};
+            } catch (e) { savedProgress = {}; }
+        }
+
+        function saveProgress() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedProgress)); } catch (e) { }
+        }
+
+        function saveSessionResults() {
+            Object.entries(state.results).forEach(([cardId, result]) => {
+                savedProgress[cardId] = result;
+            });
+            saveProgress();
+        }
+
+        function resetProgress() {
+            if (confirm('Reset all progress? This cannot be undone.')) {
+                savedProgress = {};
+                saveProgress();
+                renderStartScreen();
+            }
+        }
+
+        // ===================== SCREENS =====================
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + name).classList.add('active');
+            if (name === 'start') renderStartScreen();
+        }
+
+        function renderStartScreen() {
+            loadProgress();
+
+            const total = cards.length;
+            let gotit = 0, unsure = 0, missed = 0, unseen = 0;
+            cards.forEach(c => {
+                const status = savedProgress[c.id];
+                if (status === 'gotit') gotit++;
+                else if (status === 'unsure') unsure++;
+                else if (status === 'missed') missed++;
+                else unseen++;
+            });
+
+            const progressDiv = document.getElementById('progress-summary');
+            if (gotit + unsure + missed > 0) {
+                const gpct = (gotit / total * 100).toFixed(1);
+                const upct = (unsure / total * 100).toFixed(1);
+                const mpct = (missed / total * 100).toFixed(1);
+                progressDiv.innerHTML = `
+                    <h3>Overall Progress</h3>
+                    <div class="overall-bar">
+                        <div class="mb-gotit" style="width:${gpct}%"></div>
+                        <div class="mb-unsure" style="width:${upct}%"></div>
+                        <div class="mb-missed" style="width:${mpct}%"></div>
+                    </div>
+                    <div class="overall-text">${gotit} mastered \u00b7 ${unsure} unsure \u00b7 ${missed} missed \u00b7 ${unseen} unseen</div>
+                `;
+                progressDiv.style.display = 'block';
+            } else {
+                progressDiv.style.display = 'none';
+            }
+
+            const grid = document.getElementById('cat-grid');
+            grid.innerHTML = '';
+
+            Object.entries(categories).forEach(([catId, cat]) => {
+                const catCards = cards.filter(c => c.cat === catId);
+                const catTotal = catCards.length;
+                let cg = 0, cu = 0, cm = 0;
+                catCards.forEach(c => {
+                    const status = savedProgress[c.id];
+                    if (status === 'gotit') cg++;
+                    else if (status === 'unsure') cu++;
+                    else if (status === 'missed') cm++;
+                });
+
+                const masteryPct = catTotal > 0 ? (cg / catTotal * 100).toFixed(0) : 0;
+                const gpct = catTotal > 0 ? (cg / catTotal * 100) : 0;
+                const upct = catTotal > 0 ? (cu / catTotal * 100) : 0;
+                const mpct = catTotal > 0 ? (cm / catTotal * 100) : 0;
+
+                const btn = document.createElement('div');
+                btn.className = 'cat-btn';
+                btn.dataset.cat = catId;
+                btn.style.setProperty('--cat-color', cat.color);
+                btn.innerHTML = `
+                    <span class="cat-name">
+                        <span class="cat-dot" style="background:${cat.color}"></span>
+                        ${cat.name}
+                    </span>
+                    <span class="cat-count">${catTotal} cards</span>
+                    <div class="cat-mastery">
+                        <div class="cat-mastery-bar">
+                            <div class="mb-gotit" style="width:${gpct}%"></div>
+                            <div class="mb-unsure" style="width:${upct}%"></div>
+                            <div class="mb-missed" style="width:${mpct}%"></div>
+                        </div>
+                        <div class="cat-mastery-text">${masteryPct}% mastered</div>
+                    </div>
+                `;
+                btn.addEventListener('click', () => toggleCategory(catId, btn));
+                grid.appendChild(btn);
+            });
+
+            const weakCount = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure').length;
+            document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+            document.getElementById('btn-weak').disabled = weakCount === 0;
+
+            selectedCats.clear();
+        }
+
+        function toggleCategory(catId, btn) {
+            const multiSelect = document.getElementById('chk-multi').checked;
+
+            if (multiSelect) {
+                if (selectedCats.has(catId)) {
+                    selectedCats.delete(catId);
+                    btn.classList.remove('selected');
+                } else {
+                    selectedCats.add(catId);
+                    btn.classList.add('selected');
+                }
+            } else {
+                startSession([catId]);
+            }
+        }
+
+        // ===================== SESSION =====================
+        function startSession(catIds) {
+            loadProgress();
+
+            let sessionCards = cards.filter(c => catIds.includes(c.cat));
+
+            if (document.getElementById('chk-shuffle').checked) {
+                sessionCards = shuffleArray([...sessionCards]);
+            }
+
+            state = {
+                deck: sessionCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: sessionCards.length
+            };
+
+            if (state.deck.length === 0) {
+                alert('No cards in selected categories.');
+                return;
+            }
+
+            showScreen('card');
+            displayCard();
+        }
+
+        function startAll() {
+            if (selectedCats.size > 0) {
+                startSession([...selectedCats]);
+            } else {
+                startSession(Object.keys(categories));
+            }
+        }
+
+        function studyWeak() {
+            loadProgress();
+            const weakCards = cards.filter(c => savedProgress[c.id] === 'missed' || savedProgress[c.id] === 'unsure');
+
+            if (weakCards.length === 0) {
+                alert('No weak cards to study!');
+                return;
+            }
+
+            let sessionCards = document.getElementById('chk-shuffle').checked
+                ? shuffleArray([...weakCards])
+                : weakCards;
+
+            state = {
+                deck: sessionCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: sessionCards.length
+            };
+
+            showScreen('card');
+            displayCard();
+        }
+
+        function exitSession() {
+            saveSessionResults();
+            showScreen('start');
+        }
+
+        // ===================== CARD DISPLAY =====================
+        function displayCard() {
+            if (state.idx >= state.deck.length) {
+                if (state.overflow.length > 0) {
+                    state.deck = state.deck.concat(state.overflow);
+                    state.overflow = [];
+                } else {
+                    saveSessionResults();
+                    showResults();
+                    return;
+                }
+            }
+
+            const cardId = state.deck[state.idx];
+            const card = cards.find(c => c.id === cardId);
+            const cat = categories[card.cat];
+
+            document.getElementById('front-content').innerHTML = card.q;
+
+            let backHtml = `<div class="answer-text">${card.a}</div>`;
+            if (card.tip) {
+                backHtml += `<div class="exam-tip">${card.tip}</div>`;
+            }
+            document.getElementById('back-content').innerHTML = backHtml;
+
+            document.getElementById('cur-cat').textContent = cat.name;
+            document.getElementById('cur-cat').style.borderColor = cat.color;
+
+            document.getElementById('cur-num').textContent = state.idx + 1;
+            document.getElementById('tot-num').textContent = state.deck.length;
+
+            const pct = (state.idx / state.totalOriginal * 100);
+            document.getElementById('prog-fill').style.width = Math.min(pct, 100) + '%';
+
+            const requeueInfo = document.getElementById('requeue-info');
+            if (state.idx >= state.totalOriginal) {
+                requeueInfo.textContent = 'Review';
+                requeueInfo.style.display = 'inline';
+            } else {
+                requeueInfo.style.display = 'none';
+            }
+
+            state.flipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('conf-controls').classList.remove('visible');
+        }
+
+        function flipCard() {
+            state.flipped = !state.flipped;
+            document.getElementById('flashcard').classList.toggle('flipped', state.flipped);
+            if (state.flipped) {
+                document.getElementById('conf-controls').classList.add('visible');
+            }
+        }
+
+        function rate(confidence) {
+            if (!state.flipped) return;
+
+            const cardId = state.deck[state.idx];
+            state.results[cardId] = confidence;
+
+            if (confidence === 'missed') {
+                const offset = 5 + Math.floor(Math.random() * 3);
+                const insertAt = state.idx + offset;
+                if (insertAt < state.deck.length) {
+                    state.deck.splice(insertAt, 0, cardId);
+                } else {
+                    state.overflow.push(cardId);
+                }
+            } else if (confidence === 'unsure') {
+                const offset = 8 + Math.floor(Math.random() * 3);
+                const insertAt = state.idx + offset;
+                if (insertAt < state.deck.length) {
+                    state.deck.splice(insertAt, 0, cardId);
+                } else {
+                    state.overflow.push(cardId);
+                }
+            }
+
+            state.idx++;
+            displayCard();
+        }
+
+        // ===================== RESULTS =====================
+        function showResults() {
+            showScreen('results');
+
+            let gotit = 0, unsure = 0, missed = 0;
+            const catStats = {};
+
+            Object.entries(state.results).forEach(([cardId, result]) => {
+                const card = cards.find(c => c.id === parseInt(cardId));
+                if (!catStats[card.cat]) {
+                    catStats[card.cat] = { gotit: 0, unsure: 0, missed: 0 };
+                }
+
+                if (result === 'gotit') { gotit++; catStats[card.cat].gotit++; }
+                else if (result === 'unsure') { unsure++; catStats[card.cat].unsure++; }
+                else if (result === 'missed') { missed++; catStats[card.cat].missed++; }
+            });
+
+            const total = gotit + unsure + missed;
+
+            document.getElementById('stats-row').innerHTML = `
+                <div class="stat-card stat-gotit">
+                    <div class="stat-value">${gotit}</div>
+                    <div class="stat-label">Got It</div>
+                    <div class="stat-pct">${total > 0 ? (gotit / total * 100).toFixed(0) : 0}%</div>
+                </div>
+                <div class="stat-card stat-unsure">
+                    <div class="stat-value">${unsure}</div>
+                    <div class="stat-label">Unsure</div>
+                    <div class="stat-pct">${total > 0 ? (unsure / total * 100).toFixed(0) : 0}%</div>
+                </div>
+                <div class="stat-card stat-missed">
+                    <div class="stat-value">${missed}</div>
+                    <div class="stat-label">Missed</div>
+                    <div class="stat-pct">${total > 0 ? (missed / total * 100).toFixed(0) : 0}%</div>
+                </div>
+            `;
+
+            let breakdownHtml = '';
+            const weakAreas = [];
+
+            Object.entries(catStats).forEach(([catId, stats]) => {
+                const cat = categories[catId];
+                const catTotal = stats.gotit + stats.unsure + stats.missed;
+                const gpct = (stats.gotit / catTotal * 100);
+                const upct = (stats.unsure / catTotal * 100);
+                const mpct = (stats.missed / catTotal * 100);
+
+                if (gpct < 60) {
+                    weakAreas.push({ name: cat.name, pct: gpct.toFixed(0) });
+                }
+
+                breakdownHtml += `
+                    <div class="cat-stat-row">
+                        <div class="cat-stat-name">${cat.name}</div>
+                        <div class="cat-stat-bar">
+                            <div class="bar-seg bar-gotit" style="width:${gpct}%"></div>
+                            <div class="bar-seg bar-unsure" style="width:${upct}%"></div>
+                            <div class="bar-seg bar-missed" style="width:${mpct}%"></div>
+                        </div>
+                        <div class="cat-stat-pct">${gpct.toFixed(0)}%</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cat-breakdown').innerHTML = breakdownHtml;
+
+            const weakSection = document.getElementById('weak-section');
+            if (weakAreas.length > 0) {
+                let weakHtml = '';
+                weakAreas.forEach(w => {
+                    weakHtml += `<div class="weak-item"><span>${w.name}</span><span>${w.pct}% mastery</span></div>`;
+                });
+                document.getElementById('weak-list').innerHTML = weakHtml;
+                weakSection.style.display = 'block';
+            } else {
+                weakSection.style.display = 'none';
+            }
+
+            document.getElementById('btn-review-missed').disabled = missed === 0;
+        }
+
+        function reviewMissed() {
+            const missedIds = Object.entries(state.results)
+                .filter(([_, r]) => r === 'missed')
+                .map(([id, _]) => parseInt(id));
+
+            if (missedIds.length === 0) return;
+
+            const missedCards = cards.filter(c => missedIds.includes(c.id));
+
+            state = {
+                deck: missedCards.map(c => c.id),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: missedCards.length
+            };
+
+            showScreen('card');
+            displayCard();
+        }
+
+        function reviewMissedAndUnsure() {
+            const reviewIds = Object.entries(state.results)
+                .filter(([_, r]) => r === 'missed' || r === 'unsure')
+                .map(([id, _]) => parseInt(id));
+
+            if (reviewIds.length === 0) return;
+
+            const reviewCards = cards.filter(c => reviewIds.includes(c.id));
+
+            state = {
+                deck: shuffleArray(reviewCards.map(c => c.id)),
+                idx: 0,
+                flipped: false,
+                results: {},
+                overflow: [],
+                totalOriginal: reviewCards.length
+            };
+
+            showScreen('card');
+            displayCard();
+        }
+
+        // ===================== UTILITIES =====================
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // ===================== KEYBOARD =====================
+        document.addEventListener('keydown', (e) => {
+            const cardScreen = document.getElementById('screen-card');
+            const resultsScreen = document.getElementById('screen-results');
+
+            if (cardScreen.classList.contains('active')) {
+                if (e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    flipCard();
+                } else if (e.key === '1') {
+                    rate('missed');
+                } else if (e.key === '2') {
+                    rate('unsure');
+                } else if (e.key === '3') {
+                    rate('gotit');
+                } else if (e.key === 'Escape') {
+                    exitSession();
+                }
+            } else if (resultsScreen.classList.contains('active')) {
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    showScreen('start');
+                }
+            }
+        });
+
+        // ===================== INIT =====================
+        loadProgress();
+        renderStartScreen();
+    </script>
+
+</body>
+
+</html>
