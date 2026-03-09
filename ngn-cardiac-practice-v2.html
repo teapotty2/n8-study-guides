@@ -747,6 +747,8 @@
                 grid-template-columns: 1fr;
                 gap: .5rem
             }
+            .bowtie-center { min-width: unset }
+            .bowtie-target { font-size: .82rem; padding: 8px }
         }
 
         /* TREND */
@@ -1177,6 +1179,124 @@
         [data-theme="dark"] .drag-pill:hover {
             background: var(--accent);
             color: #fff
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+
+        @media (max-width: 600px) {
+            #app { padding: .5rem }
+
+            /* Start screen */
+            .start-screen { padding: 1.5rem 1rem }
+            .start-screen h2 { font-size: 1.4rem }
+            .exam-stats { gap: .75rem }
+            .stat-box { min-width: 80px; padding: .75rem 1rem }
+            .stat-box .num { font-size: 1.4rem }
+            .filter-group { gap: .4rem }
+            .filter-group .btn { font-size: .78rem; padding: .45rem .7rem }
+
+            /* Header */
+            .exam-header { padding: 1rem; flex-direction: column; align-items: flex-start }
+            .exam-header h1 { font-size: 1.1rem }
+            .progress-wrap { min-width: unset; max-width: unset; width: 100% }
+
+            /* Question card */
+            .q-header { padding: .75rem 1rem }
+            .q-num { font-size: .95rem }
+            .q-body { padding: 1rem }
+            .q-stem { font-size: .95rem }
+            .q-actions { padding: .75rem 1rem; flex-wrap: wrap; gap: .5rem }
+            .q-actions .btn { font-size: .85rem; padding: .6rem 1rem; flex: 1; justify-content: center }
+
+            /* MC / SATA options */
+            .mc-opt { padding: 10px 12px; gap: 8px; font-size: .9rem }
+            .mc-letter { width: 24px; height: 24px; font-size: .75rem }
+
+            /* SelectN options */
+            .opt-item { padding: 10px 12px; gap: 8px; font-size: .9rem }
+            .opt-check { width: 18px; height: 18px; font-size: 12px }
+
+            /* Drag/drop ordered */
+            .drag-pill { padding: 8px 10px; font-size: .82rem }
+            .drop-slot { padding: 8px 10px; font-size: .9rem }
+            .drop-slot::before { width: 24px; height: 24px; font-size: .7rem }
+
+            /* Matrix — horizontal scroll */
+            .matrix-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .matrix-table th, .matrix-table td { padding: 8px 6px; font-size: .8rem; white-space: nowrap }
+
+            /* Trend table — horizontal scroll */
+            .trend-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Cloze */
+            .cloze-select { min-width: 120px; font-size: .82rem }
+            .cloze-text { font-size: .9rem; line-height: 2.4 }
+
+            /* Highlight */
+            .hl-passage { font-size: .9rem }
+            .hl-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Case study tabs */
+            .case-chart { max-height: 250px }
+            .case-tab { padding: .5rem .75rem; font-size: .75rem }
+            .tab-content { padding: .75rem; font-size: .82rem }
+            .tab-content table { font-size: .78rem }
+            .tab-content th, .tab-content td { padding: 4px 6px }
+
+            /* Feedback */
+            .feedback { font-size: .85rem; padding: .75rem 1rem }
+
+            /* Results screen */
+            .results { padding: 1.5rem 1rem }
+            .score-circle { width: 130px; height: 130px }
+            .score-inner { width: 105px; height: 105px }
+            .score-inner .pct { font-size: 2rem }
+            .breakdown { grid-template-columns: repeat(2, 1fr); gap: .5rem }
+            .bd-card { padding: .75rem }
+            .bd-card .val { font-size: 1.1rem }
+
+            /* Review grid */
+            .q-grid { gap: 4px }
+            .q-grid button { width: 38px; height: 38px; font-size: .8rem }
+
+            /* Fill-in */
+            .fill-input { width: 100px; font-size: 1rem; padding: 6px 10px }
+
+            /* Resume banner */
+            .resume-banner { padding: .75rem 1rem; flex-direction: column; text-align: center }
+
+            /* Theme toggle — don't overlap content */
+            .theme-toggle { width: 38px; height: 38px; font-size: 1rem; top: .5rem; right: .5rem }
+
+            /* Dropdown table */
+            .dd-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Inline tables in stems (trend question stems) */
+            .q-stem table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: .78rem }
+            .q-stem table th, .q-stem table td { padding: 4px 6px; white-space: nowrap }
+        }
+
+        /* Slightly wider phones / small tablets */
+        @media (max-width: 768px) and (min-width: 601px) {
+            #app { padding: .75rem }
+            .start-screen { padding: 2rem 1.5rem }
+            .exam-header h1 { font-size: 1.25rem }
+            .q-body { padding: 1.2rem }
+            .matrix-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .trend-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .q-stem table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+        }
+
+        /* Touch-friendly: ensure all tappable elements are at least 44px */
+        @media (pointer: coarse) {
+            .mc-opt { min-height: 48px }
+            .opt-item { min-height: 48px }
+            .drag-pill { min-height: 44px; display: inline-flex; align-items: center }
+            .drop-slot { min-height: 48px }
+            .case-tab { min-height: 44px; display: inline-flex; align-items: center }
+            .hl-span { padding: 4px 6px }
+            .bowtie-target { min-height: 48px }
+            .cloze-select { min-height: 44px }
         }
     </style>
 </head>
