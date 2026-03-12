@@ -489,10 +489,17 @@
         }
 
         /* MATRIX GRID */
+        .matrix-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: .5rem 0
+        }
+
         .matrix-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: .9rem
+            font-size: .9rem;
+            min-width: 400px
         }
 
         .matrix-table th,
@@ -1332,8 +1339,23 @@
             .matrix-table th,
             .matrix-table td {
                 padding: 8px 6px;
-                font-size: .8rem;
+                font-size: .8rem
+            }
+
+            .matrix-table td:first-child {
+                white-space: normal;
+                min-width: 140px;
+                word-break: break-word
+            }
+
+            .matrix-table th {
                 white-space: nowrap
+            }
+
+            .matrix-table input[type=radio],
+            .matrix-table input[type=checkbox] {
+                width: 22px;
+                height: 22px
             }
 
             /* Trend table — horizontal scroll */
@@ -2893,11 +2915,11 @@
             for (let i = indices.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[indices[i], indices[j]] = [indices[j], indices[i]]; }
             // Store shuffle map so scoring can find the original index
             q._shuffledIndices = indices;
-            let html = `<table class="matrix-table"><tr><th></th>${q.cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
+            let html = `<div class="matrix-wrap"><table class="matrix-table"><tr><th></th>${q.cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
             indices.forEach((origIdx, displayIdx) => {
                 html += `<tr class="matrix-row" data-row="${origIdx}"><td>${q.rows[origIdx]}</td>${q.cols.map((c, j) => `<td><input type="radio" name="matrix_${q.id}_${origIdx}" value="${j}"></td>`).join('')}</tr>`;
             });
-            return html + '</table>';
+            return html + '</table></div>';
         }
         function renderSelectN(q) {
             return `<div class="select-n-count">Select exactly ${q.n}</div><ul class="opt-list">${q.opts.map((o, i) => `<li class="opt-item" data-idx="${i}"><div class="opt-check">\u2713</div><span>${o.t}</span></li>`).join('')}</ul>`;
