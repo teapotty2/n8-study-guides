@@ -2531,6 +2531,133 @@
             topic: "Dialysis"
         });
 
+        
+        // ===== LECTURE NOTE ADDITIONS =====
+
+        Q.push({
+            id: 57, type: "mc",
+            stem: "A patient presents with excessive thirst, frequent urination, and unexplained weight loss despite increased appetite. The nurse recognizes these as the classic '3 Ps' of diabetes. Which combination is correct?",
+            opts: [
+                "Polyuria (excessive urination), Polydipsia (excessive thirst), Polyphagia (excessive hunger)",
+                "Polyuria (excessive urination), Polydipsia (excessive thirst), Polyarthralgia (joint pain)",
+                "Polycythemia (high RBCs), Polydipsia (excessive thirst), Polyphagia (excessive hunger)",
+                "Polyuria (excessive urination), Polyneuropathy (nerve damage), Polyphagia (excessive hunger)"
+            ],
+            correct: 0,
+            rationale: "<strong>Fluid & Electrolytes Lecture — The 3 Ps of Diabetes:</strong> <strong>Polyuria</strong> — glucose spills into urine when BG exceeds renal threshold (~180 mg/dL), causing osmotic diuresis. <strong>Polydipsia</strong> — excessive fluid loss from polyuria triggers intense thirst. <strong>Polyphagia</strong> — cells are starving because glucose can't enter without insulin, so the body signals hunger despite high blood glucose. In Type 1 DM, the 3 Ps are often dramatic and sudden. In Type 2, onset is more gradual — many patients are diagnosed incidentally. DM affects a LOT of people — it's one of the most common chronic conditions you'll manage.",
+            topic: "DM Foundations"
+        });
+
+        Q.push({
+            id: 58, type: "mc",
+            stem: "A nurse is teaching a newly diagnosed diabetic about insulin injection sites. Which statement by the nurse is MOST accurate regarding absorption?",
+            opts: [
+                "The abdomen provides the fastest and most consistent absorption — it is the preferred site",
+                "The thigh provides the fastest absorption because of its large muscle mass",
+                "All injection sites absorb insulin at the same rate regardless of location",
+                "The deltoid is preferred because it is the most accessible site"
+            ],
+            correct: 0,
+            rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Injection Sites:</strong> The <strong>abdomen is the preferred site</strong> for insulin injection because it provides the <strong>fastest and most consistent absorption.</strong> Absorption rate by site (fastest → slowest): <strong>Abdomen > Arm > Thigh > Buttock.</strong> Key teaching points: Rotate injection sites within the SAME region (e.g., rotate around the abdomen) to prevent lipodystrophy (hardened fatty lumps). Avoid injecting within 2 inches of the umbilicus. Exercise increases blood flow to the area and speeds absorption — if injecting in the thigh before a run, absorption will be unpredictably fast. The abdomen is preferred precisely because it's less affected by activity.",
+            topic: "DM Foundations"
+        });
+
+        Q.push({
+            id: 59, type: "ordered",
+            stem: "A nurse finds a diabetic patient unresponsive with a blood glucose of 38 mg/dL. Place the following interventions in the correct priority order.",
+            items: [
+                "Assess airway, breathing, and level of consciousness",
+                "Determine if the patient can swallow safely — this patient CANNOT (unresponsive)",
+                "Administer glucagon 1 mg IM/SubQ OR IV dextrose (D50W) if IV access is available",
+                "Recheck blood glucose in 15 minutes",
+                "Once alert and able to swallow, provide oral carbohydrates",
+                "Investigate the cause and notify the provider"
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — Severe Hypoglycemia Emergency:</strong> <strong>Step 1: Assess ABCs</strong> — always first. <strong>Step 2: Can they swallow?</strong> This is the CRITICAL decision point. If YES → give oral glucose (juice, glucose tabs). If NO (unconscious/altered) → <strong>NEVER give oral anything</strong> (aspiration risk). <strong>Step 3: For unconscious patients:</strong> Give <strong>glucagon 1 mg IM or SubQ</strong> (works in 10-15 min by releasing stored liver glycogen) OR <strong>IV dextrose D50W 25-50 mL</strong> (works in minutes — preferred if IV access exists). <strong>Step 4: Recheck in 15 min.</strong> Glucagon may cause nausea/vomiting when patient wakes — position on side. <strong>Step 5:</strong> Once alert and swallowing safely, give complex carbs + protein to prevent rebound hypoglycemia. <strong>Key teaching:</strong> Insulin is DANGEROUS — too much insulin causes hypoglycemia → coma → death. Always make sure they have a snack, check BG before meals/exercise.",
+            topic: "Hypoglycemia"
+        });
+
+        Q.push({
+            id: 60, type: "sata",
+            stem: "A patient in DKA is started on a continuous regular insulin IV infusion. Which nursing interventions are essential? <em>(Select all that apply.)</em>",
+            opts: [
+                { t: "Standard concentration is 100 units Regular insulin in 100 mL NS (1 unit/mL)", c: true },
+                { t: "Monitor blood glucose every hour while on the drip", c: true },
+                { t: "Place patient on continuous cardiac monitoring due to potassium shifts", c: true },
+                { t: "Monitor for fluid overload — auscultate lungs for crackles (patient is receiving large volumes of IV fluid)", c: true },
+                { t: "Assess urine output hourly — monitor kidney function", c: true },
+                { t: "Check blood pressure at regular intervals during fluid resuscitation", c: true },
+                { t: "Use NPH insulin for the IV drip since it lasts longer", c: false },
+                { t: "Discontinue cardiac monitoring once potassium normalizes since the risk has passed", c: false }
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — DKA Insulin Drip Monitoring:</strong> <strong>Standard IV insulin:</strong> 100 units Regular in 100 mL NS = <strong>1 unit/mL.</strong> Only Regular insulin can be given IV. <strong>BG every hour</strong> — need to titrate drip based on insulin drip chart/sliding scale. <strong>Continuous cardiac monitor</strong> — potassium shifts are DANGEROUS. As insulin pushes K+ back into cells, hypokalemia can cause fatal arrhythmias. ECG changes: flattened T waves, U waves, prolonged QT. <strong>Lung sounds</strong> — DKA patients get LITERS of IV fluid for resuscitation (they're severely dehydrated, losing liters). Monitor for crackles/fluid overload. <strong>Urine output</strong> — minimum 0.5 mL/kg/hr indicates adequate renal perfusion. <strong>BP monitoring</strong> — hypotension is common from dehydration. Do NOT use NPH IV — it's a suspension and would cause emboli.",
+            topic: "DKA/HHS"
+        });
+
+        Q.push({
+            id: 61, type: "mc",
+            stem: "A student nurse asks why HHS (Hyperosmolar Hyperglycemic State) is considered more dangerous than DKA despite being less common. The nurse's BEST response is:",
+            opts: [
+                "HHS has a higher mortality rate (up to 20%) because extreme dehydration and hyperosmolality cause severe neurological complications including coma",
+                "HHS causes more ketoacidosis than DKA, leading to worse metabolic disturbances",
+                "HHS occurs exclusively in Type 1 diabetics who have no insulin production",
+                "HHS is more dangerous because it always requires dialysis for treatment"
+            ],
+            correct: 0,
+            rationale: "<strong>Fluid & Electrolytes Lecture — HHS Mortality ★HIGH YIELD★:</strong> <strong>HHS has a HIGHER mortality rate than DKA</strong> (10-20% vs 1-5%), but HHS is RARER. Why? HHS produces <strong>extreme hyperosmolality</strong> (BG often >600, sometimes >1000 mg/dL) causing severe dehydration and neurological damage. <strong>Key HHS features:</strong> pH is NORMAL (no ketoacidosis), NO ketones (patient has enough insulin to prevent ketosis, just not enough to control glucose), profound dehydration, tachycardia, hypotension, confusion → coma. <strong>HHS occurs mostly in Type 2 DM</strong> (elderly patients who have SOME insulin). <strong>DKA occurs mostly in Type 1 DM</strong> (complete insulin deficiency → ketone production). Treatment for both: rehydration (priority #1), insulin, electrolyte replacement, monitoring BG every hour.",
+            topic: "DKA/HHS"
+        });
+
+        Q.push({
+            id: 62, type: "sata",
+            stem: "A patient on peritoneal dialysis (PD) reports cloudy dialysate and abdominal pain. The nurse suspects peritonitis. Which interventions are appropriate? <em>(Select all that apply.)</em>",
+            opts: [
+                { t: "Obtain a sample of the cloudy effluent for culture and sensitivity before starting antibiotics", c: true },
+                { t: "Reinforce strict aseptic technique during all PD exchanges to prevent future episodes", c: true },
+                { t: "Assess vital signs for fever, tachycardia, and signs of sepsis", c: true },
+                { t: "Administer intraperitoneal antibiotics as ordered (antibiotics added directly to the dialysate)", c: true },
+                { t: "Document the appearance of the effluent — normal is clear/straw-colored; cloudy = infection", c: true },
+                { t: "Discontinue PD permanently since peritonitis means the catheter is no longer usable", c: false },
+                { t: "Encourage the patient to perform exchanges quickly to avoid contamination", c: false }
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — PD Peritonitis ★HIGH YIELD★:</strong> <strong>Peritonitis is the #1 complication of PD</strong> and the #1 reason patients switch to hemodialysis. <strong>Signs:</strong> cloudy effluent (normally clear/straw-colored), abdominal pain, fever, rebound tenderness. <strong>Cause:</strong> break in aseptic technique during exchanges — this is why <strong>STRICT aseptic technique</strong> is absolutely critical. <strong>Treatment:</strong> culture the effluent FIRST, then intraperitoneal antibiotics (added to dialysate bags). Most cases resolve with antibiotics — the catheter does NOT need to be removed unless infection is refractory. <strong>Prevention:</strong> meticulous hand hygiene, mask during exchanges, clean work surface, inspect all connections. The key exam trap: rushing through exchanges does NOT help — proper aseptic technique requires careful, methodical steps.",
+            topic: "Dialysis"
+        });
+
+        Q.push({
+            id: 63, type: "sata",
+            stem: "A patient is 6 hours post kidney transplant surgery. Which nursing assessments and interventions are priorities? <em>(Select all that apply.)</em>",
+            opts: [
+                { t: "Monitor urine output closely — the new kidney should start producing urine immediately (may have large volumes initially)", c: true },
+                { t: "Administer immunosuppressant medications as ordered to prevent organ rejection", c: true },
+                { t: "Encourage incentive spirometry and deep breathing exercises to prevent atelectasis", c: true },
+                { t: "Monitor for signs of rejection: decreased urine output, fever, graft tenderness, rising creatinine", c: true },
+                { t: "Assess surgical site and monitor vital signs frequently", c: true },
+                { t: "Teach the patient they will need lifelong immunosuppressant therapy", c: true },
+                { t: "Restrict all fluids to prevent overloading the new kidney", c: false },
+                { t: "Delay ambulation for 72 hours to protect the surgical anastomosis", c: false }
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — Kidney Transplant Post-Op ★HIGH YIELD★:</strong> <strong>The transplanted kidney should work IMMEDIATELY after surgery.</strong> Expect <strong>large urine output</strong> initially (the new kidney is clearing accumulated waste) — may need IV fluid replacement to match output. <strong>Immunosuppressants are LIFELONG</strong> — tacrolimus, mycophenolate, prednisone are common. Missing doses risks rejection. <strong>Signs of rejection:</strong> decreased UOP, fever >100.4°F, graft site tenderness/swelling, elevated BUN/creatinine, weight gain, HTN. <strong>Post-op priorities:</strong> Prevent atelectasis with incentive spirometry (surgical pain limits deep breathing). Early ambulation prevents DVT. Do NOT restrict fluids — the patient needs adequate hydration for the new kidney. Monitor I&O meticulously. <strong>Infection risk</strong> is high due to immunosuppression — protect from sick contacts, monitor for signs of infection.",
+            topic: "Transplant"
+        });
+
+        Q.push({
+            id: 64, type: "sata",
+            stem: "A nurse is teaching a diabetic patient about foot care to prevent ulcers and amputation. Which instructions should be included? <em>(Select all that apply.)</em>",
+            opts: [
+                { t: "Inspect feet daily for cuts, blisters, redness, or swelling — use a mirror to check the bottom", c: true },
+                { t: "Never walk barefoot — even inside the house", c: true },
+                { t: "Wash feet daily with warm (not hot) water — test temperature with elbow or thermometer first", c: true },
+                { t: "Keep toenails trimmed straight across to prevent ingrown nails — see a podiatrist if vision or circulation is impaired", c: true },
+                { t: "Wear properly fitted shoes — never break in new shoes for extended periods", c: true },
+                { t: "Report ANY foot wound to the healthcare provider immediately, no matter how small", c: true },
+                { t: "Soak feet in hot water for 30 minutes daily to improve circulation", c: false },
+                { t: "Apply lotion between the toes to keep the skin moisturized", c: false }
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — Diabetic Foot Care ★HIGH YIELD★:</strong> Peripheral neuropathy causes <strong>loss of protective sensation</strong> — patients can't feel injuries, blisters, or pressure sores. Peripheral vascular disease reduces blood flow, impairing healing. These combine to create the pathway: <strong>minor injury → unnoticed → infection → ulcer → gangrene → amputation.</strong> <strong>Key teaching:</strong> Daily inspection (use mirror for soles), NEVER barefoot, warm (not hot) water for washing, test water temp (can't feel if too hot → burns). <strong>Toenails straight across</strong> — prevents ingrown nails that can ulcerate. <strong>Traps:</strong> Do NOT soak feet (maceration → breakdown), do NOT put lotion between toes (moisture → fungal infection), do NOT use heating pads on feet (can't feel burns). <strong>Any wound = call the provider</strong> — what seems minor can quickly become limb-threatening in a diabetic.",
+            topic: "DM Complications"
+        });
+
         // ===== ENGINE =====
         const STORAGE_KEY = 'ngn_fluids_renal_v3_hiyield';
         const app = document.getElementById('app');
@@ -2684,7 +2811,7 @@
         const TOPIC_MAP = {
             dka: ['DKA/HHS'],
             insulin: ['DM Foundations', 'Hypoglycemia', 'DM Complications'],
-            renal: ['AKI', 'CKD/ESKD', 'Dialysis'],
+            renal: ['AKI', 'CKD/ESKD', 'Dialysis', 'Transplant'],
             meds: ['Oral Agents']
         };
         function setFilter(btn) {
