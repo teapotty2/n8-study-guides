@@ -914,9 +914,19 @@
             border-left: 4px solid var(--orange)
         }
 
-        .feedback strong {
+        .feedback strong:first-child {
             display: block;
-            margin-bottom: 4px
+            font-size: 1.05rem;
+            margin-bottom: .6rem
+        }
+
+        .feedback {
+            line-height: 1.7
+        }
+
+        .feedback strong:not(:first-child) {
+            margin-top: .4rem;
+            display: inline
         }
 
         .score-chip {
