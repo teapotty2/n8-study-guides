@@ -2273,11 +2273,68 @@
             rationale: "<strong>Fluid & Electrolytes Lecture — DM Macrovascular Complications:</strong> <strong>Cardiovascular disease is the #1 cause of death</strong> in diabetic patients. Diabetes accelerates atherosclerosis throughout the arterial system: coronary (MI), cerebral (stroke), peripheral (PVD, claudication, gangrene). Risk reduction is multifactorial: <strong>glycemic control</strong> (A1C <7%), <strong>BP control</strong> (<130/80), <strong>lipid management</strong> (statins for most diabetics), <strong>smoking cessation</strong>, and <strong>antiplatelet therapy</strong> (aspirin for those with cardiovascular risk). This is why diabetes management is about much more than blood glucose — it's comprehensive cardiovascular risk reduction.",
             topic: "DM Complications"
         });
+        // ===== SICK DAY RULES & FLUID CALCULATIONS =====
+
+        Q.push({
+            id: 43, type: "sata",
+            stem: "A Type 1 diabetic patient calls the clinic reporting nausea, vomiting, and a blood glucose of 310 mg/dL. The nurse provides sick day instructions. Which are correct? <em>(Select all that apply.)</em>",
+            opts: [
+                { t: "NEVER skip your insulin — you may need MORE insulin during illness, not less", c: true },
+                { t: "Check blood glucose every 3-4 hours and test urine for ketones", c: true },
+                { t: "Drink at least 8 oz (240 mL/1 cup) of calorie-free fluid every hour to prevent dehydration", c: true },
+                { t: "If unable to eat solid food, replace meals with carbohydrate-containing liquids (regular soda, juice, broth)", c: true },
+                { t: "Call the provider if BG >300 mg/dL on two consecutive readings, persistent vomiting, or moderate-to-large ketones", c: true },
+                { t: "Skip all insulin doses while vomiting to prevent hypoglycemia", c: false },
+                { t: "Only check blood glucose once daily during illness since the body self-regulates", c: false }
+            ],
+            rationale: "<strong>Fluid & Electrolytes Lecture — DM Sick Day Rules ★HIGH YIELD★:</strong> Illness triggers counter-regulatory hormones (cortisol, glucagon, epinephrine) that <strong>raise blood glucose</strong> — the body NEEDS insulin even more during illness. <strong>Rule 1: NEVER skip insulin.</strong> The dose may need to be increased. <strong>Rule 2: Check BG q3-4h</strong> and test urine ketones (ketone strips). <strong>Rule 3: Hydrate aggressively</strong> — 8 oz (1 cup = 240 mL = 8 oz) of calorie-free fluid every hour. If the patient can't eat, alternate calorie-free and carb-containing fluids. <strong>Rule 4: Call the provider if:</strong> BG >300 on two readings, moderate/large ketones, persistent vomiting >4 hours, signs of DKA (fruity breath, Kussmaul respirations). <strong>The #1 trap:</strong> Patients think 'I'm not eating, so I don't need insulin' — this is <strong>how DKA develops during illness.</strong>",
+            topic: "DM Complications"
+        });
+
+        Q.push({
+            id: 44, type: "cloze",
+            stem: "During illness, a diabetic patient should drink at least |0| of calorie-free fluid per hour. If blood glucose is above |1|, the patient should |2|.",
+            selects: [
+                { options: ["8 oz (240 mL / 1 cup)", "2 oz (60 mL)", "32 oz (960 mL / 4 cups)"], correct: 0 },
+                { options: ["300 mg/dL on two consecutive checks", "180 mg/dL on a single check", "500 mg/dL for more than 24 hours"], correct: 0 },
+                { options: ["contact the healthcare provider immediately and test for ketones", "skip all insulin until glucose normalizes", "increase oral food intake to dilute the glucose"], correct: 0 }
+            ],
+            scoring: "dyad",
+            rationale: "<strong>Fluid & Electrolytes Lecture — Sick Day Fluid Replacement:</strong> The target is <strong>8 oz (240 mL = 1 cup) per hour</strong> of calorie-free fluid (water, sugar-free drinks, broth). This prevents dehydration which worsens hyperglycemia. <strong>Key conversions:</strong> 1 cup = 8 oz = 240 mL. If BG is <strong>>300 mg/dL on two consecutive checks</strong>, contact the provider — this suggests the current insulin regimen is insufficient for the illness. <strong>Always test ketones</strong> when BG >300, because DKA can develop rapidly during illness. The provider may need to adjust insulin doses, provide supplemental coverage, or recommend emergency evaluation.",
+            topic: "DM Complications"
+        });
+
+        Q.push({
+            id: 45, type: "fillin",
+            stem: "A patient reports drinking 3½ cups of water this morning. Using the standard conversion (1 cup = 240 mL), calculate the total fluid intake in milliliters.<br><br>Total intake: ___",
+            answer: 840, tolerance: 0, unit: "mL",
+            rationale: "<strong>Fluid & Electrolytes Lecture — Fluid Intake Conversions:</strong> <strong>Key conversions to memorize:</strong><br>• 1 cup = 8 oz = 240 mL<br>• 1 oz = 30 mL<br>• 1 L = 1000 mL ≈ 4.2 cups<br><br><strong>Calculation:</strong> 3.5 cups × 240 mL/cup = <strong>840 mL</strong>.<br><br>This conversion is critical for I&O documentation. Nurses must convert patient-reported intake (cups, glasses) into mL for accurate fluid balance monitoring. Common nursing I&O items: ice chips = half the volume when melted (240 mL cup of ice = 120 mL fluid), gelatin/popsicles count as fluid intake, soup broth counts as fluid.",
+            topic: "DM Complications"
+        });
+
+        Q.push({
+            id: 46, type: "highlight",
+            stem: "A nurse is documenting a patient's intake for the shift. Highlight ALL items that should be counted as fluid intake in the I&O record.",
+            phrases: [
+                { text: "1 cup of coffee (8 oz = 240 mL)", correct: true },
+                { text: "1 bowl of chicken broth (6 oz = 180 mL)", correct: true },
+                { text: "1 cup of gelatin/Jell-O (becomes liquid at body temp = 240 mL)", correct: true },
+                { text: "1 popsicle (3 oz = 90 mL)", correct: true },
+                { text: "IV normal saline running at 125 mL/hr × 8 hrs (1000 mL)", correct: true },
+                { text: "1 cup of ice chips (melts to half volume = 120 mL)", correct: true },
+                { text: "1 slice of bread", correct: false },
+                { text: "1 scrambled egg", correct: false },
+                { text: "1 banana", correct: false }
+            ],
+            scoring: "plusMinus",
+            rationale: "<strong>Fluid & Electrolytes Lecture — I&O Documentation Rules:</strong> <strong>Everything that is liquid at room temperature OR becomes liquid at body temperature</strong> counts as fluid intake. This includes: <strong>all beverages</strong> (water, coffee, juice, milk, soda), <strong>soup/broth</strong>, <strong>gelatin</strong> (melts at body temp), <strong>popsicles</strong> (melt at body temp), <strong>IV fluids</strong>, <strong>tube feedings</strong>, and <strong>IV medications/flushes</strong>. <strong>Ice chips = HALF volume</strong> — a 240 mL cup of ice chips yields ~120 mL fluid. Solid foods (bread, eggs, fruit) are NOT counted even though they contain some water. <strong>Key conversions:</strong> 1 cup = 8 oz = 240 mL. 1 oz = 30 mL. A standard hospital cup = 240 mL. A standard hospital pitcher ≈ 1000 mL.",
+            topic: "DM Complications"
+        });
 
         // ===== AKI =====
 
         Q.push({
-            id: 43, type: "mc",
+            id: 47, type: "mc",
             stem: "A nurse is assessing a dehydrated patient with acute kidney injury. The BUN:Creatinine ratio is 28:1. This finding is most consistent with:",
             opts: [
                 "Prerenal AKI — decreased perfusion to the kidneys with intact tubular function",
@@ -2291,7 +2348,7 @@
         });
 
         Q.push({
-            id: 44, type: "mc",
+            id: 48, type: "mc",
             stem: "During the diuretic phase of AKI recovery, the nurse should be MOST concerned about:",
             opts: [
                 "Dehydration and hypokalemia from massive urine output",
@@ -2305,7 +2362,7 @@
         });
 
         Q.push({
-            id: 45, type: "matrix",
+            id: 49, type: "matrix",
             stem: "For each diagnostic finding, indicate whether it is associated with prerenal AKI or intrarenal (ATN) AKI.",
             rows: [
                 "BUN:Creatinine ratio >20:1",
@@ -2324,7 +2381,7 @@
         });
 
         Q.push({
-            id: 46, type: "highlight",
+            id: 50, type: "highlight",
             stem: "A nurse reviews the following findings for a patient with decreasing urine output. Highlight the findings that suggest PRERENAL rather than intrarenal AKI.",
             phrases: [
                 { text: "BUN:Creatinine ratio 25:1", correct: true },
@@ -2346,7 +2403,7 @@
         // ===== CKD/ESKD =====
 
         Q.push({
-            id: 47, type: "mc",
+            id: 51, type: "mc",
             stem: "A patient's GFR is 22 mL/min. According to CKD staging, this represents:",
             opts: [
                 "Stage 4 — severe decrease in GFR, prepare for renal replacement therapy",
@@ -2360,7 +2417,7 @@
         });
 
         Q.push({
-            id: 48, type: "mc",
+            id: 52, type: "mc",
             stem: "The renal osteodystrophy cascade in ESKD begins with:",
             opts: [
                 "Phosphorus retention by the failing kidneys, leading to hyperphosphatemia",
@@ -2374,7 +2431,7 @@
         });
 
         Q.push({
-            id: 49, type: "cloze",
+            id: 53, type: "cloze",
             stem: "The renal osteodystrophy cascade: Phosphorus |0| → Calcium |1| → Vitamin D |2| → PTH |3| → Bones |4|.",
             selects: [
                 { options: ["UP (kidneys can't excrete it)", "DOWN (kidneys excrete too much)", "NORMAL"], correct: 0 },
@@ -2391,7 +2448,7 @@
         // ===== DIALYSIS =====
 
         Q.push({
-            id: 50, type: "mc",
+            id: 54, type: "mc",
             stem: "A nurse assesses an AV fistula and feels a palpable vibration (thrill) and hears a whooshing sound (bruit) on auscultation. This indicates:",
             opts: [
                 "The fistula is patent and functioning properly",
@@ -2405,7 +2462,7 @@
         });
 
         Q.push({
-            id: 51, type: "sata",
+            id: 55, type: "sata",
             stem: "A nurse is caring for a patient with an AV fistula in the left arm. Which nursing actions are correct? <em>(Select all that apply.)</em>",
             opts: [
                 { t: "Never take blood pressure on the left arm", c: true },
@@ -2423,7 +2480,7 @@
         });
 
         Q.push({
-            id: 52, type: "matrix",
+            id: 56, type: "matrix",
             stem: "For each characteristic, indicate whether it describes Hemodialysis (HD), Peritoneal Dialysis (PD), or CRRT.",
             rows: [
                 "Uses a dialyzer machine with AV fistula/graft access, 3-4 times/week for 3-4 hours",
