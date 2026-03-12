@@ -2621,6 +2621,16 @@
             <button class="btn btn-outline filter-btn" data-filter="trad" onclick="setFilter(this)">Traditional</button>
         </div>
         <div style="margin-top:1.2rem">
+            <p style="color:var(--muted);margin-bottom:.5rem;font-size:.9rem">Topic Focus</p>
+            <div class="filter-group">
+                <button class="btn btn-primary topic-btn active" data-topic="all" onclick="setTopic(this)">All Topics</button>
+                <button class="btn btn-outline topic-btn" data-topic="dka" onclick="setTopic(this)">DKA vs HHS</button>
+                <button class="btn btn-outline topic-btn" data-topic="insulin" onclick="setTopic(this)">Insulin</button>
+                <button class="btn btn-outline topic-btn" data-topic="renal" onclick="setTopic(this)">Renal</button>
+                <button class="btn btn-outline topic-btn" data-topic="meds" onclick="setTopic(this)">Medications</button>
+            </div>
+        </div>
+        <div style="margin-top:1.2rem">
             <p style="color:var(--muted);margin-bottom:.5rem;font-size:.9rem">Exam Size</p>
             <div class="filter-group">
                 <button class="btn btn-outline size-btn" data-size="10" onclick="setSize(this)">Baby (10)</button>
@@ -2637,11 +2647,23 @@
         }
 
         let activeFilter = 'all';
-        let activeSize = 60; // default to Full (60)
+        let activeSize = 60;
+        let activeTopic = 'all';
+        const TOPIC_MAP = {
+            dka: ['DKA/HHS'],
+            insulin: ['DM Foundations', 'Hypoglycemia', 'DM Complications'],
+            renal: ['AKI', 'CKD/ESKD', 'Dialysis'],
+            meds: ['Oral Agents']
+        };
         function setFilter(btn) {
             document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active'); b.classList.add('btn-outline'); b.classList.remove('btn-primary'); });
             btn.classList.add('active'); btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
             activeFilter = btn.dataset.filter;
+        }
+        function setTopic(btn) {
+            document.querySelectorAll('.topic-btn').forEach(b => { b.classList.remove('active'); b.classList.add('btn-outline'); b.classList.remove('btn-primary'); });
+            btn.classList.add('active'); btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
+            activeTopic = btn.dataset.topic;
         }
         function setSize(btn) {
             document.querySelectorAll('.size-btn').forEach(b => { b.classList.remove('active'); b.classList.add('btn-outline'); b.classList.remove('btn-primary'); });
@@ -2650,11 +2672,22 @@
         }
 
         function getFilteredQs() {
-            if (activeFilter === 'all') return [...Q];
-            if (activeFilter === 'case') return Q.filter(q => q.caseId);
-            if (activeFilter === 'ngn') return Q.filter(q => !q.caseId && ['bowtie', 'selectN', 'cloze', 'highlight', 'matrix'].includes(q.type));
-            if (activeFilter === 'trad') return Q.filter(q => !q.caseId && ['mc', 'sata', 'ordered', 'fillin'].includes(q.type));
-            return [...Q];
+            let qs = [...Q];
+            // Apply type filter
+            if (activeFilter === 'case') qs = qs.filter(q => q.caseId);
+            else if (activeFilter === 'ngn') qs = qs.filter(q => !q.caseId && ['bowtie', 'selectN', 'cloze', 'highlight', 'matrix'].includes(q.type));
+            else if (activeFilter === 'trad') qs = qs.filter(q => !q.caseId && ['mc', 'sata', 'ordered', 'fillin'].includes(q.type));
+            // Apply topic filter
+            if (activeTopic !== 'all' && TOPIC_MAP[activeTopic]) {
+                const topics = TOPIC_MAP[activeTopic];
+                // For DKA topic, also include case study questions (DKA case)
+                if (activeTopic === 'dka') {
+                    qs = qs.filter(q => topics.includes(q.topic) || q.caseId);
+                } else {
+                    qs = qs.filter(q => topics.includes(q.topic));
+                }
+            }
+            return qs;
         }
 
         // Sample N questions from pool while preserving the ratio of question categories.
@@ -2824,7 +2857,10 @@
 
             app.innerHTML = `
     <div class="exam-header">
-        <h1>NGN Fluids &amp; Renal Exam</h1>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <h1>NGN Fluids &amp; Renal Exam</h1>
+            <button class="btn btn-outline" onclick="exitExam()" style="font-size:.8rem;padding:.4rem 1rem;border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.9)">✕ Exit</button>
+        </div>
         <div class="progress-wrap">
             <div class="progress-bar"><div class="progress-fill" style="width:${((cur + 1) / examQs.length) * 100}%"></div></div>
             <div class="progress-text">${cur + 1}/${examQs.length} ${mode === 'review' ? '(Review Mode)' : ''}</div>
@@ -3115,9 +3151,16 @@
         window.resumeExam = resumeExam;
         window.showStart = showStart;
         window.setFilter = setFilter;
+        window.setTopic = setTopic;
         window.setSize = setSize;
         window.clearState = clearState;
         window.toggleTheme = toggleTheme;
+        window.exitExam = function () {
+            if (confirm('Exit the exam? Your progress is saved and you can resume later.')) {
+                saveState();
+                showStart();
+            }
+        };
 
         // ===== RESULTS SCREEN =====
         function showResults() {
