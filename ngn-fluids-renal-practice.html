@@ -1,0 +1,2794 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGN Fluid &amp; Electrolytes Practice Exam</title>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #3182ce;
+            --renal: #2E86C1;
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1a202c;
+            --green: #38a169;
+            --red: #e53e3e;
+            --orange: #dd6b20;
+            --muted: #718096;
+            --border: #e2e8f0;
+            --radius: 12px
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f1117;
+            --card: #1a1d2e;
+            --text: #e2e8f0;
+            --border: #2d3148;
+            --muted: #8892b0
+        }
+
+        /* RESET */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6
+        }
+
+        #app {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem
+        }
+
+        /* DARK MODE TOGGLE */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all .2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12)
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent)
+        }
+
+        /* HEADER */
+        .exam-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem
+        }
+
+        .exam-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700
+        }
+
+        .progress-wrap {
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, .2);
+            border-radius: 4px;
+            overflow: hidden
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #68d391;
+            border-radius: 4px;
+            transition: width .4s
+        }
+
+        .progress-text {
+            font-size: .8rem;
+            opacity: .8;
+            margin-top: 4px;
+            text-align: right
+        }
+
+        /* START SCREEN */
+        .start-screen {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .08)
+        }
+
+        .start-screen h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem
+        }
+
+        .start-screen p {
+            color: var(--muted);
+            margin-bottom: .5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .exam-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap
+        }
+
+        .stat-box {
+            background: var(--bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            min-width: 120px
+        }
+
+        .stat-box .num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent)
+        }
+
+        .stat-box .lbl {
+            font-size: .8rem;
+            color: var(--muted)
+        }
+
+        /* FILTER GROUP */
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+            justify-content: center;
+            margin: 1.5rem 0
+        }
+
+        .filter-group .btn {
+            font-size: .85rem;
+            padding: .5rem 1rem
+        }
+
+        .filter-group .btn.active {
+            background: var(--accent);
+            color: #fff
+        }
+
+        /* RESUME BANNER */
+        .resume-banner {
+            background: var(--card);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06)
+        }
+
+        .resume-banner p {
+            color: var(--text);
+            font-weight: 600
+        }
+
+        .resume-banner .btn {
+            font-size: .85rem
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary)
+        }
+
+        .btn-success {
+            background: var(--green);
+            color: #fff
+        }
+
+        .btn-success:hover {
+            filter: brightness(.9)
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent)
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #fff
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        /* QUESTION CARD */
+        .q-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+            overflow: hidden
+        }
+
+        .q-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .5rem
+        }
+
+        .q-num {
+            font-weight: 700;
+            font-size: 1.1rem
+        }
+
+        .q-badge {
+            font-size: .75rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600
+        }
+
+        .badge-case {
+            background: rgba(255, 255, 255, .2)
+        }
+
+        .badge-cjmm {
+            background: #68d391;
+            color: #1a365d
+        }
+
+        .badge-ngn {
+            background: #fbd38d;
+            color: #7b341e
+        }
+
+        .badge-trad {
+            background: rgba(255, 255, 255, .15)
+        }
+
+        .q-type {
+            font-size: .75rem;
+            opacity: .8
+        }
+
+        .q-body {
+            padding: 1.5rem
+        }
+
+        .q-stem {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            line-height: 1.5
+        }
+
+        .q-actions {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        /* CASE STUDY LAYOUT */
+        .case-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0
+        }
+
+        .case-chart {
+            background: var(--bg);
+            border-right: 2px solid var(--border);
+            max-height: 500px;
+            overflow-y: auto
+        }
+
+        .case-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            background: var(--primary);
+            overflow-x: auto
+        }
+
+        .case-tab {
+            padding: .6rem 1rem;
+            font-size: .8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, .7);
+            cursor: pointer;
+            white-space: nowrap;
+            border: none;
+            background: none;
+            transition: all .2s
+        }
+
+        .case-tab.active {
+            color: #fff;
+            background: rgba(255, 255, 255, .1);
+            border-bottom: 2px solid #68d391
+        }
+
+        .tab-content {
+            padding: 1rem;
+            font-size: .9rem;
+            display: none
+        }
+
+        .tab-content.active {
+            display: block
+        }
+
+        .tab-content table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+            margin: .5rem 0
+        }
+
+        .tab-content th,
+        .tab-content td {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            text-align: left
+        }
+
+        .tab-content th {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600
+        }
+
+        @media(max-width:768px) {
+            .case-layout {
+                grid-template-columns: 1fr
+            }
+
+            .case-chart {
+                max-height: 300px;
+                border-right: none;
+                border-bottom: 2px solid var(--border)
+            }
+        }
+
+        /* HIGHLIGHT TYPE */
+        .hl-passage {
+            line-height: 1.8;
+            font-size: .95rem
+        }
+
+        .hl-span {
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all .2s;
+            border-bottom: 2px dashed var(--border)
+        }
+
+        .hl-span:hover {
+            background: #bee3f8
+        }
+
+        .hl-span.selected {
+            background: #fefcbf;
+            border-bottom-color: var(--orange)
+        }
+
+        .hl-span.correct {
+            background: #c6f6d5 !important;
+            border-bottom-color: var(--green) !important
+        }
+
+        .hl-span.wrong {
+            background: #fed7d7 !important;
+            border-bottom-color: var(--red) !important
+        }
+
+        .hl-span.missed {
+            background: #c6f6d5;
+            border: 2px dashed var(--green)
+        }
+
+        /* DROPDOWN / CLOZE */
+        .cloze-text {
+            line-height: 2.2;
+            font-size: .95rem
+        }
+
+        .cloze-select {
+            padding: 4px 8px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--card);
+            cursor: pointer;
+            min-width: 160px
+        }
+
+        .cloze-select.correct {
+            border-color: var(--green);
+            background: #c6f6d5
+        }
+
+        .cloze-select.wrong {
+            border-color: var(--red);
+            background: #fed7d7
+        }
+
+        /* MATRIX GRID */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .9rem
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            text-align: center
+        }
+
+        .matrix-table th {
+            background: var(--primary);
+            color: #fff
+        }
+
+        .matrix-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            background: var(--bg)
+        }
+
+        .matrix-table input[type=radio],
+        .matrix-table input[type=checkbox] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer
+        }
+
+        .matrix-row.correct td:first-child {
+            border-left: 4px solid var(--green)
+        }
+
+        .matrix-row.wrong td:first-child {
+            border-left: 4px solid var(--red)
+        }
+
+        /* SELECT N */
+        .select-n-count {
+            font-size: .9rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: .8rem;
+            padding: 6px 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            display: inline-block
+        }
+
+        .opt-list {
+            list-style: none
+        }
+
+        .opt-item {
+            padding: 10px 14px;
+            margin: 6px 0;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .2s
+        }
+
+        .opt-item:hover {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .opt-item.checked {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .opt-item.correct {
+            border-color: var(--green) !important;
+            background: #c6f6d5 !important
+        }
+
+        .opt-item.wrong {
+            border-color: var(--red) !important;
+            background: #fed7d7 !important
+        }
+
+        .opt-item.missed {
+            border-color: var(--green);
+            border-style: dashed
+        }
+
+        .opt-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px
+        }
+
+        .opt-item.checked .opt-check {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff
+        }
+
+        /* DRAG & DROP / ORDERED */
+        .drag-source {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1rem;
+            min-height: 44px
+        }
+
+        .drag-pill {
+            padding: 8px 14px;
+            background: var(--bg);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .9rem;
+            font-weight: 500;
+            transition: all .2s;
+            user-select: none
+        }
+
+        .drag-pill:hover {
+            background: var(--accent);
+            color: #fff
+        }
+
+        .drag-pill.placed {
+            opacity: .4;
+            pointer-events: none
+        }
+
+        .drop-slots {
+            counter-reset: slot
+        }
+
+        .drop-slot {
+            padding: 10px 14px;
+            margin: 6px 0;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .2s
+        }
+
+        .drop-slot::before {
+            counter-increment: slot;
+            content: counter(slot);
+            background: var(--primary);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .8rem;
+            flex-shrink: 0
+        }
+
+        .drop-slot.filled {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .drop-slot.correct {
+            border-color: var(--green);
+            background: #c6f6d5
+        }
+
+        .drop-slot.wrong {
+            border-color: var(--red);
+            background: #fed7d7
+        }
+
+        .slot-content {
+            flex: 1
+        }
+
+        .slot-remove {
+            cursor: pointer;
+            color: var(--red);
+            font-weight: 700;
+            font-size: 1.2rem
+        }
+
+        /* BOWTIE */
+        .bowtie-wrap {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0
+        }
+
+        .bowtie-col {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem
+        }
+
+        .bowtie-center {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            font-weight: 700;
+            min-width: 140px
+        }
+
+        .bowtie-target {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: .9rem
+        }
+
+        .bowtie-target.filled {
+            border-color: var(--accent);
+            background: var(--bg);
+            border-style: solid
+        }
+
+        .bowtie-target.correct {
+            border-color: var(--green);
+            background: #c6f6d5
+        }
+
+        .bowtie-target.wrong {
+            border-color: var(--red);
+            background: #fed7d7
+        }
+
+        .bowtie-label {
+            font-size: .75rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px
+        }
+
+        @media(max-width:600px) {
+            .bowtie-wrap {
+                grid-template-columns: 1fr;
+                gap: .5rem
+            }
+            .bowtie-center { min-width: unset }
+            .bowtie-target { font-size: .82rem; padding: 8px }
+        }
+
+        /* TREND */
+        .trend-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+            margin: 1rem 0
+        }
+
+        .trend-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 8px;
+            position: sticky;
+            top: 0
+        }
+
+        .trend-table td {
+            padding: 8px;
+            border: 1px solid var(--border);
+            text-align: center
+        }
+
+        .trend-table tr:nth-child(even) {
+            background: var(--bg)
+        }
+
+        .trend-alert {
+            color: var(--red);
+            font-weight: 700
+        }
+
+        /* MC / SATA */
+        .mc-list {
+            list-style: none
+        }
+
+        .mc-opt {
+            padding: 12px 16px;
+            margin: 6px 0;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .mc-opt:hover {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .mc-opt.selected {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .mc-opt.correct {
+            border-color: var(--green) !important;
+            background: #c6f6d5 !important
+        }
+
+        .mc-opt.wrong {
+            border-color: var(--red) !important;
+            background: #fed7d7 !important
+        }
+
+        .mc-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .85rem;
+            flex-shrink: 0
+        }
+
+        .mc-opt.selected .mc-letter {
+            background: var(--accent);
+            color: #fff
+        }
+
+        /* FILL IN BLANK */
+        .fill-input {
+            padding: 8px 14px;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 120px;
+            text-align: center;
+            color: var(--primary);
+            background: var(--card)
+        }
+
+        .fill-input.correct {
+            border-color: var(--green);
+            background: #c6f6d5
+        }
+
+        .fill-input.wrong {
+            border-color: var(--red);
+            background: #fed7d7
+        }
+
+        .fill-unit {
+            font-weight: 600;
+            color: var(--muted);
+            margin-left: 8px
+        }
+
+        /* FEEDBACK */
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            font-size: .9rem;
+            display: none
+        }
+
+        .feedback.show {
+            display: block
+        }
+
+        .feedback.pass {
+            background: #c6f6d5;
+            border-left: 4px solid var(--green)
+        }
+
+        .feedback.fail {
+            background: #fed7d7;
+            border-left: 4px solid var(--red)
+        }
+
+        .feedback.partial {
+            background: #fefcbf;
+            border-left: 4px solid var(--orange)
+        }
+
+        .feedback strong {
+            display: block;
+            margin-bottom: 4px
+        }
+
+        .score-chip {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: .8rem;
+            font-weight: 700;
+            margin-left: 8px
+        }
+
+        .score-chip.full {
+            background: var(--green);
+            color: #fff
+        }
+
+        .score-chip.part {
+            background: var(--orange);
+            color: #fff
+        }
+
+        .score-chip.zero {
+            background: var(--red);
+            color: #fff
+        }
+
+        /* RESULTS SCREEN */
+        .results {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .08)
+        }
+
+        .results h2 {
+            color: var(--primary);
+            margin-bottom: 1rem
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(var(--green) calc(var(--pct) * 1%), var(--border) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem auto
+        }
+
+        .score-inner {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .score-inner .pct {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary)
+        }
+
+        .score-inner .lbl {
+            font-size: .8rem;
+            color: var(--muted)
+        }
+
+        .breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: left
+        }
+
+        .bd-card {
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px
+        }
+
+        .bd-card h4 {
+            font-size: .85rem;
+            color: var(--muted);
+            margin-bottom: 4px
+        }
+
+        .bd-card .val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary)
+        }
+
+        /* DROPDOWN TABLE */
+        .dd-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .9rem
+        }
+
+        .dd-table th,
+        .dd-table td {
+            padding: 10px;
+            border: 1px solid var(--border)
+        }
+
+        .dd-table th {
+            background: var(--primary);
+            color: #fff
+        }
+
+        .dd-table select {
+            padding: 4px 6px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            font-size: .85rem;
+            font-weight: 600;
+            width: 100%;
+            background: var(--card);
+            color: var(--text)
+        }
+
+        /* HIGHLIGHT TABLE */
+        .hl-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .9rem
+        }
+
+        .hl-table th,
+        .hl-table td {
+            padding: 10px;
+            border: 1px solid var(--border);
+            text-align: center
+        }
+
+        .hl-table th {
+            background: var(--primary);
+            color: #fff
+        }
+
+        .hl-table td.hlable {
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .hl-table td.hlable:hover {
+            background: #bee3f8
+        }
+
+        .hl-table td.hlable.selected {
+            background: #fefcbf
+        }
+
+        .hl-table td.hlable.correct {
+            background: #c6f6d5 !important
+        }
+
+        .hl-table td.hlable.wrong {
+            background: #fed7d7 !important
+        }
+
+        /* REVIEW MODE GRID */
+        .q-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+            gap: 6px;
+            margin: 1.5rem 0
+        }
+
+        .q-grid button {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .q-grid button:hover {
+            border-color: var(--accent);
+            background: var(--bg)
+        }
+
+        .q-grid button.current {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #fff
+        }
+
+        .q-grid button.answered {
+            border-color: var(--green);
+            background: var(--green);
+            color: #fff
+        }
+
+        .q-grid button.wrong-answer {
+            border-color: var(--red);
+            background: var(--red);
+            color: #fff
+        }
+
+        .q-grid button.partial-answer {
+            border-color: var(--orange);
+            background: var(--orange);
+            color: #fff
+        }
+
+        /* DARK MODE OVERRIDES for hardcoded light backgrounds */
+        [data-theme="dark"] .hl-span:hover {
+            background: rgba(49, 130, 206, .25)
+        }
+
+        [data-theme="dark"] .hl-span.selected {
+            background: rgba(221, 107, 32, .25)
+        }
+
+        [data-theme="dark"] .hl-span.correct,
+        [data-theme="dark"] .opt-item.correct,
+        [data-theme="dark"] .mc-opt.correct,
+        [data-theme="dark"] .drop-slot.correct,
+        [data-theme="dark"] .bowtie-target.correct,
+        [data-theme="dark"] .hl-table td.hlable.correct,
+        [data-theme="dark"] .cloze-select.correct,
+        [data-theme="dark"] .fill-input.correct,
+        [data-theme="dark"] .feedback.pass {
+            background: rgba(56, 161, 105, .2) !important
+        }
+
+        [data-theme="dark"] .hl-span.wrong,
+        [data-theme="dark"] .opt-item.wrong,
+        [data-theme="dark"] .mc-opt.wrong,
+        [data-theme="dark"] .drop-slot.wrong,
+        [data-theme="dark"] .bowtie-target.wrong,
+        [data-theme="dark"] .hl-table td.hlable.wrong,
+        [data-theme="dark"] .cloze-select.wrong,
+        [data-theme="dark"] .fill-input.wrong,
+        [data-theme="dark"] .feedback.fail {
+            background: rgba(229, 62, 62, .2) !important
+        }
+
+        [data-theme="dark"] .hl-span.missed {
+            background: rgba(56, 161, 105, .15)
+        }
+
+        [data-theme="dark"] .feedback.partial {
+            background: rgba(221, 107, 32, .2)
+        }
+
+        [data-theme="dark"] .hl-table td.hlable:hover {
+            background: rgba(49, 130, 206, .2)
+        }
+
+        [data-theme="dark"] .hl-table td.hlable.selected {
+            background: rgba(221, 107, 32, .2)
+        }
+
+        [data-theme="dark"] .opt-item:hover,
+        [data-theme="dark"] .opt-item.checked,
+        [data-theme="dark"] .mc-opt:hover,
+        [data-theme="dark"] .mc-opt.selected,
+        [data-theme="dark"] .drop-slot.filled,
+        [data-theme="dark"] .bowtie-target.filled {
+            background: rgba(49, 130, 206, .15)
+        }
+
+        [data-theme="dark"] .drag-pill:hover {
+            background: var(--accent);
+            color: #fff
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+
+        @media (max-width: 600px) {
+            #app { padding: .5rem }
+
+            /* Start screen */
+            .start-screen { padding: 1.5rem 1rem }
+            .start-screen h2 { font-size: 1.4rem }
+            .exam-stats { gap: .75rem }
+            .stat-box { min-width: 80px; padding: .75rem 1rem }
+            .stat-box .num { font-size: 1.4rem }
+            .filter-group { gap: .4rem }
+            .filter-group .btn { font-size: .78rem; padding: .45rem .7rem }
+
+            /* Header */
+            .exam-header { padding: 1rem; flex-direction: column; align-items: flex-start }
+            .exam-header h1 { font-size: 1.1rem }
+            .progress-wrap { min-width: unset; max-width: unset; width: 100% }
+
+            /* Question card */
+            .q-header { padding: .75rem 1rem }
+            .q-num { font-size: .95rem }
+            .q-body { padding: 1rem }
+            .q-stem { font-size: .95rem }
+            .q-actions { padding: .75rem 1rem; flex-wrap: wrap; gap: .5rem }
+            .q-actions .btn { font-size: .85rem; padding: .6rem 1rem; flex: 1; justify-content: center }
+
+            /* MC / SATA options */
+            .mc-opt { padding: 10px 12px; gap: 8px; font-size: .9rem }
+            .mc-letter { width: 24px; height: 24px; font-size: .75rem }
+
+            /* SelectN options */
+            .opt-item { padding: 10px 12px; gap: 8px; font-size: .9rem }
+            .opt-check { width: 18px; height: 18px; font-size: 12px }
+
+            /* Drag/drop ordered */
+            .drag-pill { padding: 8px 10px; font-size: .82rem }
+            .drop-slot { padding: 8px 10px; font-size: .9rem }
+            .drop-slot::before { width: 24px; height: 24px; font-size: .7rem }
+
+            /* Matrix — horizontal scroll */
+            .matrix-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .matrix-table th, .matrix-table td { padding: 8px 6px; font-size: .8rem; white-space: nowrap }
+
+            /* Trend table — horizontal scroll */
+            .trend-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Cloze */
+            .cloze-select { min-width: 120px; font-size: .82rem }
+            .cloze-text { font-size: .9rem; line-height: 2.4 }
+
+            /* Highlight */
+            .hl-passage { font-size: .9rem }
+            .hl-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Case study tabs */
+            .case-chart { max-height: 250px }
+            .case-tab { padding: .5rem .75rem; font-size: .75rem }
+            .tab-content { padding: .75rem; font-size: .82rem }
+            .tab-content table { font-size: .78rem }
+            .tab-content th, .tab-content td { padding: 4px 6px }
+
+            /* Feedback */
+            .feedback { font-size: .85rem; padding: .75rem 1rem }
+
+            /* Results screen */
+            .results { padding: 1.5rem 1rem }
+            .score-circle { width: 130px; height: 130px }
+            .score-inner { width: 105px; height: 105px }
+            .score-inner .pct { font-size: 2rem }
+            .breakdown { grid-template-columns: repeat(2, 1fr); gap: .5rem }
+            .bd-card { padding: .75rem }
+            .bd-card .val { font-size: 1.1rem }
+
+            /* Review grid */
+            .q-grid { gap: 4px }
+            .q-grid button { width: 38px; height: 38px; font-size: .8rem }
+
+            /* Fill-in */
+            .fill-input { width: 100px; font-size: 1rem; padding: 6px 10px }
+
+            /* Resume banner */
+            .resume-banner { padding: .75rem 1rem; flex-direction: column; text-align: center }
+
+            /* Theme toggle — don't overlap content */
+            .theme-toggle { width: 38px; height: 38px; font-size: 1rem; top: .5rem; right: .5rem }
+
+            /* Dropdown table */
+            .dd-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+
+            /* Inline tables in stems (trend question stems) */
+            .q-stem table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: .78rem }
+            .q-stem table th, .q-stem table td { padding: 4px 6px; white-space: nowrap }
+        }
+
+        /* Slightly wider phones / small tablets */
+        @media (max-width: 768px) and (min-width: 601px) {
+            #app { padding: .75rem }
+            .start-screen { padding: 2rem 1.5rem }
+            .exam-header h1 { font-size: 1.25rem }
+            .q-body { padding: 1.2rem }
+            .matrix-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .trend-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+            .q-stem table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch }
+        }
+
+        /* Touch-friendly: ensure all tappable elements are at least 44px */
+        @media (pointer: coarse) {
+            .mc-opt { min-height: 48px }
+            .opt-item { min-height: 48px }
+            .drag-pill { min-height: 44px; display: inline-flex; align-items: center }
+            .drop-slot { min-height: 48px }
+            .case-tab { min-height: 44px; display: inline-flex; align-items: center }
+            .hl-span { padding: 4px 6px }
+            .bowtie-target { min-height: 48px }
+            .cloze-select { min-height: 44px }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">☀</button>
+<script>
+// ===== DATA =====
+// ===== DATA =====
+const CASES = [
+  {
+    id: 1,
+    title: "DKA Emergency",
+    patient: "Marcus Thompson",
+    age: 19,
+    dx: "Diabetic Ketoacidosis (DKA) — Missed Insulin",
+    tabs: {
+      notes: {
+        label: "Nursing Notes",
+        content: "<p><strong>Chief Complaint:</strong> Nausea, vomiting, abdominal pain, and confusion.</p><p><strong>History of Present Illness:</strong> 19-year-old male with Type 1 DM (diagnosed age 11) brought to ED by roommate. Patient reports running out of insulin 2 days ago and did not refill prescription. Began feeling ill yesterday with nausea and diffuse abdominal pain. Roommate found him lethargic and confused this morning.</p><p><strong>PMH:</strong> Type 1 DM, last A1C 9.2% (3 months ago).</p><p><strong>Physical Exam:</strong></p><ul><li>Lethargic but arousable, oriented to person only</li><li>Kussmaul respirations — deep, rapid breathing pattern</li><li>Fruity/acetone odor on breath</li><li>Mucous membranes dry and cracked</li><li>Poor skin turgor (tenting &gt;3 seconds)</li><li>Abdomen diffusely tender, no rebound</li></ul>"
+      },
+      vitals: {
+        label: "Vital Signs",
+        content: "<table><tr><th>Parameter</th><th>Value</th></tr><tr><td>Blood Pressure</td><td>92/58 mmHg</td></tr><tr><td>Heart Rate</td><td>118 bpm, sinus tachycardia</td></tr><tr><td>Respiratory Rate</td><td>32 breaths/min (Kussmaul)</td></tr><tr><td>SpO2</td><td>97% on room air</td></tr><tr><td>Temperature</td><td>98.1°F (36.7°C)</td></tr><tr><td>Weight</td><td>72 kg</td></tr></table>"
+      },
+      labs: {
+        label: "Lab Results",
+        content: "<table><tr><th>Lab</th><th>Result</th><th>Reference</th></tr><tr><td>Blood Glucose</td><td><strong>486 mg/dL</strong></td><td>70-110 mg/dL</td></tr><tr><td>Arterial pH</td><td><strong>7.18</strong></td><td>7.35-7.45</td></tr><tr><td>HCO3</td><td><strong>8 mEq/L</strong></td><td>22-26 mEq/L</td></tr><tr><td>Anion Gap</td><td><strong>24 mEq/L</strong></td><td>8-12 mEq/L</td></tr><tr><td>Potassium</td><td><strong>5.6 mEq/L</strong></td><td>3.5-5.0 mEq/L</td></tr><tr><td>Sodium</td><td>131 mEq/L</td><td>136-145 mEq/L</td></tr><tr><td>BUN</td><td>32 mg/dL</td><td>7-20 mg/dL</td></tr><tr><td>Creatinine</td><td>1.6 mg/dL</td><td>0.6-1.2 mg/dL</td></tr><tr><td>Serum Ketones</td><td><strong>Positive (large)</strong></td><td>Negative</td></tr><tr><td>Serum Osmolality</td><td>308 mOsm/kg</td><td>275-295 mOsm/kg</td></tr></table><p><em>Corrected Na+ = 131 + [1.6 × (486 - 100)/100] = 137 mEq/L</em></p>"
+      },
+      ecg: {
+        label: "ECG",
+        content: "<p><strong>Rhythm:</strong> Sinus tachycardia, rate 118 bpm</p><p><strong>Notable Findings:</strong></p><ul><li>Tall, peaked T waves (consistent with K+ 5.6)</li><li>Normal QRS duration (0.09 sec)</li><li>No ST changes</li></ul>"
+      },
+      orders: {
+        label: "Provider Orders",
+        content: "<ul><li><strong>0.9% NS</strong> 1000 mL/hr IV × 2 hours (fluid resuscitation FIRST)</li><li>Check K+ level before starting insulin</li><li><strong>Regular insulin</strong> continuous IV drip at 0.1 units/kg/hr (7.2 units/hr) — start AFTER first liter NS and K+ confirmed ≥3.3</li><li>Flush insulin through entire IV tubing before connecting to patient</li><li>2-bag IV protocol: Bag 1 = NS, Bag 2 = D10NS — both with 20 mEq KCl/L</li><li>Blood glucose monitoring every 1 hour (POCT)</li><li>BMP every 4 hours</li><li>Continuous cardiac monitoring</li><li>Strict I&O with Foley catheter</li><li>NPO until nausea resolves</li></ul>"
+      }
+    },
+    tabs2: {
+      notes: {
+        label: "4-Hour Update",
+        content: "<p><strong>4 hours post-treatment initiation:</strong></p><p>Patient more alert, oriented to person and place. Nausea improved. Received 3L NS total. Insulin drip running at 7.2 units/hr for 3 hours. 2-bag protocol initiated when glucose reached 280 mg/dL — dextrose bag rate increased, plain NS rate decreased.</p><p><strong>Concern:</strong> Glucose is responding well but acidosis is NOT yet resolved. Anion gap still elevated. The insulin drip must continue even though glucose is improving — stopping it prematurely will cause acidosis rebound.</p>"
+      },
+      vitals: {
+        label: "Updated Vitals",
+        content: "<table><tr><th>Parameter</th><th>Value</th><th>Trend</th></tr><tr><td>Blood Pressure</td><td>108/68 mmHg</td><td>↑ improving</td></tr><tr><td>Heart Rate</td><td>98 bpm</td><td>↓ improving</td></tr><tr><td>Respiratory Rate</td><td>24 breaths/min</td><td>↓ still elevated</td></tr><tr><td>SpO2</td><td>98% on RA</td><td>Stable</td></tr></table>"
+      },
+      labs: {
+        label: "Updated Labs",
+        content: "<table><tr><th>Lab</th><th>Result</th><th>Trend</th></tr><tr><td>Blood Glucose</td><td>280 mg/dL</td><td>↓ from 486 (responding)</td></tr><tr><td>Arterial pH</td><td><strong>7.26</strong></td><td>↑ from 7.18 (still acidotic)</td></tr><tr><td>HCO3</td><td><strong>12 mEq/L</strong></td><td>↑ from 8 (improving slowly)</td></tr><tr><td>Anion Gap</td><td><strong>18 mEq/L</strong></td><td>↓ from 24 (still elevated)</td></tr><tr><td>Potassium</td><td><strong>4.1 mEq/L</strong></td><td>↓↓ from 5.6 (K+ shifting intracellularly)</td></tr><tr><td>Phosphorus</td><td>2.0 mg/dL</td><td>↓ (depleted)</td></tr></table><p><strong>Critical Observation:</strong> K+ dropped from 5.6 → 4.1 in 4 hours. This is the <strong>potassium trap</strong> — initial K+ appeared high from acidosis, but total body K+ was depleted. Insulin is now driving K+ into cells, unmasking the deficit. Continue KCl replacement in IV fluids and monitor closely.</p>"
+      },
+      ecg: {
+        label: "Updated ECG",
+        content: "<p><strong>Rate:</strong> 98 bpm, sinus tachycardia improving</p><p><strong>Notable:</strong></p><ul><li>Peaked T waves resolved (K+ normalizing)</li><li>No new conduction abnormalities</li></ul>"
+      },
+      orders: {
+        label: "Updated Orders",
+        content: "<ul><li><strong>Continue insulin drip</strong> — do NOT stop until pH ≥7.3, HCO3 ≥15, and anion gap closed</li><li>Increase dextrose bag (D10NS) rate to prevent hypoglycemia while maintaining insulin drip</li><li>Increase KCl in IV fluids to 40 mEq/L (K+ dropping)</li><li>Continue hourly BG and q4h BMP</li><li>When acidosis resolved: overlap SQ insulin 1-2 hours BEFORE stopping drip</li><li>Endocrinology consult for insulin regimen and diabetes education</li><li>Social work consult — assess barriers to medication access</li></ul>"
+      }
+    }
+  }
+];
+
+const Q = [];
+
+// ===== DKA CASE =====
+
+Q.push({
+  id: 1, type: "highlight", caseId: 1, cjmm: "Recognize Cues",
+  stem: "Based on the client's nursing notes, vital signs, and lab results, highlight the findings that require immediate follow-up by the nurse.",
+  phrases: [
+    { text: "Kussmaul respirations — deep, rapid breathing", correct: true },
+    { text: "Fruity/acetone odor on breath", correct: true },
+    { text: "Blood glucose 486 mg/dL", correct: true },
+    { text: "Arterial pH 7.18", correct: true },
+    { text: "HCO3 8 mEq/L", correct: true },
+    { text: "Anion gap 24 mEq/L", correct: true },
+    { text: "Potassium 5.6 mEq/L", correct: true },
+    { text: "Blood pressure 92/58 mmHg", correct: true },
+    { text: "Heart rate 118 bpm", correct: true },
+    { text: "Serum ketones positive (large)", correct: true },
+    { text: "Lethargic, oriented to person only", correct: true },
+    { text: "Type 1 DM diagnosed at age 11", correct: false },
+    { text: "SpO2 97% on room air", correct: false },
+    { text: "Temperature 98.1°F", correct: false },
+    { text: "Last A1C 9.2% three months ago", correct: false },
+    { text: "Weight 72 kg", correct: false }
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Pathophysiology:</strong> These findings paint the full picture of DKA: <strong>pH 7.18</strong> = severe metabolic acidosis, <strong>HCO3 8</strong> = severely depleted bicarbonate buffer, <strong>anion gap 24</strong> = ketoacid accumulation (normal 8-12). <strong>Kussmaul respirations</strong> are the body's compensatory mechanism — blowing off CO2 to reduce acid load. <strong>Fruity breath</strong> = exhaled acetone (ketone byproduct). <strong>Glucose 486</strong> = severe hyperglycemia causing osmotic diuresis → dehydration → <strong>BP 92/58</strong> (hypovolemia) and <strong>HR 118</strong> (compensatory tachycardia). <strong>K+ 5.6</strong> appears elevated but this is the <strong>potassium trap</strong> — acidosis shifts K+ OUT of cells, masking severe total body depletion. <strong>Altered mental status</strong> results from acidosis and hyperosmolality. Normal findings (SpO2, temp, weight) and historical data (DM history, A1C) are not acute concerns requiring immediate action."
+});
+
+Q.push({
+  id: 2, type: "cloze", caseId: 1, cjmm: "Analyze Cues",
+  stem: "The client's presentation is consistent with |0| triggered by |1|. The Kussmaul respirations represent |2|. The initial potassium of 5.6 mEq/L is misleading because |3|.",
+  selects: [
+    { options: ["diabetic ketoacidosis (DKA)", "hyperglycemic hyperosmolar syndrome (HHS)", "hypoglycemic crisis"], correct: 0 },
+    { options: ["missed insulin doses for 2 days", "excessive carbohydrate intake", "medication interaction"], correct: 0 },
+    { options: ["respiratory compensation for metabolic acidosis — the body is blowing off CO2 to raise pH", "primary respiratory alkalosis from anxiety and hyperventilation", "Cheyne-Stokes breathing from neurological compromise"], correct: 0 },
+    { options: ["acidosis shifts K+ out of cells, making serum levels appear high while total body K+ is depleted from osmotic diuresis", "the kidneys are retaining excessive potassium due to acute renal failure", "the patient has been consuming a high-potassium diet"], correct: 0 }
+  ],
+  scoring: "dyad",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA vs HHS:</strong> This is DKA, not HHS: <strong>ketones present, pH <7.3, low HCO3, elevated anion gap</strong>. HHS would show glucose >600, osmolality >320, normal pH, and absent ketones. The trigger is clear: <strong>2 days without insulin</strong> in a Type 1 patient = no insulin to shuttle glucose into cells → body shifts to fat metabolism → ketone production → metabolic acidosis. <strong>Kussmaul respirations</strong> are the lungs' attempt to compensate by eliminating CO2 (an acid) — deep, rapid breathing reduces PaCO2 to partially offset the metabolic acidosis. The <strong>potassium trap</strong> is heavily tested: in acidosis, H+ ions flood INTO cells and K+ shifts OUT to maintain electrical neutrality. Serum K+ looks high, but the patient has lost massive amounts of K+ through osmotic diuresis. When insulin is given, K+ rushes back into cells and the true deficit is unmasked — potentially causing fatal hypokalemia."
+});
+
+Q.push({
+  id: 3, type: "matrix", caseId: 1, cjmm: "Prioritize Hypotheses",
+  stem: "For each potential complication, indicate whether it is a PRIORITY concern or a NON-PRIORITY concern during DKA treatment for this client.",
+  rows: [
+    "Hypokalemia during insulin therapy (potassium trap)",
+    "Cerebral edema from too-rapid fluid correction",
+    "Hypoglycemia if insulin drip continues after glucose normalizes",
+    "Elevated A1C (9.2%)",
+    "Rebound acidosis if insulin stopped too early",
+    "Mild prerenal azotemia (Cr 1.6)",
+    "Hyponatremia (Na+ 131 — pseudohyponatremia)"
+  ],
+  cols: ["Priority", "Non-Priority"],
+  correct: [0, 0, 0, 1, 0, 1, 1],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Treatment Complications:</strong> <strong>Hypokalemia</strong> is the #1 killer during DKA treatment — insulin drives K+ into cells, unmasking severe total body depletion. Always check K+ before starting insulin; if <3.3, replace K+ BEFORE insulin. <strong>Cerebral edema</strong> is a feared complication especially in young patients — caused by too-rapid fluid shifts. <strong>Hypoglycemia</strong> occurs if insulin drip runs without dextrose after glucose normalizes — that's why the 2-bag protocol exists (add dextrose to maintain insulin drip for acidosis). <strong>Rebound acidosis</strong> occurs if insulin is stopped when glucose improves but pH/HCO3/anion gap haven't normalized — glucose corrects before acidosis. The <strong>elevated A1C</strong> reflects chronic control issues but isn't an acute treatment priority. The <strong>Cr 1.6</strong> is mild prerenal from dehydration and will likely improve with fluids. The <strong>Na+ 131</strong> is pseudohyponatremia — corrected Na+ is 137 (hyperglycemia pulls water into the vascular space, diluting sodium)."
+});
+
+Q.push({
+  id: 4, type: "selectN", n: 4, caseId: 1, cjmm: "Generate Solutions",
+  stem: "The nurse is planning care for this client with DKA. Select the 4 priority nursing interventions.",
+  options: [
+    { text: "Initiate IV fluid resuscitation with 0.9% NS before starting insulin", correct: true },
+    { text: "Verify potassium level is ≥3.3 mEq/L before starting the insulin drip", correct: true },
+    { text: "Monitor blood glucose every hour via point-of-care testing", correct: true },
+    { text: "Flush insulin through the entire IV tubing before connecting to patient (insulin adheres to plastic)", correct: true },
+    { text: "Administer IV sodium bicarbonate immediately to correct the acidosis", correct: false },
+    { text: "Start subcutaneous insulin glargine as the initial insulin therapy", correct: false },
+    { text: "Encourage oral fluids immediately to supplement IV hydration", correct: false },
+    { text: "Administer potassium chloride IV push to rapidly correct potassium", correct: false }
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Management Protocol:</strong> <strong>Fluids FIRST, then insulin</strong> — rehydration alone will begin lowering glucose. <strong>Check K+ before insulin</strong>: if K+ <3.3, replace potassium FIRST because insulin will drive K+ further down, risking cardiac arrest. <strong>Hourly BG monitoring</strong> is essential to titrate the insulin drip and know when to add dextrose (2-bag protocol). <strong>Flushing insulin tubing</strong> is critical because insulin adheres to plastic — without flushing, the patient doesn't receive the full dose initially. <strong>Sodium bicarbonate is generally AVOIDED</strong> in DKA — it can worsen hypokalemia and cause paradoxical CNS acidosis. <strong>Only regular insulin IV</strong> is used in DKA (not glargine — long-acting SQ insulin has no role in acute DKA management). Patient is <strong>NPO</strong> (nausea, vomiting, altered mental status = aspiration risk). Potassium is <strong>never given IV push</strong> — it must be diluted in IV fluids and infused slowly (risk of fatal cardiac arrest)."
+});
+
+Q.push({
+  id: 5, type: "ordered", caseId: 1, cjmm: "Take Action",
+  stem: "Place the following DKA treatment steps in the correct priority order.",
+  items: [
+    "Begin IV fluid resuscitation with 0.9% NS at 500-1000 mL/hr",
+    "Draw BMP and verify serum potassium is ≥3.3 mEq/L",
+    "Initiate continuous IV regular insulin drip (flush tubing first)",
+    "When glucose reaches 250-300 mg/dL, start dextrose-containing IV fluid (2-bag protocol)",
+    "When pH ≥7.3, HCO3 ≥15, and anion gap closed — overlap subcutaneous insulin for 1-2 hours",
+    "Discontinue insulin drip 1-2 hours after subcutaneous insulin given"
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Treatment Sequence:</strong> <strong>1) Fluids first</strong> — the patient is severely dehydrated (lost liters to osmotic diuresis). NS restores volume and alone will lower glucose. <strong>2) Check K+</strong> — must be ≥3.3 before insulin or risk fatal hypokalemia. <strong>3) Start insulin drip</strong> — continuous regular insulin IV (only insulin approved for IV use). Flush tubing because insulin adheres to plastic. <strong>4) 2-bag protocol</strong> — when glucose drops to 250-300, add dextrose to prevent hypoglycemia while continuing insulin to resolve acidosis. Remember: glucose corrects BEFORE acidosis. <strong>5) Transition criteria</strong> — don't stop the drip until pH ≥7.3, HCO3 ≥15, anion gap normalized, AND patient can eat. <strong>6) Overlap</strong> — give SQ insulin 1-2 hours before stopping drip to prevent rebound hyperglycemia/ketosis (there must be circulating insulin at all times)."
+});
+
+Q.push({
+  id: 6, type: "cloze", caseId: 1, cjmm: "Evaluate Outcomes", useTabs2: true,
+  stem: "At the 4-hour mark, the glucose response has been |0| but the acidosis response is |1|. The potassium dropping from 5.6 to 4.1 demonstrates |2|. The correct action is to |3|.",
+  selects: [
+    { options: ["effective — glucose decreased from 486 to 280", "ineffective — glucose has not changed significantly", "dangerously rapid — glucose dropping too fast"], correct: 0 },
+    { options: ["incomplete — pH 7.26 and anion gap 18 indicate ongoing acidosis requiring continued insulin", "fully resolved — the patient can be transitioned to subcutaneous insulin", "worsening — the treatment is not working"], correct: 0 },
+    { options: ["the potassium trap — insulin is driving K+ into cells, unmasking the true total body deficit", "appropriate correction of hyperkalemia with no further concern", "laboratory error that should be rechecked"], correct: 0 },
+    { options: ["continue the insulin drip with dextrose (2-bag protocol), increase KCl in IV fluids, and monitor hourly", "stop the insulin drip since glucose is improving", "administer IV potassium chloride push for the dropping potassium"], correct: 0 }
+  ],
+  scoring: "dyad",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Monitoring & the 2-Bag Protocol:</strong> Glucose is responding well (486→280) but <strong>acidosis lags behind</strong> — pH still 7.26, HCO3 only 12, anion gap still 18. This is the classic DKA trap: <strong>glucose corrects before acidosis</strong>. Stopping insulin now would cause acidosis rebound. The <strong>2-bag protocol</strong> solves this: add dextrose to prevent hypoglycemia while continuing insulin to resolve acidosis. The <strong>K+ drop from 5.6 to 4.1</strong> in 4 hours is the textbook potassium trap — the initial 5.6 was falsely elevated from acidosis shifting K+ out of cells. Now insulin is driving K+ back in, and the true total body deficit is being revealed. Action: <strong>increase KCl in IV to 40 mEq/L</strong> and monitor closely. K+ is never given IV push — always diluted and infused over time."
+});
+
+// ===== DM FOUNDATIONS =====
+
+Q.push({
+  id: 7, type: "mc",
+  stem: "A nurse is teaching a newly diagnosed patient about Type 1 diabetes mellitus. Which statement by the nurse is MOST accurate?",
+  opts: [
+    "Type 1 DM results from autoimmune destruction of pancreatic beta cells, causing absolute insulin deficiency",
+    "Type 1 DM is caused by insulin resistance at the cellular receptor level",
+    "Type 1 DM accounts for approximately 95% of all diabetes cases",
+    "Type 1 DM can be managed with oral hypoglycemic agents alone"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — DM Foundations:</strong> <strong>Type 1 DM</strong> = autoimmune beta-cell destruction → absolute insulin deficiency. The body produces NO insulin, requiring exogenous insulin for life. Presents acutely with the 'three Ps' (polyuria, polydipsia, polyphagia) + sudden weight loss + ketoacidosis if untreated. <strong>Type 2</strong> involves insulin resistance + progressive beta-cell dysfunction, accounts for ~95% of cases, and initially may respond to oral agents. Type 1 patients can NEVER use oral agents alone — they need insulin to survive.",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 8, type: "mc",
+  stem: "Which diagnostic criterion confirms a diabetes mellitus diagnosis?",
+  opts: [
+    "HbA1C ≥6.5% on two separate occasions",
+    "Random blood glucose of 160 mg/dL with polyuria",
+    "Fasting blood glucose of 110 mg/dL",
+    "2-hour OGTT of 180 mg/dL"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — DM Diagnosis:</strong> Diagnostic criteria (any one, confirmed by repeat testing): <strong>HbA1C ≥6.5%</strong> (reflects 2-3 month average), <strong>fasting glucose ≥126 mg/dL</strong> (fasting ≥8 hours), <strong>random glucose ≥200 mg/dL WITH classic symptoms</strong>, or <strong>2-hour OGTT ≥200 mg/dL</strong>. A random glucose of 160 doesn't meet the ≥200 threshold. Fasting of 110 is 'impaired fasting glucose' (prediabetes range 100-125). OGTT of 180 doesn't meet the ≥200 threshold.",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 9, type: "mc",
+  stem: "Which insulin is the ONLY type approved for intravenous administration?",
+  opts: [
+    "Regular insulin (Humulin R)",
+    "Insulin lispro (Humalog)",
+    "NPH insulin (Humulin N)",
+    "Insulin glargine (Lantus)"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Types:</strong> <strong>Regular insulin</strong> is the ONLY insulin approved for IV use. It has onset 30-60 min (SQ) but works immediately IV. In DKA, the standard preparation is 100 units regular insulin in 100 mL NS (1 unit/mL), so the infusion rate in mL/hr = units/hr. Rapid-acting insulins (lispro, aspart) are for SQ bolus with meals. NPH is intermediate-acting SQ only. Glargine is long-acting SQ only and CANNOT be mixed with other insulins (pH 4).",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 10, type: "sata",
+  stem: "A nurse is reviewing insulin types with a student. Which statements about insulin are correct? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Rapid-acting insulin (lispro, aspart) has onset of 5-15 minutes and should be given immediately before meals", c: true },
+    { t: "Regular insulin has onset of 30-60 minutes and should be given 15-30 minutes before meals", c: true },
+    { t: "Glargine (Lantus) provides a continuous 24-hour basal level with no peak", c: true },
+    { t: "Glargine can be safely mixed with NPH in the same syringe", c: false },
+    { t: "NPH insulin peaks at 4-12 hours, creating a hypoglycemia risk window", c: true },
+    { t: "All insulin vials should be shaken vigorously before use", c: false },
+    { t: "Inhaled insulin (Afrezza) requires pulmonary function testing before initiation", c: true }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Kinetics:</strong> <strong>Rapid-acting</strong> (lispro, aspart, glulisine): onset 5-15 min, peak 30-60 min, duration 3-5 hr. Give with meals. <strong>Short-acting (Regular)</strong>: onset 30-60 min, peak 2-3 hr, duration 4-6 hr. Give 15-30 min before meals. <strong>Intermediate (NPH)</strong>: onset 1-1.5 hr, peak 4-12 hr, duration up to 24 hr. The peak window creates hypoglycemia risk — ensure snack availability. <strong>Long-acting (Glargine)</strong>: onset 3-6 hr, NO peak ('peakless'), duration 24 hr. <strong>Cannot mix glargine</strong> with any other insulin (pH 4 — mixing destroys the slow-release mechanism). Only NPH is cloudy; shake none of them vigorously. <strong>Inhaled insulin (Afrezza)</strong>: requires baseline and periodic PFTs — contraindicated in chronic lung disease.",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 11, type: "sata",
+  stem: "Before administering insulin to a hospitalized patient, the nurse should perform which safety checks? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Verify the blood glucose level (check BG before giving insulin)", c: true },
+    { t: "Confirm the patient has food available — meal tray arriving or snack at bedside", c: true },
+    { t: "Verify the correct insulin type, dose, and route against the order", c: true },
+    { t: "Have another nurse independently verify the insulin dose (high-alert medication)", c: true },
+    { t: "Draw up insulin using a tuberculin syringe for more precise measurement", c: false },
+    { t: "Administer insulin intramuscularly for faster absorption", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Safety:</strong> Insulin is a <strong>high-alert medication</strong>. Critical safety checks: <strong>1) Check BG</strong> — never give insulin blindly. <strong>2) Ensure food availability</strong> — giving insulin without a meal = iatrogenic hypoglycemia (a leading cause of hospital harm). <strong>3) Verify order</strong> — right insulin, right dose, right route. <strong>4) Independent double-check</strong> — two-nurse verification per most hospital policies. Use <strong>insulin syringes</strong> (calibrated in units), not tuberculin syringes. Insulin is given <strong>subcutaneously</strong> (rotate sites: abdomen fastest absorption, then arms, thighs, buttocks). IM injection causes unpredictable absorption and is not standard practice.",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 12, type: "matrix",
+  stem: "For each insulin characteristic, indicate whether it describes Rapid-Acting (Lispro), Intermediate-Acting (NPH), or Long-Acting (Glargine) insulin.",
+  rows: [
+    "Onset 5-15 minutes, give immediately before meals",
+    "Appears cloudy — roll gently, never shake",
+    "Peakless — provides continuous 24-hour basal coverage",
+    "Peak 4-12 hours — hypoglycemia risk during this window",
+    "Cannot be mixed with any other insulin (pH 4)",
+    "Onset 1-1.5 hours, duration up to 24 hours"
+  ],
+  cols: ["Rapid-Acting (Lispro)", "Intermediate (NPH)", "Long-Acting (Glargine)"],
+  correct: [0, 1, 2, 1, 2, 1],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Kinetics Matching:</strong> <strong>Rapid-acting (Lispro)</strong>: onset 5-15 min, peak 30-60 min, duration 3-5 hr. Give immediately with meals. <strong>NPH</strong>: onset 1-1.5 hr, peak 4-12 hr, duration up to 24 hr. Only cloudy insulin. The broad peak window (4-12 hr) means hypoglycemia can strike at unpredictable times — ensure snacks. <strong>Glargine</strong>: onset 3-6 hr, no peak ('peakless'), duration 24 hr. Cannot mix (acidic pH destroys the crystal structure). Given once daily at the same time.",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 13, type: "ordered",
+  stem: "A nurse is preparing to mix regular and NPH insulin in one syringe. Place the steps in the correct order.",
+  items: [
+    "Roll the NPH vial gently to resuspend (never shake)",
+    "Inject air into the NPH vial equal to the NPH dose (do NOT withdraw insulin yet)",
+    "Inject air into the regular insulin vial and withdraw the regular (clear) insulin dose",
+    "Insert the needle into the NPH vial and withdraw the NPH (cloudy) insulin dose",
+    "Verify the total volume in the syringe equals both doses combined"
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Mixing Insulin ('Clear Before Cloudy'):</strong> The mnemonic is <strong>'clear before cloudy'</strong>: draw up regular (clear) before NPH (cloudy). But the air injection sequence matters: <strong>1) Roll NPH</strong> to resuspend. <strong>2) Inject air into NPH first</strong> (but don't withdraw yet — avoids contaminating regular with NPH particles). <strong>3) Inject air into regular and withdraw the dose</strong>. <strong>4) NOW go back to NPH and withdraw</strong>. <strong>5) Verify total</strong>. The reason: if you contaminate the regular vial with NPH particles, you've ruined the entire multi-dose vial. Remember: glargine CANNOT be mixed (pH 4 destroys the slow-release mechanism).",
+  topic: "DM Foundations"
+});
+
+Q.push({
+  id: 14, type: "fillin",
+  stem: "A patient weighing 72 kg is in DKA. The provider orders a continuous insulin drip at 0.1 units/kg/hr. The standard preparation is 100 units in 100 mL NS. The nurse should set the IV pump to:<br><br>Rate = ___",
+  answer: 7.2, tolerance: 0.1, unit: "mL/hr",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Insulin Drip Calculation:</strong> Dose = 0.1 units/kg/hr × 72 kg = <strong>7.2 units/hr</strong>. With the standard preparation of 100 units/100 mL (= 1 unit/mL), the rate in mL/hr equals the dose in units/hr. So the pump rate = <strong>7.2 mL/hr</strong>. This is the standard DKA insulin infusion rate. Remember: flush the entire IV tubing with the insulin solution before connecting to the patient — insulin adheres to plastic tubing, and without flushing, the patient won't receive the full dose initially.",
+  topic: "DM Foundations"
+});
+
+// ===== ORAL AGENTS =====
+
+Q.push({
+  id: 15, type: "mc",
+  stem: "A nurse is caring for a patient on metformin who is scheduled for a CT scan with IV contrast dye. The priority nursing action is to:",
+  opts: [
+    "Hold metformin 48 hours before and after the contrast procedure",
+    "Administer metformin with extra fluids before the procedure",
+    "Request a different oral hypoglycemic for the day of the procedure",
+    "Continue metformin as scheduled — contrast does not interact with metformin"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Metformin Safety:</strong> Metformin must be <strong>held 48 hours before AND after</strong> contrast dye administration. The concern: contrast dye is nephrotoxic and can temporarily reduce renal function. If metformin is present during reduced renal function, it cannot be cleared → accumulates → <strong>fatal lactic acidosis</strong>. Metformin is also contraindicated in renal impairment (always monitor BUN/creatinine). Other metformin pearls: GI side effects (take with food), no hypoglycemia as monotherapy, B12 deficiency with long-term use.",
+  topic: "Oral Agents"
+});
+
+Q.push({
+  id: 16, type: "mc",
+  stem: "Which class of oral hypoglycemics works by stimulating pancreatic beta cells to secrete more insulin and carries a significant risk of hypoglycemia?",
+  opts: [
+    "Sulfonylureas (glipizide, glyburide)",
+    "Biguanides (metformin)",
+    "SGLT2 inhibitors (canagliflozin)",
+    "DPP-4 inhibitors (sitagliptin)"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Oral Hypoglycemics:</strong> <strong>Sulfonylureas</strong> stimulate beta cells to secrete insulin regardless of blood glucose level → significant <strong>hypoglycemia risk</strong>. Contraindicated in sulfa allergy patients. Beta-blockers mask hypoglycemia symptoms — dangerous combination. <strong>Metformin</strong> reduces hepatic glucose production — low hypoglycemia risk. <strong>SGLT2 inhibitors</strong> cause glycosuria (glucose in urine) — low hypoglycemia risk but UTI/yeast infection risk. <strong>DPP-4 inhibitors</strong> increase incretins — low hypoglycemia risk, weight-neutral.",
+  topic: "Oral Agents"
+});
+
+Q.push({
+  id: 17, type: "matrix",
+  stem: "For each oral hypoglycemic agent, indicate its PRIMARY mechanism of action.",
+  rows: [
+    "Metformin",
+    "Glipizide (sulfonylurea)",
+    "Acarbose (alpha-glucosidase inhibitor)",
+    "Canagliflozin (SGLT2 inhibitor)",
+    "Pioglitazone (thiazolidinedione)"
+  ],
+  cols: ["Decreases Hepatic Glucose Production", "Stimulates Beta Cell Insulin Secretion", "Delays Carbohydrate Absorption", "Prevents Renal Glucose Reabsorption", "Sensitizes Peripheral Tissue to Insulin"],
+  correct: [0, 1, 2, 3, 4],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Oral Hypoglycemic Mechanisms:</strong> <strong>Metformin</strong> = decreases hepatic glucose production (also improves insulin sensitivity). <strong>Sulfonylureas (glipizide)</strong> = stimulate beta cells to secrete insulin (HIGH hypoglycemia risk). <strong>Alpha-glucosidase inhibitors (acarbose)</strong> = delay carb absorption in the GI tract (take with first bite). <strong>SGLT2 inhibitors (canagliflozin)</strong> = prevent kidneys from reabsorbing glucose → glycosuria. <strong>Thiazolidinediones (pioglitazone)</strong> = sensitize peripheral tissues to insulin. Each class targets a different pathophysiologic mechanism — combination therapy attacks hyperglycemia from multiple angles.",
+  topic: "Oral Agents"
+});
+
+Q.push({
+  id: 18, type: "cloze",
+  stem: "Metformin's most dangerous adverse effect is |0|, which is why it must be |1|. Sulfonylureas are contraindicated in patients with |2|.",
+  selects: [
+    { options: ["lactic acidosis", "hypoglycemia", "hepatic failure"], correct: 0 },
+    { options: ["held 48 hours before and after IV contrast dye and contraindicated in renal/hepatic impairment", "taken only on an empty stomach to prevent drug interaction", "discontinued after 6 months regardless of glycemic control"], correct: 0 },
+    { options: ["sulfa allergy — and beta-blockers mask hypoglycemia symptoms in patients on sulfonylureas", "penicillin allergy — cross-reactivity occurs", "shellfish allergy — shared iodine pathway"], correct: 0 }
+  ],
+  scoring: "dyad",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Metformin & Sulfonylurea Safety:</strong> Metformin's feared complication is <strong>lactic acidosis</strong> — occurs when metformin accumulates in the setting of renal impairment, hepatic dysfunction, or contrast-induced nephropathy. Always monitor BUN/Cr. Hold 48h around contrast. Sulfonylureas contain a sulfa moiety → <strong>contraindicated in sulfa allergy</strong>. Additionally, <strong>beta-blockers mask hypoglycemia symptoms</strong> (tachycardia, tremor, diaphoresis) in patients on sulfonylureas — the patient may not realize they're hypoglycemic until confusion or seizure occurs.",
+  topic: "Oral Agents"
+});
+
+// ===== HYPOGLYCEMIA =====
+
+Q.push({
+  id: 19, type: "mc",
+  stem: "A hospitalized patient becomes diaphoretic, tremulous, and confused. Blood glucose is 52 mg/dL. The patient is unable to swallow safely. The nurse should FIRST:",
+  opts: [
+    "Administer D50W (50% dextrose) 25-50 mL IV push",
+    "Give 4 oz orange juice by mouth",
+    "Administer glucagon 1 mg intramuscularly",
+    "Call a rapid response team and wait for the provider"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Hypoglycemia Emergency:</strong> Key decision: <strong>Can the patient swallow safely?</strong> This patient CANNOT (confused, unable to swallow). In the <strong>hospital</strong> with IV access: <strong>D50W 25-50 mL IV push</strong> is first-line — immediate glucose delivery. Never put anything in the mouth of a patient who cannot safely swallow (aspiration risk is immediate and lethal). <strong>Glucagon 1 mg IM/SQ</strong> is for the <strong>community setting</strong> when no IV access is available — it stimulates hepatic glycogenolysis. If the patient WERE conscious and able to swallow, give 15g fast-acting carbs (Rule of 15).",
+  topic: "Hypoglycemia"
+});
+
+Q.push({
+  id: 20, type: "sata",
+  stem: "A nurse is assessing a patient for signs of hypoglycemia (blood glucose <70 mg/dL). Which are manifestations of hypoglycemia? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Diaphoresis (sweating)", c: true },
+    { t: "Tremors and shakiness", c: true },
+    { t: "Tachycardia and palpitations", c: true },
+    { t: "Confusion and irritability", c: true },
+    { t: "Hunger", c: true },
+    { t: "Kussmaul respirations", c: false },
+    { t: "Fruity breath odor", c: false },
+    { t: "Warm, flushed, dry skin", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — Hypoglycemia Signs:</strong> Hypoglycemia triggers the <strong>sympathetic nervous system</strong>: diaphoresis, tremors, tachycardia, palpitations, pallor, hunger, anxiety. As glucose drops further, <strong>neuroglycopenic symptoms</strong> appear: confusion, irritability, slurred speech, seizures, loss of consciousness. <strong>Kussmaul respirations and fruity breath</strong> are signs of <strong>DKA</strong> (hyperglycemia), not hypoglycemia. Warm, flushed, dry skin is associated with hyperglycemia (dehydration). Key safety point: <strong>beta-blockers mask</strong> the sympathetic symptoms (tachycardia, tremors) — patients on beta-blockers may not recognize hypoglycemia until neuroglycopenic symptoms occur.",
+  topic: "Hypoglycemia"
+});
+
+Q.push({
+  id: 21, type: "ordered",
+  stem: "A conscious patient reports feeling shaky and lightheaded. Blood glucose is 62 mg/dL. Place the hypoglycemia management steps in the correct order.",
+  items: [
+    "Administer 15 grams of fast-acting carbohydrate (4 oz juice, glucose tablets, or 6 oz regular soda)",
+    "Recheck blood glucose in 15 minutes",
+    "If BG still <70 mg/dL, repeat 15g fast-acting carbohydrate",
+    "Once BG >70 mg/dL, provide a complex carbohydrate + protein snack or meal",
+    "Investigate the cause (too much insulin, missed meal, excessive exercise)"
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Rule of 15 Algorithm:</strong> <strong>1) Give 15g fast carbs</strong> — options: 4 oz juice, 6 oz regular soda, 3-4 glucose tablets, 1 tbsp honey. <strong>2) Recheck in 15 minutes</strong> — fast carbs take ~15 min to raise BG. <strong>3) Repeat if needed</strong> — continue the cycle until BG >70. <strong>4) Follow with complex carb + protein</strong> — sustains the glucose elevation (the fast carbs will metabolize quickly). Examples: crackers with cheese, half a sandwich. <strong>5) Investigate the cause</strong> — was it too much insulin? Missed meal? Excessive exercise? Adjust the regimen to prevent recurrence. Document the episode.",
+  topic: "Hypoglycemia"
+});
+
+// ===== DKA/HHS =====
+
+Q.push({
+  id: 22, type: "mc",
+  stem: "A nurse is caring for a patient in DKA. Which lab value must be confirmed BEFORE starting the insulin drip?",
+  opts: [
+    "Potassium ≥3.3 mEq/L",
+    "Sodium ≥136 mEq/L",
+    "Blood glucose ≥300 mg/dL",
+    "Arterial pH ≤7.30"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Potassium Trap:</strong> <strong>Check K+ BEFORE insulin</strong> — this is non-negotiable. If K+ <3.3 mEq/L, replace potassium FIRST before starting insulin. Insulin drives K+ into cells; if starting K+ is already critically low, insulin will cause fatal hypokalemia → cardiac arrest. The initial K+ in DKA often appears normal or high (5.6 in our case) because acidosis shifts K+ out of cells, but total body K+ is severely depleted from osmotic diuresis. The insulin will unmask this deficit rapidly.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 23, type: "mc",
+  stem: "In DKA, the blood glucose typically normalizes BEFORE the acidosis resolves. The nurse understands that the correct action when glucose reaches 250-300 mg/dL is to:",
+  opts: [
+    "Add dextrose to the IV fluids (2-bag protocol) while continuing the insulin drip to resolve the acidosis",
+    "Discontinue the insulin drip immediately since the hyperglycemia is corrected",
+    "Switch from IV insulin to subcutaneous glargine to maintain glycemic control",
+    "Increase the insulin drip rate to correct the acidosis faster"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — 2-Bag Protocol:</strong> This is one of the most tested DKA concepts: <strong>glucose corrects BEFORE acidosis</strong>. Stopping insulin when glucose improves causes <strong>acidosis rebound</strong> because insulin is needed to suppress ketogenesis and resolve the metabolic acidosis. The <strong>2-bag protocol</strong> solves this: Bag 1 = NS without dextrose, Bag 2 = D10NS with dextrose. Both contain the same K+ concentration. As glucose drops toward 250-300, increase the dextrose bag rate and decrease the plain bag rate (total rate stays constant). This prevents hypoglycemia while keeping the insulin drip running to resolve acidosis.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 24, type: "mc",
+  stem: "Which finding differentiates HHS from DKA?",
+  opts: [
+    "Normal arterial pH, absent ketones, and serum osmolality >320 mOsm/kg",
+    "Kussmaul respirations with fruity breath odor",
+    "Blood glucose of 350 mg/dL with metabolic acidosis",
+    "Rapid onset over less than 24 hours in a young Type 1 patient"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA vs HHS:</strong> <strong>HHS</strong> = Type 2 patients, older adults, slow onset (days to weeks), blood glucose >600, osmolality >320, <strong>normal pH, absent ketones</strong>, altered mental status as hallmark, mortality 5-16%. <strong>DKA</strong> = Type 1 (can occur in Type 2), rapid onset (<24h), glucose >250, pH <7.3, ketones present, Kussmaul respirations, fruity breath, mortality <1%. The key difference: in HHS, there's enough insulin to prevent ketogenesis but not enough to prevent hyperglycemia. In DKA, insulin is virtually absent → uncontrolled fat metabolism → ketone production → acidosis.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 25, type: "mc",
+  stem: "The hallmark clinical presentation that distinguishes HHS from DKA is:",
+  opts: [
+    "Altered mental status — confusion, lethargy, seizures, or coma",
+    "Nausea, vomiting, and abdominal pain",
+    "Kussmaul breathing pattern",
+    "Fruity/acetone odor on breath"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — HHS Presentation:</strong> <strong>Altered mental status is the hallmark of HHS</strong>: confusion, lethargy, seizures, hallucinations, coma. This is caused by profound hyperosmolality (>320 mOsm/kg) — the extremely high serum glucose concentration dehydrates brain cells. N/V/abdominal pain and Kussmaul respirations are hallmarks of <strong>DKA</strong> (the acidosis drives the respiratory compensation). Fruity breath is also DKA (exhaled acetone from ketone metabolism). HHS patients do NOT have fruity breath or Kussmaul breathing because they don't develop significant ketoacidosis.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 26, type: "sata",
+  stem: "A nurse is monitoring a patient in DKA on an insulin drip. Which assessments are essential? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Blood glucose every 1 hour via point-of-care testing", c: true },
+    { t: "Continuous cardiac monitoring for arrhythmias related to potassium shifts", c: true },
+    { t: "BMP (electrolytes, BUN/Cr) every 4-6 hours", c: true },
+    { t: "Strict I&O with hourly urine output measurement", c: true },
+    { t: "Auscultate lung sounds regularly for signs of fluid overload from aggressive resuscitation", c: true },
+    { t: "Monitor anion gap trend to determine when acidosis resolves", c: true },
+    { t: "Check A1C every 4 hours to track glycemic control", c: false },
+    { t: "Perform arterial blood gases every 30 minutes", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Monitoring:</strong> <strong>Hourly BG</strong> guides insulin drip titration — when stable × 4 consecutive hours, move to q2h. <strong>Cardiac monitoring</strong> is essential because K+ shifts can cause fatal arrhythmias (peaked T waves, widened QRS). <strong>BMP q4-6h</strong> tracks electrolyte shifts (K+, Na+, Cl-, Ca, Mg, Phos all change during treatment). <strong>I&O</strong> monitors fluid resuscitation response and renal function. <strong>Lung sounds</strong> — aggressive IV fluids can cause pulmonary edema. <strong>Anion gap</strong> — closing gap = acidosis resolving (more reliable than pH alone for DKA resolution). A1C reflects months of control, not acute changes. ABGs may be needed but not every 30 minutes.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 27, type: "sata",
+  stem: "Which are criteria that must be met BEFORE discontinuing the insulin drip in DKA? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Arterial pH ≥7.3", c: true },
+    { t: "Serum bicarbonate ≥15 mEq/L", c: true },
+    { t: "Anion gap has normalized (closed)", c: true },
+    { t: "Subcutaneous insulin has been administered and overlapped for 1-2 hours", c: true },
+    { t: "Patient is able to eat and tolerate oral intake", c: true },
+    { t: "Blood glucose has returned to normal (70-110 mg/dL)", c: false },
+    { t: "Potassium has risen above 5.5 mEq/L", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Resolution Criteria:</strong> The insulin drip continues until ALL of these are met: <strong>pH ≥7.3</strong> (acidosis resolved), <strong>HCO3 ≥15</strong> (bicarbonate buffer replenished), <strong>anion gap closed</strong> (no more excess ketoacids), <strong>patient can eat</strong> (ready for SQ insulin), AND <strong>SQ insulin overlapped 1-2 hours before drip discontinuation</strong> (prevents rebound ketosis — must have circulating insulin at all times). Blood glucose normalizing is NOT sufficient — remember, glucose corrects before acidosis. Stopping the drip when glucose is normal but acidosis persists = rebound DKA. Hyperkalemia is not a resolution criterion.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 28, type: "matrix",
+  stem: "For each clinical feature, indicate whether it is characteristic of DKA, HHS, or both.",
+  rows: [
+    "Arterial pH <7.3 with metabolic acidosis",
+    "Serum osmolality >320 mOsm/kg",
+    "Kussmaul respirations with fruity breath",
+    "Altered mental status as the hallmark presentation",
+    "Blood glucose >250 mg/dL",
+    "Absent or minimal ketones",
+    "Rapid onset (<24 hours)",
+    "Mortality rate 5-16%"
+  ],
+  cols: ["DKA", "HHS"],
+  correct: [0, 1, 0, 1, 0, 1, 0, 1],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA vs HHS Comparison Matrix:</strong> <strong>DKA-specific:</strong> pH <7.3 (acidosis from ketones), Kussmaul respirations (compensatory — blowing off CO2), fruity breath (exhaled acetone), rapid onset. Glucose >250 is the DKA threshold (HHS is usually >600 but both have hyperglycemia — DKA is the one where >250 is the defining criterion). <strong>HHS-specific:</strong> osmolality >320 (profound hyperosmolality), altered mental status as hallmark (from brain cell dehydration), absent/minimal ketones (enough insulin to prevent ketogenesis), higher mortality (5-16% vs <1% for DKA — older patients, later presentation, more comorbidities).",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 29, type: "selectN", n: 5,
+  stem: "A patient is admitted with DKA. Select the 5 components of the DKA treatment protocol.",
+  options: [
+    { text: "IV fluid resuscitation with 0.9% NS initially, then 0.45% NS", correct: true },
+    { text: "Continuous IV regular insulin drip (after verifying K+ ≥3.3)", correct: true },
+    { text: "Potassium replacement added to IV fluids", correct: true },
+    { text: "Hourly blood glucose monitoring", correct: true },
+    { text: "2-bag IV protocol (dextrose + non-dextrose bags) when glucose reaches 250-300", correct: true },
+    { text: "IV sodium bicarbonate bolus for all patients with pH <7.3", correct: false },
+    { text: "Subcutaneous insulin glargine as the primary insulin therapy", correct: false },
+    { text: "Oral metformin to supplement IV insulin", correct: false }
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Treatment Protocol:</strong> The five pillars: <strong>1) Fluids</strong> — NS 500-1000 mL/hr initially for volume restoration, then half-normal saline. <strong>2) IV regular insulin</strong> — the only insulin for IV use, continuous drip after confirming K+ ≥3.3. <strong>3) K+ replacement</strong> — add KCl to IV fluids to prevent hypokalemia as insulin shifts K+ intracellularly. <strong>4) Hourly BG</strong> — guide insulin titration and 2-bag protocol timing. <strong>5) 2-bag protocol</strong> — when glucose reaches 250-300, add dextrose to prevent hypoglycemia while continuing insulin for acidosis. Bicarbonate is NOT routine. Glargine is for maintenance, not acute DKA. Metformin is held during acute illness.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 30, type: "highlight",
+  stem: "A nurse reviews the following assessment findings for a patient with suspected hyperglycemic emergency. Highlight the findings that are specific to HHS rather than DKA.",
+  phrases: [
+    { text: "Blood glucose 920 mg/dL", correct: true },
+    { text: "Serum osmolality 348 mOsm/kg", correct: true },
+    { text: "Arterial pH 7.38 (normal)", correct: true },
+    { text: "Ketones absent", correct: true },
+    { text: "Patient is obtunded and unresponsive to verbal stimuli", correct: true },
+    { text: "Onset over the past 5 days with progressive lethargy", correct: true },
+    { text: "Kussmaul respirations at 34/min", correct: false },
+    { text: "Fruity/acetone odor on breath", correct: false },
+    { text: "Arterial pH 7.12 with HCO3 6 mEq/L", correct: false },
+    { text: "Anion gap 28 mEq/L", correct: false }
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — HHS Recognition:</strong> HHS features: <strong>glucose >600</strong> (often 800-1200+), <strong>osmolality >320</strong> (348 is severely elevated), <strong>normal pH</strong> (no ketoacidosis), <strong>absent ketones</strong> (enough insulin to prevent ketogenesis), <strong>altered mental status</strong> (hallmark — from cerebral dehydration), <strong>slow onset over days</strong> (insidious). DKA features that are NOT HHS: Kussmaul respirations (compensating for acidosis — no acidosis in HHS), fruity breath (from ketones — no significant ketones in HHS), severe acidosis (pH 7.12, HCO3 6), and elevated anion gap (from ketoacids). Memory anchor: 'HHS = High sugar, Hyperosmolar, Sneaky (slow onset), altered Sensorium.'",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 31, type: "fillin",
+  stem: "The anion gap is used to help diagnose DKA. The formula is Na+ - (Cl- + HCO3-). A patient has Na+ 140, Cl- 104, HCO3- 10. The anion gap is:<br><br>Anion Gap = ___",
+  answer: 26, tolerance: 0, unit: "mEq/L",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Anion Gap Calculation:</strong> Anion gap = Na+ - (Cl- + HCO3-) = 140 - (104 + 10) = <strong>26 mEq/L</strong>. Normal is 8-12 mEq/L (without K+). An anion gap of 26 is significantly elevated, indicating accumulation of unmeasured anions — in DKA, these are <strong>ketoacids</strong> (beta-hydroxybutyric acid and acetoacetic acid). A closing anion gap during treatment indicates the acidosis is resolving. The anion gap is a more reliable indicator of DKA resolution than pH alone.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 32, type: "bowtie",
+  stem: "Complete the bow-tie for a patient presenting with DKA.",
+  actions: ["Start IV fluid resuscitation with 0.9% NS", "Initiate continuous IV regular insulin drip"],
+  allActions: ["Start IV fluid resuscitation with 0.9% NS", "Initiate continuous IV regular insulin drip", "Administer oral metformin", "Start subcutaneous glargine insulin"],
+  condition: "Diabetic Ketoacidosis (DKA)",
+  allConditions: ["Diabetic Ketoacidosis (DKA)", "Hyperglycemic Hyperosmolar Syndrome (HHS)", "Hypoglycemic Crisis"],
+  parameters: ["Hourly blood glucose levels", "Serum potassium and anion gap"],
+  allParams: ["Hourly blood glucose levels", "Serum potassium and anion gap", "Daily hemoglobin A1C", "Weekly fasting lipid panel"],
+  rationale: "<strong>Fluid & Electrolytes Lecture — DKA Bow-Tie:</strong> <strong>Condition:</strong> DKA — pH <7.3, ketones present, anion gap elevated. <strong>Actions:</strong> IV fluid resuscitation (0.9% NS) addresses the severe dehydration from osmotic diuresis. IV regular insulin drip addresses the insulin deficiency causing ketogenesis and hyperglycemia. Oral metformin is held in acute illness. SQ glargine is maintenance therapy, not acute DKA management. <strong>Parameters:</strong> Hourly BG guides insulin titration and 2-bag protocol timing. K+ monitoring prevents fatal hypokalemia (potassium trap). Anion gap tracks acidosis resolution (more reliable than pH). A1C reflects months of control, not useful for acute monitoring. Lipid panels are irrelevant acutely.",
+  topic: "DKA/HHS"
+});
+
+Q.push({
+  id: 33, type: "mc",
+  stem: "In DKA, the corrected sodium formula accounts for pseudohyponatremia. A patient has measured Na+ of 128 mEq/L and glucose of 600 mg/dL. The corrected sodium is approximately:",
+  opts: [
+    "136 mEq/L",
+    "128 mEq/L",
+    "142 mEq/L",
+    "120 mEq/L"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Pseudohyponatremia in DKA:</strong> Correction formula: Corrected Na+ = Measured Na+ + [1.6 × (Glucose - 100) / 100]. So: 128 + [1.6 × (600 - 100) / 100] = 128 + [1.6 × 5] = 128 + 8 = <strong>136 mEq/L</strong>. The hyperglycemia pulls water from the intracellular space into the vascular space (osmotic effect), diluting the sodium. The measured sodium looks low, but the corrected value reveals the true sodium status. This is called <strong>pseudohyponatremia</strong> — the sodium isn't truly low, it's just diluted.",
+  topic: "DKA/HHS"
+});
+
+// ===== DM COMPLICATIONS =====
+
+Q.push({
+  id: 34, type: "mc",
+  stem: "A patient with Type 1 DM has fasting blood glucose readings of 52 mg/dL at 3 AM followed by 268 mg/dL upon waking. The nurse suspects:",
+  opts: [
+    "Somogyi effect — overnight hypoglycemia causing rebound hyperglycemia from counter-regulatory hormones",
+    "Dawn phenomenon — nocturnal growth hormone surge raising blood glucose",
+    "Insulin waning — evening insulin wearing off too soon",
+    "Normal blood glucose variation requiring no intervention"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Morning Hyperglycemia:</strong> The pattern of <strong>3 AM hypoglycemia → morning hyperglycemia</strong> = <strong>Somogyi effect</strong>. The body detects overnight low glucose and releases counter-regulatory hormones (glucagon, cortisol, epinephrine, growth hormone) that cause rebound hyperglycemia. Critical teaching: treatment is <strong>LESS insulin</strong> (decrease evening NPH or increase bedtime snack). Giving MORE insulin worsens the overnight low and makes the rebound worse. <strong>Dawn phenomenon</strong>: normal until ~3 AM, then rises (growth hormone surge) — move NPH to bedtime. <strong>Insulin waning</strong>: progressive rise from bedtime through morning — increase evening dose.",
+  topic: "DM Complications"
+});
+
+Q.push({
+  id: 35, type: "matrix",
+  stem: "For each blood glucose pattern, indicate whether it represents the Somogyi effect, Dawn phenomenon, or Insulin waning.",
+  rows: [
+    "Normal bedtime → 3 AM hypoglycemia → morning hyperglycemia",
+    "Normal bedtime → normal 3 AM → elevated morning",
+    "Elevated bedtime → progressively rising 3 AM → elevated morning",
+    "Treatment: DECREASE evening insulin or increase bedtime snack",
+    "Treatment: Move NPH from dinnertime to bedtime",
+    "Treatment: INCREASE evening insulin dose"
+  ],
+  cols: ["Somogyi Effect", "Dawn Phenomenon", "Insulin Waning"],
+  correct: [0, 1, 2, 0, 1, 2],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Three Causes of Morning Hyperglycemia:</strong> <strong>Somogyi</strong>: 3 AM LOW → morning HIGH (counter-regulatory rebound). Treat with LESS insulin (counterintuitive!). <strong>Dawn</strong>: 3 AM normal → morning HIGH (growth hormone surge). Move NPH to bedtime. <strong>Waning</strong>: progressive rise all night (insulin wearing off). Increase evening dose. The key differentiator is the <strong>3 AM blood glucose</strong>. If it's low = Somogyi. If it's normal = Dawn. If it's elevated = Waning. Critical concept: increasing insulin in a Somogyi patient WORSENS the problem by deepening overnight hypoglycemia.",
+  topic: "DM Complications"
+});
+
+Q.push({
+  id: 36, type: "sata",
+  stem: "A nurse is teaching a diabetic patient about preventing microvascular complications. Which statements are correct? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Annual dilated eye exams can detect diabetic retinopathy early", c: true },
+    { t: "The earliest sign of diabetic nephropathy is microalbuminuria (>30 mg/24h)", c: true },
+    { t: "ACE inhibitors are first-line to slow nephropathy progression regardless of blood pressure", c: true },
+    { t: "Daily foot inspections are essential because peripheral neuropathy reduces pain sensation", c: true },
+    { t: "Maintaining A1C <7% significantly reduces microvascular complication risk", c: true },
+    { t: "Microvascular complications only develop after 20+ years of diabetes", c: false },
+    { t: "Retinopathy can be reversed with tight glycemic control", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — DM Microvascular Complications:</strong> <strong>Retinopathy</strong>: annual dilated eye exams detect early changes (microaneurysms, hemorrhages). Laser photocoagulation can slow progression but cannot reverse damage. <strong>Nephropathy</strong>: microalbuminuria (>30 mg/24h on 2 consecutive tests) is the earliest detectable sign. ACE inhibitors slow progression independent of BP effects (reduce intraglomerular pressure). <strong>Neuropathy</strong>: peripheral neuropathy causes loss of protective sensation → foot injuries go unnoticed → ulceration → amputation. Daily foot inspection is essential. <strong>A1C <7%</strong> significantly reduces all microvascular complications. Complications can develop well before 20 years, especially with poor control.",
+  topic: "DM Complications"
+});
+
+Q.push({
+  id: 37, type: "cloze",
+  stem: "The macrovascular complication that is the #1 cause of death in diabetic patients is |0|. Diabetes accelerates |1|. Risk reduction includes |2|.",
+  selects: [
+    { options: ["cardiovascular disease (CAD, MI, stroke)", "diabetic nephropathy leading to ESKD", "diabetic retinopathy causing blindness"], correct: 0 },
+    { options: ["atherosclerosis affecting coronary, cerebral, and peripheral arteries", "autoimmune destruction of blood vessel walls", "venous insufficiency from prolonged hyperglycemia"], correct: 0 },
+    { options: ["tight glycemic control, BP management, lipid management, smoking cessation, and antiplatelet therapy", "insulin therapy alone without lifestyle modification", "surgery to bypass all affected arteries"], correct: 0 }
+  ],
+  scoring: "dyad",
+  rationale: "<strong>Fluid & Electrolytes Lecture — DM Macrovascular Complications:</strong> <strong>Cardiovascular disease is the #1 cause of death</strong> in diabetic patients. Diabetes accelerates atherosclerosis throughout the arterial system: coronary (MI), cerebral (stroke), peripheral (PVD, claudication, gangrene). Risk reduction is multifactorial: <strong>glycemic control</strong> (A1C <7%), <strong>BP control</strong> (<130/80), <strong>lipid management</strong> (statins for most diabetics), <strong>smoking cessation</strong>, and <strong>antiplatelet therapy</strong> (aspirin for those with cardiovascular risk). This is why diabetes management is about much more than blood glucose — it's comprehensive cardiovascular risk reduction.",
+  topic: "DM Complications"
+});
+
+// ===== AKI =====
+
+Q.push({
+  id: 38, type: "mc",
+  stem: "A nurse is assessing a dehydrated patient with acute kidney injury. The BUN:Creatinine ratio is 28:1. This finding is most consistent with:",
+  opts: [
+    "Prerenal AKI — decreased perfusion to the kidneys with intact tubular function",
+    "Intrarenal AKI — direct damage to the kidney parenchyma",
+    "Postrenal AKI — obstruction of urine outflow",
+    "Chronic kidney disease with stable renal function"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — AKI Classification:</strong> BUN:Cr ratio <strong>>20:1</strong> indicates <strong>prerenal AKI</strong>. In prerenal states (hypovolemia, HF, hemorrhage), the kidneys are underperfused but the tubules are still functioning. The intact tubules reabsorb BUN aggressively (trying to conserve volume), raising BUN disproportionately to creatinine. Other prerenal indicators: FENa <1% (tubules avidly reabsorbing sodium), concentrated urine with high specific gravity. <strong>Intrarenal</strong> = BUN:Cr <20:1, FENa >2% (tubules damaged, can't reabsorb). <strong>Postrenal</strong> = obstruction pattern on imaging.",
+  topic: "AKI"
+});
+
+Q.push({
+  id: 39, type: "mc",
+  stem: "During the diuretic phase of AKI recovery, the nurse should be MOST concerned about:",
+  opts: [
+    "Dehydration and hypokalemia from massive urine output",
+    "Fluid overload from excessive IV fluid administration",
+    "Hyperkalemia from continued potassium retention",
+    "Metabolic alkalosis from bicarbonate retention"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — AKI Diuretic Phase (Heavily Tested):</strong> The diuretic phase is counterintuitive: urine output <strong>increases dramatically</strong> (1-4.5 L/day) but BUN may still rise initially. The danger shifts 180 degrees from the oliguric phase: now the concern is <strong>dehydration and electrolyte loss</strong>, especially <strong>hypokalemia</strong> (the kidneys are dumping fluid and electrolytes because they can't concentrate urine properly). Requires aggressive <strong>fluid and electrolyte replacement</strong>. This is a heavily tested concept because students expect all AKI phases to involve fluid overload — but the diuretic phase is the opposite.",
+  topic: "AKI"
+});
+
+Q.push({
+  id: 40, type: "matrix",
+  stem: "For each diagnostic finding, indicate whether it is associated with prerenal AKI or intrarenal (ATN) AKI.",
+  rows: [
+    "BUN:Creatinine ratio >20:1",
+    "BUN:Creatinine ratio <20:1",
+    "FENa <1% (tubules avidly reabsorbing sodium)",
+    "FENa >2% (tubules leaking sodium)",
+    "Muddy brown granular casts",
+    "Concentrated urine with high specific gravity",
+    "Fixed specific gravity (isosthenuria — can't concentrate)"
+  ],
+  cols: ["Prerenal", "Intrarenal (ATN)"],
+  correct: [0, 1, 0, 1, 1, 0, 1],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Prerenal vs Intrarenal Differentiation:</strong> <strong>Prerenal</strong> = kidneys are underperfused but tubules work fine. They compensate by reabsorbing everything: BUN:Cr >20:1 (concentrating BUN), FENa <1% (holding onto Na+), high specific gravity (concentrating urine). <strong>Intrarenal (ATN)</strong> = tubular damage means they CAN'T reabsorb: BUN:Cr <20:1 (no selective reabsorption), FENa >2% (Na+ leaking through damaged tubules), fixed specific gravity ~1.010 (can't concentrate OR dilute — isosthenuria), muddy brown casts (sloughed tubular cells). This differentiation guides treatment: prerenal responds to fluid resuscitation; intrarenal requires supportive care and nephrotoxin removal.",
+  topic: "AKI"
+});
+
+Q.push({
+  id: 41, type: "highlight",
+  stem: "A nurse reviews the following findings for a patient with decreasing urine output. Highlight the findings that suggest PRERENAL rather than intrarenal AKI.",
+  phrases: [
+    { text: "BUN:Creatinine ratio 25:1", correct: true },
+    { text: "FENa 0.5%", correct: true },
+    { text: "Urine specific gravity 1.030 (concentrated)", correct: true },
+    { text: "Recent hemorrhage with blood loss of 800 mL", correct: true },
+    { text: "Blood pressure 88/52 mmHg (hypotension)", correct: true },
+    { text: "Muddy brown granular casts in urine sediment", correct: false },
+    { text: "FENa 3.8%", correct: false },
+    { text: "Fixed urine specific gravity 1.010 (isosthenuria)", correct: false },
+    { text: "BUN:Creatinine ratio 12:1", correct: false },
+    { text: "Gentamicin trough level 4.2 mcg/mL (elevated)", correct: false }
+  ],
+  scoring: "plusMinus",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Prerenal AKI Indicators:</strong> <strong>Prerenal pattern:</strong> BUN:Cr >20:1 (intact tubules concentrating BUN), FENa <1% (tubules reabsorbing Na+ aggressively to preserve volume), concentrated urine with high specific gravity (tubules are working — they're concentrating urine because the body needs to conserve water), hemorrhage/hypotension (the CAUSE — decreased perfusion to kidneys). <strong>Intrarenal pattern:</strong> muddy brown casts (tubular death), FENa >2% (damaged tubules leaking Na+), fixed specific gravity (isosthenuria — can't concentrate), BUN:Cr <20:1, elevated aminoglycoside levels (the nephrotoxic cause). The key principle: in prerenal, the kidney is trying to help (concentrating, reabsorbing); in intrarenal, the kidney is injured and can't help.",
+  topic: "AKI"
+});
+
+// ===== CKD/ESKD =====
+
+Q.push({
+  id: 42, type: "mc",
+  stem: "A patient's GFR is 22 mL/min. According to CKD staging, this represents:",
+  opts: [
+    "Stage 4 — severe decrease in GFR, prepare for renal replacement therapy",
+    "Stage 2 — mild decrease in GFR",
+    "Stage 3 — moderate decrease in GFR",
+    "Stage 5 — ESKD requiring dialysis or transplant"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — CKD Stages:</strong> Stage 1: GFR >90 (damage with normal function). Stage 2: GFR 60-89 (mild ↓). Stage 3: GFR 30-59 (moderate ↓, complications begin). <strong>Stage 4: GFR 15-29</strong> (severe ↓ — prepare for renal replacement therapy, create vascular access). Stage 5: GFR <15 or dialysis (ESKD). At GFR 22, this patient is in Stage 4 — the focus shifts to preparing for dialysis or transplant evaluation. AV fistula should be created now (needs 3-6 months to mature before use).",
+  topic: "CKD/ESKD"
+});
+
+Q.push({
+  id: 43, type: "mc",
+  stem: "The renal osteodystrophy cascade in ESKD begins with:",
+  opts: [
+    "Phosphorus retention by the failing kidneys, leading to hyperphosphatemia",
+    "Excess calcium supplementation causing hypercalcemia",
+    "Primary hyperparathyroidism from a parathyroid adenoma",
+    "Vitamin D toxicity from over-supplementation"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — Renal Osteodystrophy Cascade:</strong> The cascade starts with <strong>phosphorus retention</strong>: failed kidneys can't excrete phosphorus → hyperphosphatemia → phosphorus binds serum calcium → hypocalcemia → kidneys can't activate vitamin D (calcitriol) → gut can't absorb calcium → low calcium triggers parathyroid glands → massive PTH secretion (secondary hyperparathyroidism) → PTH leaches calcium from bones → weakened, fracture-prone bones. Memory: <strong>Phos UP → Ca DOWN → Vit D DOWN → PTH UP → Bones WEAK</strong>. Treatment targets each step: phosphate binders, active vitamin D, calcimimetics.",
+  topic: "CKD/ESKD"
+});
+
+Q.push({
+  id: 44, type: "cloze",
+  stem: "The renal osteodystrophy cascade: Phosphorus |0| → Calcium |1| → Vitamin D |2| → PTH |3| → Bones |4|.",
+  selects: [
+    { options: ["UP (kidneys can't excrete it)", "DOWN (kidneys excrete too much)", "NORMAL"], correct: 0 },
+    { options: ["DOWN (bound by excess phosphorus)", "UP (released from bones)", "NORMAL"], correct: 0 },
+    { options: ["DOWN (kidneys can't activate calcitriol)", "UP (compensatory production)", "NORMAL"], correct: 0 },
+    { options: ["UP (parathyroids compensate for low calcium by leaching it from bones)", "DOWN (suppressed by high calcium)", "NORMAL"], correct: 0 },
+    { options: ["WEAKEN (calcium being pulled out by PTH → pathologic fractures)", "STRENGTHEN (from calcium supplementation)", "UNCHANGED"], correct: 0 }
+  ],
+  scoring: "dyad",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Renal Osteodystrophy Memory Anchor:</strong> <strong>Phos UP → Ca DOWN → Vit D DOWN → PTH UP → Bones WEAKEN.</strong> Step by step: (1) Failed kidneys can't excrete phosphorus → accumulates. (2) High phosphorus binds calcium → serum calcium drops. (3) Kidneys can't convert vitamin D to active calcitriol → gut can't absorb dietary calcium → calcium drops further. (4) Low calcium stimulates parathyroid glands → massive PTH secretion (secondary hyperparathyroidism). (5) PTH pulls calcium from bones to try to normalize serum levels → bones become brittle and fracture-prone. Treatment: phosphate binders with meals, active vitamin D (calcitriol), calcimimetics (cinacalcet) for severe hyperparathyroidism.",
+  topic: "CKD/ESKD"
+});
+
+// ===== DIALYSIS =====
+
+Q.push({
+  id: 45, type: "mc",
+  stem: "A nurse assesses an AV fistula and feels a palpable vibration (thrill) and hears a whooshing sound (bruit) on auscultation. This indicates:",
+  opts: [
+    "The fistula is patent and functioning properly",
+    "The fistula is clotted and requires immediate declotting",
+    "The fistula is infected and needs antibiotic therapy",
+    "The fistula has stenosed and needs surgical revision"
+  ],
+  correct: 0,
+  rationale: "<strong>Fluid & Electrolytes Lecture — AV Fistula Assessment:</strong> A palpable <strong>thrill</strong> (vibration) and audible <strong>bruit</strong> (whooshing/humming sound) indicate the fistula is <strong>patent and functioning</strong>. These findings result from arterial blood flowing through the surgical connection into the vein at high pressure. Assess thrill and bruit <strong>every shift</strong>. <strong>Absent thrill/bruit = fistula is clotted = emergency</strong> — notify the provider immediately. The AV fistula is the <strong>preferred long-term access</strong>: lowest infection rate, longest patency, least complications. Maturation time: 3-6 months (why Stage 4 CKD patients need early fistula creation).",
+  topic: "Dialysis"
+});
+
+Q.push({
+  id: 46, type: "sata",
+  stem: "A nurse is caring for a patient with an AV fistula in the left arm. Which nursing actions are correct? <em>(Select all that apply.)</em>",
+  opts: [
+    { t: "Never take blood pressure on the left arm", c: true },
+    { t: "Never perform venipuncture or blood draws on the left arm", c: true },
+    { t: "Never start an IV line on the left arm", c: true },
+    { t: "Assess for thrill and bruit at every shift", c: true },
+    { t: "Teach the patient to avoid constrictive clothing or jewelry on the left arm", c: true },
+    { t: "Report absent thrill or bruit immediately (indicates clotting)", c: true },
+    { t: "Apply a tourniquet to the left arm for routine blood draws from the fistula", c: false },
+    { t: "Use the AV fistula for all IV medication administration between dialysis sessions", c: false },
+    { t: "Encourage the patient to sleep on the left arm to promote blood flow", c: false }
+  ],
+  rationale: "<strong>Fluid & Electrolytes Lecture — AV Fistula Protection Rules:</strong> The AV fistula is the patient's <strong>lifeline</strong>. Critical rules: <strong>NO BP</strong> (cuff compression can damage the fistula), <strong>NO venipuncture</strong>, <strong>NO IVs</strong>, <strong>NO constrictive clothing/jewelry</strong> on the access arm. Assess <strong>thrill and bruit every shift</strong> — absent = clotted = emergency. Teach patient: <strong>elevate the arm</strong>, don't sleep on it (compression restricts flow), carry identification about the fistula. The fistula is <strong>only accessed by trained dialysis nurses</strong> during HD sessions — never used for routine IV medications or blood draws between sessions. Report immediately: decreased thrill/bruit, swelling, pain, redness, drainage.",
+  topic: "Dialysis"
+});
+
+Q.push({
+  id: 47, type: "matrix",
+  stem: "For each characteristic, indicate whether it describes Hemodialysis (HD), Peritoneal Dialysis (PD), or CRRT.",
+  rows: [
+    "Uses a dialyzer machine with AV fistula/graft access, 3-4 times/week for 3-4 hours",
+    "Uses the peritoneal membrane as a natural filter, patient performs exchanges at home",
+    "Continuous therapy for hemodynamically unstable ICU patients",
+    "Rapid fluid and solute removal — risk of hypotension and disequilibrium",
+    "Risk of peritonitis from contaminated exchanges",
+    "Slow, gentle fluid removal over 24+ hours",
+    "Requires AV fistula creation 3-6 months before first use",
+    "Patient independence — can perform exchanges during daily activities"
+  ],
+  cols: ["Hemodialysis", "Peritoneal Dialysis", "CRRT"],
+  correct: [0, 1, 2, 0, 1, 2, 0, 1],
+  scoring: "perRow",
+  rationale: "<strong>Fluid & Electrolytes Lecture — Dialysis Modalities:</strong> <strong>HD:</strong> External machine, AV fistula access (preferred — lowest infection/thrombosis), 3-4x/week × 3-4 hrs. Rapid fluid removal → hypotension, disequilibrium risk. AV fistula needs 3-6 month maturation. <strong>PD:</strong> Uses peritoneal membrane (22,000 cm² surface area) as natural filter. CAPD = 4-5 manual exchanges/day; CCPD = automated overnight. Patient independence but peritonitis risk. Protein loss in dialysate → hypoalbuminemia. <strong>CRRT:</strong> ICU patients too unstable for HD. Continuous 24+ hours. Slow, gentle removal avoids hemodynamic instability. Types: CVVH (filtration), CVVHD (dialysis), CVVHDF (combined). Requires continuous anticoagulation and intensive nursing (hourly I&O).",
+  topic: "Dialysis"
+});
+
+// ===== ENGINE =====
+const STORAGE_KEY = 'ngn_fluids_renal_v2_hiyield';
+const app = document.getElementById('app');
+let cur = 0, scores = [], submitted = new Set(), answers = {}, examQs = [], mode = 'exam'; // mode: exam | review
+let btSelected = null;
+
+// ===== THEME =====
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.querySelector('.theme-toggle').textContent = isDark ? '\u2600' : '\u263E';
+    try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch(e) {}
+}
+(function() { try { const t = localStorage.getItem('theme'); if (t) { document.documentElement.setAttribute('data-theme', t); document.querySelector('.theme-toggle').textContent = t === 'dark' ? '\u263E' : '\u2600'; } } catch(e) {} })();
+
+// ===== VALIDATE DATA =====
+function validateData() {
+    const types = ['highlight','cloze','matrix','selectN','ordered','bowtie','mc','sata','fillin'];
+    Q.forEach((q, i) => {
+        if (!types.includes(q.type)) console.warn(`Q${q.id}: unknown type "${q.type}"`);
+        if (!q.rationale) console.warn(`Q${q.id}: missing rationale`);
+        if (q.type === 'cloze' && (!q.selects || !q.text)) console.warn(`Q${q.id}: cloze missing selects or text`);
+        if (q.type === 'highlight' && !q.phrases) console.warn(`Q${q.id}: highlight missing phrases`);
+        if (q.type === 'matrix' && (!q.rows || !q.cols || !q.correct)) console.warn(`Q${q.id}: matrix missing fields`);
+        if (q.type === 'selectN' && !q.n) console.warn(`Q${q.id}: selectN missing n`);
+        if (q.type === 'ordered' && !q.items) console.warn(`Q${q.id}: ordered missing items`);
+        if (q.type === 'bowtie' && (!q.actions || !q.condition || !q.parameters)) console.warn(`Q${q.id}: bowtie missing fields`);
+        if (q.type === 'mc' && (q.correct === undefined || !q.opts)) console.warn(`Q${q.id}: mc missing fields`);
+        if (q.type === 'sata' && !q.opts) console.warn(`Q${q.id}: sata missing opts`);
+        if (q.type === 'fillin' && q.answer === undefined) console.warn(`Q${q.id}: fillin missing answer`);
+        if (q.caseId && !CASES.find(c => c.id === q.caseId)) console.warn(`Q${q.id}: references missing case ${q.caseId}`);
+    });
+    console.log(`validateData: ${Q.length} questions checked`);
+}
+validateData();
+
+// ===== NORMALIZE DATA =====
+// Data may use {text, correct} or {t, c} for options, and "options" or "opts" as key.
+// Normalize everything to {t, c} under q.opts so renderers/scorers stay clean.
+// For cloze questions, the |0| template may live in stem — copy to text for the renderer.
+Q.forEach(q => {
+    if (q.type === 'cloze' && !q.text && q.stem && q.stem.includes('|0|')) {
+        q.text = q.stem;
+        q.stem = 'Complete the following statement by selecting the correct option for each dropdown.';
+    }
+    // Normalize opts/options → q.opts with {t, c}
+    if (q.options && !q.opts) { q.opts = q.options; delete q.options; }
+    if (q.opts) {
+        q.opts = q.opts.map(o => {
+            if (typeof o === 'string') return { t: o, c: false };
+            if (o.t !== undefined) return o;
+            return { t: o.text || o.label || String(o), c: !!(o.correct || o.c) };
+        });
+    }
+    // Normalize phrases → {t, c}
+    if (q.phrases) {
+        q.phrases = q.phrases.map(p => {
+            if (p.t !== undefined) return p;
+            return { t: p.text || String(p), c: !!(p.correct || p.c) };
+        });
+    }
+    // Normalize cloze selects → {opts: [...], correct: N}
+    if (q.selects) {
+        q.selects = q.selects.map(s => {
+            if (s.opts) return s;
+            return { opts: s.options || s.opts || [], correct: s.correct };
+        });
+    }
+});
+
+// ===== SHUFFLE =====
+function shuffle(a) {
+    const arr = [...a];
+    for (let i = arr.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+    return arr;
+}
+
+// ===== LOCAL STORAGE =====
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ cur, scores, submitted: [...submitted], answers, examQs: examQs.map(q => q.id), mode }));
+    } catch(e) {}
+}
+function loadState() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const s = JSON.parse(raw);
+        if (!s || !s.examQs) return null;
+        return s;
+    } catch(e) { return null; }
+}
+function clearState() { try { localStorage.removeItem(STORAGE_KEY); } catch(e) {} }
+
+// ===== START SCREEN =====
+function showStart() {
+    const saved = loadState();
+    const resumeHTML = saved ? `<div class="resume-banner"><p>You have a saved exam in progress (${saved.submitted.length}/${saved.examQs.length} answered).</p><button class="btn btn-success" onclick="resumeExam()">Resume</button> <button class="btn btn-outline" onclick="clearState();showStart()">Start Fresh</button></div>` : '';
+
+    const caseCount = CASES.length;
+    const ngnCount = Q.filter(q => !q.caseId && ['bowtie','selectN','cloze','highlight','matrix'].includes(q.type)).length;
+    const tradCount = Q.filter(q => !q.caseId && ['mc','sata','ordered','fillin'].includes(q.type)).length;
+
+    app.innerHTML = `
+    ${resumeHTML}
+    <div class="start-screen">
+        <h2>NGN Fluid &amp; Electrolytes Practice Exam</h2>
+        <p>Next Generation NCLEX-Style Questions</p>
+        <p style="color:var(--muted)">Case studies, bow-ties, and traditional items covering DM, DKA/HHS, AKI, CKD, dialysis &amp; transplant</p>
+        <div class="exam-stats">
+            <div class="stat-box"><div class="num">${Q.length}</div><div class="lbl">Questions</div></div>
+            <div class="stat-box"><div class="num">${caseCount}</div><div class="lbl">Case Studies</div></div>
+            <div class="stat-box"><div class="num">9</div><div class="lbl">Item Types</div></div>
+        </div>
+        <div class="filter-group">
+            <button class="btn btn-primary filter-btn active" data-filter="all" onclick="setFilter(this)">All Questions</button>
+            <button class="btn btn-outline filter-btn" data-filter="case" onclick="setFilter(this)">Case Studies</button>
+            <button class="btn btn-outline filter-btn" data-filter="ngn" onclick="setFilter(this)">NGN Standalone</button>
+            <button class="btn btn-outline filter-btn" data-filter="trad" onclick="setFilter(this)">Traditional</button>
+        </div>
+        <div style="margin-top:1.2rem">
+            <p style="color:var(--muted);margin-bottom:.5rem;font-size:.9rem">Exam Size</p>
+            <div class="filter-group">
+                <button class="btn btn-outline size-btn" data-size="10" onclick="setSize(this)">Baby (10)</button>
+                <button class="btn btn-outline size-btn" data-size="20" onclick="setSize(this)">Mini (20)</button>
+                <button class="btn btn-outline size-btn" data-size="40" onclick="setSize(this)">Grande (40)</button>
+                <button class="btn btn-primary size-btn active" data-size="60" onclick="setSize(this)">Full (60)</button>
+            </div>
+        </div>
+        <div style="margin-top:1rem">
+            <label style="cursor:pointer"><input type="checkbox" id="randomizeChk"> Randomize question order</label>
+        </div>
+        <button class="btn btn-primary" onclick="startExam()" style="font-size:1.1rem;padding:.8rem 2.5rem;margin-top:1.5rem">Begin Exam</button>
+    </div>`;
+}
+
+let activeFilter = 'all';
+let activeSize = 60; // default to Full (60)
+function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active'); b.classList.add('btn-outline'); b.classList.remove('btn-primary'); });
+    btn.classList.add('active'); btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
+    activeFilter = btn.dataset.filter;
+}
+function setSize(btn) {
+    document.querySelectorAll('.size-btn').forEach(b => { b.classList.remove('active'); b.classList.add('btn-outline'); b.classList.remove('btn-primary'); });
+    btn.classList.add('active'); btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
+    activeSize = parseInt(btn.dataset.size);
+}
+
+function getFilteredQs() {
+    if (activeFilter === 'all') return [...Q];
+    if (activeFilter === 'case') return Q.filter(q => q.caseId);
+    if (activeFilter === 'ngn') return Q.filter(q => !q.caseId && ['bowtie','selectN','cloze','highlight','matrix'].includes(q.type));
+    if (activeFilter === 'trad') return Q.filter(q => !q.caseId && ['mc','sata','ordered','fillin'].includes(q.type));
+    return [...Q];
+}
+
+// Sample N questions from pool while preserving the ratio of question categories.
+// Case study questions are kept as complete groups (all 6 Qs per case stay together).
+function sampleByRatio(pool, n) {
+    if (n <= 0 || n >= pool.length) return pool;
+
+    // Bucket into 3 categories: case groups, NGN standalone, traditional
+    const caseGroups = {}; // caseId -> [q, q, ...]
+    const ngn = [];
+    const trad = [];
+    pool.forEach(q => {
+        if (q.caseId) {
+            if (!caseGroups[q.caseId]) caseGroups[q.caseId] = [];
+            caseGroups[q.caseId].push(q);
+        } else if (['bowtie','selectN','cloze','highlight','matrix'].includes(q.type)) ngn.push(q);
+        else trad.push(q);
+    });
+
+    const caseGroupList = Object.values(caseGroups); // each is an array of 6 Qs
+    const totalCase = caseGroupList.reduce((a, g) => a + g.length, 0);
+    const total = pool.length;
+
+    // Calculate proportional targets
+    const caseTarget = Math.round(n * (totalCase / total));
+    const ngnTarget = Math.round(n * (ngn.length / total));
+    const tradTarget = n - caseTarget - ngnTarget; // remainder goes to trad to avoid rounding gaps
+
+    // For case questions, pick whole groups that get closest to caseTarget
+    const shuffledGroups = shuffle(caseGroupList);
+    const pickedCaseQs = [];
+    for (const group of shuffledGroups) {
+        if (pickedCaseQs.length + group.length <= Math.max(caseTarget, 6)) {
+            pickedCaseQs.push(...group);
+        }
+        if (pickedCaseQs.length >= caseTarget) break;
+    }
+
+    // Pick standalone NGN and traditional
+    const pickedNgn = shuffle(ngn).slice(0, Math.max(0, ngnTarget));
+    // Adjust trad count to hit total target after case rounding
+    const tradNeeded = n - pickedCaseQs.length - pickedNgn.length;
+    const pickedTrad = shuffle(trad).slice(0, Math.max(0, tradNeeded));
+
+    return [...pickedCaseQs, ...pickedNgn, ...pickedTrad];
+}
+
+function startExam() {
+    let qs = getFilteredQs();
+    if (qs.length === 0) { alert('No questions match the selected filter.'); return; }
+
+    // Apply size limit with ratio preservation
+    if (activeSize > 0 && activeSize < qs.length) {
+        qs = sampleByRatio(qs, activeSize);
+    }
+
+    const doRandom = document.getElementById('randomizeChk') && document.getElementById('randomizeChk').checked;
+    if (doRandom || activeSize > 0) {
+        // Always shuffle when sampling (otherwise you'd get the same subset every time)
+        const caseQs = {};
+        const standalone = [];
+        qs.forEach(q => {
+            if (q.caseId) {
+                if (!caseQs[q.caseId]) caseQs[q.caseId] = [];
+                caseQs[q.caseId].push(q);
+            } else standalone.push(q);
+        });
+        const shuffledStandalone = shuffle(standalone);
+        const caseGroups = shuffle(Object.values(caseQs));
+        const result = [...shuffledStandalone];
+        caseGroups.forEach(group => {
+            const pos = Math.floor(Math.random() * (result.length + 1));
+            result.splice(pos, 0, ...group);
+        });
+        qs = result;
+    }
+    // Shuffle option order for MC/SATA/selectN so correct answers aren't always in the same position
+    qs.forEach(q => {
+        if (q.type === 'sata' || q.type === 'selectN') {
+            q.opts = shuffle(q.opts);
+        } else if (q.type === 'mc') {
+            const correctOpt = q.opts[q.correct];
+            q.opts = shuffle(q.opts);
+            q.correct = q.opts.indexOf(correctOpt);
+        }
+    });
+    examQs = qs;
+    cur = 0; scores = new Array(qs.length).fill(null); submitted = new Set(); answers = {}; mode = 'exam';
+    saveState();
+    renderQ();
+}
+
+function resumeExam() {
+    const s = loadState();
+    if (!s) { showStart(); return; }
+    examQs = s.examQs.map(id => Q.find(q => q.id === id)).filter(Boolean);
+    cur = s.cur; scores = s.scores || new Array(examQs.length).fill(null);
+    submitted = new Set(s.submitted || []);
+    answers = s.answers || {};
+    mode = s.mode || 'exam';
+    renderQ();
+}
+
+// ===== GET CASE =====
+function getCaseForQ(q) { return CASES.find(c => c.id === q.caseId); }
+
+// ===== RENDER CHART (CASE TABS) =====
+function renderChart(cs, q) {
+    const tabs = q.useTabs2 && cs.tabs2 ? cs.tabs2 : cs.tabs;
+    const keys = Object.keys(tabs);
+    let html = `<div class="case-tabs">${keys.map((k, i) => `<button class="case-tab${i === 0 ? ' active' : ''}" data-tabkey="${k}">${tabs[k].label}</button>`).join('')}</div>`;
+    keys.forEach((k, i) => { html += `<div class="tab-content${i === 0 ? ' active' : ''}" data-tab="${k}">${tabs[k].content}</div>`; });
+    return html;
+}
+
+// ===== TAB SWITCHING (event delegation) =====
+document.addEventListener('click', function(e) {
+    const tab = e.target.closest('.case-tab');
+    if (!tab) return;
+    const chart = tab.closest('.case-chart');
+    if (!chart) return;
+    const key = tab.dataset.tabkey;
+    chart.querySelectorAll('.case-tab').forEach(t => t.classList.remove('active'));
+    chart.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = chart.querySelector(`[data-tab="${key}"]`);
+    if (panel) panel.classList.add('active');
+});
+
+// ===== BADGES =====
+function badge(q) {
+    let b = '';
+    if (q.caseId) { const cs = getCaseForQ(q); b += `<span class="q-badge badge-case">Case ${q.caseId}: ${cs ? cs.title : ''}</span> `; }
+    if (q.cjmm) b += `<span class="q-badge badge-cjmm">${q.cjmm}</span> `;
+    const typeLabels = { highlight:'Highlight Text', cloze:'Drop-Down Cloze', matrix:'Matrix Grid', selectN:`Select ${q.n||'N'}`, ordered:'Ordered Response', bowtie:'Bow-Tie', mc:'Multiple Choice', sata:'Select All That Apply', fillin:'Fill-in-the-Blank' };
+    const cat = q.caseId ? 'badge-case' : (['bowtie','selectN','cloze','highlight','matrix'].includes(q.type) ? 'badge-ngn' : 'badge-trad');
+    b += `<span class="q-badge ${cat}">${typeLabels[q.type] || q.type}</span>`;
+    return b;
+}
+
+// ===== MAIN RENDER =====
+function renderQ() {
+    if (cur >= examQs.length) { showResults(); return; }
+    const q = examQs[cur];
+    const cs = q.caseId ? getCaseForQ(q) : null;
+    const isCase = !!cs;
+    const isSubmitted = submitted.has(cur);
+
+    const header = `<div class="q-header"><span class="q-num">Question ${cur + 1} of ${examQs.length}</span><div>${badge(q)}</div></div>`;
+
+    const renderers = {
+        highlight: renderHighlight, cloze: renderCloze, matrix: renderMatrix,
+        selectN: renderSelectN, ordered: renderOrdered, bowtie: renderBowtie,
+        mc: renderMC, sata: renderSATA, fillin: renderFillin
+    };
+    const renderer = renderers[q.type];
+    const body = renderer ? renderer(q) : `<p style="color:var(--red)">Unknown question type: ${q.type}</p>`;
+
+    const navBtns = `${cur > 0 ? `<button class="btn btn-outline" onclick="prevQ()">\u2190 Prev</button>` : '<span></span>'}`;
+    const submitBtn = isSubmitted
+        ? `<button class="btn btn-success" onclick="nextQ()">Next \u2192</button>`
+        : `<button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">Submit Answer</button>`;
+
+    const actions = `<div class="q-actions">${navBtns}<div>${submitBtn}<span id="scoreArea">${isSubmitted && scores[cur] ? ` <span class="score-chip ${scores[cur].pct===100?'full':scores[cur].pct>0?'part':'zero'}">${scores[cur].earned}/${scores[cur].possible} (${scores[cur].pct}%)</span>` : ''}</div></div>`;
+    const fb = `<div class="feedback" id="feedback"></div>`;
+
+    let inner;
+    if (isCase) {
+        inner = `<div class="case-layout"><div class="case-chart">${renderChart(cs, q)}</div><div><div class="q-body"><div class="q-stem">${q.stem}</div>${body}</div>${fb}${actions}</div></div>`;
+    } else {
+        inner = `<div class="q-body"><div class="q-stem">${q.stem.replace(/\n/g,'<br>')}</div>${body}</div>${fb}${actions}`;
+    }
+
+    const reviewGrid = mode === 'review' ? `<div class="q-grid">${examQs.map((qq,i) => `<div class="q-grid-item${i===cur?' current':''}${submitted.has(i)?' answered':''}" onclick="goToQ(${i})">${i+1}</div>`).join('')}</div>` : '';
+
+    app.innerHTML = `
+    <div class="exam-header">
+        <h1>NGN Fluids &amp; Renal Exam</h1>
+        <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:${((cur+1)/examQs.length)*100}%"></div></div>
+            <div class="progress-text">${cur+1}/${examQs.length} ${mode==='review'?'(Review Mode)':''}</div>
+        </div>
+    </div>
+    ${reviewGrid}
+    <div class="q-card">${header}${inner}</div>`;
+
+    if (isSubmitted) showFeedback(q);
+}
+
+// ===== TYPE RENDERERS =====
+function renderHighlight(q) {
+    return `<div class="hl-passage">${q.phrases.map((p, i) => `<span class="hl-span" data-idx="${i}">${p.t}</span> `).join('')}</div>`;
+}
+function renderCloze(q) {
+    const parts = q.text.split(/\|(\d+)\|/);
+    let html = '<div class="cloze-text">';
+    parts.forEach((p, i) => {
+        if (i % 2 === 1) {
+            const idx = parseInt(p); const s = q.selects[idx];
+            html += `<select class="cloze-select" data-idx="${idx}"><option value="">-- Select --</option>${s.opts.map((o, j) => `<option value="${j}">${o}</option>`).join('')}</select>`;
+        } else html += p;
+    });
+    return html + '</div>';
+}
+function renderMatrix(q) {
+    // Build shuffled index array so rows don't always appear in data order
+    const indices = q.rows.map((_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [indices[i], indices[j]] = [indices[j], indices[i]]; }
+    // Store shuffle map so scoring can find the original index
+    q._shuffledIndices = indices;
+    let html = `<table class="matrix-table"><tr><th></th>${q.cols.map(c => `<th>${c}</th>`).join('')}</tr>`;
+    indices.forEach((origIdx, displayIdx) => {
+        html += `<tr class="matrix-row" data-row="${origIdx}"><td>${q.rows[origIdx]}</td>${q.cols.map((c, j) => `<td><input type="radio" name="matrix_${q.id}_${origIdx}" value="${j}"></td>`).join('')}</tr>`;
+    });
+    return html + '</table>';
+}
+function renderSelectN(q) {
+    return `<div class="select-n-count">Select exactly ${q.n}</div><ul class="opt-list">${q.opts.map((o, i) => `<li class="opt-item" data-idx="${i}"><div class="opt-check">\u2713</div><span>${o.t}</span></li>`).join('')}</ul>`;
+}
+function renderOrdered(q) {
+    const shuffled = shuffle(q.items.map((item, i) => ({ t: item, origIdx: i })));
+    let html = `<div class="drag-source" id="dragSrc">${shuffled.map(it => `<div class="drag-pill" data-orig="${it.origIdx}">${it.t}</div>`).join('')}</div><div class="drop-slots" id="dropSlots">`;
+    for (let i = 0; i < q.items.length; i++) html += `<div class="drop-slot" data-pos="${i}"><span class="slot-content"></span></div>`;
+    return html + '</div>';
+}
+function renderBowtie(q) {
+    const allA = shuffle([...q.allActions]), allC = shuffle([...q.allConditions]), allP = shuffle([...q.allParams]);
+    const allPills = [...allA, ...allC, ...allP];
+    return `<p style="margin-bottom:.5rem;color:var(--muted);font-size:.85rem">Click an option, then click a target box to place it.</p>
+<div style="margin-bottom:1rem"><strong>Available Options:</strong>
+<div class="drag-source" id="btSrc">${allPills.map(o => `<div class="drag-pill" data-val="${o}">${o}</div>`).join('')}</div></div>
+<div class="bowtie-wrap">
+<div class="bowtie-col"><div class="bowtie-label">Actions to Take</div>
+<div class="bowtie-target" data-slot="a1">Click to place</div>
+<div class="bowtie-target" data-slot="a2">Click to place</div></div>
+<div class="bowtie-center"><div class="bowtie-label" style="color:rgba(255,255,255,.7)">Condition</div>
+<div class="bowtie-target" data-slot="cond" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3)">Click to place</div></div>
+<div class="bowtie-col"><div class="bowtie-label">Parameters to Monitor</div>
+<div class="bowtie-target" data-slot="p1">Click to place</div>
+<div class="bowtie-target" data-slot="p2">Click to place</div></div></div>`;
+}
+function renderMC(q) {
+    const letters = 'ABCDEFGH';
+    return `<ul class="mc-list">${q.opts.map((o, i) => `<li class="mc-opt" data-idx="${i}"><span class="mc-letter">${letters[i]}</span><span>${typeof o === 'string' ? o : o.t || o}</span></li>`).join('')}</ul>`;
+}
+function renderSATA(q) {
+    return `<div class="select-n-count">Select All That Apply</div><ul class="opt-list">${q.opts.map((o, i) => `<li class="opt-item" data-idx="${i}"><div class="opt-check">\u2713</div><span>${o.t}</span></li>`).join('')}</ul>`;
+}
+function renderFillin(q) {
+    return `<div style="margin-top:1rem"><input type="number" class="fill-input" id="fillInput" step="any" placeholder="?"><span class="fill-unit">${q.unit || ''}</span></div>`;
+}
+
+// ===== EVENT DELEGATION (no inline onclick for interaction types) =====
+document.addEventListener('click', function(e) {
+    if (submitted.has(cur)) return;
+
+    const hlSpan = e.target.closest('.hl-span');
+    if (hlSpan && !submitted.has(cur)) { hlSpan.classList.toggle('selected'); return; }
+
+    const optItem = e.target.closest('.opt-item');
+    if (optItem) {
+        const q = examQs[cur];
+        if (optItem.classList.contains('checked')) { optItem.classList.remove('checked'); }
+        else {
+            if (q.type === 'selectN' && q.n) {
+                const checked = optItem.closest('.opt-list').querySelectorAll('.checked').length;
+                if (checked >= q.n) {
+                    const first = optItem.closest('.opt-list').querySelector('.checked');
+                    if (first) first.classList.remove('checked');
+                }
+            }
+            optItem.classList.add('checked');
+        }
+        return;
+    }
+
+    const mcOpt = e.target.closest('.mc-opt');
+    if (mcOpt) {
+        mcOpt.closest('.mc-list').querySelectorAll('.mc-opt').forEach(o => o.classList.remove('selected'));
+        mcOpt.classList.add('selected');
+        return;
+    }
+
+    const pill = e.target.closest('.drag-pill:not(.placed)');
+    if (pill && pill.closest('.drag-source') && !pill.closest('#btSrc')) {
+        const slots = document.querySelectorAll('.drop-slot:not(.filled)');
+        if (slots.length === 0) return;
+        slots[0].classList.add('filled');
+        slots[0].querySelector('.slot-content').textContent = pill.textContent;
+        slots[0].dataset.origIdx = pill.dataset.orig;
+        pill.classList.add('placed');
+        return;
+    }
+
+    const slot = e.target.closest('.drop-slot.filled');
+    if (slot && !e.target.closest('.bowtie-target')) {
+        const origIdx = slot.dataset.origIdx;
+        slot.classList.remove('filled');
+        slot.querySelector('.slot-content').textContent = '';
+        delete slot.dataset.origIdx;
+        const srcPill = document.querySelector(`.drag-pill[data-orig="${origIdx}"]`);
+        if (srcPill) srcPill.classList.remove('placed');
+        return;
+    }
+
+    const btPill = e.target.closest('#btSrc .drag-pill:not(.placed)');
+    if (btPill) {
+        document.querySelectorAll('#btSrc .drag-pill').forEach(p => p.style.outline = '');
+        btPill.style.outline = '3px solid var(--accent)';
+        btSelected = btPill;
+        return;
+    }
+
+    const btTarget = e.target.closest('.bowtie-target');
+    if (btTarget && btSelected) {
+        if (btTarget.classList.contains('filled')) {
+            const old = btTarget.dataset.val;
+            const oldPill = document.querySelector(`#btSrc .drag-pill[data-val="${CSS.escape(old)}"]`);
+            if (oldPill) oldPill.classList.remove('placed');
+        }
+        btTarget.textContent = btSelected.textContent;
+        btTarget.dataset.val = btSelected.dataset.val;
+        btTarget.classList.add('filled');
+        btSelected.classList.add('placed');
+        btSelected.style.outline = '';
+        btSelected = null;
+        return;
+    }
+});
+
+// ===== SCORING =====
+function submitAnswer() {
+    if (submitted.has(cur)) return;
+    submitted.add(cur);
+    const q = examQs[cur];
+    let earned = 0, possible = 0;
+
+    if (q.type === 'highlight') {
+        const correct = q.phrases.filter(p => p.c).length;
+        possible = correct;
+        document.querySelectorAll('.hl-span').forEach(el => {
+            const idx = parseInt(el.dataset.idx), isCorrect = q.phrases[idx].c, isSel = el.classList.contains('selected');
+            if (isCorrect && isSel) { earned++; el.classList.add('correct'); }
+            else if (isCorrect && !isSel) { el.classList.add('missed'); }
+            else if (!isCorrect && isSel) { earned = Math.max(0, earned - 1); el.classList.add('wrong'); }
+        });
+        earned = Math.max(0, earned);
+    }
+    else if (q.type === 'cloze') {
+        possible = q.selects.length;
+        let allCorrect = true;
+        document.querySelectorAll('.cloze-select').forEach(sel => {
+            const idx = parseInt(sel.dataset.idx), val = parseInt(sel.value);
+            sel.disabled = true;
+            if (val === q.selects[idx].correct) { sel.classList.add('correct'); }
+            else { sel.classList.add('wrong'); allCorrect = false; }
+        });
+        if (q.scoring === 'dyad') { earned = allCorrect ? possible : 0; }
+        else { document.querySelectorAll('.cloze-select.correct').forEach(() => earned++); }
+    }
+    else if (q.type === 'matrix') {
+        possible = q.rows.length;
+        q.rows.forEach((r, i) => {
+            const sel = document.querySelector(`input[name="matrix_${q.id}_${i}"]:checked`);
+            const row = document.querySelector(`.matrix-row[data-row="${i}"]`);
+            document.querySelectorAll(`input[name="matrix_${q.id}_${i}"]`).forEach(inp => inp.disabled = true);
+            if (sel && parseInt(sel.value) === q.correct[i]) { earned++; row.classList.add('correct'); }
+            else row.classList.add('wrong');
+        });
+    }
+    else if (q.type === 'selectN' || q.type === 'sata') {
+        const corr = q.opts.filter(o => o.c).length;
+        possible = corr;
+        document.querySelectorAll('.opt-item').forEach(el => {
+            const idx = parseInt(el.dataset.idx), isC = q.opts[idx].c, isSel = el.classList.contains('checked');
+            el.style.pointerEvents = 'none';
+            if (isC && isSel) { earned++; el.classList.add('correct'); }
+            else if (isC && !isSel) el.classList.add('missed');
+            else if (!isC && isSel) { earned = Math.max(0, earned - 1); el.classList.add('wrong'); }
+        });
+        earned = Math.max(0, earned);
+    }
+    else if (q.type === 'ordered') {
+        possible = q.items.length;
+        document.querySelectorAll('.drop-slot').forEach((slot, i) => {
+            const origIdx = slot.dataset.origIdx;
+            if (origIdx !== undefined && parseInt(origIdx) === i) { earned++; slot.classList.add('correct'); }
+            else slot.classList.add('wrong');
+        });
+        document.querySelectorAll('.drag-pill').forEach(p => p.style.pointerEvents = 'none');
+    }
+    else if (q.type === 'bowtie') {
+        possible = 5;
+        document.querySelectorAll('.bowtie-target').forEach(t => {
+            const slotName = t.dataset.slot, val = t.dataset.val || '';
+            let isCorrect = false;
+            if ((slotName === 'a1' || slotName === 'a2') && q.actions.includes(val)) isCorrect = true;
+            if (slotName === 'cond' && val === q.condition) isCorrect = true;
+            if ((slotName === 'p1' || slotName === 'p2') && q.parameters.includes(val)) isCorrect = true;
+            if (isCorrect) { earned++; t.classList.add('correct'); } else t.classList.add('wrong');
+        });
+        document.querySelectorAll('#btSrc .drag-pill').forEach(p => p.style.pointerEvents = 'none');
+    }
+    else if (q.type === 'mc') {
+        possible = 1;
+        const sel = document.querySelector('.mc-opt.selected');
+        document.querySelectorAll('.mc-opt').forEach(o => o.style.pointerEvents = 'none');
+        if (sel) {
+            const idx = parseInt(sel.dataset.idx);
+            if (idx === q.correct) { earned = 1; sel.classList.add('correct'); }
+            else { sel.classList.add('wrong'); document.querySelectorAll('.mc-opt')[q.correct].classList.add('correct'); }
+        } else { document.querySelectorAll('.mc-opt')[q.correct].classList.add('correct'); }
+    }
+    else if (q.type === 'fillin') {
+        possible = 1;
+        const inp = document.getElementById('fillInput');
+        const val = parseFloat(inp.value), tol = q.tolerance || 0;
+        inp.disabled = true;
+        if (!isNaN(val) && Math.abs(val - q.answer) <= tol) { earned = 1; inp.classList.add('correct'); }
+        else { inp.classList.add('wrong'); inp.insertAdjacentHTML('afterend', `<span style="color:var(--green);font-weight:700;margin-left:1rem">Correct: ${q.answer} ${q.unit||''}</span>`); }
+    }
+
+    const pct = possible > 0 ? Math.round((earned / possible) * 100) : 0;
+    scores[cur] = { earned, possible, pct };
+
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn btn-success';
+        nextBtn.textContent = 'Next \u2192';
+        nextBtn.addEventListener('click', nextQ);
+        submitBtn.parentNode.replaceChild(nextBtn, submitBtn);
+    }
+
+    const scoreArea = document.getElementById('scoreArea');
+    if (scoreArea) {
+        const chip = pct === 100 ? 'full' : pct > 0 ? 'part' : 'zero';
+        scoreArea.innerHTML = `<span class="score-chip ${chip}">${earned}/${possible} (${pct}%)</span>`;
+    }
+
+    showFeedback(q);
+    saveState();
+}
+
+function showFeedback(q) {
+    const s = scores[cur] || { pct: 0 };
+    const cls = s.pct === 100 ? 'pass' : s.pct > 0 ? 'partial' : 'fail';
+    const lbl = s.pct === 100 ? 'Correct!' : s.pct > 0 ? 'Partial Credit' : 'Incorrect';
+    const fb = document.getElementById('feedback');
+    if (fb) {
+        fb.className = `feedback show ${cls}`;
+        fb.innerHTML = `<strong>${lbl}</strong>${q.rationale}`;
+    }
+}
+
+// ===== NAVIGATION =====
+function nextQ() { if (cur < examQs.length - 1) { cur++; saveState(); renderQ(); } else { showResults(); } }
+function prevQ() { if (cur > 0) { cur--; saveState(); renderQ(); } }
+function goToQ(i) { cur = i; saveState(); renderQ(); }
+
+window.nextQ = nextQ;
+window.prevQ = prevQ;
+window.goToQ = goToQ;
+window.submitAnswer = submitAnswer;
+window.startExam = startExam;
+window.resumeExam = resumeExam;
+window.showStart = showStart;
+window.setFilter = setFilter;
+window.setSize = setSize;
+window.clearState = clearState;
+window.toggleTheme = toggleTheme;
+
+// ===== RESULTS SCREEN =====
+function showResults() {
+    const total = scores.reduce((a, s) => a + (s ? s.earned : 0), 0);
+    const poss = scores.reduce((a, s) => a + (s ? s.possible : 0), 0);
+    const pct = poss > 0 ? Math.round((total / poss) * 100) : 0;
+
+    let caseE=0,caseP=0,ngnE=0,ngnP=0,tradE=0,tradP=0;
+    scores.forEach((s, i) => {
+        if (!s) return;
+        const q = examQs[i];
+        if (q.caseId) { caseE += s.earned; caseP += s.possible; }
+        else if (['bowtie','selectN','cloze','highlight','matrix'].includes(q.type)) { ngnE += s.earned; ngnP += s.possible; }
+        else { tradE += s.earned; tradP += s.possible; }
+    });
+
+    const topics = {};
+    scores.forEach((s, i) => {
+        if (!s) return;
+        const q = examQs[i];
+        const topic = q.topic || (q.caseId ? `Case ${q.caseId}` : 'General');
+        if (!topics[topic]) topics[topic] = { earned: 0, possible: 0 };
+        topics[topic].earned += s.earned;
+        topics[topic].possible += s.possible;
+    });
+
+    const topicHTML = Object.entries(topics).map(([t, d]) => {
+        const tp = d.possible > 0 ? Math.round((d.earned/d.possible)*100) : 0;
+        return `<div class="bd-card"><h4>${t}</h4><div class="val">${tp}%</div></div>`;
+    }).join('');
+
+    app.innerHTML = `
+    <div class="exam-header"><h1>NGN Fluids &amp; Renal Exam</h1></div>
+    <div class="results">
+        <h2>Exam Complete!</h2>
+        <div class="score-circle" style="--pct:${pct}"><div class="score-inner"><div class="pct">${pct}%</div><div class="lbl">${total}/${poss} points</div></div></div>
+        <div class="breakdown">
+            ${caseP ? `<div class="bd-card"><h4>Case Studies</h4><div class="val">${Math.round((caseE/caseP)*100)}%</div></div>` : ''}
+            ${ngnP ? `<div class="bd-card"><h4>NGN Standalone</h4><div class="val">${Math.round((ngnE/ngnP)*100)}%</div></div>` : ''}
+            ${tradP ? `<div class="bd-card"><h4>Traditional</h4><div class="val">${Math.round((tradE/tradP)*100)}%</div></div>` : ''}
+        </div>
+        <h3 style="margin-top:1.5rem;margin-bottom:.5rem">By Topic</h3>
+        <div class="breakdown">${topicHTML}</div>
+        <button class="btn btn-primary" onclick="clearState();showStart()" style="margin-top:1.5rem">Retake Exam</button>
+        <button class="btn btn-outline" onclick="enterReview()" style="margin-top:1.5rem;margin-left:.5rem">Review Answers</button>
+    </div>`;
+}
+
+function enterReview() {
+    mode = 'review'; cur = 0;
+    for (let i = 0; i < examQs.length; i++) submitted.add(i);
+    renderQ();
+}
+window.enterReview = enterReview;
+
+// ===== INIT =====
+showStart();
+
+</script>
+</body>
+</html>
