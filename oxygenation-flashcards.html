@@ -733,6 +733,8 @@
       <div class="start-actions">
         <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
         <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+        <button class="btn-secondary" id="btn-pe" onclick="studyProfEmphasis()"
+          style="border-color:#f87171;color:#f87171">🟥 Prof Emphasis Only</button>
         <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
       </div>
     </div>
@@ -957,8 +959,8 @@
       { id: 105, cat: 'lower', q: 'What vaccine is heavily emphasized for COPD patients?', a: '<strong>Annual influenza (flu) vaccine.</strong> This was heavily emphasized in lecture.', tip: 'EXAM TIP: COPD patient education questions love to test flu vaccine.' },
       { id: 106, cat: 'lower', q: 'What is the strongest predisposing factor for asthma?', a: '<strong>Allergies</strong> \u2014 seasonal, dust, dander, mold, pollens, roach droppings, air pollution, smoke.' },
       { id: 107, cat: 'lower', q: 'What is status asthmaticus, what is the most dangerous sign, and what happens to acid-base balance?', a: 'Severe, persistent asthma attack that <strong>does NOT respond to regular therapy</strong>. Most dangerous sign: <strong>disappearance of wheezing</strong> = impending respiratory failure (not enough air movement to produce a wheeze). <strong>Acid-base progression</strong>: Initially respiratory alkalosis (blowing off CO2 with tachypnea) \u2192 then respiratory acidosis (CO2 trapping as patient fatigues). A normalizing or rising PaCO2 is ominous.', tip: 'PROF EMPHASIS: Know the acid-base shift. Silent chest = escalate IMMEDIATELY. Normalizing PaCO2 = they are tiring.' },
-      { id: 108, cat: 'lower', q: 'What medication is given IV for status asthmaticus beyond SABAs and steroids?', a: '<strong>Magnesium sulfate 2g over 20 minutes</strong> for smooth muscle relaxation. Also: supplemental O2, IVF, ABGs, cardiac monitoring.' },
-      { id: 109, cat: 'lower', q: 'What is CF, who gets it, and what is the key to management?', a: '<strong>Autosomal recessive</strong> disease, most common in <strong>Caucasians</strong>. Most diagnosed at age 2; median survival late 30s. <strong>Airway clearance is the KEY</strong> to management: chest PT, anti-inflammatory agents.' },
+      { id: 108, cat: 'lower', q: 'What medication is given IV for status asthmaticus beyond SABAs and steroids? What beta-blocker rule applies?', a: '<strong>Magnesium sulfate 2g over 20 minutes</strong> for smooth muscle relaxation. Also: supplemental O2, <strong>IV fluids</strong> (loosen secretions, aid expectoration and hydration), ABGs, cardiac monitoring. <strong>Do NOT give non-selective beta-blockers</strong> to asthma patients (cause bronchospasm via \u03b22 blockade). <strong>Cardio-selective beta-blockers (metoprolol, atenolol) are OK</strong> because they target \u03b21 (heart), not \u03b22 (lungs).', tip: 'PROF EMPHASIS: Beta-blocker question is classic NCLEX. Non-selective = bad for asthma. Cardio-selective = safe.' },
+      { id: 109, cat: 'lower', q: 'What is CF, who gets it, and what is the key to management? What about pancreatic enzymes?', a: '<strong>Autosomal recessive</strong> disease, most common in <strong>Caucasians</strong>. Most diagnosed at age 2; median survival late 30s. <strong>Airway clearance is the KEY</strong> to management: chest PT, anti-inflammatory agents. <strong>Pancreatic enzyme replacement</strong> (pancrelipase): <strong>do NOT crush</strong>, take <strong>BEFORE meals</strong>. High-calorie diet (malabsorption causes weight loss). Increase fluids to thin secretions.', tip: 'EXAM TIP: CF = thick secretions everywhere. Lungs AND pancreas are affected. Enzymes before meals, CPT before meals.' },
       { id: 110, cat: 'lower', q: 'When should chest PT be performed for CF patients and why?', a: '<strong>Before meals</strong> (avoid vomiting/aspiration), before bed, and in the morning. This is the same timing principle as postural drainage.' },
       { id: 111, cat: 'lower', q: 'What is the ICOUGH protocol and what is the most common IS error patients make?', a: '<strong>I</strong> = Incentive Spirometry, <strong>C</strong> = Coughing & Deep Breathing, <strong>O</strong> = Oral Care, <strong>U</strong> = Understanding (patient education), <strong>G</strong> = Get OOB to chair \u00d73 daily, <strong>H</strong> = HOB >30\u00b0. <strong>Common IS error</strong>: patients breathe INTO the spirometer instead of sucking air IN. The purpose is to INHALE deeply. 10 breaths should be slow and controlled (not in rapid succession to avoid hyperventilation). Patients do NOT wake up at night for IS.', tip: 'PROF EMPHASIS: Check that patients use IS correctly. Ask them to demonstrate. Suggest deep breaths during TV commercial breaks.' },
       { id: 112, cat: 'lower', q: 'How is atelectasis most commonly acquired? What are the priority interventions?', a: 'Most commonly <strong>post-operative</strong>. Priority: position changes, ambulation, deep breathing and coughing, incentive spirometry, suction PRN, pain control (multimodal \u2014 opioids depress respiratory drive).' },
@@ -1025,7 +1027,7 @@
       { id: 167, cat: 'pharm', q: 'What is the first-line treatment for GAS pharyngitis?', a: '<strong>Penicillin V potassium \u00d7 10 days</strong>. Full course is essential to prevent rheumatic fever and glomerulonephritis.' },
       { id: 168, cat: 'pharm', q: 'What role do corticosteroids play in COVID-19 treatment?', a: '<strong>Limited to patients requiring supplemental O2.</strong> Not given to mild cases. Help reduce the inflammatory response in severe disease.' },
       { id: 169, cat: 'pharm', q: 'What are combination ICS + LABA inhalers?', a: '<strong>Budesonide/formoterol (Symbicort), fluticasone/salmeterol (Advair), fluticasone furoate/vilanterol (Breo)</strong>. Combine controller anti-inflammatory with long-acting bronchodilator.' },
-      { id: 170, cat: 'pharm', q: 'What medications are used for pulmonary hypertension?', a: '<strong>Calcium channel blockers, prostanoids, phosphodiesterase inhibitors</strong>, diuretics, O2, anticoagulation, digoxin.' },
+      { id: 170, cat: 'pharm', q: 'What medications are used for pulmonary hypertension?', a: '<strong>CCBs</strong> (calcium channel blockers) to vasodilate pulmonary arteries. <strong>Phosphodiesterase inhibitors</strong>: <strong>sildenafil (Viagra)</strong>, tadalafil. <strong>Prostanoids</strong> (potent pulmonary vasodilators). <strong>Diuretics</strong> for fluid overload/right-sided HF. <strong>Anticoagulants</strong> to prevent thrombotic complications. <strong>Digoxin</strong> to improve RV contractility. Supplemental O2 and supervised exercise.', tip: 'EXAM TIP: Sildenafil (Viagra) for pulmonary HTN is a common test question. Same drug, different indication.' },
       { id: 171, cat: 'pharm', q: 'When is an IVC filter indicated?', a: 'For patients with <strong>recurrent PEs</strong> despite anticoagulation. The filter traps clots before they reach the lungs.' },
       { id: 172, cat: 'pharm', q: 'Long-term high-dose NSAIDs are used in what pediatric respiratory condition?', a: '<strong>Cystic Fibrosis</strong> (ages 6-17) \u2014 slows loss of lung function.' },
 
@@ -1182,6 +1184,15 @@
     function studyWeak() {
       const p = loadProgress();
       let deck = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').map(c => c.id);
+      if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+      if (deck.length === 0) return;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function studyProfEmphasis() {
+      let deck = cards.filter(c => c.tip && c.tip.includes('PROF')).map(c => c.id);
       if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
       if (deck.length === 0) return;
       state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
