@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respiratory Medications — Exam-Ready Drug Guide</title>
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-light: #dbeafe;
+            --blue-bg: #eff6ff;
+            --red: #dc2626;
+            --red-light: #fee2e2;
+            --red-bg: #fef2f2;
+            --amber: #d97706;
+            --amber-light: #fef3c7;
+            --amber-bg: #fffbeb;
+            --green: #059669;
+            --green-light: #d1fae5;
+            --green-bg: #ecfdf5;
+            --purple: #7c3aed;
+            --purple-light: #ede9fe;
+            --purple-bg: #f5f3ff;
+            --teal: #0d9488;
+            --teal-light: #ccfbf1;
+            --teal-bg: #f0fdfa;
+            --slate: #1e293b;
+            --slate-mid: #64748b;
+            --slate-light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.75;
+            color: var(--slate);
+            background: var(--slate-light);
+        }
+
+        .page-wrap {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* NAV */
+        nav.toc {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            overflow-y: auto;
+            background: #fff;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            font-size: .8rem;
+            z-index: 100;
+        }
+
+        nav.toc h2 {
+            font-size: .95rem;
+            color: var(--green);
+            margin-bottom: .75rem;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        nav.toc a {
+            display: block;
+            padding: .3rem .5rem;
+            color: var(--slate-mid);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all .15s;
+        }
+
+        nav.toc a:hover {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        nav.toc .nav-group {
+            margin-bottom: .4rem;
+        }
+
+        /* MAIN */
+        main {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 2.5rem 4rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: var(--green);
+            letter-spacing: -.5px;
+            margin-bottom: .25rem;
+        }
+
+        .subtitle {
+            color: var(--slate-mid);
+            font-size: .85rem;
+            margin-bottom: 2rem;
+        }
+
+        h2.section-title {
+            font-size: 1.15rem;
+            padding: .6rem 1rem;
+            border-radius: 8px;
+            margin: 2.5rem 0 1rem;
+            color: #fff;
+        }
+
+        h2.green {
+            background: var(--green);
+        }
+
+        h2.blue {
+            background: var(--blue);
+        }
+
+        h2.red {
+            background: var(--red);
+        }
+
+        h2.purple {
+            background: var(--purple);
+        }
+
+        h2.amber {
+            background: var(--amber);
+        }
+
+        h2.teal {
+            background: var(--teal);
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: var(--slate);
+            margin: 1.5rem 0 .5rem;
+            padding-bottom: .25rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h4 {
+            font-size: .9rem;
+            margin: 1rem 0 .4rem;
+            color: var(--slate-mid);
+        }
+
+        p,
+        li {
+            font-size: .88rem;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.4rem;
+            margin: .4rem 0;
+        }
+
+        li {
+            margin-bottom: .2rem;
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: .75rem 0 1.25rem;
+            font-size: .82rem;
+        }
+
+        th,
+        td {
+            padding: .5rem .65rem;
+            border: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--green-bg);
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        table.blue th {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+
+        table.red th {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        table.purple th {
+            background: var(--purple-bg);
+            color: var(--purple);
+        }
+
+        table.amber th {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        table.teal th {
+            background: var(--teal-bg);
+            color: var(--teal);
+        }
+
+        /* CALLOUTS */
+        .callout {
+            border-radius: 8px;
+            padding: .85rem 1rem;
+            margin: .75rem 0 1rem;
+            font-size: .84rem;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: .3rem;
+            font-size: .85rem;
+        }
+
+        .callout.warning {
+            background: var(--red-bg);
+            border-left: 4px solid var(--red);
+        }
+
+        .callout.warning .callout-title {
+            color: var(--red);
+        }
+
+        .callout.pearl {
+            background: var(--blue-bg);
+            border-left: 4px solid var(--blue);
+        }
+
+        .callout.pearl .callout-title {
+            color: var(--blue);
+        }
+
+        .callout.clinical {
+            background: var(--green-bg);
+            border-left: 4px solid var(--green);
+        }
+
+        .callout.clinical .callout-title {
+            color: var(--green);
+        }
+
+        .callout.exam {
+            background: var(--amber-bg);
+            border-left: 4px solid var(--amber);
+        }
+
+        .callout.exam .callout-title {
+            color: var(--amber);
+        }
+
+        /* TAGS */
+        .tag {
+            display: inline-block;
+            font-size: .65rem;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .tag-heavy {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .tag-exam {
+            background: var(--amber-light);
+            color: #92400e;
+        }
+
+        /* DRUG CARD */
+        .drug-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin: .75rem 0;
+            background: #fff;
+            transition: box-shadow .2s;
+        }
+
+        .drug-card:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+        }
+
+        .drug-card h4 {
+            margin: 0 0 .4rem;
+            color: var(--slate);
+            font-size: .92rem;
+        }
+
+        .drug-card .brand {
+            color: var(--slate-mid);
+            font-weight: normal;
+            font-size: .82rem;
+        }
+
+        .drug-card .moa {
+            font-size: .8rem;
+            color: var(--teal);
+            font-style: italic;
+            margin-bottom: .3rem;
+        }
+
+        .drug-card .detail-row {
+            display: flex;
+            gap: 1.5rem;
+            font-size: .82rem;
+            margin-top: .3rem;
+        }
+
+        .drug-card .detail-row .label {
+            font-weight: 600;
+            color: var(--slate-mid);
+            min-width: 90px;
+        }
+
+        /* COMPARE */
+        .compare-row {
+            display: flex;
+            gap: 1rem;
+            margin: .75rem 0;
+        }
+
+        .compare-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .compare-card h4 {
+            margin: 0 0 .4rem;
+            font-size: .88rem;
+        }
+
+        .compare-card.left {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .compare-card.right {
+            border-color: var(--red);
+            background: var(--red-bg);
+        }
+
+        @media(max-width:768px) {
+            nav.toc {
+                display: none;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .compare-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
+        <nav class="toc">
+            <h2>💊 Respiratory Meds</h2>
+            <div class="nav-group"><a href="#s1">I. Bronchodilators</a></div>
+            <div class="nav-group"><a href="#s2">II. Corticosteroids</a></div>
+            <div class="nav-group"><a href="#s3">III. Combination Inhalers</a></div>
+            <div class="nav-group"><a href="#s4">IV. Other Respiratory Meds</a></div>
+            <div class="nav-group"><a href="#s5">V. Sedation Agents</a></div>
+            <div class="nav-group"><a href="#s6">VI. Reversal Agents</a></div>
+            <div class="nav-group"><a href="#s7">VII. Anticoagulants</a></div>
+            <div class="nav-group"><a href="#s8">VIII. Pulmonary HTN Meds</a></div>
+            <div class="nav-group"><a href="#s9">IX. COVID-19 (MATH+)</a></div>
+            <div class="nav-group"><a href="#s10">X. Smoking Cessation</a></div>
+            <div class="nav-group"><a href="#s11">XI. Quick Reference Table</a></div>
+        </nav>
+
+        <main>
+            <h1>💊 Respiratory Medications &mdash; Exam-Ready Drug Guide</h1>
+            <p class="subtitle">All medications from the Oxygenation &amp; Gas Exchange unit, organized by drug class
+                with nursing considerations, dosing, and professor emphasis points.</p>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 1: BRONCHODILATORS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title green" id="s1">I. Bronchodilators</h2>
+
+            <p>Bronchodilators relax smooth muscle in the airways to increase airflow. They are the
+                <strong>first-line treatment for acute bronchospasm</strong> and ongoing airway management in
+                asthma and COPD.
+            </p>
+
+            <h3>SABAs (Short-Acting Beta-2 Agonists) &mdash; Rescue Inhalers</h3>
+
+            <div class="callout exam">
+                <div class="callout-title">EXAM TIP: SABA = Rescue <span class="tag tag-exam">HIGH YIELD</span></div>
+                <p>SABAs are for <strong>acute symptom relief</strong>. If a question says "the patient is having an
+                    acute asthma attack, which medication do you give FIRST?" &mdash; the answer is always a SABA
+                    (albuterol).</p>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Generic</th>
+                    <th>Brand</th>
+                    <th>MOA</th>
+                    <th>Key Nursing Points</th>
+                </tr>
+                <tr>
+                    <td><strong>Albuterol</strong></td>
+                    <td>ProAir, Ventolin, Proventil</td>
+                    <td>Stimulates &beta;2 receptors &rarr; bronchial smooth muscle relaxation</td>
+                    <td>Most common rescue inhaler. Side effects: tremor, tachycardia, palpitations, hypokalemia.
+                        Onset 5-15 min, duration 4-6 hours.</td>
+                </tr>
+                <tr>
+                    <td><strong>Levalbuterol</strong></td>
+                    <td>Xopenex</td>
+                    <td>R-isomer of albuterol (same mechanism)</td>
+                    <td>Fewer cardiac side effects than albuterol. Used when tachycardia is a concern.</td>
+                </tr>
+                <tr>
+                    <td><strong>Terbutaline</strong></td>
+                    <td>Brethine</td>
+                    <td>&beta;2 agonist</td>
+                    <td>Also used as a tocolytic (stops preterm labor via uterine smooth muscle relaxation).</td>
+                </tr>
+            </table>
+
+            <h3>LABAs (Long-Acting Beta-2 Agonists) &mdash; Controller Meds</h3>
+
+            <div class="callout warning">
+                <div class="callout-title">Warning: LABA Safety Rule</div>
+                <p><strong>NEVER use a LABA alone for asthma</strong> &mdash; must ALWAYS be combined with an
+                    anti-inflammatory agent (ICS). LABAs alone increase the risk of asthma-related death. They are
+                    <strong>NOT rescue inhalers</strong>.
+                </p>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Generic</th>
+                    <th>Brand</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Salmeterol</strong></td>
+                    <td>Serevent</td>
+                    <td>12-hour duration. Use WITH ICS for asthma. Can be used alone for COPD.</td>
+                </tr>
+                <tr>
+                    <td><strong>Formoterol</strong></td>
+                    <td>Foradil, Perforomist</td>
+                    <td>12-hour duration. Faster onset than salmeterol.</td>
+                </tr>
+                <tr>
+                    <td><strong>Indacaterol</strong></td>
+                    <td>Arcapta</td>
+                    <td>24-hour ultra-long acting. COPD only.</td>
+                </tr>
+                <tr>
+                    <td><strong>Olodaterol</strong></td>
+                    <td>Striverdi</td>
+                    <td>24-hour. COPD maintenance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Arformoterol</strong></td>
+                    <td>Brovana</td>
+                    <td>Nebulized LABA for COPD.</td>
+                </tr>
+            </table>
+
+            <h3>Anticholinergics (Muscarinic Antagonists)</h3>
+
+            <table class="teal">
+                <tr>
+                    <th>Generic</th>
+                    <th>Brand</th>
+                    <th>Duration</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Ipratropium</strong></td>
+                    <td>Atrovent</td>
+                    <td>Short-acting (4-6 hrs)</td>
+                    <td>Blocks acetylcholine &rarr; bronchodilation via different pathway than &beta;2 agonists. Often
+                        combined with albuterol (DuoNeb/Combivent).</td>
+                </tr>
+                <tr>
+                    <td><strong>Tiotropium</strong></td>
+                    <td>Spiriva</td>
+                    <td>Long-acting (24 hrs)</td>
+                    <td>First-line maintenance for COPD. Once-daily dosing. Side effects: dry mouth, urinary retention,
+                        constipation.</td>
+                </tr>
+                <tr>
+                    <td><strong>Umeclidinium</strong></td>
+                    <td>Incruse Ellipta</td>
+                    <td>Long-acting</td>
+                    <td>COPD maintenance. Dry powder inhaler.</td>
+                </tr>
+            </table>
+
+            <div class="callout pearl">
+                <div class="callout-title">Pearl: Anticholinergic Side Effects</div>
+                <p>Remember: "Can't see, can't pee, can't spit, can't sh*t" &mdash; <strong>blurred vision, urinary
+                        retention, dry mouth, constipation</strong>. These are classic anticholinergic effects across
+                    ALL
+                    anticholinergic drugs.</p>
+            </div>
+
+            <h3>Methylxanthines</h3>
+
+            <div class="drug-card">
+                <h4>Theophylline <span class="brand">(Theo-Dur, Elixophyllin)</span></h4>
+                <p class="moa">Phosphodiesterase inhibitor &rarr; smooth muscle relaxation + mild anti-inflammatory</p>
+                <div class="detail-row"><span class="label">Route:</span> PO</div>
+                <div class="detail-row"><span class="label">Use:</span> Chronic asthma/COPD (rarely used today due to
+                    narrow therapeutic window)</div>
+                <div class="detail-row"><span class="label">Therapeutic Level:</span> <strong>5-15 mcg/mL</strong>.
+                    Toxicity is common.</div>
+                <div class="detail-row"><span class="label">Toxicity Signs:</span> Nausea, vomiting, restlessness,
+                    seizures, arrhythmias</div>
+                <div class="detail-row"><span class="label">Nursing:</span> Monitor serum levels, avoid caffeine, many
+                    drug interactions</div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 2: CORTICOSTEROIDS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title teal" id="s2">II. Corticosteroids</h2>
+
+            <p>Corticosteroids are <strong>anti-inflammatory agents</strong> that reduce airway edema, mucus production,
+                and bronchial hyperresponsiveness. They are the <strong>most effective long-term controller
+                    medication</strong> for asthma.</p>
+
+            <h3>Inhaled Corticosteroids (ICS) &mdash; Controller Meds</h3>
+
+            <table class="teal">
+                <tr>
+                    <th>Generic</th>
+                    <th>Brand</th>
+                    <th>Key Nursing Points</th>
+                </tr>
+                <tr>
+                    <td><strong>Beclomethasone</strong></td>
+                    <td>QVAR</td>
+                    <td rowspan="3">
+                        <strong>Rinse mouth after each use</strong> to prevent oral candidiasis (thrush).<br>
+                        Use spacer with MDI for better delivery and reduced oral deposition.<br>
+                        If also using a SABA, use <strong>SABA first</strong> (opens airways), then ICS (deeper
+                        penetration).<br>
+                        NOT for acute rescue &mdash; takes days to weeks for full effect.
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Budesonide</strong></td>
+                    <td>Pulmicort</td>
+                </tr>
+                <tr>
+                    <td><strong>Fluticasone</strong></td>
+                    <td>Flovent</td>
+                </tr>
+            </table>
+
+            <div class="callout exam">
+                <div class="callout-title">EXAM TIP: ICS Mouth Care <span class="tag tag-exam">HIGH YIELD</span></div>
+                <p>If a question asks about a patient on an inhaled steroid and they have white patches in their mouth
+                    &mdash; this is <strong>oral candidiasis (thrush)</strong> from the steroid. Teaching point:
+                    <strong>rinse, gargle, and spit after every use</strong>.
+                </p>
+            </div>
+
+            <h3>Systemic Corticosteroids</h3>
+
+            <table class="amber">
+                <tr>
+                    <th>Generic</th>
+                    <th>Route</th>
+                    <th>Use</th>
+                    <th>Key Considerations</th>
+                </tr>
+                <tr>
+                    <td><strong>Prednisone</strong></td>
+                    <td>PO</td>
+                    <td>Asthma/COPD exacerbation, sarcoidosis</td>
+                    <td rowspan="3">
+                        Short-term for acute exacerbations. Long-term use &rarr; <strong>muscle weakness, osteoporosis,
+                            adrenal suppression, hyperglycemia, immunosuppression, moon face, buffalo
+                            hump</strong>.<br>
+                        <strong>NEVER abruptly stop</strong> &mdash; must taper to avoid adrenal crisis.<br>
+                        Sarcoidosis: ~1 year of steroids, taper after 12 months.<br>
+                        <strong>Steroids + tube feeds = check blood sugars q6h.</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Methylprednisolone</strong></td>
+                    <td>IV/PO</td>
+                    <td>Severe exacerbations, COVID (MATH+)</td>
+                </tr>
+                <tr>
+                    <td><strong>Dexamethasone</strong></td>
+                    <td>IV/PO</td>
+                    <td>Severe inflammation, post-extubation</td>
+                </tr>
+            </table>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 3: COMBINATION INHALERS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title blue" id="s3">III. Combination Inhalers</h2>
+
+            <table class="blue">
+                <tr>
+                    <th>Combination</th>
+                    <th>Brand</th>
+                    <th>Components</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td>ICS + LABA</td>
+                    <td><strong>Advair</strong></td>
+                    <td>Fluticasone + salmeterol</td>
+                    <td>Asthma/COPD maintenance. Rinse mouth after use.</td>
+                </tr>
+                <tr>
+                    <td>ICS + LABA</td>
+                    <td><strong>Symbicort</strong></td>
+                    <td>Budesonide + formoterol</td>
+                    <td>Asthma/COPD. Has faster LABA onset (formoterol).</td>
+                </tr>
+                <tr>
+                    <td>ICS + LABA</td>
+                    <td><strong>Breo Ellipta</strong></td>
+                    <td>Fluticasone furoate + vilanterol</td>
+                    <td>Once-daily dosing. Dry powder inhaler.</td>
+                </tr>
+                <tr>
+                    <td>SABA + Anticholinergic</td>
+                    <td><strong>DuoNeb / Combivent</strong></td>
+                    <td>Albuterol + ipratropium</td>
+                    <td>Dual-action bronchodilation for acute COPD.</td>
+                </tr>
+            </table>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 4: OTHER RESPIRATORY MEDS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title purple" id="s4">IV. Other Respiratory Medications</h2>
+
+            <h3>Leukotriene Modifiers</h3>
+            <div class="drug-card">
+                <h4>Montelukast <span class="brand">(Singulair)</span> / Zafirlukast <span
+                        class="brand">(Accolate)</span></h4>
+                <p class="moa">Block leukotriene receptors &rarr; reduce inflammation, bronchoconstriction, mucus
+                    production</p>
+                <div class="detail-row"><span class="label">Use:</span> Asthma prevention (not rescue), exercise-induced
+                    bronchospasm, allergic rhinitis</div>
+                <div class="detail-row"><span class="label">Route:</span> PO only (taken at night for asthma)</div>
+                <div class="detail-row"><span class="label">Nursing:</span> Monitor for mood/behavior changes
+                    (montelukast has an FDA black box warning for neuropsychiatric effects).</div>
+            </div>
+
+            <h3>Mast Cell Stabilizers</h3>
+            <div class="drug-card">
+                <h4>Cromolyn sodium <span class="brand">(NasalCrom, Intal)</span></h4>
+                <p class="moa">Stabilizes mast cells &rarr; prevents histamine/leukotriene release</p>
+                <div class="detail-row"><span class="label">Use:</span> Prophylactic ONLY. Given BEFORE exercise or
+                    allergen exposure.</div>
+                <div class="detail-row"><span class="label">Nursing:</span> NOT effective for acute attacks. Takes 2-4
+                    weeks for full effect.</div>
+            </div>
+
+            <h3>Mucolytics &amp; Expectorants</h3>
+            <table class="purple">
+                <tr>
+                    <th>Drug</th>
+                    <th>MOA</th>
+                    <th>Use</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Acetylcysteine (Mucomyst)</strong></td>
+                    <td>Breaks disulfide bonds in mucus</td>
+                    <td>CF, thick secretions</td>
+                    <td>Also the antidote for <strong>acetaminophen overdose</strong>. Smells like rotten eggs (sulfur).
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Dornase alfa (Pulmozyme)</strong></td>
+                    <td>Breaks down DNA in sputum</td>
+                    <td>Cystic fibrosis</td>
+                    <td>Reduces sputum viscosity. Nebulized once daily.</td>
+                </tr>
+                <tr>
+                    <td><strong>Guaifenesin (Mucinex)</strong></td>
+                    <td>Increases respiratory fluid &rarr; thins mucus</td>
+                    <td>Chest congestion</td>
+                    <td>Increase fluid intake to help thin secretions. OTC.</td>
+                </tr>
+            </table>
+
+            <h3>CF-Specific Medications</h3>
+            <div class="drug-card">
+                <h4>Pancrelipase <span class="brand">(Creon, Zenpep)</span> <span class="tag tag-heavy">PROF
+                        EMPHASIS</span></h4>
+                <p class="moa">Pancreatic enzyme replacement &mdash; lipase, protease, amylase</p>
+                <div class="detail-row"><span class="label">Use:</span> CF patients with pancreatic insufficiency
+                    (malabsorption)</div>
+                <div class="detail-row"><span class="label">Timing:</span> <strong>Take BEFORE meals</strong> (to aid
+                    digestion)</div>
+                <div class="detail-row"><span class="label">Nursing:</span> <strong>Do NOT crush</strong> the
+                    enteric-coated capsules. High-calorie diet recommended (CF patients lose weight from malabsorption).
+                </div>
+            </div>
+
+            <h3>Magnesium Sulfate</h3>
+            <div class="drug-card">
+                <h4>Magnesium Sulfate <span class="tag tag-heavy">PROF EMPHASIS</span></h4>
+                <p class="moa">Promotes smooth muscle relaxation</p>
+                <div class="detail-row"><span class="label">Dose:</span> <strong>2g IV over 20 minutes</strong></div>
+                <div class="detail-row"><span class="label">Use:</span> Status asthmaticus (when SABAs + steroids fail)
+                </div>
+                <div class="detail-row"><span class="label">Nursing:</span> Monitor for hypotension, flushing, muscle
+                    weakness. Check reflexes (loss of DTRs = toxicity). Have calcium gluconate at bedside (antidote).
+                </div>
+            </div>
+
+            <h3>Antibiotics for Pneumonia</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Common Agents</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td>Community-Acquired PNA</td>
+                    <td>Azithromycin, fluoroquinolones (levofloxacin), amoxicillin</td>
+                    <td>Get sputum culture BEFORE starting antibiotics. Increase fluids.</td>
+                </tr>
+                <tr>
+                    <td>Hospital-Acquired / VAP</td>
+                    <td>Broad-spectrum: piperacillin-tazobactam, vancomycin, carbapenems</td>
+                    <td>VAP develops &ge;48 hrs after intubation. VAP bundle is prevention.</td>
+                </tr>
+                <tr>
+                    <td>GAS Pharyngitis</td>
+                    <td><strong>Penicillin V potassium &times; 10 days</strong></td>
+                    <td>Full course essential to prevent rheumatic fever and glomerulonephritis.</td>
+                </tr>
+            </table>
+
+            <h3>Other Important Meds</h3>
+            <table>
+                <tr>
+                    <th>Drug</th>
+                    <th>Use</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Chlorhexidine 0.12%</strong></td>
+                    <td>Oral care for VAP prevention</td>
+                    <td>Applied q12h as part of the VAP bundle. Oral care with toothbrush q2h.</td>
+                </tr>
+                <tr>
+                    <td><strong>Antitussives</strong> (dextromethorphan, codeine)</td>
+                    <td>Suppress cough</td>
+                    <td><strong>Do NOT suppress a productive cough</strong> &mdash; patient needs to expectorate
+                        secretions first. Only use for dry, non-productive cough.</td>
+                </tr>
+                <tr>
+                    <td><strong>PPIs</strong> (pantoprazole)</td>
+                    <td>PUD prophylaxis in VAP bundle</td>
+                    <td>Stress ulcer prevention for ventilated patients.</td>
+                </tr>
+                <tr>
+                    <td><strong>H2 blockers</strong> (famotidine/Pepcid)</td>
+                    <td>PUD prophylaxis (alternative)</td>
+                    <td>Alternative to PPIs in VAP bundle.</td>
+                </tr>
+            </table>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 5: SEDATION AGENTS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title amber" id="s5">V. ICU Sedation Agents <span class="tag tag-heavy">PROF
+                    EMPHASIS</span></h2>
+
+            <p>Sedation is critical for ventilated patients &mdash; it prevents patient-vent dyssynchrony, reduces
+                anxiety, and facilitates procedures. <strong>Have reversal agent orders ready BEFORE administering
+                    sedation</strong> (Pyxis/PRN).</p>
+
+            <table class="amber">
+                <tr>
+                    <th>Drug</th>
+                    <th>Brand</th>
+                    <th>Class</th>
+                    <th>Key Features</th>
+                    <th>Nursing Considerations</th>
+                </tr>
+                <tr>
+                    <td><strong>Propofol</strong></td>
+                    <td>Diprivan</td>
+                    <td>Sedative-hypnotic</td>
+                    <td>Rapid onset/offset. White milky emulsion (lipid-based). Easily titratable.</td>
+                    <td>Monitor triglycerides (lipid load). <strong>Change tubing q12h</strong> (infection risk). Can
+                        cause hypotension, bradycardia. Propofol infusion syndrome if prolonged high doses.</td>
+                </tr>
+                <tr>
+                    <td><strong>Fentanyl</strong></td>
+                    <td>Sublimaze</td>
+                    <td>Opioid analgesic</td>
+                    <td>100x more potent than morphine. IV drip or bolus. Fast onset.</td>
+                    <td>Respiratory depression risk. Reversed by <strong>naloxone</strong>. Monitor RR, SpO2, ETCO2.
+                        Chest wall rigidity at high doses.</td>
+                </tr>
+                <tr>
+                    <td><strong>Midazolam</strong></td>
+                    <td>Versed</td>
+                    <td>Benzodiazepine</td>
+                    <td>Anxiolytic + amnestic. Short-acting benzo.</td>
+                    <td>Respiratory depression risk. Reversed by <strong>flumazenil</strong>. Paradoxical agitation
+                        possible. Accumulates with renal impairment.</td>
+                </tr>
+                <tr>
+                    <td><strong>Ketamine</strong></td>
+                    <td>Ketalar</td>
+                    <td>Dissociative anesthetic</td>
+                    <td>Unique: provides analgesia + sedation without respiratory depression.</td>
+                    <td>Bronchodilator properties (helpful in asthma). May cause hallucinations, increased secretions,
+                        elevated ICP.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dexmedetomidine</strong></td>
+                    <td>Precedex</td>
+                    <td>Alpha-2 agonist</td>
+                    <td>Sedation WITHOUT significant respiratory depression. Patient remains arousable.</td>
+                    <td>Ideal for weaning/extubation. Bradycardia and hypotension are main concerns. Does not require
+                        reversal agent. More expensive.</td>
+                </tr>
+            </table>
+
+            <div class="callout warning">
+                <div class="callout-title">Warning: Both Opioids AND Benzos Suppress Breathing <span
+                        class="tag tag-heavy">PROF EMPHASIS</span></div>
+                <p>Both opioids (fentanyl) and benzodiazepines (midazolam) suppress respiratory drive. When used
+                    together, the risk is <strong>compounded</strong>. Monitor respiratory rate, depth, SpO2, and ETCO2
+                    continuously. Never leave a recently sedated patient unmonitored.</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 6: REVERSAL AGENTS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title red" id="s6">VI. Reversal Agents &mdash; MUST KNOW <span class="tag tag-heavy">PROF
+                    EMPHASIS</span></h2>
+
+            <div class="compare-row">
+                <div class="compare-card left" style="border-color:var(--blue);background:var(--blue-bg);">
+                    <h4>Naloxone (Narcan)</h4>
+                    <ul>
+                        <li><strong>Reverses:</strong> Opioids (fentanyl, morphine, heroin)</li>
+                        <li><strong>Dose:</strong> 0.2&ndash;0.4 mg IV q2-3 min PRN</li>
+                        <li><strong>Route:</strong> IV push; repeat until awake/breathing</li>
+                        <li><strong>Onset:</strong> 1-2 minutes IV</li>
+                        <li><strong>Duration:</strong> 20-60 minutes</li>
+                    </ul>
+                </div>
+                <div class="compare-card right" style="border-color:var(--purple);background:var(--purple-bg);">
+                    <h4>Flumazenil (Romazicon)</h4>
+                    <ul>
+                        <li><strong>Reverses:</strong> Benzodiazepines (Ativan, Xanax, Valium, Versed)</li>
+                        <li><strong>Dose:</strong> 0.2 mg IV; max 1 mg/dose, 3 mg total</li>
+                        <li><strong>Route:</strong> IV; give q few min, monitor closely</li>
+                        <li><strong>Onset:</strong> 1-2 minutes IV</li>
+                        <li><strong>Duration:</strong> 45-90 minutes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout warning">
+                <div class="callout-title">⚠️ Critical: Re-Sedation Risk <span class="tag tag-heavy">PROF
+                        EMPHASIS</span></div>
+                <p>Both reversal agents have a <strong>SHORTER duration than the drugs they reverse</strong>. The
+                    patient
+                    CAN re-sedate after the reversal agent wears off. <strong>Continuous monitoring is
+                        essential</strong>
+                    &mdash; do not assume the patient is safe because they woke up.</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 7: ANTICOAGULANTS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title blue" id="s7">VII. Anticoagulants (PE/DVT)</h2>
+
+            <table class="blue">
+                <tr>
+                    <th>Drug</th>
+                    <th>Brand</th>
+                    <th>Route</th>
+                    <th>Monitoring</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Heparin</strong> (unfractionated)</td>
+                    <td>&mdash;</td>
+                    <td>IV drip (GTT) or SubQ</td>
+                    <td><strong>aPTT, anti-Xa</strong></td>
+                    <td>First-line for active PE. Rapid onset. Antidote: <strong>protamine sulfate</strong>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Enoxaparin</strong></td>
+                    <td>Lovenox</td>
+                    <td>SubQ</td>
+                    <td>Anti-Xa (if monitoring needed)</td>
+                    <td>LMWH &mdash; used for DVT/PE prevention and treatment. Do NOT rub injection site. Rotate
+                        abdominal injection sites.</td>
+                </tr>
+                <tr>
+                    <td><strong>Warfarin</strong></td>
+                    <td>Coumadin</td>
+                    <td>PO</td>
+                    <td><strong>INR (goal 2-3)</strong></td>
+                    <td>Long-term anticoagulation. Takes 3-5 days for full effect (bridge with heparin). Antidote:
+                        <strong>Vitamin K (phytonadione)</strong>. Avoid foods high in Vitamin K (leafy greens).
+                    </td>
+                </tr>
+            </table>
+
+            <div class="callout clinical">
+                <div class="callout-title">Clinical Pearl: DVT/PE Prevention in ICU</div>
+                <p>All ICU patients need DVT prophylaxis: <strong>SCDs (sequential compression devices)</strong> AND/OR
+                    SubQ heparin or enoxaparin. COVID patients are especially high-risk (hypercoagulable state).
+                    Ambulation as soon as possible.</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 8: PULMONARY HTN MEDS -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title purple" id="s8">VIII. Pulmonary Hypertension Medications</h2>
+
+            <table class="purple">
+                <tr>
+                    <th>Drug Class</th>
+                    <th>Examples</th>
+                    <th>MOA</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>CCBs</strong></td>
+                    <td>Nifedipine, diltiazem, amlodipine</td>
+                    <td>Vasodilate pulmonary arteries</td>
+                    <td>First-line if vasoreactivity test is positive. Monitor BP closely.</td>
+                </tr>
+                <tr>
+                    <td><strong>Phosphodiesterase-5 inhibitors</strong></td>
+                    <td><strong>Sildenafil (Viagra/Revatio)</strong>, tadalafil (Adcirca)</td>
+                    <td>Relax pulmonary vasculature via NO pathway</td>
+                    <td>Same drug as for ED &mdash; different indication! Do NOT combine with nitrates (fatal
+                        hypotension).</td>
+                </tr>
+                <tr>
+                    <td><strong>Prostanoids</strong></td>
+                    <td>Epoprostenol (Flolan), treprostinil</td>
+                    <td>Potent pulmonary vasodilators</td>
+                    <td>Epoprostenol: continuous IV, cannot be interrupted (rebound pulmonary HTN). Keep ice packs on
+                        medication.</td>
+                </tr>
+                <tr>
+                    <td><strong>Endothelin receptor antagonists</strong></td>
+                    <td>Bosentan (Tracleer), ambrisentan</td>
+                    <td>Block vasoconstrictor endothelin</td>
+                    <td>Hepatotoxic &mdash; monitor LFTs monthly. <strong>Teratogenic</strong> &mdash; requires
+                        pregnancy
+                        testing.</td>
+                </tr>
+                <tr>
+                    <td><strong>Diuretics</strong></td>
+                    <td>Furosemide (Lasix)</td>
+                    <td>Reduce fluid overload</td>
+                    <td>For right-sided HF symptoms. Monitor I&O, daily weights, K+ levels.</td>
+                </tr>
+                <tr>
+                    <td><strong>Digoxin</strong></td>
+                    <td>Lanoxin</td>
+                    <td>Improve RV contractility</td>
+                    <td>Narrow therapeutic index (0.5-2.0 ng/mL). Toxicity: bradycardia, N/V, visual disturbances
+                        (yellow/green halos). Check K+ (hypokalemia increases toxicity).</td>
+                </tr>
+            </table>
+
+            <div class="callout exam">
+                <div class="callout-title">EXAM TIP: Sildenafil for Pulmonary HTN <span class="tag tag-exam">HIGH
+                        YIELD</span></div>
+                <p>Sildenafil (Viagra) for pulmonary hypertension is a classic test question. Same drug, different
+                    indication. <strong>Absolutely do NOT combine with nitrates</strong> &mdash; causes severe,
+                    potentially
+                    fatal hypotension.</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 9: COVID-19 MATH+ -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title red" id="s9">IX. COVID-19 Medications (MATH+ Protocol) <span
+                    class="tag tag-heavy">PROF EMPHASIS</span></h2>
+
+            <table class="red">
+                <tr>
+                    <th>Letter</th>
+                    <th>Drug</th>
+                    <th>Floor Dose</th>
+                    <th>ICU Dose</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td><strong>M</strong></td>
+                    <td><strong>Methylprednisolone</strong></td>
+                    <td>Standard steroid dosing</td>
+                    <td>Higher doses</td>
+                    <td>Anti-inflammatory (first-line). COVID is very responsive to steroids.</td>
+                </tr>
+                <tr>
+                    <td><strong>A</strong></td>
+                    <td><strong>Ascorbic acid (Vitamin C)</strong></td>
+                    <td>500-1000 mg q6h</td>
+                    <td>50 mg/kg or 3000 mg</td>
+                    <td>Antioxidant support</td>
+                </tr>
+                <tr>
+                    <td><strong>T</strong></td>
+                    <td><strong>Thiamine (Vitamin B1)</strong></td>
+                    <td>Standard</td>
+                    <td>Higher doses</td>
+                    <td>Prevents metabolic derangement</td>
+                </tr>
+                <tr>
+                    <td><strong>H</strong></td>
+                    <td><strong>Heparin (LMWH)</strong></td>
+                    <td>Prophylactic</td>
+                    <td>Therapeutic</td>
+                    <td>Anticoagulation &mdash; COVID is highly coagulable</td>
+                </tr>
+                <tr>
+                    <td colspan="5"
+                        style="background:var(--red-bg);font-weight:700;text-align:center;color:var(--red);">
+                        + ADJUNCTS</td>
+                </tr>
+                <tr>
+                    <td>+</td>
+                    <td>Statin, Zinc, Vitamin D, Famotidine (Pepcid), Melatonin (6 mg qhs)</td>
+                    <td colspan="2">&mdash;</td>
+                    <td>Supportive; reduce inflammation and immune modulation</td>
+                </tr>
+            </table>
+
+            <p><strong>Remdesivir</strong> (Veklury) is the only <strong>FDA-approved antiviral</strong> for
+                hospitalized
+                COVID patients. Monitor liver and kidney function.</p>
+
+            <div class="callout pearl">
+                <div class="callout-title">Pearl: Steroids + Tube Feeds</div>
+                <p>When a COVID patient is on steroids AND tube feeds, <strong>check blood sugars q6h</strong>. Steroids
+                    cause hyperglycemia, and the tube feed provides a continuous glucose load.</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 10: SMOKING CESSATION -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title green" id="s10">X. Smoking Cessation Aids</h2>
+
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Examples</th>
+                    <th>Key Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>NRT (Nicotine Replacement)</strong></td>
+                    <td>Gum, inhaler, patch, sublingual tablet, lozenge</td>
+                    <td>Provides controlled nicotine to reduce withdrawal. Patch: new site daily, remove before sleep if
+                        causing vivid dreams.</td>
+                </tr>
+                <tr>
+                    <td><strong>Bupropion SR</strong> (Wellbutrin/Zyban)</td>
+                    <td>&mdash;</td>
+                    <td>Antidepressant that reduces nicotine cravings. Start 1-2 weeks before quit date. Lowers seizure
+                        threshold &mdash; avoid in seizure history.</td>
+                </tr>
+                <tr>
+                    <td><strong>Varenicline</strong> (Chantix)</td>
+                    <td>&mdash;</td>
+                    <td>Partial nicotine receptor agonist. Most effective cessation medication. Monitor for
+                        mood/behavior
+                        changes, suicidal ideation.</td>
+                </tr>
+                <tr>
+                    <td>Other</td>
+                    <td>Nortriptyline, clonidine</td>
+                    <td>Second-line agents. Clonidine: monitor for hypotension.</td>
+                </tr>
+            </table>
+
+            <!-- ============================================================ -->
+            <!-- SECTION 11: QUICK REFERENCE TABLE -->
+            <!-- ============================================================ -->
+
+            <h2 class="section-title teal" id="s11">XI. Quick Reference &mdash; Drug to Condition</h2>
+
+            <table class="teal">
+                <tr>
+                    <th>Condition</th>
+                    <th>First-Line / Key Drugs</th>
+                    <th>Remember</th>
+                </tr>
+                <tr>
+                    <td><strong>Acute asthma attack</strong></td>
+                    <td>SABA (albuterol) &rarr; systemic corticosteroids</td>
+                    <td>Rescue first, then control inflammation</td>
+                </tr>
+                <tr>
+                    <td><strong>Status asthmaticus</strong></td>
+                    <td>SABA + IV steroids + <strong>IV fluids</strong> + <strong>Mg sulfate 2g IV</strong></td>
+                    <td>Do NOT give non-selective beta-blockers. Metoprolol/atenolol OK.</td>
+                </tr>
+                <tr>
+                    <td><strong>COPD maintenance</strong></td>
+                    <td>LABA + LAMA (tiotropium). ICS if frequent exacerbations.</td>
+                    <td>Flu vaccine annually. Target SpO2 ~90%, not 100%.</td>
+                </tr>
+                <tr>
+                    <td><strong>COPD exacerbation</strong></td>
+                    <td>SABA + anticholinergic + systemic steroids + antibiotics (if infection)</td>
+                    <td>Do NOT over-oxygenate COPD patients.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pneumonia (bacterial)</strong></td>
+                    <td>Antibiotics (culture first!) + antipyretics. Increase fluids.</td>
+                    <td>Pneumo vaccine: PCV13 + PPSV23 one year apart (&ge;65 or immunocompromised &ge;16)</td>
+                </tr>
+                <tr>
+                    <td><strong>Cystic fibrosis</strong></td>
+                    <td>Chest PT + dornase alfa + pancrelipase + high-calorie diet</td>
+                    <td>Pancreatic enzymes BEFORE meals. Do NOT crush.</td>
+                </tr>
+                <tr>
+                    <td><strong>Sarcoidosis</strong></td>
+                    <td>Corticosteroids for ~1 year, taper after 12 months</td>
+                    <td>Stiff lungs from granulomas. PFTs + ABGs for workup.</td>
+                </tr>
+                <tr>
+                    <td><strong>PE (active)</strong></td>
+                    <td>Heparin GTT &rarr; transition to warfarin (INR 2-3)</td>
+                    <td>Prevention: SCDs + SubQ heparin/enoxaparin. D-dimer to rule OUT.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pulmonary HTN</strong></td>
+                    <td>CCBs, sildenafil, prostanoids, diuretics, digoxin</td>
+                    <td>Do NOT combine sildenafil with nitrates.</td>
+                </tr>
+                <tr>
+                    <td><strong>COVID-19 (hospitalized)</strong></td>
+                    <td>MATH+ protocol + remdesivir</td>
+                    <td>Steroids + tube feeds = check glucose q6h.</td>
+                </tr>
+                <tr>
+                    <td><strong>Opioid respiratory depression</strong></td>
+                    <td><strong>Naloxone (Narcan)</strong></td>
+                    <td>Shorter duration than opioid &mdash; watch for re-sedation.</td>
+                </tr>
+                <tr>
+                    <td><strong>Benzo respiratory depression</strong></td>
+                    <td><strong>Flumazenil (Romazicon)</strong></td>
+                    <td>Shorter duration than benzo &mdash; watch for re-sedation.</td>
+                </tr>
+                <tr>
+                    <td><strong>VAP prevention</strong></td>
+                    <td>Chlorhexidine q12h + oral care q2h + PPI/H2 + DVT prophylaxis</td>
+                    <td>VAP bundle: HOB &gt;30&deg;, daily SAT + SBT</td>
+                </tr>
+                <tr>
+                    <td><strong>ICU sedation</strong></td>
+                    <td>Propofol, fentanyl, midazolam, ketamine, dexmedetomidine</td>
+                    <td>Have reversal agents ordered BEFORE sedation. SAT daily.</td>
+                </tr>
+            </table>
+
+            <div class="callout warning">
+                <div class="callout-title">⚠️ Beta-Blocker Rule for Asthma <span class="tag tag-heavy">PROF
+                        EMPHASIS</span></div>
+                <p><strong>Do NOT give non-selective beta-blockers to asthma patients</strong> (propranolol, nadolol,
+                    etc.) &mdash; they block &beta;2 receptors in the lungs causing bronchospasm.
+                    <strong>Cardio-selective
+                        beta-blockers (metoprolol, atenolol) are OK</strong> because they primarily target &beta;1
+                    (heart),
+                    not &beta;2 (lungs).</p>
+            </div>
+
+            <div class="callout clinical">
+                <div class="callout-title">Final Pharmacy Pearl</div>
+                <p>Always remember the <strong>inhaler order</strong>: if a patient takes both a SABA and an ICS, use
+                    the
+                    <strong>SABA first</strong> (opens the airways), wait 1-5 minutes, then use the
+                    <strong>ICS</strong> (so the steroid can penetrate deeper into the now-open airways). And always
+                    <strong>rinse the mouth after ICS use</strong>.
+                </p>
+            </div>
+
+        </main>
+    </div>
+</body>
+
+</html>
