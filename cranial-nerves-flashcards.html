@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cranial Nerves — Flashcard Drill</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* SCREENS */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* START SCREEN */
+    .start-container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding-top: 1.5rem;
+    }
+
+    .start-container h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      color: #22d3ee;
+      margin-bottom: .25rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      font-size: .88rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* PROGRESS SUMMARY */
+    #progress-summary {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    #progress-summary h3 {
+      color: #94a3b8;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .5rem;
+    }
+
+    .overall-bar {
+      height: 10px;
+      background: #0f172a;
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: .4rem;
+    }
+
+    .mb-gotit {
+      background: #4ade80;
+      transition: width .4s;
+    }
+
+    .mb-unsure {
+      background: #fbbf24;
+      transition: width .4s;
+    }
+
+    .mb-missed {
+      background: #f87171;
+      transition: width .4s;
+    }
+
+    .overall-text {
+      font-size: .78rem;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    /* CATEGORY GRID */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cat-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cat-btn:hover {
+      border-color: var(--cat-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+    }
+
+    .cat-btn.selected {
+      border-color: var(--cat-color);
+      box-shadow: 0 0 0 2px var(--cat-color), 0 4px 12px rgba(0, 0, 0, .3);
+    }
+
+    .cat-name {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 600;
+      font-size: .88rem;
+      color: #e2e8f0;
+      margin-bottom: .25rem;
+    }
+
+    .cat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .cat-count {
+      font-size: .75rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: .4rem;
+    }
+
+    .cat-mastery-bar {
+      height: 5px;
+      background: #0f172a;
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: .2rem;
+    }
+
+    .cat-mastery-text {
+      font-size: .7rem;
+      color: #64748b;
+    }
+
+    /* OPTIONS ROW */
+    .options-row {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+
+    .toggle-label input {
+      accent-color: #22d3ee;
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: linear-gradient(135deg, #0891b2, #22d3ee);
+      color: #0f172a;
+      border: none;
+      padding: .65rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 211, 238, .3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: .6rem 1.2rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: #22d3ee;
+      color: #22d3ee;
+    }
+
+    .btn-weak {
+      background: transparent;
+      border: 1px solid #f87171;
+      color: #f87171;
+      padding: .6rem 1.2rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-weak:hover {
+      background: #f87171;
+      color: #0f172a;
+    }
+
+    .btn-reset {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: .78rem;
+      cursor: pointer;
+      padding: .4rem;
+      text-decoration: underline;
+    }
+
+    .btn-reset:hover {
+      color: #f87171;
+    }
+
+    .start-actions {
+      display: flex;
+      gap: .75rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+
+    /* CARD SCREEN */
+    .card-screen {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 3rem);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .progress-section {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .progress-text {
+      font-size: .82rem;
+      color: #94a3b8;
+      margin-bottom: .3rem;
+    }
+
+    .requeue-badge {
+      background: #fbbf24;
+      color: #0f172a;
+      font-size: .7rem;
+      padding: .1rem .4rem;
+      border-radius: 4px;
+      margin-left: .5rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #0f172a;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22d3ee, #0891b2);
+      transition: width .3s;
+      border-radius: 3px;
+    }
+
+    .cat-badge {
+      background: #334155;
+      color: #e2e8f0;
+      padding: .3rem .7rem;
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* FLASHCARD */
+    .flashcard {
+      perspective: 1200px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      min-height: 320px;
+      margin-bottom: 1rem;
+    }
+
+    .card-inner {
+      width: 100%;
+      max-width: 640px;
+      min-height: 300px;
+      position: relative;
+      transition: transform .55s;
+      transform-style: preserve-3d;
+    }
+
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 300px;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 2rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #1e293b, #334155);
+      border: 1px solid #475569;
+      z-index: 2;
+    }
+
+    .card-back {
+      background: linear-gradient(145deg, #1a2332, #1e293b);
+      border: 1px solid #475569;
+      transform: rotateY(180deg);
+    }
+
+    .card-content {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+
+    .card-content .answer-label {
+      color: #22d3ee;
+      font-weight: 700;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .4rem;
+    }
+
+    .card-content .answer-text {
+      margin-bottom: .75rem;
+    }
+
+    .card-content .tip-box {
+      background: rgba(34, 211, 238, .08);
+      border: 1px solid rgba(34, 211, 238, .25);
+      border-radius: 8px;
+      padding: .6rem .8rem;
+      margin-top: .5rem;
+      font-size: .88rem;
+      color: #67e8f9;
+    }
+
+    .card-content .tip-box strong {
+      color: #22d3ee;
+    }
+
+    .flip-hint {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .75rem;
+      color: #64748b;
+      letter-spacing: .5px;
+    }
+
+    /* CONFIDENCE CONTROLS */
+    .conf-controls {
+      display: flex;
+      gap: .75rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .conf-controls.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .conf-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .2rem;
+      padding: .7rem 1.5rem;
+      border-radius: 10px;
+      border: 2px solid;
+      cursor: pointer;
+      background: transparent;
+      transition: all .2s;
+      min-width: 100px;
+    }
+
+    .conf-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .conf-missed {
+      border-color: #f87171;
+      color: #f87171;
+    }
+
+    .conf-missed:hover {
+      background: rgba(248, 113, 113, .1);
+    }
+
+    .conf-unsure {
+      border-color: #fbbf24;
+      color: #fbbf24;
+    }
+
+    .conf-unsure:hover {
+      background: rgba(251, 191, 36, .1);
+    }
+
+    .conf-gotit {
+      border-color: #4ade80;
+      color: #4ade80;
+    }
+
+    .conf-gotit:hover {
+      background: rgba(74, 222, 128, .1);
+    }
+
+    .conf-icon {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .conf-label {
+      font-size: .82rem;
+      font-weight: 600;
+    }
+
+    .conf-key {
+      font-size: .68rem;
+      opacity: .6;
+    }
+
+    /* NAV ROW */
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .kb-hints {
+      font-size: .72rem;
+      color: #475569;
+    }
+
+    .kb-hints kbd {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: .1rem .35rem;
+      border-radius: 3px;
+      font-family: inherit;
+      margin: 0 .1rem;
+    }
+
+    /* RESULTS SCREEN */
+    .results-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding-top: 2rem;
+    }
+
+    .results-container h1 {
+      text-align: center;
+      color: #22d3ee;
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      border: 1px solid #334155;
+    }
+
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .stat-card .stat-label {
+      font-size: .8rem;
+      color: #94a3b8;
+      margin: .2rem 0;
+    }
+
+    .stat-card .stat-pct {
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    .stat-gotit .stat-value,
+    .stat-gotit .stat-pct {
+      color: #4ade80;
+    }
+
+    .stat-unsure .stat-value,
+    .stat-unsure .stat-pct {
+      color: #fbbf24;
+    }
+
+    .stat-missed .stat-value,
+    .stat-missed .stat-pct {
+      color: #f87171;
+    }
+
+    .breakdown-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .breakdown-section h3 {
+      color: #94a3b8;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .75rem;
+    }
+
+    .cat-stat-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .5rem;
+      font-size: .84rem;
+    }
+
+    .cat-stat-name {
+      width: 160px;
+      color: #e2e8f0;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cat-stat-bar {
+      flex: 1;
+      height: 8px;
+      background: #0f172a;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .bar-seg {
+      transition: width .4s;
+    }
+
+    .bar-gotit {
+      background: #4ade80;
+    }
+
+    .bar-unsure {
+      background: #fbbf24;
+    }
+
+    .bar-missed {
+      background: #f87171;
+    }
+
+    .cat-stat-pct {
+      width: 45px;
+      text-align: right;
+      color: #94a3b8;
+      font-size: .78rem;
+    }
+
+    .weak-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .weak-section h3 {
+      color: #f87171;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .5rem;
+    }
+
+    .weak-item {
+      display: flex;
+      justify-content: space-between;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: .5rem .75rem;
+      margin-bottom: .4rem;
+      font-size: .84rem;
+    }
+
+    .weak-item span:last-child {
+      color: #f87171;
+      font-weight: 600;
+    }
+
+    .results-actions {
+      display: flex;
+      gap: .75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    /* MOBILE */
+    @media(max-width:600px) {
+      .screen {
+        padding: 1rem;
+      }
+
+      .cat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .card-face {
+        padding: 1.5rem 1.25rem 2.5rem;
+      }
+
+      .conf-btn {
+        padding: .6rem 1rem;
+        min-width: 80px;
+      }
+
+      .cat-stat-name {
+        width: 100px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== START SCREEN ========== -->
+  <div id="screen-start" class="screen active">
+    <div class="start-container">
+      <h1>Cranial Nerves — Flashcard Drill</h1>
+      <p class="subtitle">All 12 cranial nerves &mdash; 36 cards across 6 categories</p>
+
+      <div id="progress-summary">
+        <h3>Overall Progress</h3>
+        <div class="overall-bar">
+          <div class="mb-gotit" id="ov-gotit"></div>
+          <div class="mb-unsure" id="ov-unsure"></div>
+          <div class="mb-missed" id="ov-missed"></div>
+        </div>
+        <div class="overall-text" id="ov-text"></div>
+      </div>
+
+      <div class="cat-grid" id="cat-grid"></div>
+
+      <div class="options-row">
+        <label class="toggle-label"><input type="checkbox" id="chk-shuffle" checked> Shuffle cards</label>
+        <label class="toggle-label"><input type="checkbox" id="chk-multi"> Multi-select categories</label>
+      </div>
+
+      <div class="start-actions">
+        <button class="btn-weak" id="btn-weak" onclick="studyWeak()">Study Weak Cards (0)</button>
+        <button class="btn-primary" onclick="startAll()">Study All Cards</button>
+        <button class="btn-secondary" id="btn-pe" onclick="studyProfEmphasis()"
+          style="border-color:#f87171;color:#f87171">🟥 Prof Emphasis Only</button>
+        <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CARD SCREEN ========== -->
+  <div id="screen-card" class="screen">
+    <div class="card-screen">
+      <div class="card-header">
+        <div class="progress-section">
+          <div class="progress-text"><span id="cur-num">1</span> / <span id="tot-num">0</span><span
+              class="requeue-badge" id="requeue-info" style="display:none"></span></div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="prog-fill"></div>
+          </div>
+        </div>
+        <span class="cat-badge" id="cur-cat">Category</span>
+      </div>
+
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-inner" id="card-inner">
+          <div class="card-face card-front">
+            <div class="card-content" id="front-content"></div>
+            <div class="flip-hint">SPACE or click to flip</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-content" id="back-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conf-controls" id="conf-controls">
+        <button class="conf-btn conf-missed" onclick="rate('missed')">
+          <span class="conf-icon">&times;</span>
+          <span class="conf-label">Missed</span>
+          <span class="conf-key">Press 1</span>
+        </button>
+        <button class="conf-btn conf-unsure" onclick="rate('unsure')">
+          <span class="conf-icon">~</span>
+          <span class="conf-label">Unsure</span>
+          <span class="conf-key">Press 2</span>
+        </button>
+        <button class="conf-btn conf-gotit" onclick="rate('gotit')">
+          <span class="conf-icon">&check;</span>
+          <span class="conf-label">Got It</span>
+          <span class="conf-key">Press 3</span>
+        </button>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-secondary" onclick="exitSession()">Exit Session</button>
+        <div class="kb-hints"><kbd>Space</kbd> Flip &nbsp;<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Rate &nbsp;<kbd>Esc</kbd>
+          Exit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== RESULTS SCREEN ========== -->
+  <div id="screen-results" class="screen">
+    <div class="results-container">
+      <h1>Session Complete</h1>
+      <div class="stats-row">
+        <div class="stat-card stat-gotit">
+          <div class="stat-value" id="res-gotit-n">0</div>
+          <div class="stat-label">Got It</div>
+          <div class="stat-pct" id="res-gotit-p">0%</div>
+        </div>
+        <div class="stat-card stat-unsure">
+          <div class="stat-value" id="res-unsure-n">0</div>
+          <div class="stat-label">Unsure</div>
+          <div class="stat-pct" id="res-unsure-p">0%</div>
+        </div>
+        <div class="stat-card stat-missed">
+          <div class="stat-value" id="res-missed-n">0</div>
+          <div class="stat-label">Missed</div>
+          <div class="stat-pct" id="res-missed-p">0%</div>
+        </div>
+      </div>
+      <div class="breakdown-section" id="breakdown"></div>
+      <div class="weak-section" id="weak-section"></div>
+      <div class="results-actions">
+        <button class="btn-primary" id="btn-rev-missed" onclick="reviewMissed()">Review Missed Cards</button>
+        <button class="btn-secondary" id="btn-rev-mu" onclick="reviewMissedAndUnsure()">Review Missed + Unsure</button>
+        <button class="btn-secondary" onclick="showScreen('start')">New Session</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DATA ====================
+    const STORAGE_KEY = 'cranial-nerves-fc-v1';
+
+    const categories = {
+      'overview': { name: 'Overview & Mnemonics', color: '#f59e0b' },
+      'sensory': { name: 'Sensory Nerves', color: '#3b82f6' },
+      'motor': { name: 'Motor Nerves', color: '#ef4444' },
+      'mixed': { name: 'Mixed Nerves', color: '#8b5cf6' },
+      'exam': { name: 'Clinical Exam', color: '#14b8a6' },
+      'disorders': { name: 'Disorders & Nursing', color: '#ec4899' }
+    };
+
+    const cards = [
+      // ===== OVERVIEW & MNEMONICS (6 cards) =====
+      { id: 1, cat: 'overview', q: 'Name all 12 cranial nerves in order (CN I \u2013 CN XII).', a: '<strong>I</strong> Olfactory<br><strong>II</strong> Optic<br><strong>III</strong> Oculomotor<br><strong>IV</strong> Trochlear<br><strong>V</strong> Trigeminal<br><strong>VI</strong> Abducens<br><strong>VII</strong> Facial<br><strong>VIII</strong> Vestibulocochlear (Acoustic)<br><strong>IX</strong> Glossopharyngeal<br><strong>X</strong> Vagus<br><strong>XI</strong> Accessory (Spinal Accessory)<br><strong>XII</strong> Hypoglossal', tip: 'Mnemonic: <strong>O</strong>h <strong>O</strong>h <strong>O</strong>h <strong>T</strong>o <strong>T</strong>ouch <strong>A</strong>nd <strong>F</strong>eel <strong>V</strong>ery <strong>G</strong>reen <strong>V</strong>egetables, <strong>A</strong>H!' },
+      { id: 2, cat: 'overview', q: 'What is the mnemonic for cranial nerve TYPE (Sensory, Motor, or Both)?', a: '<strong>S</strong>ome <strong>S</strong>ay <strong>M</strong>arry <strong>M</strong>oney <strong>B</strong>ut <strong>M</strong>y <strong>B</strong>rother <strong>S</strong>ays <strong>B</strong>ig <strong>B</strong>rains <strong>M</strong>atter <strong>M</strong>ore<br><br>I-Sensory, II-Sensory, III-Motor, IV-Motor, V-Both, VI-Motor, VII-Both, VIII-Sensory, IX-Both, X-Both, XI-Motor, XII-Motor', tip: 'EXAM TIP: If a nerve is SENSORY, testing involves the patient PERCEIVING a stimulus. If MOTOR, testing involves the patient PERFORMING a movement.' },
+      { id: 3, cat: 'overview', q: 'Where do cranial nerves originate \u2014 brain or spinal cord?', a: 'All 12 cranial nerves emerge directly from the <strong>brain</strong> (mostly brainstem, except CN I from cerebrum and CN II from diencephalon). This is what distinguishes them from spinal nerves.', tip: 'CN I and II are the only cranial nerves that emerge from the cerebrum/diencephalon, not the brainstem.' },
+      { id: 4, cat: 'overview', q: 'Which cranial nerves are tested together when assessing the gag reflex?', a: '<strong>CN IX (Glossopharyngeal)</strong> \u2014 sensory limb (feels the touch)<br><strong>CN X (Vagus)</strong> \u2014 motor limb (triggers the gag)<br><br>Both must be intact for a normal gag reflex. Absent gag = aspiration risk.', tip: 'PROF EMPHASIS: Absent gag reflex is a key finding in brainstem assessment and determines NPO status and aspiration precautions.' },
+      { id: 5, cat: 'overview', q: 'Which cranial nerves control eye movement? What is the mnemonic?', a: '<strong>CN III</strong> (Oculomotor) \u2014 most eye muscles, pupil constriction, eyelid elevation<br><strong>CN IV</strong> (Trochlear) \u2014 superior oblique (looks down and in)<br><strong>CN VI</strong> (Abducens) \u2014 lateral rectus (ABducts the eye = looks laterally)<br><br>Mnemonic: <strong>LR6-SO4-3</strong> (Lateral Rectus = CN 6, Superior Oblique = CN 4, rest = CN 3)', tip: 'EXAM TIP: CN VI palsy = eye cannot look LATERALLY (turns inward). CN III palsy = ptosis + dilated pupil + eye turns down-and-out.' },
+      { id: 6, cat: 'overview', q: 'Which cranial nerve is the LONGEST and has the widest distribution?', a: '<strong>CN X \u2014 Vagus nerve</strong>. It travels from the brainstem all the way down through the neck, thorax, and abdomen. It innervates the heart, lungs, and most of the GI tract.<br><br>\u201cVagus\u201d means <strong>wanderer</strong> \u2014 it wanders throughout the body.', tip: 'EXAM TIP: Vagal stimulation \u2192 bradycardia, increased GI motility. Vagus injury \u2192 hoarseness, dysphagia, loss of gag reflex.' },
+
+      // ===== SENSORY NERVES (3 cards) =====
+      { id: 7, cat: 'sensory', q: 'CN I \u2014 Olfactory Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Sensory<br><strong>Function:</strong> Sense of smell<br><strong>Location:</strong> Emerges from cerebral cortex (olfactory bulb on cribriform plate of ethmoid bone) \u2192 nasal cavity<br><strong>Test:</strong> Have patient close eyes and occlude one nostril. Present familiar, non-irritating smells (coffee, vanilla, peppermint). Patient identifies the smell. Test each nostril separately.', tip: 'Do NOT use ammonia or alcohol \u2014 these stimulate CN V (trigeminal) pain fibers, not smell.' },
+      { id: 8, cat: 'sensory', q: 'CN II \u2014 Optic Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Sensory<br><strong>Function:</strong> Vision (visual acuity, visual fields, color vision)<br><strong>Location:</strong> Emerges from diencephalon \u2192 retina of the eye. Optic chiasm is where fibers partially cross.<br><strong>Test:</strong> Snellen chart (acuity), confrontation visual field test (peripheral vision), fundoscopic exam (optic disc), pupillary light reflex (afferent limb).', tip: 'EXAM TIP: CN II carries the AFFERENT (sensory) limb of the pupillary light reflex. CN III carries the EFFERENT (motor) limb. A blown pupil = CN III compression.' },
+      { id: 9, cat: 'sensory', q: 'CN VIII \u2014 Vestibulocochlear (Acoustic) Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Sensory<br><strong>Function:</strong> TWO branches: <strong>Cochlear</strong> = hearing; <strong>Vestibular</strong> = balance and equilibrium<br><strong>Location:</strong> Emerges from pons-medulla junction \u2192 inner ear<br><strong>Test:</strong> Whisper test or audiometry (cochlear branch). Romberg test (stand feet together, eyes closed \u2014 vestibular). Watch for nystagmus.', tip: 'EXAM TIP: Sensorineural hearing loss = CN VIII or cochlear damage. Conductive = middle ear problem. Weber/Rinne tests differentiate them.' },
+
+      // ===== MOTOR NERVES (6 cards) =====
+      { id: 10, cat: 'motor', q: 'CN III \u2014 Oculomotor Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Motor<br><strong>Function:</strong> Moves most eye muscles (superior/medial/inferior rectus, inferior oblique), raises upper eyelid (levator palpebrae), constricts pupil (parasympathetic)<br><strong>Location:</strong> Emerges from midbrain \u2192 orbit<br><strong>Test:</strong> Track finger through 6 cardinal positions of gaze (H-pattern). Check for ptosis. Pupillary light reflex (efferent/motor limb).', tip: 'PROF EMPHASIS: A \u201cblown pupil\u201d (fixed, dilated) = CN III compression, often from uncal herniation. This is an EMERGENCY finding.' },
+      { id: 11, cat: 'motor', q: 'CN IV \u2014 Trochlear Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Motor<br><strong>Function:</strong> Innervates the <strong>superior oblique</strong> muscle \u2014 allows the eye to look <strong>down and inward</strong><br><strong>Location:</strong> Emerges from dorsal midbrain (only CN to exit from the back of the brainstem!), crosses to opposite side<br><strong>Test:</strong> Ask patient to look down and medially (toward nose). Difficulty = CN IV palsy. Patient may tilt head to compensate.', tip: 'Memory trick: CN IV = Trochlear = \u201cpulley\u201d (trochlea). The superior oblique loops through a bony pulley in the orbit.' },
+      { id: 12, cat: 'motor', q: 'CN VI \u2014 Abducens Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Motor<br><strong>Function:</strong> Innervates the <strong>lateral rectus</strong> muscle \u2014 ABducts the eye (moves it laterally/outward)<br><strong>Location:</strong> Emerges from pons \u2192 orbit<br><strong>Test:</strong> Ask patient to look laterally (toward the ear). Inability to abduct = CN VI palsy \u2192 eye turns inward (esotropia).', tip: 'Memory trick: <strong>LR6</strong> \u2014 Lateral Rectus = CN 6. \u201cSix Lateral.\u201d CN VI is the most commonly injured CN from increased ICP.' },
+      { id: 13, cat: 'motor', q: 'CN XI \u2014 Accessory (Spinal Accessory) Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Motor<br><strong>Function:</strong> Innervates <strong>sternocleidomastoid</strong> (SCM) and <strong>trapezius</strong> muscles \u2014 head turning and shoulder shrugging<br><strong>Location:</strong> Emerges from medulla AND upper spinal cord \u2192 neck and shoulder<br><strong>Test:</strong> Ask patient to shrug shoulders against resistance (trapezius). Ask patient to turn head against resistance (SCM). Compare both sides.', tip: 'EXAM TIP: After neck surgery (carotid endarterectomy, radical neck dissection), CN XI may be damaged \u2192 inability to shrug shoulder on affected side.' },
+      { id: 14, cat: 'motor', q: 'CN XII \u2014 Hypoglossal Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Motor<br><strong>Function:</strong> Tongue movement (speech, swallowing, food manipulation)<br><strong>Location:</strong> Emerges from medulla \u2192 tongue muscles<br><strong>Test:</strong> Ask patient to stick out tongue. <strong>Deviation toward the AFFECTED side</strong> = nerve damage on that side. Also test tongue strength by pushing against cheek.', tip: 'PROF EMPHASIS: \u201cThe tongue points to the problem.\u201d Tongue deviates TOWARD the side of the lesion. Also assess speech clarity \u2014 CN XII damage \u2192 dysarthria.' },
+      { id: 15, cat: 'motor', q: 'How do you remember that CN XII controls the tongue?', a: '<strong>Hypo-GLOSSAL</strong> \u2014 \u201cglossal\u201d means tongue (like \u201cglossitis\u201d = tongue inflammation). The <strong>hypo</strong> prefix means \u201cunder\u201d \u2014 the nerve runs under the tongue.<br><br>CN 12 controls the tongue with its <strong>12</strong> muscles!', tip: 'EXAM TIP: If a stroke patient has tongue deviation + dysphagia + dysarthria, suspect CN XII involvement.' },
+
+      // ===== MIXED NERVES (6 cards) =====
+      { id: 16, cat: 'mixed', q: 'CN V \u2014 Trigeminal Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Both (sensory + motor)<br><strong>Function:</strong> SENSORY = facial sensation in 3 divisions (V1 ophthalmic, V2 maxillary, V3 mandibular). MOTOR = muscles of mastication (chewing: masseter, temporalis, pterygoids)<br><strong>Location:</strong> Largest CN; emerges from pons \u2192 face<br><strong>Test:</strong> Sensory: light touch with cotton wisp on forehead, cheek, jaw. Motor: clench jaw, palpate masseter. Also corneal reflex (afferent limb).', tip: 'PROF EMPHASIS: CN V is affected in <strong>trigeminal neuralgia (tic douloureux)</strong> \u2014 severe stabbing facial pain. Treat with carbamazepine (Tegretol). Avoid facial stimulation triggers!' },
+      { id: 17, cat: 'mixed', q: 'What are the three divisions of the trigeminal nerve (CN V)?', a: '<strong>V1 \u2014 Ophthalmic:</strong> Forehead, upper eyelid, nose bridge (sensory only)<br><strong>V2 \u2014 Maxillary:</strong> Cheek, upper lip, upper teeth (sensory only)<br><strong>V3 \u2014 Mandibular:</strong> Lower jaw, lower lip, chin (sensory AND motor \u2014 this is the branch with the chewing muscles)', tip: 'EXAM TIP: Touch each zone separately when testing. The corneal reflex tests V1 (ophthalmic division) \u2014 the afferent limb.' },
+      { id: 18, cat: 'mixed', q: 'CN VII \u2014 Facial Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Both (sensory + motor)<br><strong>Function:</strong> MOTOR = facial expression muscles (smile, frown, close eyes, raise eyebrows), lacrimal and salivary glands. SENSORY = taste on anterior 2/3 of tongue<br><strong>Location:</strong> Emerges from pons \u2192 face, tongue, salivary glands<br><strong>Test:</strong> Motor: smile, frown, raise eyebrows, puff cheeks, squeeze eyes shut (compare symmetry). Sensory: taste test with sugar/salt/lemon on anterior tongue.', tip: 'PROF EMPHASIS: CN VII is affected in <strong>Bell\'s Palsy</strong> \u2014 sudden unilateral facial paralysis. Treat with steroids within 72 hours. Reassure patient it is NOT a stroke. Protect eye (artificial tears, patch at night).' },
+      { id: 19, cat: 'mixed', q: 'CN IX \u2014 Glossopharyngeal Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Both (sensory + motor)<br><strong>Function:</strong> SENSORY = taste on posterior 1/3 of tongue, sensation in pharynx (sensory limb of gag reflex), monitors carotid body (BP/O2). MOTOR = pharyngeal muscles (swallowing)<br><strong>Location:</strong> Emerges from medulla \u2192 tongue, pharynx, carotid body<br><strong>Test:</strong> Gag reflex (sensory limb \u2014 feels the touch). Test taste on posterior tongue. Say \u201cahh\u201d and watch uvula.', tip: 'EXAM TIP: CN IX monitors the carotid body and sinus, helping regulate blood pressure and respiratory drive. Carotid massage stimulates CN IX.' },
+      { id: 20, cat: 'mixed', q: 'CN X \u2014 Vagus Nerve<br>Type? Function? Location? How to test?', a: '<strong>Type:</strong> Both (sensory + motor)<br><strong>Function:</strong> MOTOR = pharynx, larynx (voice), soft palate (swallowing). PARASYMPATHETIC = slows HR, increases GI motility, bronchoconstriction. SENSORY = visceral sensation from thorax/abdomen<br><strong>Location:</strong> Emerges from medulla \u2192 \u201cwanders\u201d through neck, thorax, abdomen<br><strong>Test:</strong> Gag reflex (motor limb \u2014 triggers the gag). Say \u201cahh\u201d \u2014 uvula should rise midline. Assess voice quality (hoarseness = vagus injury).', tip: 'PROF EMPHASIS: Vagal maneuvers (bearing down, carotid massage) stimulate CN X \u2192 bradycardia. After thyroidectomy, check voice \u2014 recurrent laryngeal nerve (branch of vagus) may be damaged.' },
+      { id: 21, cat: 'mixed', q: 'How do you differentiate CN IX vs CN X in the gag reflex?', a: '<strong>CN IX (Glossopharyngeal)</strong> = AFFERENT/sensory limb. It SENSES the touch on the posterior pharynx.<br><br><strong>CN X (Vagus)</strong> = EFFERENT/motor limb. It triggers the actual GAG response (pharyngeal muscle contraction).<br><br>Both must work for a normal gag reflex. Test by touching posterior pharynx with tongue depressor.', tip: 'EXAM TIP: In comatose patients, absent gag reflex means both CN IX and X are affected. This is a brainstem death criterion and means the patient cannot protect their airway.' },
+
+      // ===== CLINICAL EXAM (8 cards) =====
+      { id: 22, cat: 'exam', q: 'What is the corneal reflex and which cranial nerves does it test?', a: '<strong>Afferent (sensory):</strong> CN V (trigeminal, V1 ophthalmic division) \u2014 FEELS the touch<br><strong>Efferent (motor):</strong> CN VII (facial) \u2014 closes the eyelid (blink)<br><br><strong>Test:</strong> Lightly touch cornea with wisp of cotton. Normal response = bilateral blink.', tip: 'EXAM TIP: An unconscious patient with no corneal reflex has lost both CN V and VII function \u2014 concerning for brainstem involvement.' },
+      { id: 23, cat: 'exam', q: 'What is the pupillary light reflex and which cranial nerves are involved?', a: '<strong>Afferent (sensory):</strong> CN II (optic) \u2014 detects the light<br><strong>Efferent (motor):</strong> CN III (oculomotor) \u2014 constricts the pupil<br><br>Shine light in one eye \u2192 BOTH pupils constrict (direct AND consensual response). If only one constricts, localize the problem based on which limb is damaged.', tip: 'PROF EMPHASIS: <strong>Fixed, dilated pupil = CN III compression</strong> (uncal herniation). This is an emergency \u2014 notify provider immediately and intervene to lower ICP.' },
+      { id: 24, cat: 'exam', q: 'What is the swallowing assessment and which cranial nerves are involved?', a: 'Swallowing involves <strong>5 cranial nerves</strong>:<br><strong>CN V</strong> \u2014 jaw/chewing (oral phase)<br><strong>CN VII</strong> \u2014 lips/cheeks (oral phase)<br><strong>CN IX</strong> \u2014 pharyngeal sensation<br><strong>CN X</strong> \u2014 pharyngeal muscles and laryngeal closure<br><strong>CN XII</strong> \u2014 tongue pushes bolus backward<br><br>Test: Check gag reflex first, then small sips of water.', tip: 'EXAM TIP: Post-stroke, ALWAYS assess swallow before giving ANY food/drink. Dysphagia screening is a nursing priority.' },
+      { id: 25, cat: 'exam', q: 'How do you test eye movements using the \u201cH-pattern\u201d and which CNs does it assess?', a: 'Hold finger ~12 inches from patient\'s face. Move in an <strong>H pattern</strong>: right, center, left, center, up-right, down-right, up-left, down-left.<br><br>Tests: <strong>CN III</strong> (most directions), <strong>CN IV</strong> (down and in), <strong>CN VI</strong> (lateral gaze).<br><br>Watch for nystagmus, inability to follow, or eye lag.', tip: 'EXAM TIP: If one eye doesn\'t move laterally = CN VI palsy (most common from increased ICP). Eye \u201cdown and out\u201d with ptosis = CN III palsy.' },
+      { id: 26, cat: 'exam', q: 'Bell\'s Palsy (CN VII) vs Stroke: How do you tell them apart?', a: '<strong>Bell\'s Palsy (peripheral CN VII):</strong> ENTIRE half of face affected \u2014 cannot raise eyebrow, close eye, OR smile. Forehead IS involved.<br><br><strong>Stroke (central/upper motor neuron):</strong> Only LOWER face affected \u2014 can still raise eyebrow and wrinkle forehead. Forehead SPARED due to bilateral innervation.', tip: 'PROF EMPHASIS: Ask the patient to raise both eyebrows. Can raise eyebrow \u2192 stroke. Cannot \u2192 Bell\'s palsy. Classic exam question!' },
+      { id: 27, cat: 'exam', q: 'What bedside tests assess CN VIII (vestibulocochlear)?', a: '<strong>Cochlear branch (hearing):</strong><br>\u2022 Whisper test: stand 2 feet away, whisper<br>\u2022 Weber test: tuning fork on head \u2014 should hear equally<br>\u2022 Rinne test: tuning fork on mastoid then near ear \u2014 air conduction > bone conduction<br><br><strong>Vestibular branch (balance):</strong><br>\u2022 Romberg test: stand feet together, eyes closed. Sway = positive<br>\u2022 Assess for nystagmus', tip: 'EXAM TIP: Weber lateralizes TO the affected ear in conductive loss, AWAY from affected ear in sensorineural loss.' },
+      { id: 28, cat: 'exam', q: 'Which cranial nerves are assessed during GCS evaluation?', a: '<strong>Eye Opening:</strong> CN II (sees stimulus), CN V (feels pain)<br><strong>Motor Response:</strong> CN VII (facial grimace), CN XI (limb movement)<br><strong>Verbal Response:</strong> CN IX, X, XII (speech/vocalization)<br><br>Pupillary assessment (alongside GCS): CN II + CN III', tip: 'EXAM TIP: GCS \u2264 8 = COMA \u2192 patient needs airway protection (intubation). LOC is the most sensitive indicator of neurological change.' },
+      { id: 29, cat: 'exam', q: 'What is the sequence for a systematic cranial nerve exam (I\u2013XII)?', a: 'I \u2014 Smell test<br>II \u2014 Vision, visual fields, pupil afferent<br>III, IV, VI \u2014 Eye movements (H-pattern), pupil efferent, ptosis<br>V \u2014 Facial sensation (3 zones), jaw clench, corneal reflex afferent<br>VII \u2014 Facial expressions, corneal efferent, taste anterior tongue<br>VIII \u2014 Hearing, balance (Romberg)<br>IX, X \u2014 Gag reflex, swallow, say \u201cahh\u201d<br>XI \u2014 Shoulder shrug, head turn vs resistance<br>XII \u2014 Tongue protrusion, tongue strength', tip: 'Rapid screen in emergency: pupils (II, III), eye movements (III, IV, VI), facial symmetry (VII), gag (IX, X), tongue (XII). Takes < 2 minutes.' },
+
+      // ===== DISORDERS & NURSING (7 cards) =====
+      { id: 30, cat: 'disorders', q: 'What is trigeminal neuralgia and how is it managed?', a: '<strong>CN V disorder</strong><br><strong>Presentation:</strong> Paroxysmal, severe, STABBING facial pain along one or more branches. Unilateral, brief but excruciating.<br><strong>Triggers:</strong> Touching face, brushing teeth, chewing, cold air<br><strong>Treatment:</strong> Carbamazepine (Tegretol) first-line. Also gabapentin, phenytoin. Surgical: microvascular decompression.<br><strong>Nursing:</strong> Avoid triggers, soft foods on unaffected side, lukewarm water, no drafts.', tip: 'PROF EMPHASIS: Patients may neglect hygiene and nutrition due to pain fear. Carbamazepine requires CBC monitoring (aplastic anemia risk).' },
+      { id: 31, cat: 'disorders', q: 'What is Bell\'s Palsy and key nursing interventions?', a: '<strong>CN VII disorder</strong><br><strong>Presentation:</strong> SUDDEN unilateral facial paralysis, increased tearing, difficulty speaking/eating.<br><strong>Recovery:</strong> Most recover in 3-5 weeks.<br><strong>Treatment:</strong> Corticosteroids within 72 hours, antivirals if HSV.<br><strong>Nursing:</strong> Eye protection (artificial tears, tape shut at night, sunglasses), meals on unaffected side, facial exercises, <strong>Reassure: NOT a stroke!</strong>', tip: 'PROF EMPHASIS: Bell\'s affects ENTIRE side of face (including forehead). Stroke spares forehead. Heavily tested distinction.' },
+      { id: 32, cat: 'disorders', q: 'Fixed, dilated pupil on one side \u2014 what CN is involved?', a: '<strong>CN III (Oculomotor) compression</strong><br><br>Classic sign of <strong>uncal herniation</strong> \u2014 temporal lobe herniates over tentorium, compresses CN III parasympathetic fibers.<br><br>Additional signs: ptosis, eye \u201cdown and out,\u201d cannot move eye upward/medially.<br><br><strong>NEUROSURGICAL EMERGENCY.</strong>', tip: 'PROF EMPHASIS: Unilateral blown pupil in head injury = impending herniation. Intervene: HOB 30\u00b0, mannitol, hyperventilation (emergent only).' },
+      { id: 33, cat: 'disorders', q: 'Post-thyroidectomy \u2014 which CN must you assess and how?', a: '<strong>CN X (Vagus)</strong> \u2014 specifically the <strong>recurrent laryngeal nerve</strong> branch.<br><br>Runs close to thyroid gland, can be damaged during surgery.<br><br><strong>Assess:</strong> Have patient speak \u2014 listen for hoarseness or stridor. Say \u201ceee\u201d \u2014 should be clear.<br><br>Bilateral damage \u2192 airway obstruction (cords cannot abduct) \u2192 EMERGENCY.', tip: 'PROF EMPHASIS: Assess voice Q1-2 hours post-op. Keep trach tray and calcium gluconate at bedside (for hypocalcemia from parathyroid removal).' },
+      { id: 34, cat: 'disorders', q: 'How does vagus nerve (CN X) stimulation affect the heart?', a: '<strong>Vagus = parasympathetic \u2192 BRADYCARDIA</strong><br><br><strong>Vagal maneuvers (treat SVT):</strong> Valsalva, carotid massage (one side only!), cold water on face<br><br><strong>Excessive vagal tone:</strong> Syncope, severe bradycardia, asystole<br><br><strong>Treatment:</strong> Atropine (blocks parasympathetic)', tip: 'EXAM TIP: Suctioning can stimulate vagus \u2192 bradycardia. Always pre-oxygenate and monitor HR during suctioning.' },
+      { id: 35, cat: 'disorders', q: 'What cranial nerves are tested for brain death determination?', a: '<strong>Brain death = absence of ALL brainstem reflexes:</strong><br>\u2022 Pupils fixed/dilated (CN II, III)<br>\u2022 Corneal reflex absent (CN V, VII)<br>\u2022 Oculocephalic reflex absent (CN III, VI, VIII)<br>\u2022 Gag reflex absent (CN IX, X)<br>\u2022 Cough reflex absent (CN X)<br>\u2022 Apnea test \u2014 no effort when CO\u2082 reaches 60 mmHg<br><br>Two physicians must confirm.', tip: 'PROF EMPHASIS: Brain death = cardiac death. Patient must be removed from life support (unless organ donation).' },
+      { id: 36, cat: 'disorders', q: 'Which cranial nerves are most commonly affected by increased ICP?', a: '<strong>CN III:</strong> Unilateral blown pupil (uncal herniation compresses CN III). Ipsilateral to lesion.<br><br><strong>CN VI:</strong> MOST commonly affected by generalized ICP (long intracranial course). Cannot abduct eye \u2192 diplopia laterally. May be bilateral (false localizing sign).<br><br><strong>CN IV:</strong> Can be injured in severe TBI. Difficulty looking down and in.', tip: 'EXAM TIP: CN VI palsy is the MOST COMMON false localizing sign of increased ICP \u2014 elevated pressure but doesn\'t localize WHERE the lesion is.' }
+    ];
+
+
+
+    // ==================== STATE ====================
+    let state = {
+      deck: [],
+      idx: 0,
+      flipped: false,
+      results: {},
+      overflow: [],
+      totalOriginal: 0
+    };
+
+    // ==================== STORAGE ====================
+    function loadProgress() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { return {}; }
+    }
+    function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+    function saveSessionResults() {
+      const p = loadProgress();
+      Object.entries(state.results).forEach(([id, conf]) => { p[id] = conf; });
+      saveProgress(p);
+    }
+
+    // ==================== SCREENS ====================
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + name).classList.add('active');
+      if (name === 'start') renderStartScreen();
+    }
+
+    function renderStartScreen() {
+      const p = loadProgress();
+      const grid = document.getElementById('cat-grid');
+      grid.innerHTML = '';
+
+      let totalGotit = 0, totalUnsure = 0, totalMissed = 0, totalCards = cards.length;
+
+      Object.entries(categories).forEach(([catId, cat]) => {
+        const catCards = cards.filter(c => c.cat === catId);
+        let g = 0, u = 0, m = 0;
+        catCards.forEach(c => {
+          const r = p[c.id];
+          if (r === 'gotit') { g++; totalGotit++; }
+          else if (r === 'unsure') { u++; totalUnsure++; }
+          else if (r === 'missed') { m++; totalMissed++; }
+        });
+        const total = catCards.length;
+        const gP = total ? (g / total * 100).toFixed(0) : 0;
+        const uP = total ? (u / total * 100).toFixed(0) : 0;
+        const mP = total ? (m / total * 100).toFixed(0) : 0;
+
+        const btn = document.createElement('div');
+        btn.className = 'cat-btn';
+        btn.dataset.cat = catId;
+        btn.style.setProperty('--cat-color', cat.color);
+        btn.innerHTML = `
+      <span class="cat-name"><span class="cat-dot" style="background:${cat.color}"></span>${cat.name}</span>
+      <span class="cat-count">${total} cards</span>
+      <div class="cat-mastery">
+        <div class="cat-mastery-bar">
+          <div class="mb-gotit" style="width:${gP}%"></div>
+          <div class="mb-unsure" style="width:${uP}%"></div>
+          <div class="mb-missed" style="width:${mP}%"></div>
+        </div>
+        <div class="cat-mastery-text">${gP}% mastered</div>
+      </div>`;
+        btn.addEventListener('click', () => handleCatClick(btn, catId));
+        grid.appendChild(btn);
+      });
+
+      // Progress summary
+      const studied = totalGotit + totalUnsure + totalMissed;
+      const ps = document.getElementById('progress-summary');
+      if (studied > 0) {
+        ps.style.display = 'block';
+        document.getElementById('ov-gotit').style.width = (totalGotit / totalCards * 100) + '%';
+        document.getElementById('ov-unsure').style.width = (totalUnsure / totalCards * 100) + '%';
+        document.getElementById('ov-missed').style.width = (totalMissed / totalCards * 100) + '%';
+        document.getElementById('ov-text').textContent = `${totalGotit} mastered \u00b7 ${totalUnsure} unsure \u00b7 ${totalMissed} missed \u00b7 ${totalCards - studied} unseen`;
+      } else {
+        ps.style.display = 'none';
+      }
+
+      // Weak cards count
+      const weakCount = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').length;
+      document.getElementById('btn-weak').textContent = `Study Weak Cards (${weakCount})`;
+      document.getElementById('btn-weak').style.display = weakCount > 0 ? '' : 'none';
+    }
+
+    let selectedCats = new Set();
+    function handleCatClick(btn, catId) {
+      const multi = document.getElementById('chk-multi').checked;
+      if (multi) {
+        if (selectedCats.has(catId)) { selectedCats.delete(catId); btn.classList.remove('selected'); }
+        else { selectedCats.add(catId); btn.classList.add('selected'); }
+      } else {
+        selectedCats.clear();
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+        selectedCats.add(catId);
+        btn.classList.add('selected');
+        startSession([catId]);
+      }
+    }
+
+    // ==================== SESSION ====================
+    function startSession(catIds) {
+      let deck = cards.filter(c => catIds.includes(c.cat)).map(c => c.id);
+      if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+      if (deck.length === 0) return;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function startAll() {
+      const catIds = Object.keys(categories);
+      startSession(catIds);
+    }
+
+    function studyWeak() {
+      const p = loadProgress();
+      let deck = cards.filter(c => p[c.id] === 'missed' || p[c.id] === 'unsure').map(c => c.id);
+      if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+      if (deck.length === 0) return;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function studyProfEmphasis() {
+      let deck = cards.filter(c => c.tip && c.tip.includes('PROF')).map(c => c.id);
+      if (document.getElementById('chk-shuffle').checked) deck = shuffle(deck);
+      if (deck.length === 0) return;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // ==================== CARD DISPLAY ====================
+    function displayCard() {
+      if (state.idx >= state.deck.length) {
+        if (state.overflow.length > 0) {
+          state.deck = state.deck.concat(state.overflow);
+          state.overflow = [];
+        }
+        if (state.idx >= state.deck.length) {
+          saveSessionResults();
+          showResults();
+          return;
+        }
+      }
+
+      const cardId = state.deck[state.idx];
+      const card = cards.find(c => c.id === cardId);
+      if (!card) return;
+
+      state.flipped = false;
+      document.getElementById('card-inner').classList.remove('flipped');
+      document.getElementById('conf-controls').classList.remove('visible');
+
+      document.getElementById('front-content').innerHTML = card.q;
+
+      let backHtml = '<div class="answer-label">Answer</div><div class="answer-text">' + card.a + '</div>';
+      if (card.tip) backHtml += '<div class="tip-box"><strong>EXAM TIP:</strong> ' + card.tip.replace(/^EXAM TIP:\s*/i, '') + '</div>';
+      document.getElementById('back-content').innerHTML = backHtml;
+
+      const cat = categories[card.cat];
+      const badge = document.getElementById('cur-cat');
+      badge.textContent = cat.name;
+      badge.style.background = cat.color + '22';
+      badge.style.color = cat.color;
+      badge.style.border = '1px solid ' + cat.color;
+
+      // Progress
+      const answered = Object.keys(state.results).length;
+      document.getElementById('cur-num').textContent = answered + 1;
+      document.getElementById('tot-num').textContent = state.totalOriginal;
+      document.getElementById('prog-fill').style.width = (answered / state.totalOriginal * 100) + '%';
+
+      // Requeue info
+      const requeueCount = state.deck.length - state.idx - 1 + state.overflow.length;
+      const extra = state.deck.length - state.totalOriginal + state.overflow.length;
+      const ri = document.getElementById('requeue-info');
+      if (extra > 0) { ri.style.display = ''; ri.textContent = '+' + extra + ' requeued'; }
+      else { ri.style.display = 'none'; }
+
+      // Auto-adjust card height
+      const inner = document.getElementById('card-inner');
+      inner.style.minHeight = '300px';
+    }
+
+    function flipCard() {
+      if (state.idx >= state.deck.length) return;
+      state.flipped = !state.flipped;
+      document.getElementById('card-inner').classList.toggle('flipped');
+      if (state.flipped) document.getElementById('conf-controls').classList.add('visible');
+      else document.getElementById('conf-controls').classList.remove('visible');
+    }
+
+    // ==================== RATING ====================
+    function rate(confidence) {
+      if (!state.flipped) return;
+      const cardId = state.deck[state.idx];
+      state.results[cardId] = confidence;
+
+      if (confidence === 'missed') {
+        const offset = 5 + Math.floor(Math.random() * 3);
+        const insertAt = state.idx + offset;
+        if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+        else state.overflow.push(cardId);
+      } else if (confidence === 'unsure') {
+        const offset = 8 + Math.floor(Math.random() * 3);
+        const insertAt = state.idx + offset;
+        if (insertAt < state.deck.length) state.deck.splice(insertAt, 0, cardId);
+        else state.overflow.push(cardId);
+      }
+
+      state.idx++;
+      displayCard();
+    }
+
+    function exitSession() {
+      saveSessionResults();
+      if (Object.keys(state.results).length > 0) showResults();
+      else showScreen('start');
+    }
+
+    // ==================== RESULTS ====================
+    function showResults() {
+      showScreen('results');
+      const r = state.results;
+      let g = 0, u = 0, m = 0;
+      Object.values(r).forEach(v => { if (v === 'gotit') g++; else if (v === 'unsure') u++; else if (v === 'missed') m++; });
+      const total = g + u + m;
+
+      document.getElementById('res-gotit-n').textContent = g;
+      document.getElementById('res-gotit-p').textContent = total ? Math.round(g / total * 100) + '%' : '0%';
+      document.getElementById('res-unsure-n').textContent = u;
+      document.getElementById('res-unsure-p').textContent = total ? Math.round(u / total * 100) + '%' : '0%';
+      document.getElementById('res-missed-n').textContent = m;
+      document.getElementById('res-missed-p').textContent = total ? Math.round(m / total * 100) + '%' : '0%';
+
+      // Category breakdown
+      const bd = document.getElementById('breakdown');
+      let html = '<h3>By Category</h3>';
+      Object.entries(categories).forEach(([catId, cat]) => {
+        const catResults = Object.entries(r).filter(([id]) => {
+          const card = cards.find(c => c.id === parseInt(id));
+          return card && card.cat === catId;
+        });
+        if (catResults.length === 0) return;
+        let cg = 0, cu = 0, cm = 0;
+        catResults.forEach(([, v]) => { if (v === 'gotit') cg++; else if (v === 'unsure') cu++; else m++; });
+        // Recount missed for this category
+        cm = catResults.filter(([, v]) => v === 'missed').length;
+        const ct = cg + cu + cm;
+        const gw = ct ? (cg / ct * 100).toFixed(0) : 0;
+        const uw = ct ? (cu / ct * 100).toFixed(0) : 0;
+        const mw = ct ? (cm / ct * 100).toFixed(0) : 0;
+        html += `<div class="cat-stat-row">
+      <div class="cat-stat-name">${cat.name}</div>
+      <div class="cat-stat-bar">
+        <div class="bar-seg bar-gotit" style="width:${gw}%"></div>
+        <div class="bar-seg bar-unsure" style="width:${uw}%"></div>
+        <div class="bar-seg bar-missed" style="width:${mw}%"></div>
+      </div>
+      <div class="cat-stat-pct">${gw}%</div>
+    </div>`;
+      });
+      bd.innerHTML = html;
+
+      // Weak areas
+      const ws = document.getElementById('weak-section');
+      let weakHtml = '<h3>Focus Areas</h3>';
+      let hasWeak = false;
+      Object.entries(categories).forEach(([catId, cat]) => {
+        const catResults = Object.entries(r).filter(([id]) => {
+          const card = cards.find(c => c.id === parseInt(id));
+          return card && card.cat === catId;
+        });
+        if (catResults.length === 0) return;
+        const cg = catResults.filter(([, v]) => v === 'gotit').length;
+        const ct = catResults.length;
+        const pct = Math.round(cg / ct * 100);
+        if (pct < 60) {
+          hasWeak = true;
+          weakHtml += `<div class="weak-item"><span>${cat.name}</span><span>${pct}% mastery</span></div>`;
+        }
+      });
+      ws.innerHTML = hasWeak ? weakHtml : '';
+
+      // Button visibility
+      document.getElementById('btn-rev-missed').style.display = m > 0 ? '' : 'none';
+      document.getElementById('btn-rev-mu').style.display = (m + u) > 0 ? '' : 'none';
+    }
+
+    function reviewMissed() {
+      const missedIds = Object.entries(state.results).filter(([, v]) => v === 'missed').map(([id]) => parseInt(id));
+      if (missedIds.length === 0) return;
+      let deck = document.getElementById('chk-shuffle').checked ? shuffle(missedIds) : missedIds;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function reviewMissedAndUnsure() {
+      const ids = Object.entries(state.results).filter(([, v]) => v === 'missed' || v === 'unsure').map(([id]) => parseInt(id));
+      if (ids.length === 0) return;
+      let deck = document.getElementById('chk-shuffle').checked ? shuffle(ids) : ids;
+      state = { deck, idx: 0, flipped: false, results: {}, overflow: [], totalOriginal: deck.length };
+      showScreen('card');
+      displayCard();
+    }
+
+    function resetProgress() {
+      if (confirm('Reset all progress? This cannot be undone.')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderStartScreen();
+      }
+    }
+
+    // ==================== KEYBOARD ====================
+    document.addEventListener('keydown', (e) => {
+      const active = document.querySelector('.screen.active');
+      if (!active) return;
+      const id = active.id;
+
+      if (id === 'screen-card') {
+        if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); flipCard(); }
+        if (e.key === '1') rate('missed');
+        if (e.key === '2') rate('unsure');
+        if (e.key === '3') rate('gotit');
+        if (e.key === 'Escape') exitSession();
+      }
+      if (id === 'screen-results') {
+        if (e.key === 'Escape' || e.key === 'Enter') showScreen('start');
+      }
+    });
+
+    // ==================== INIT ====================
+    renderStartScreen();
+  </script>
+</body>
+
+</html>
