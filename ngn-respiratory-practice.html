@@ -2197,9 +2197,9 @@
 
         Q.push({
             id: 30, type: 'bowtie',
-            stem: 'A nurse is analyzing a patient\'s capnography readings.',
-            actions: ['Administer bronchodilator', 'Assess for pulmonary embolism'],
-            allActions: ['Administer bronchodilator', 'Assess for pulmonary embolism', 'Increase IV fluid rate', 'Apply nasal cannula at 2L'],
+            stem: 'A 58-year-old post-operative patient is on continuous capnography monitoring following abdominal surgery. Over 30 minutes the nurse notes EtCO₂ trending from 38 mmHg down to 18 mmHg while a stat ABG returns PaCO₂ 54 mmHg. The patient is now tachycardic, reports sharp pleuritic chest pain, and appears anxious and diaphoretic.',
+            actions: ['Administer bronchodilator as ordered', 'Notify provider and initiate PE workup (CTA pulmonary angiography, anticoagulation orders)'],
+            allActions: ['Administer bronchodilator as ordered', 'Notify provider and initiate PE workup (CTA pulmonary angiography, anticoagulation orders)', 'Increase IV fluid rate', 'Apply nasal cannula at 2L'],
             condition: 'Sudden significant drop in EtCO₂ with rising arterial CO₂',
             allConditions: ['Sudden significant drop in EtCO₂ with rising arterial CO₂', 'Gradually rising EtCO₂ with decreasing respiratory rate', 'Shark fin waveform on capnography', 'EtCO₂ reads zero with no waveform'],
             parameters: ['Dead space ventilation from PE', 'Tachypnea with pleuritic chest pain'],
@@ -2585,7 +2585,7 @@
 
         Q.push({
             id: 60, type: 'bowtie',
-            stem: 'The nurse is selecting appropriate oxygen therapy for patients on the respiratory unit.',
+            stem: 'A 67-year-old patient with COPD GOLD III arrives to the ED with worsening dyspnea over 2 days. SpO₂ is 82% on room air, RR 24, and he appears fatigued but is speaking in full sentences. His last ABG baseline showed PaCO₂ 52 mmHg. The provider orders supplemental oxygen and the nurse must select the appropriate delivery device.',
             actions: ['Apply Venturi mask at 28% FiO₂', 'Apply non-rebreather mask at 15 L/min'],
             allActions: ['Apply Venturi mask at 28% FiO₂', 'Apply non-rebreather mask at 15 L/min', 'Apply nasal cannula at 1 L/min', 'Begin mechanical ventilation immediately'],
             condition: 'COPD patient with SpO₂ 82% requiring controlled oxygen delivery',
@@ -2785,9 +2785,9 @@
 
         Q.push({
             id: 75, type: 'bowtie',
-            stem: 'A nurse is managing a patient on mechanical ventilation.',
-            actions: ['Ensure VAP bundle elements are in place', 'Position patient for thoracentesis'],
-            allActions: ['Ensure VAP bundle elements are in place', 'Position patient for thoracentesis', 'Increase tidal volume to clear secretions', 'Administer IV beta-blockers for tachycardia'],
+            stem: 'A 54-year-old patient has been intubated and mechanically ventilated for 3 days following emergency abdominal surgery. The nurse notes a new temperature of 38.9°C, WBC 14,500, and is suctioning thick purulent yellow secretions from the ETT. A new chest X-ray shows a right lower lobe infiltrate not present on admission.',
+            actions: ['Ensure VAP bundle elements are in place', 'Obtain sputum culture before initiating antibiotic therapy'],
+            allActions: ['Ensure VAP bundle elements are in place', 'Obtain sputum culture before initiating antibiotic therapy', 'Position patient for thoracentesis', 'Increase tidal volume to clear secretions'],
             condition: 'Intubated patient with rising temperature, increased WBC, and new purulent secretions 72 hours post-intubation',
             allConditions: ['Intubated patient with rising temperature, increased WBC, and new purulent secretions 72 hours post-intubation', 'Post-extubation patient with clear sputum and normal temperature', 'COPD patient with barrel chest and pursed-lip breathing', 'Patient with pleural effusion on chest X-ray'],
             parameters: ['VAP suspected — get cultures before antibiotics', 'Prevention bundle must be evaluated for compliance'],
@@ -2950,14 +2950,14 @@
 
         Q.push({
             id: 88, type: 'bowtie',
-            stem: 'A patient with moderate asthma is being evaluated in the emergency department.',
-            actions: ['Administer albuterol (SABA) nebulizer immediately', 'Administer salmeterol (LABA) MDI for quick relief'],
-            allActions: ['Administer albuterol (SABA) nebulizer immediately', 'Administer salmeterol (LABA) MDI for quick relief', 'Administer IV propranolol for tachycardia', 'Begin non-rebreather mask at 100% FiO₂'],
+            stem: 'A 22-year-old patient with a history of moderate persistent asthma arrives to the emergency department in acute distress. She reports using her albuterol inhaler 6 times in the past 4 hours with minimal relief. On assessment: RR 26, SpO₂ 91% on room air, diffuse bilateral expiratory wheezing, and accessory muscle use. She is unable to speak in full sentences.',
+            actions: ['Administer albuterol (SABA) nebulizer immediately', 'Position patient upright and apply supplemental oxygen'],
+            allActions: ['Administer albuterol (SABA) nebulizer immediately', 'Position patient upright and apply supplemental oxygen', 'Administer salmeterol (LABA) MDI for quick relief', 'Administer IV propranolol for tachycardia'],
             condition: 'Acute asthma attack with SpO₂ 91%, bilateral wheezing, RR 26',
             allConditions: ['Acute asthma attack with SpO₂ 91%, bilateral wheezing, RR 26', 'Stable COPD patient on room air with SpO₂ 94%', 'Post-operative patient with SpO₂ 97% on 2L NC', 'Patient with emphysema in respiratory failure'],
             parameters: ['Rescue bronchodilator needed immediately', 'SABA is first-line for acute bronchospasm'],
             allParams: ['Rescue bronchodilator needed immediately', 'SABA is first-line for acute bronchospasm', 'Long-acting bronchodilator for maintenance dosing', 'Patient needs intubation preparation'],
-            rationale: "<strong>Asthma Emergency — Bowtie:</strong> In an <strong>acute asthma attack</strong>, the correct action is <strong>albuterol (SABA) immediately</strong> — it is the rescue bronchodilator with onset in 5–15 minutes. Parameters: acute bronchospasm requires immediate rescue; SABAs are first-line. <strong>LABA (salmeterol) is WRONG</strong> for acute attacks — it has a slow onset (15–30 minutes) and is a maintenance medication. Giving salmeterol alone for asthma has a black box warning for increased asthma deaths. Propranolol is absolutely contraindicated in asthma.",
+            rationale: "<strong>Asthma Emergency — Bowtie:</strong> In an <strong>acute asthma attack</strong>, correct actions are (1) <strong>albuterol (SABA) immediately</strong> — rescue bronchodilator with onset in 5–15 minutes; and (2) <strong>position upright + supplemental O₂</strong> — reduces work of breathing and improves SpO₂. Parameters: acute bronchospasm requires immediate rescue; SABAs are first-line. <strong>LABA (salmeterol) is WRONG</strong> for acute attacks — slow onset (15–30 min), maintenance-only, black box warning for increased asthma deaths when used without ICS. <strong>Propranolol is absolutely contraindicated</strong> in asthma (non-selective beta-blocker causes bronchoconstriction).",
             topic: "COPD & Asthma/CF"
         });
 
@@ -3224,7 +3224,7 @@
 
         Q.push({
             id: 108, type: 'bowtie',
-            stem: 'The nurse is evaluating a patient with worsening respiratory failure in the ICU.',
+            stem: 'A 41-year-old patient with sepsis-induced ARDS has been on lung-protective mechanical ventilation (TV 6 mL/kg IBW, PEEP 14 cmH₂O, FiO₂ 80%) for 18 hours. The latest ABG shows pH 7.30, PaO₂ 52 mmHg, P/F ratio 85. Chest X-ray shows bilateral diffuse infiltrates that have worsened since admission. The ICU team is reassessing the management plan.',
             actions: ['Initiate prone positioning protocol', 'Obtain ordered sputum culture before antibiotics'],
             allActions: ['Initiate prone positioning protocol', 'Obtain ordered sputum culture before antibiotics', 'Increase tidal volume to 10 mL/kg to improve oxygenation', 'Apply nasal cannula at 6 L/min'],
             condition: 'Patient with P/F ratio of 85, bilateral infiltrates, pH 7.30, intubated on lung-protective ventilation',
@@ -3377,7 +3377,7 @@
 
         Q.push({
             id: 120, type: 'bowtie',
-            stem: 'A nurse is managing a patient on mechanical ventilation.',
+            stem: 'A HIGH PRESSURE alarm sounds on the ventilator of a 49-year-old patient with COPD who was intubated 6 hours ago for respiratory failure. The ventilator display shows PIP 50 cmH₂O, plateau pressure 22 cmH₂O. The nurse auscultates diffuse expiratory wheezing bilaterally. SpO₂ has dropped from 96% to 88% over the past 10 minutes.',
             actions: ['Suction the airway and check for ETT biting or kinking', 'Administer bronchodilator via in-line MDI'],
             allActions: ['Suction the airway and check for ETT biting or kinking', 'Administer bronchodilator via in-line MDI', 'Increase PEEP to 20 cmH₂O immediately', 'Remove the ventilator circuit and place patient on Ambu-bag'],
             condition: 'High pressure alarm (PIP 50) with expiratory wheezing and large PIP-Plateau gap',
@@ -4060,15 +4060,13 @@
             }
             else if (q.type === 'cloze') {
                 possible = q.selects.length;
-                let allCorrect = true;
                 document.querySelectorAll('.cloze-select').forEach(sel => {
                     const idx = parseInt(sel.dataset.idx), val = parseInt(sel.value);
                     sel.disabled = true;
                     if (val === q.selects[idx].correct) { sel.classList.add('correct'); }
-                    else { sel.classList.add('wrong'); allCorrect = false; }
+                    else { sel.classList.add('wrong'); }
                 });
-                if (q.scoring === 'dyad') { earned = allCorrect ? possible : 0; }
-                else { document.querySelectorAll('.cloze-select.correct').forEach(() => earned++); }
+                document.querySelectorAll('.cloze-select.correct').forEach(() => earned++);
             }
             else if (q.type === 'matrix') {
                 possible = q.rows.length;
