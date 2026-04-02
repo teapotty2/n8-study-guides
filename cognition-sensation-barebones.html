@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognition & Sensation — Barebones Study Guide</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --border: #334155;
+            --text: #e2e8f0;
+            --dim: #94a3b8;
+            --cyan: #22d3ee;
+            --red: #f87171;
+            --green: #4ade80;
+            --yellow: #fbbf24;
+            --purple: #a78bfa;
+            --pink: #f472b6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        h1 {
+            color: var(--cyan);
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: .25rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--dim);
+            margin-bottom: 2rem;
+            font-size: .85rem;
+        }
+
+        h2 {
+            color: var(--cyan);
+            font-size: 1.3rem;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: .4rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--purple);
+            font-size: 1.05rem;
+            margin: 1.5rem 0 .5rem;
+        }
+
+        h4 {
+            color: var(--yellow);
+            font-size: .95rem;
+            margin: 1rem 0 .4rem;
+        }
+
+        p {
+            margin: .5rem 0;
+        }
+
+        ul {
+            padding-left: 1.4rem;
+            margin: .4rem 0;
+        }
+
+        li {
+            margin: .2rem 0;
+        }
+
+        strong {
+            color: var(--cyan);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: .75rem 0;
+            font-size: .88rem;
+        }
+
+        th {
+            background: var(--card);
+            color: var(--cyan);
+            padding: .5rem;
+            text-align: left;
+            border: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        td {
+            padding: .5rem;
+            border: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(30, 41, 59, .5);
+        }
+
+        .alert {
+            background: rgba(248, 113, 113, .1);
+            border-left: 4px solid var(--red);
+            padding: .6rem 1rem;
+            margin: .75rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: .9rem;
+        }
+
+        .alert strong {
+            color: var(--red);
+        }
+
+        .tip {
+            background: rgba(34, 211, 238, .08);
+            border-left: 4px solid var(--cyan);
+            padding: .6rem 1rem;
+            margin: .75rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: .9rem;
+        }
+
+        .formula {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: .6rem 1rem;
+            margin: .75rem 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--yellow);
+        }
+
+        .toc {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: var(--cyan);
+        }
+
+        .toc a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: .85rem;
+            display: block;
+            padding: .15rem 0;
+        }
+
+        .toc a:hover {
+            color: var(--cyan);
+        }
+
+        .vs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+            margin: .75rem 0;
+        }
+
+        .vs>div {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .75rem;
+        }
+
+        .vs h4 {
+            margin-top: 0;
+        }
+
+        @media(max-width:600px) {
+            .vs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            h2,
+            h3,
+            strong {
+                color: #1a365d;
+            }
+
+            .alert {
+                border-left-color: red;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Cognition & Sensation</h1>
+        <p class="subtitle">Barebones Complete Guide — Chapters 60-65</p>
+
+        <div class="toc">
+            <h3>Contents</h3>
+            <a href="#s1">1. Neuroanatomy Essentials</a>
+            <a href="#s2">2. Neurotransmitters</a>
+            <a href="#s3">3. Autonomic Nervous System</a>
+            <a href="#s4">4. Neuro Assessment</a>
+            <a href="#s5">5. Diagnostic Tests</a>
+            <a href="#s6">6. Altered LOC & GCS</a>
+            <a href="#s7">7. Increased ICP</a>
+            <a href="#s8">8. Intracranial Surgery</a>
+            <a href="#s9">9. Seizures</a>
+            <a href="#s10">10. Stroke</a>
+            <a href="#s11">11. Head Injury & TBI</a>
+            <a href="#s12">12. Spinal Cord Injury</a>
+            <a href="#s13">13. Meningitis & CNS Infections</a>
+            <a href="#s14">14. Autoimmune & CN Disorders</a>
+            <a href="#s15">15. Gerontologic Considerations</a>
+            <a href="#s16">16. Key Formulas</a>
+        </div>
+
+        <!-- ==================== 1. NEUROANATOMY ==================== -->
+        <h2 id="s1">1. Neuroanatomy Essentials</h2>
+
+        <h3>Brain Lobes</h3>
+        <table>
+            <tr>
+                <th>Lobe</th>
+                <th>Functions</th>
+                <th>Damage Causes</th>
+            </tr>
+            <tr>
+                <td><strong>Frontal</strong> (largest)</td>
+                <td>Personality, judgment, motor, concentration, abstract thinking, Broca's area</td>
+                <td>Personality changes, poor judgment, motor deficits, expressive aphasia</td>
+            </tr>
+            <tr>
+                <td><strong>Parietal</strong></td>
+                <td>Sensory processing, spatial orientation, body awareness</td>
+                <td>Sensory loss, neglect syndrome, inability to recognize objects by touch</td>
+            </tr>
+            <tr>
+                <td><strong>Temporal</strong></td>
+                <td>Hearing, memory, Wernicke's area (language comprehension)</td>
+                <td>Hearing deficits, receptive aphasia, memory problems</td>
+            </tr>
+            <tr>
+                <td><strong>Occipital</strong></td>
+                <td>Vision processing</td>
+                <td>Visual field deficits, blindness</td>
+            </tr>
+        </table>
+
+        <h3>Key Structures</h3>
+        <ul>
+            <li><strong>Brainstem:</strong> Vital reflex centers — respiration, HR, BP, coughing, swallowing, vomiting.
+                Contains reticular formation (arousal/sleep-wake)</li>
+            <li><strong>Cerebellum:</strong> Coordination, balance, proprioception. Damage → ataxia</li>
+            <li><strong>Hypothalamus:</strong> Temperature regulation, thirst, hunger, circadian rhythm</li>
+            <li><strong>Motor fibers decussate at medulla</strong> → right brain stroke = left-sided deficits</li>
+        </ul>
+
+        <h3>Meninges & CSF</h3>
+        <ul>
+            <li>Three layers: <strong>Dura mater → Arachnoid → Pia mater</strong></li>
+            <li>CSF circulates in the <strong>subarachnoid space</strong></li>
+            <li>CSF produced by <strong>choroid plexus</strong> in ventricles, ~150 mL total, ~500 mL/day produced</li>
+            <li>Normal CSF: clear and colorless. Cloudy = infection. Pink/bloody = hemorrhage</li>
+        </ul>
+
+        <h3>Blood Supply</h3>
+        <ul>
+            <li><strong>Internal carotid arteries</strong> (anterior, ~80%) + <strong>Vertebral arteries</strong>
+                (posterior) → joined by <strong>Circle of Willis</strong></li>
+            <li>Cerebral vessels have <strong>only 2 layers (not 3)</strong> → prone to aneurysm, especially at Circle
+                of Willis</li>
+            <li>Cerebral veins have <strong>NO valves</strong> → depend on gravity for drainage → why HOB elevation
+                matters</li>
+            <li><strong>Blood-brain barrier</strong> disrupted by trauma, edema, hypoxemia</li>
+        </ul>
+
+        <h3>Monro-Kellie Hypothesis</h3>
+        <p>Skull = rigid container. Three components: <strong>Brain (~1400g) + Blood (~75 mL) + CSF (~75 mL)</strong>.
+            If one increases, another must decrease → or ICP rises.</p>
+
+        <!-- ==================== 2. NEUROTRANSMITTERS ==================== -->
+        <h2 id="s2">2. Neurotransmitters</h2>
+
+        <table>
+            <tr>
+                <th>NT</th>
+                <th>Type</th>
+                <th>Function</th>
+                <th>Disease Link</th>
+            </tr>
+            <tr>
+                <td><strong>Acetylcholine (ACh)</strong></td>
+                <td>Excitatory (muscle) / Inhibitory (cardiac)</td>
+                <td>Muscle contraction, memory, parasympathetic effects</td>
+                <td>↓ in <strong>Myasthenia Gravis</strong> (antibodies attack ACh receptors) & Alzheimer's</td>
+            </tr>
+            <tr>
+                <td><strong>Dopamine</strong></td>
+                <td>Both</td>
+                <td>Motor control, reward, motivation</td>
+                <td>↓ in <strong>Parkinson's</strong> (substantia nigra); ↑ in Schizophrenia</td>
+            </tr>
+            <tr>
+                <td><strong>Serotonin</strong></td>
+                <td>Inhibitory</td>
+                <td>Mood, sleep, appetite</td>
+                <td>↓ in <strong>Depression</strong>; SSRIs increase it</td>
+            </tr>
+            <tr>
+                <td><strong>Norepinephrine</strong></td>
+                <td>Excitatory</td>
+                <td>Fight-or-flight, alertness, vasoconstriction</td>
+                <td>Primary <strong>sympathetic NT</strong>; levophed = IV norepinephrine</td>
+            </tr>
+            <tr>
+                <td><strong>GABA</strong></td>
+                <td><strong>Primary INHIBITORY</strong></td>
+                <td>Reduces neuronal excitability</td>
+                <td>↓ = <strong>seizures</strong>; benzos & barbiturates enhance GABA</td>
+            </tr>
+            <tr>
+                <td><strong>Glutamate</strong></td>
+                <td><strong>Primary EXCITATORY</strong></td>
+                <td>Learning, memory</td>
+                <td>Excess = <strong>excitotoxicity</strong> (secondary brain injury after stroke/TBI)</td>
+            </tr>
+            <tr>
+                <td><strong>Endorphins</strong></td>
+                <td>Inhibitory</td>
+                <td>Natural pain relief</td>
+                <td>Opioids mimic endorphins</td>
+            </tr>
+        </table>
+
+        <div class="tip"><strong>Demyelination</strong> (MS, GBS, SCI) → nerve impulses slow or stop. MS = CNS
+            demyelination. GBS = peripheral. SCI transection = complete loss below level.</div>
+
+        <!-- ==================== 3. ANS ==================== -->
+        <h2 id="s3">3. Autonomic Nervous System</h2>
+
+        <div class="vs">
+            <div>
+                <h4 style="color:#f87171">Sympathetic (Fight or Flight)</h4>
+                <p><strong>NT:</strong> Norepinephrine + Epinephrine</p>
+                <ul>
+                    <li>↑ HR, ↑ BP</li>
+                    <li>Bronchodilation</li>
+                    <li>Pupil dilation (mydriasis)</li>
+                    <li>↑ Blood glucose</li>
+                    <li>↓ GI motility</li>
+                    <li>Blood → skeletal muscles</li>
+                    <li>Diaphoresis</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color:#4ade80">Parasympathetic (Rest & Digest)</h4>
+                <p><strong>NT:</strong> Acetylcholine</p>
+                <ul>
+                    <li>↓ HR (bradycardia)</li>
+                    <li>↓ BP</li>
+                    <li>Bronchoconstriction</li>
+                    <li>Pupil constriction (miosis)</li>
+                    <li>↑ GI motility/secretions</li>
+                    <li>↑ Salivation</li>
+                    <li>↑ Urination</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tip"><strong>Connections:</strong> Neurogenic shock = lost sympathetic tone → give levophed. Vagal
+            stimulation (CN X) = parasympathetic → bradycardia → give atropine. Autonomic dysreflexia = exaggerated
+            sympathetic response below SCI lesion.</div>
+
+        <!-- ==================== 4. NEURO ASSESSMENT ==================== -->
+        <h2 id="s4">4. Neuro Assessment</h2>
+
+        <div class="alert"><strong>LOC is the MOST SENSITIVE indicator</strong> of neurological status. Always the first
+            thing to change.</div>
+
+        <h3>Key Components</h3>
+        <ul>
+            <li><strong>AAOx4:</strong> Person, Place, Time, Situation</li>
+            <li><strong>Pupils:</strong> PERRLA — equal, round, reactive. Unilateral fixed dilated = CN III compression
+                = <strong>emergency</strong></li>
+            <li><strong>Motor:</strong> Strength, coordination, gait</li>
+            <li><strong>Sensory:</strong> Light touch, pain, temperature, proprioception</li>
+            <li><strong>Cranial Nerves:</strong> I–XII (see cranial nerve flashcard set)</li>
+            <li><strong>Reflexes:</strong> DTRs, Babinski (positive in adults = UMN lesion), corneal, gag</li>
+        </ul>
+
+        <h3>Reflexes</h3>
+        <table>
+            <tr>
+                <th>Increased DTRs (hyperreflexia)</th>
+                <th>Decreased DTRs (hyporeflexia)</th>
+            </tr>
+            <tr>
+                <td>Upper motor neuron lesion, spinal cord compression, eclampsia, autonomic dysreflexia</td>
+                <td>Lower motor neuron lesion, peripheral neuropathy, spinal shock, normal aging</td>
+            </tr>
+        </table>
+
+        <h3>LOC Progression</h3>
+        <p><strong>Alert → Confused → Lethargic</strong> (drowsy but arousable) <strong>→ Obtunded</strong> (difficult
+            to arouse) <strong>→ Stupor</strong> (painful stimuli only) <strong>→ Coma</strong> (unresponsive)</p>
+
+        <h3>Breathing Patterns</h3>
+        <ul>
+            <li><strong>Cheyne-Stokes:</strong> Crescendo-decrescendo with apnea — HF, brainstem damage</li>
+            <li><strong>Kussmaul:</strong> Deep and rapid — DKA (blowing off CO₂)</li>
+            <li><strong>Ataxic (Biot's):</strong> Completely irregular — brainstem damage (grave sign)</li>
+        </ul>
+
+        <!-- ==================== 5. DIAGNOSTIC TESTS ==================== -->
+        <h2 id="s5">5. Diagnostic Tests</h2>
+
+        <table>
+            <tr>
+                <th>Test</th>
+                <th>Purpose</th>
+                <th>Key Points</th>
+            </tr>
+            <tr>
+                <td><strong>CT scan</strong></td>
+                <td>First-line for stroke, trauma</td>
+                <td>Within 20 min of ED arrival for stroke. Differentiates ischemic vs hemorrhagic</td>
+            </tr>
+            <tr>
+                <td><strong>MRI</strong></td>
+                <td>Soft tissue detail, demyelination, DAI</td>
+                <td>Remove ALL metal. Contraindicated with pacemakers</td>
+            </tr>
+            <tr>
+                <td><strong>EEG</strong></td>
+                <td>Seizures, brain death</td>
+                <td>Avoid caffeine before. Flat line = brain death</td>
+            </tr>
+            <tr>
+                <td><strong>Lumbar Puncture</strong></td>
+                <td>CSF analysis (meningitis, SAH)</td>
+                <td><strong>CONTRAINDICATED with ↑ICP.</strong> Position: fetal. Post: ↑fluids for headache</td>
+            </tr>
+            <tr>
+                <td><strong>Cerebral Angiography</strong></td>
+                <td>Aneurysm, AVM visualization</td>
+                <td>Post: check puncture site, pedal pulses, neuro status</td>
+            </tr>
+        </table>
+
+        <h3>Lumbar Puncture Post-Care</h3>
+        <ul>
+            <li>Post-LP headache = CSF leakage → worsens upright, improves flat</li>
+            <li><strong>Increase fluids</strong>, pain meds, position for comfort</li>
+            <li>Monitor neuro status and puncture site</li>
+        </ul>
+
+        <!-- ==================== 6. ALTERED LOC & GCS ==================== -->
+        <h2 id="s6">6. Altered LOC & GCS</h2>
+
+        <h3>Glasgow Coma Scale (3-15)</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Best</th>
+                <th>Key Thresholds</th>
+            </tr>
+            <tr>
+                <td><strong>Eye Opening</strong> (1-4)</td>
+                <td>Spontaneous = 4</td>
+                <td>To verbal = 3, To pain = 2, None = 1</td>
+            </tr>
+            <tr>
+                <td><strong>Verbal</strong> (1-5)</td>
+                <td>Oriented = 5</td>
+                <td>Confused = 4, Inappropriate = 3, Incomprehensible = 2, None = 1</td>
+            </tr>
+            <tr>
+                <td><strong>Motor</strong> (1-6)</td>
+                <td>Obeys commands = 6</td>
+                <td>Localizes = 5, Withdraws = 4, <strong>Decorticate = 3, Decerebrate = 2</strong>, None = 1</td>
+            </tr>
+        </table>
+
+        <div class="alert"><strong>GCS ≤ 8 = intubate.</strong> Patient cannot protect airway.</div>
+
+        <h3>Posturing</h3>
+        <ul>
+            <li><strong>Decorticate (flexion):</strong> Arms flexed toward core, legs extended. GCS motor = 3. "Cord
+                still works"</li>
+            <li><strong>Decerebrate (extension):</strong> ALL extended. GCS motor = 2. Brainstem damage.
+                <strong>WORSE</strong></li>
+            <li><strong>Flaccid:</strong> No motor response. GCS motor = 1. Worst prognosis</li>
+        </ul>
+
+        <h3>Nursing Care for Altered LOC</h3>
+        <ul>
+            <li><strong>#1 Priority: Airway.</strong> HOB 30°, lateral position, suctioning</li>
+            <li>Aspiration prevention — nothing by mouth until gag assessed</li>
+            <li>Skin: turning q2h, foam boots, correct alignment</li>
+            <li>Thermoregulation: Fever ↑ ICP. Treat aggressively but <strong>prevent shivering</strong></li>
+            <li>Eyes: artificial tears, patches — can't blink (check corneal reflex)</li>
+            <li>Bowel: stool softeners, bowel regimen. Bladder: may need Foley</li>
+            <li><strong>Talk to patient as if they can hear</strong> — hearing is last sense to go</li>
+            <li>Reduce stimulation. Space nursing activities (clustering ↑ ICP)</li>
+        </ul>
+
+        <!-- ==================== 7. INCREASED ICP ==================== -->
+        <h2 id="s7">7. Increased ICP</h2>
+
+        <p>Normal ICP: <strong>0-10 mmHg</strong> (upper limit 15). Intervene when >15.</p>
+
+        <div class="formula">CPP = MAP − ICP &nbsp;&nbsp;|&nbsp;&nbsp; Target: 70-80 mmHg &nbsp;&nbsp;|&nbsp;&nbsp; CPP
+            &lt; 50 = irreversible damage</div>
+
+        <h3>Signs (Early → Late)</h3>
+        <ul>
+            <li><strong>EARLY:</strong> ↓ LOC (restlessness, confusion, delayed responses) — FIRST sign</li>
+            <li><strong>MID:</strong> Pupil changes (ipsilateral dilation), headache, vomiting (projectile, no nausea)
+            </li>
+            <li><strong>LATE — Cushing's Triad:</strong> ↑ systolic BP + widened pulse pressure, bradycardia, irregular
+                respirations → <strong>imminent herniation</strong></li>
+        </ul>
+
+        <h3>CO₂ and Cerebral Vessels</h3>
+        <ul>
+            <li><strong>↑ CO₂ → vasodilation → ↑ ICP</strong> (bad)</li>
+            <li><strong>↓ CO₂ → vasoconstriction → ↓ ICP</strong> (but too much = ischemia; keep PaCO₂ ≥ 30)</li>
+            <li>Always monitor: are they breathing off their CO₂?</li>
+        </ul>
+
+        <h3>Management</h3>
+        <ul>
+            <li><strong>HOB 30-45°</strong>, head midline, avoid neck flexion/rotation</li>
+            <li>Avoid Valsalva — use stool softeners</li>
+            <li><strong>Mannitol</strong> (osmotic diuretic) — pulls fluid from brain</li>
+            <li><strong>Corticosteroids</strong> (dexamethasone) — ONLY for brain tumor edema, NOT trauma</li>
+            <li><strong>Do NOT bolus hypertonic saline</strong> — rapid sodium correction → osmotic demyelination</li>
+            <li>Hyperventilation only in emergent situations</li>
+            <li>Space nursing activities</li>
+        </ul>
+
+        <h3>Hyponatremia vs Hypernatremia</h3>
+        <div class="vs">
+            <div>
+                <h4 style="color:#fbbf24">Hyponatremia (Na⁺ &lt; 135)</h4>
+                <p>Water shifts INTO brain cells → cerebral edema → confusion, headache, seizures, coma (Na &lt; 120)
+                </p>
+            </div>
+            <div>
+                <h4 style="color:#fbbf24">Hypernatremia (Na⁺ &gt; 145)</h4>
+                <p>Water shifts OUT of brain cells → cellular dehydration → restlessness, irritability, seizures, coma
+                    (Na &gt; 160)</p>
+            </div>
+        </div>
+
+        <h3>SIADH vs Diabetes Insipidus</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>SIADH</th>
+                <th>Diabetes Insipidus</th>
+            </tr>
+            <tr>
+                <td>ADH</td>
+                <td>↑ (too much)</td>
+                <td>↓ (too little)</td>
+            </tr>
+            <tr>
+                <td>Urine</td>
+                <td>↓ output, concentrated</td>
+                <td>↑↑ output (>200 mL/hr), dilute</td>
+            </tr>
+            <tr>
+                <td>Sodium</td>
+                <td>↓ (dilutional hyponatremia)</td>
+                <td>↑ (hypernatremia)</td>
+            </tr>
+            <tr>
+                <td>Treatment</td>
+                <td>Fluid restriction (<800 mL/day)</td>
+                <td>Fluid replacement + desmopressin (DDAVP)</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 8. INTRACRANIAL SURGERY ==================== -->
+        <h2 id="s8">8. Intracranial Surgery</h2>
+
+        <ul>
+            <li><strong>Craniotomy:</strong> Bone flap created, repositioned after. <strong>Craniectomy:</strong> Bone
+                removed for decompression</li>
+            <li><strong>Transsphenoidal:</strong> For pituitary tumors, through nasal cavity. Post-op: NO nose blowing,
+                watch for DI and CSF leak</li>
+            <li>Cerebral edema peaks <strong>24-36 hours</strong> post-op</li>
+            <li>Give preop education: what to expect, shaving, drains, frequent neuro checks</li>
+            <li>Post-op: neuro checks q15-60 min, seizure precautions, anticonvulsants (Keppra, phenytoin)</li>
+            <li>Signs of trouble: ↑ BP + ↓ HR + respiratory failure = increasing ICP</li>
+            <li>Blood-stained dressings → medium for bacteria → change them</li>
+            <li>No coughing, sneezing, nose blowing (↑ ICP)</li>
+        </ul>
+
+        <!-- ==================== 9. SEIZURES ==================== -->
+        <h2 id="s9">9. Seizures</h2>
+
+        <p>Abnormal uncontrolled electrical discharge. <strong>Any brain trauma = ↑ seizure risk.</strong></p>
+
+        <h3>Types</h3>
+        <ul>
+            <li><strong>Focal (partial):</strong> One hemisphere</li>
+            <li><strong>Generalized:</strong> Both hemispheres from onset</li>
+            <li><strong>Status epilepticus:</strong> Continuous ≥5 min or serial without recovery →
+                <strong>EMERGENCY</strong> → permanent brain damage</li>
+        </ul>
+
+        <h3>Nursing During Seizure</h3>
+        <ul>
+            <li>Stay with patient, protect from injury, clear area</li>
+            <li><strong>DO NOT restrain. DO NOT put anything in mouth.</strong></li>
+            <li>Turn to side, TIME the seizure</li>
+            <li>Check <strong>blood glucose</strong> immediately (brain not storing glucose)</li>
+            <li>Watch respiratory status — always</li>
+        </ul>
+
+        <h3>Medications</h3>
+        <table>
+            <tr>
+                <th>Drug</th>
+                <th>Use</th>
+                <th>Key Points</th>
+            </tr>
+            <tr>
+                <td><strong>Lorazepam (Ativan)</strong></td>
+                <td>First-line active seizure</td>
+                <td>2 mg IV, repeat ×1. Also CIWA protocol</td>
+            </tr>
+            <tr>
+                <td><strong>Diazepam (Valium)</strong></td>
+                <td>Alternative active seizure</td>
+                <td>Longer half-life. Also CIWA</td>
+            </tr>
+            <tr>
+                <td><strong>Levetiracetam (Keppra)</strong></td>
+                <td>Maintenance/prevention</td>
+                <td>Given frequently in neuro; fewer drug interactions</td>
+            </tr>
+            <tr>
+                <td><strong>Phenobarbital</strong></td>
+                <td>Prevention; status epilepticus</td>
+                <td>Enhances GABA; respiratory depression risk</td>
+            </tr>
+            <tr>
+                <td><strong>Phenytoin (Dilantin)</strong></td>
+                <td>Maintenance</td>
+                <td>Therapeutic: 10-20 mcg/mL. Gingival hyperplasia</td>
+            </tr>
+        </table>
+
+        <h3>CIWA Protocol</h3>
+        <p>Sliding scale lorazepam for <strong>alcohol withdrawal prevention</strong>. Goal: prevent progression to
+            withdrawal seizures and delirium tremens.</p>
+
+        <!-- ==================== 10. STROKE ==================== -->
+        <h2 id="s10">10. Stroke</h2>
+
+        <div class="alert"><strong>BeFAST:</strong> Balance, Eyes, Face drooping, Arm weakness, Speech difficulty, Time
+            to call 911</div>
+
+        <h3>Ischemic (87%) vs Hemorrhagic (13%)</h3>
+        <div class="vs">
+            <div>
+                <h4 style="color:#22d3ee">Ischemic</h4>
+                <ul>
+                    <li>Thrombus or embolus</li>
+                    <li>Penumbra = salvageable tissue</li>
+                    <li>tPA within 3 hrs (extended 4.5)</li>
+                    <li>"Time is brain" — 1.9M neurons/min lost</li>
+                    <li>A-fib = #1 embolic cause</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color:#f87171">Hemorrhagic</h4>
+                <ul>
+                    <li>Ruptured vessel, AVM, anticoagulants</li>
+                    <li>First sign: <strong>severe headache</strong></li>
+                    <li>tPA is CONTRAINDICATED</li>
+                    <li>If SAH: nimodipine for vasospasm</li>
+                    <li>Aneurysm precautions: bed rest, no stimulation</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Aphasia</h3>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Presentation</th>
+                <th>Memory Trick</th>
+            </tr>
+            <tr>
+                <td><strong>Expressive (Broca's)</strong></td>
+                <td>Left frontal</td>
+                <td>Can't speak/write, CAN understand</td>
+                <td>Broca's = <strong>Broken</strong> speech</td>
+            </tr>
+            <tr>
+                <td><strong>Receptive (Wernicke's)</strong></td>
+                <td>Left temporal</td>
+                <td>Can't understand, speaks fluent nonsense</td>
+                <td>Wernicke's = <strong>"What?"</strong></td>
+            </tr>
+            <tr>
+                <td><strong>Global</strong></td>
+                <td>Both areas</td>
+                <td>Can't speak, write, or understand</td>
+                <td>Everything lost</td>
+            </tr>
+        </table>
+
+        <h3>tPA Protocol</h3>
+        <ul>
+            <li>Dose: <strong>0.9 mg/kg</strong> (max 90 mg). 10% bolus over 1 min, rest over 1 hour</li>
+            <li>Risk: <strong>BLEEDING</strong>. Insert all lines BEFORE giving</li>
+            <li>No anticoagulants for 24 hours after</li>
+            <li>Monitoring: q15 min × 2 hrs → q30 min × 6 hrs → q1 hr × 16 hrs</li>
+            <li>Permissive hypertension: allow BP up to 185/105 to perfuse penumbra</li>
+        </ul>
+
+        <h3>Additional Points</h3>
+        <ul>
+            <li><strong>Dual antiplatelet:</strong> Aspirin + Plavix for secondary prevention</li>
+            <li>NIH Stroke Scale assessment ongoing, especially after thrombolytics</li>
+            <li>Swallow assessment before ANY food/drink</li>
+            <li>Right brain stroke = left deficits. Left brain stroke = right deficits + language issues</li>
+        </ul>
+
+        <!-- ==================== 11. HEAD INJURY ==================== -->
+        <h2 id="s11">11. Head Injury & TBI</h2>
+
+        <h3>Epidural vs Subdural</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Epidural</th>
+                <th>Subdural</th>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>Between skull & dura</td>
+                <td>Between dura & brain</td>
+            </tr>
+            <tr>
+                <td>Bleeding</td>
+                <td><strong>Arterial</strong> (middle meningeal)</td>
+                <td><strong>Venous</strong> (bridging veins)</td>
+            </tr>
+            <tr>
+                <td>Presentation</td>
+                <td>Brief LOC → <strong>LUCID INTERVAL</strong> → rapid deterioration</td>
+                <td>Acute (24-48 hrs) or chronic (weeks-months)</td>
+            </tr>
+            <tr>
+                <td>Treatment</td>
+                <td><strong>EMERGENCY surgery</strong></td>
+                <td>Monitoring or surgical evacuation</td>
+            </tr>
+            <tr>
+                <td>CT shape</td>
+                <td>Biconvex (lens)</td>
+                <td>Crescent</td>
+            </tr>
+        </table>
+
+        <h3>Key Concepts</h3>
+        <ul>
+            <li><strong>Primary injury:</strong> Direct trauma at moment of impact (contusion, laceration, hematoma)
+            </li>
+            <li><strong>Secondary injury:</strong> Evolves over hours/days (edema, ischemia, glutamate excitotoxicity) —
+                <strong>PREVENTABLE</strong></li>
+            <li><strong>Coup-contrecoup:</strong> Damage at impact site AND opposite side</li>
+            <li>Basilar skull fracture signs: <strong>Battle Sign</strong> (mastoid ecchymosis), <strong>Raccoon
+                    Eyes</strong> (periorbital), <strong>Halo Sign</strong> (CSF leak)</li>
+            <li>Always assume <strong>cervical spine injury</strong> until ruled out</li>
+            <li>Benzodiazepines preferred for sedation (don't affect CBF or ICP)</li>
+        </ul>
+
+        <h3>Brain Death</h3>
+        <ul>
+            <li>Cardinal signs: coma, absence of ALL brainstem reflexes, apnea</li>
+            <li><strong>Apnea test:</strong> Off vent with O₂ cannula. No breathing with CO₂ to 60 mmHg over 8-10 min
+            </li>
+            <li>Two physicians must confirm. Brain death = legal death</li>
+        </ul>
+
+        <!-- ==================== 12. SPINAL CORD INJURY ==================== -->
+        <h2 id="s12">12. Spinal Cord Injury</h2>
+
+        <p>Most common levels: <strong>C5-C7, T12, L1</strong>. Paraplegia (lower) vs Tetraplegia (all four, cervical).
+        </p>
+
+        <h3>Spinal Shock vs Neurogenic Shock</h3>
+        <table>
+            <tr>
+                <th></th>
+                <th>Spinal Shock</th>
+                <th>Neurogenic Shock</th>
+            </tr>
+            <tr>
+                <td>What</td>
+                <td>Loss of ALL reflex activity below injury</td>
+                <td>Loss of <strong>sympathetic tone</strong> (distributive shock)</td>
+            </tr>
+            <tr>
+                <td>Signs</td>
+                <td>Flaccid paralysis, areflexia, paralytic ileus</td>
+                <td>↓BP, <strong>bradycardia</strong>, <strong>warm dry skin</strong></td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>Days to weeks (temporary)</td>
+                <td>Acute emergency</td>
+            </tr>
+            <tr>
+                <td>Key distinction</td>
+                <td>Reflex problem</td>
+                <td><strong>Circulatory problem</strong></td>
+            </tr>
+        </table>
+
+        <h3>Neurogenic Shock Treatment</h3>
+        <ul>
+            <li>Try <strong>IV fluids FIRST</strong> but don't overload</li>
+            <li><strong>Levophed (norepinephrine)</strong> — first-line vasopressor</li>
+            <li>Maintain <strong>MAP ≥ 85 mmHg</strong></li>
+            <li>Usually in injuries <strong>above T6</strong></li>
+        </ul>
+
+        <div class="alert"><strong>Corticosteroids for SCI: NOW CONTROVERSIAL.</strong> Limited benefit, significant
+            side effects. Many facilities stopped routine use.</div>
+
+        <h3>Autonomic Dysreflexia</h3>
+        <ul>
+            <li><strong>Who:</strong> SCI above T6, AFTER spinal shock resolves</li>
+            <li><strong>Trigger #1:</strong> Distended bladder (kinked catheter)</li>
+            <li><strong>Signs:</strong> Severe HTN, pounding headache, bradycardia, flushing/diaphoresis above lesion
+            </li>
+            <li><strong>FIRST action: SIT UP</strong> (gravity lowers BP), then find and remove cause</li>
+            <li>Hydralazine IV if BP stays critical</li>
+        </ul>
+
+        <h3>Other SCI Priorities</h3>
+        <ul>
+            <li>Respiratory: High cervical (C3-C5) affects phrenic nerve → diaphragm → may need ventilator</li>
+            <li>Secondary injury: Won't know extent until swelling resolves. <strong>Transected = complete,
+                    irreversible</strong></li>
+            <li>DVT prophylaxis within 72 hrs for ≥3 months</li>
+            <li>PROM at least 4× daily. Splints for footdrop</li>
+            <li>Bowel program + intermittent cath (long-term)</li>
+        </ul>
+
+        <!-- ==================== 13. MENINGITIS ==================== -->
+        <h2 id="s13">13. Meningitis & CNS Infections</h2>
+
+        <h3>Classic Symptoms</h3>
+        <p>Headache, high fever, <strong>nuchal rigidity</strong>, photophobia, ↓ LOC</p>
+
+        <h3>Signs of Meningeal Irritation</h3>
+        <ul>
+            <li><strong>Kernig:</strong> Thigh flexed → can't extend leg</li>
+            <li><strong>Brudzinski:</strong> Neck flexion → reflexive hip/knee flexion (more sensitive)</li>
+        </ul>
+
+        <h3>Treatment</h3>
+        <ul>
+            <li><strong>Bacterial:</strong> High-dose IV antibiotics (penicillin G + ceftriaxone) + dexamethasone.
+                URGENT</li>
+            <li><strong>Viral:</strong> Supportive care. Usually self-limiting (summer/fall)</li>
+            <li>Diagnosed by <strong>lumbar puncture</strong>: ↑ WBC, ↑ protein, ↓ glucose in bacterial</li>
+            <li><strong>Droplet precautions</strong> until pathogen identified + 24 hrs on antibiotics</li>
+            <li>Prophylaxis for close contacts within 24 hours (rifampin, cipro, or ceftriaxone)</li>
+            <li>Petechial rash = N. meningitidis → septicemia</li>
+        </ul>
+
+        <h3>Nursing</h3>
+        <ul>
+            <li>Frequent neuro assessment, monitor for ↑ ICP, pain and fever management</li>
+            <li>HOB 30°, head midline</li>
+            <li>CLABSI bundle & CAUTI bundle — neuro patients often have lines + Foley</li>
+        </ul>
+
+        <!-- ==================== 14. AUTOIMMUNE & CN DISORDERS ==================== -->
+        <h2 id="s14">14. Autoimmune & CN Disorders</h2>
+
+        <h3>Multiple Sclerosis</h3>
+        <ul>
+            <li>Progressive CNS demyelination, relapsing-remitting pattern</li>
+            <li><strong>90% have spasticity</strong>, mostly lower extremities</li>
+            <li><strong>Heat worsens symptoms</strong> — maintain temperate environment</li>
+        </ul>
+
+        <h3>Myasthenia Gravis</h3>
+        <ul>
+            <li>Antibodies attack ACh receptors at NMJ → weakness worsens with use</li>
+            <li>Initial: <strong>ocular muscles</strong> (ptosis, diplopia)</li>
+            <li>Treatment: <strong>Mestinon (pyridostigmine)</strong> — cholinesterase inhibitor</li>
+            <li>Thymectomy in patients <60 can produce remission</li>
+            <li>Tensilon test: IV edrophonium → immediate improvement = positive for MG</li>
+        </ul>
+
+        <h3>Myasthenic vs Cholinergic Crisis</h3>
+        <div class="vs">
+            <div>
+                <h4 style="color:#f87171">Myasthenic Crisis</h4>
+                <p>Undermedicated or exacerbation</p>
+                <p>→ ↑ Mestinon, IVIG, plasmapheresis</p>
+            </div>
+            <div>
+                <h4 style="color:#fbbf24">Cholinergic Crisis</h4>
+                <p>Overmedicated with anticholinesterase</p>
+                <p>→ STOP meds, give <strong>atropine</strong></p>
+            </div>
+        </div>
+        <p>Both cause severe weakness + respiratory compromise. Treatment is <strong>OPPOSITE</strong>.</p>
+
+        <h3>Guillain-Barré Syndrome</h3>
+        <ul>
+            <li>Autoimmune attack on <strong>peripheral nerve myelin</strong>, 60-70% follow viral illness</li>
+            <li><strong>Ascending paralysis</strong> (starts in legs, moves up) → respiratory failure = #1 threat</li>
+            <li>Treatment: ICU monitoring, plasmapheresis or IVIG</li>
+        </ul>
+
+        <h3>Trigeminal Neuralgia (CN V)</h3>
+        <ul>
+            <li>Severe STABBING facial pain. Triggers: touching face, brushing teeth, cold air</li>
+            <li>Treatment: <strong>carbamazepine (Tegretol)</strong> — monitor CBC (aplastic anemia risk)</li>
+            <li>Soft foods on unaffected side, lukewarm water, avoid drafts</li>
+        </ul>
+
+        <h3>Bell's Palsy (CN VII)</h3>
+        <ul>
+            <li>Sudden unilateral facial paralysis — <strong>NOT a stroke</strong> (reassure patient)</li>
+            <li>Bell's = ENTIRE face (including forehead). Stroke = lower face only (forehead spared)</li>
+            <li>Treatment: corticosteroids within 72 hours, eye protection, facial exercises</li>
+            <li>Most recover 3-5 weeks</li>
+        </ul>
+
+        <!-- ==================== 15. GERONTOLOGIC ==================== -->
+        <h2 id="s15">15. Gerontologic Considerations</h2>
+
+        <table>
+            <tr>
+                <th>Change</th>
+                <th>Significance</th>
+            </tr>
+            <tr>
+                <td>Brain weight ↓</td>
+                <td>Ventricles enlarge → ↑ risk subdural hematoma</td>
+            </tr>
+            <tr>
+                <td>Cerebral blood flow ↓</td>
+                <td>Slower processing (NORMAL). Memory loss = NOT normal — investigate</td>
+            </tr>
+            <tr>
+                <td>Slower reflexes</td>
+                <td>DTRs diminished — expected</td>
+            </tr>
+            <tr>
+                <td>↓ Thirst sensation</td>
+                <td>Prone to dehydration → confusion, falls</td>
+            </tr>
+            <tr>
+                <td>↓ Temperature regulation</td>
+                <td>Prone to hypo/hyperthermia</td>
+            </tr>
+            <tr>
+                <td>↓ Pain perception</td>
+                <td>Careful with hot/cold packs — burns/frostbite risk</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 16. KEY FORMULAS ==================== -->
+        <h2 id="s16">16. Key Formulas</h2>
+
+        <div class="formula">CPP = MAP − ICP &nbsp;&nbsp;|&nbsp;&nbsp; Normal CPP: 70-80 mmHg &nbsp;&nbsp;|&nbsp;&nbsp;
+            CPP &lt; 50 = irreversible damage</div>
+        <div class="formula">MAP = (SBP + 2×DBP) ÷ 3</div>
+        <div class="formula">GCS ≤ 8 → Intubate &nbsp;&nbsp;|&nbsp;&nbsp; Normal ICP: 0-15 mmHg</div>
+        <div class="formula">tPA: 0.9 mg/kg (max 90 mg) | 10% bolus, 90% over 1 hour | Window: 3-4.5 hrs</div>
+
+        <div class="tip" style="margin-top: 1.5rem;">
+            <strong>Top Priority Concepts:</strong><br>
+            • LOC = most sensitive indicator, always assess first<br>
+            • ↑CO₂ = vasodilation = ↑ICP | ↓CO₂ = vasoconstriction = ↓ICP<br>
+            • HOB 30-45°, head midline for ANY neuro patient<br>
+            • Seizure: airway, don't restrain, don't put anything in mouth, TIME it<br>
+            • Epidural = lucid interval → crash. Subdural = gradual<br>
+            • Neurogenic shock: warm + bradycardia. Hypovolemic: cold + tachycardia<br>
+            • Autonomic dysreflexia: SIT UP, check bladder FIRST<br>
+            • Bell's = whole face. Stroke = lower face only<br>
+            • Myasthenic = ↑ meds. Cholinergic = STOP meds + atropine<br>
+            • Always watch respiratory status no matter what
+        </div>
+
+    </div>
+</body>
+
+</html>
