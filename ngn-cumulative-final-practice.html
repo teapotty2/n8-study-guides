@@ -1756,57 +1756,6 @@
             },
             // ===== CARDIAC CASES =====
   {
-    id: 'card_c1',
-    title: "Aortic Stenosis → Heart Failure",
-    patient: "Mrs. Evelyn Carter",
-    age: 68,
-    dx: "Severe Aortic Stenosis with Decompensated Heart Failure",
-    tabs: {
-      notes: {
-        label: "Nursing Notes",
-        content: "<p><strong>Chief Complaint:</strong> Progressive dyspnea on exertion over 3 months, now occurring at rest.</p><p><strong>History of Present Illness:</strong> 68-year-old female presents with worsening shortness of breath. Initially noticed DOE when climbing stairs, now experiencing dyspnea at rest and orthopnea (sleeps on 3 pillows). Reports fatigue, occasional lightheadedness, and decreased exercise tolerance.</p><p><strong>PMH:</strong> HTN x 20 years, hyperlipidemia.</p><p><strong>Physical Exam:</strong></p><ul><li>Harsh systolic murmur best heard at right 2nd intercostal space (aortic area), radiating to carotids</li><li>S4 gallop present</li><li>Crackles bilateral bases</li><li>Mild bilateral pedal edema 1+</li><li>JVP mildly elevated</li></ul><p><strong>Echocardiogram:</strong> EF 38%, severe aortic stenosis with valve area 0.8 cm² (normal 3.0-4.0 cm²), concentric LVH, elevated LV filling pressures.</p>"
-      },
-      vitals: {
-        label: "Vital Signs",
-        content: "<table><tr><th>Parameter</th><th>Value</th></tr><tr><td>Blood Pressure</td><td>138/88 mmHg</td></tr><tr><td>Heart Rate</td><td>96 bpm, regular</td></tr><tr><td>Respiratory Rate</td><td>24 breaths/min</td></tr><tr><td>SpO2</td><td>93% on room air</td></tr><tr><td>Temperature</td><td>98.4°F (36.9°C)</td></tr></table>"
-      },
-      labs: {
-        label: "Lab Results",
-        content: "<table><tr><th>Lab</th><th>Result</th><th>Reference</th></tr><tr><td>BNP</td><td><strong>680 pg/mL</strong></td><td>&lt;100 pg/mL</td></tr><tr><td>Troponin I</td><td>0.02 ng/mL</td><td>&lt;0.04 ng/mL</td></tr><tr><td>Potassium</td><td>4.2 mEq/L</td><td>3.5-5.0 mEq/L</td></tr><tr><td>Creatinine</td><td>1.3 mg/dL</td><td>0.6-1.2 mg/dL</td></tr><tr><td>Hemoglobin</td><td>11.2 g/dL</td><td>12.0-16.0 g/dL</td></tr><tr><td>Sodium</td><td>138 mEq/L</td><td>136-145 mEq/L</td></tr></table>"
-      },
-      ecg: {
-        label: "ECG",
-        content: "<p><strong>Rhythm:</strong> Normal sinus rhythm</p><p><strong>Rate:</strong> 96 bpm</p><p><strong>Notable Findings:</strong></p><ul><li>Left ventricular hypertrophy (LVH) voltage criteria met</li><li>ST depression in V5-V6 (LV strain pattern)</li><li>Left atrial enlargement</li></ul>"
-      },
-      orders: {
-        label: "Provider Orders",
-        content: "<ul><li>Furosemide (Lasix) 40 mg IV x1 now</li><li>Supplemental O2 via nasal cannula at 2 L/min, titrate to SpO2 ≥94%</li><li>Cardiology consult — STAT</li><li>Echocardiogram (if not already completed)</li><li>Daily weights — same time, same scale</li><li>Strict I&O monitoring</li><li>Sodium-restricted diet (2 g/day)</li><li>Activity: bed rest with bathroom privileges</li><li>Repeat BMP and BNP in AM</li></ul>"
-      }
-    },
-    tabs2: {
-      notes: {
-        label: "Updated Notes",
-        content: "<p><strong>4 hours post-intervention:</strong> Patient reports significant improvement in dyspnea. Able to lie flatter with only 1 pillow. Crackles decreased bilaterally. Urine output 1200 mL over 4 hours following IV furosemide.</p><p><strong>Cardiology Consult Note:</strong> Reviewed echocardiogram — severe aortic stenosis with valve area 0.8 cm², EF 38%. Recommend evaluation for surgical aortic valve replacement (SAVR) vs. transcatheter aortic valve replacement (TAVR). Patient is a surgical candidate. Started on low-dose ACE inhibitor (lisinopril 2.5 mg PO daily) with careful BP monitoring. Continue diuresis. Will reassess for definitive intervention once patient is optimized.</p>"
-      },
-      vitals: {
-        label: "Updated Vitals",
-        content: "<table><tr><th>Parameter</th><th>Value</th></tr><tr><td>Blood Pressure</td><td>128/78 mmHg</td></tr><tr><td>Heart Rate</td><td>84 bpm, regular</td></tr><tr><td>Respiratory Rate</td><td>18 breaths/min</td></tr><tr><td>SpO2</td><td>96% on 2L NC</td></tr><tr><td>Temperature</td><td>98.2°F (36.8°C)</td></tr><tr><td>Urine Output</td><td>1200 mL / 4 hours</td></tr></table>"
-      },
-      labs: {
-        label: "Updated Labs",
-        content: "<table><tr><th>Lab</th><th>Result</th><th>Trend</th></tr><tr><td>BNP</td><td>520 pg/mL</td><td>↓ from 680</td></tr><tr><td>Potassium</td><td>3.9 mEq/L</td><td>↓ from 4.2 (monitor with diuresis)</td></tr><tr><td>Creatinine</td><td>1.3 mg/dL</td><td>Stable</td></tr></table>"
-      },
-      ecg: {
-        label: "Updated ECG",
-        content: "<p><strong>Rhythm:</strong> Normal sinus rhythm</p><p><strong>Rate:</strong> 84 bpm</p><p><strong>Notable Findings:</strong> LVH with strain pattern unchanged. No new ischemic changes.</p>"
-      },
-      orders: {
-        label: "Updated Orders",
-        content: "<ul><li>Continue furosemide 40 mg IV q12h</li><li>Lisinopril 2.5 mg PO daily (new — monitor BP closely)</li><li>Continue O2 2L NC, wean as tolerated to maintain SpO2 ≥94%</li><li>Continue daily weights and strict I&O</li><li>Surgical evaluation for aortic valve replacement</li><li>PT/OT consult for activity progression</li><li>Monitor electrolytes q12h with ongoing diuresis</li></ul>"
-      }
-    }
-  },
-  {
     id: 'card_c2',
     title: "Post-MI Pericarditis → Cardiac Tamponade",
     patient: "Mr. James Rivera",
@@ -2549,130 +2498,11 @@
 
         // ── Cardiac Questions (65) ─────────────────────────────────────────
 
-// ============================================================
-// CASE 1: Aortic Stenosis → Heart Failure (Q1-Q6)
-// ============================================================
 
-Q.push({
-  id: 'card_1', topic: 'cardiac',
-  type: "highlight",
-  caseId: 'card_c1',
-  cjmm: "Recognize Cues",
-  stem: "Based on the client's nursing notes, vital signs, lab results, and ECG, highlight the findings that require immediate follow-up by the nurse.",
-  phrases: [
-    { text: "Harsh systolic murmur at right 2nd intercostal space radiating to carotids", correct: true },
-    { text: "S4 gallop present", correct: true },
-    { text: "EF 38%", correct: true },
-    { text: "Progressive dyspnea on exertion now occurring at rest", correct: true },
-    { text: "Respiratory rate 24 breaths/min", correct: true },
-    { text: "SpO2 93% on room air", correct: true },
-    { text: "BNP 680 pg/mL", correct: true },
-    { text: "ST depression in V5-V6 (strain pattern)", correct: true },
-    { text: "Crackles bilateral bases", correct: true },
-    { text: "HTN x 20 years", correct: false },
-    { text: "Hyperlipidemia", correct: false },
-    { text: "Potassium 4.2 mEq/L", correct: false },
-    { text: "Creatinine 1.3 mg/dL", correct: false },
-    { text: "Troponin 0.02 ng/mL (within normal limits)", correct: false },
-    { text: "Temperature 98.4°F", correct: false },
-    { text: "Sodium 138 mEq/L", correct: false }
-  ],
-  scoring: "plusMinus",
-  rationale: "<strong>N8 Cardiac Lecture — Valvular Heart Disease & Heart Failure:</strong> These findings indicate decompensating aortic stenosis with developing heart failure. <strong>EF 38%</strong> (<40%) = HFrEF (heart failure with reduced ejection fraction). <strong>BNP >100</strong> confirms heart failure — BNP is released from stretched ventricles. <strong>S4 gallop</strong> = stiff, noncompliant ventricle from chronic pressure overload (atrial kick against a rigid wall). The <strong>harsh systolic murmur at the right 2nd ICS</strong> radiating to the carotids is the hallmark of aortic stenosis. <strong>ST depression in V5-V6</strong> represents LV strain from hypertrophy. The normal findings (K+, troponin, temp, Na+) do not require immediate intervention. PMH items are historical context, not acute findings."
-});
 
-Q.push({
-  id: 'card_2', topic: 'cardiac',
-  type: "cloze",
-  caseId: 'card_c1',
-  cjmm: "Analyze Cues",
-  stem: "The client's presentation is most consistent with |0| secondary to |1|. The pathophysiological mechanism is |2| leading to |3|.",
-  selects: [
-    { options: ["decompensated heart failure", "acute coronary syndrome", "pulmonary embolism"], correct: 0 },
-    { options: ["severe aortic stenosis", "mitral regurgitation", "pericarditis"], correct: 0 },
-    { options: ["chronic pressure overload from the stenotic valve increasing afterload", "volume overload from valvular regurgitation", "coronary artery occlusion"], correct: 0 },
-    { options: ["left ventricular hypertrophy with eventual systolic failure", "right ventricular dilation", "atrial enlargement"], correct: 0 }
-  ],
-  scoring: "dyad",
-  rationale: "<strong>N8 Cardiac Lecture — Valvular Disease Pathophysiology:</strong> Aortic stenosis creates <strong>chronic pressure overload</strong> — the LV must generate more pressure to push blood through the narrowed valve (increased afterload). This causes compensatory concentric LVH, but eventually the muscle fails and EF drops. The progression: <strong>AS → LVH → diastolic dysfunction → systolic dysfunction → HF</strong>. This is distinct from ACS (would have rising troponin, acute ST changes in coronary distribution) and PE (sudden onset, D-dimer elevation, right heart strain). Mitral regurgitation causes volume overload (not pressure overload), and pericarditis presents with friction rub and diffuse ST elevation."
-});
 
-Q.push({
-  id: 'card_3', topic: 'cardiac',
-  type: "matrix",
-  caseId: 'card_c1',
-  cjmm: "Prioritize Hypotheses",
-  stem: "For each potential complication, indicate whether it is a PRIORITY concern or a NON-PRIORITY concern for this client at this time.",
-  rows: [
-    "Hyperglycemia",
-    "Syncope or sudden cardiac death",
-    "Mild anemia (Hgb 11.2)",
-    "Pulmonary edema",
-    "Angina from decreased coronary perfusion",
-    "Hyperlipidemia progression",
-    "Acute kidney injury from low cardiac output"
-  ],
-  cols: ["Priority", "Non-Priority"],
-  correct: [1, 0, 1, 0, 0, 1, 0],
-  scoring: "perRow",
-  rationale: "<strong>N8 Cardiac Lecture — Aortic Stenosis Clinical Triad:</strong> The classic triad of symptomatic aortic stenosis = <strong>HF (dyspnea) + syncope + angina</strong>. These are life-threatening. <strong>Pulmonary edema</strong> is an immediate risk given EF 38% and current crackles. <strong>Syncope</strong> occurs because the stenotic valve limits cardiac output during exertion — the brain doesn't get enough blood. <strong>Angina</strong> occurs because the hypertrophied LV has increased oxygen demand but the stenotic valve limits coronary perfusion (even without CAD). Once symptoms appear in AS, prognosis worsens dramatically without valve replacement: mean survival is 2-3 years with HF symptoms, 3 years with syncope, and 5 years with angina. Hyperglycemia, mild anemia, and hyperlipidemia are chronic management issues — important but not the priority in this acute decompensation. <strong>Acute kidney injury</strong> is a priority concern — reduced cardiac output from the failing LV leads to decreased renal perfusion. This patient's creatinine is already mildly elevated at 1.3, and IV furosemide (while necessary) can further stress the kidneys. Monitor UO and creatinine closely."
-});
 
-Q.push({
-  id: 'card_4', topic: 'cardiac',
-  type: "selectN",
-  n: 4,
-  caseId: 'card_c1',
-  cjmm: "Generate Solutions",
-  stem: "The nurse is planning care for this client. Select the 4 priority nursing interventions.",
-  options: [
-    { text: "Position the head of bed elevated (high Fowler's or orthopneic position)", correct: true },
-    { text: "Administer IV furosemide as prescribed", correct: true },
-    { text: "Apply supplemental O2 to maintain SpO2 ≥94%", correct: true },
-    { text: "Initiate strict I&O monitoring and obtain daily weights", correct: true },
-    { text: "Administer IV nitroglycerin for afterload reduction", correct: false },
-    { text: "Administer spironolactone 25 mg PO for potassium-sparing diuresis", correct: false },
-    { text: "Administer IV morphine for anxiety and dyspnea relief", correct: false },
-    { text: "Start anticoagulation therapy with heparin", correct: false }
-  ],
-  scoring: "plusMinus",
-  rationale: "<strong>N8 Cardiac Lecture — Heart Failure Management:</strong> Priority interventions target the pathophysiology: <strong>HOB elevation</strong> reduces venous return (preload) and improves lung expansion. <strong>IV furosemide</strong> promotes diuresis to reduce fluid overload. <strong>O2</strong> addresses hypoxemia (SpO2 93%). <strong>I&O and daily weights</strong> are essential to monitor fluid balance — 1 kg weight gain = ~1L fluid retention. IV nitroglycerin is used in HF for preload reduction but must be used cautiously in aortic stenosis (these patients are preload-dependent; excessive preload reduction can cause severe hypotension). Spironolactone is a long-term GDMT medication, not an acute intervention. IV morphine is no longer recommended in acute HF (respiratory depression risk, no mortality benefit). Anticoagulation is not indicated for AS unless concurrent AFib."
-});
 
-Q.push({
-  id: 'card_5', topic: 'cardiac',
-  type: "ordered",
-  caseId: 'card_c1',
-  cjmm: "Take Action",
-  stem: "Place the following nursing actions in the priority order they should be performed for this client.",
-  items: [
-    "Elevate the head of bed and position client upright (orthopneic position)",
-    "Apply supplemental oxygen via nasal cannula at 2 L/min",
-    "Administer IV furosemide 40 mg as prescribed",
-    "Insert Foley catheter and initiate strict I&O monitoring",
-    "Obtain daily weight and compare to baseline",
-    "Prepare for cardiology consultation and echocardiogram"
-  ],
-  scoring: "plusMinus",
-  rationale: "<strong>N8 Cardiac Lecture — ABCs & Prioritization in Acute HF:</strong> Prioritize using the ABC framework: <strong>1) Position upright</strong> — immediate, non-pharmacologic intervention to reduce preload and improve breathing (Airway/Breathing). <strong>2) Apply O2</strong> — addresses hypoxemia (SpO2 93%, goal ≥94%). <strong>3) Administer furosemide</strong> — pharmacologic intervention to reduce fluid overload. <strong>4) Foley/I&O</strong> — must monitor response to diuretic therapy (expect brisk diuresis). <strong>5) Daily weight</strong> — objective measure of fluid status. <strong>6) Cardiology consult/echo</strong> — important but less urgent than stabilizing the patient. Remember: intervene first, investigate second."
-});
-
-Q.push({
-  id: 'card_6', topic: 'cardiac',
-  type: "cloze",
-  caseId: 'card_c1',
-  cjmm: "Evaluate Outcomes",
-  useTabs2: true,
-  stem: "The client's response to diuretic therapy has been |0| as evidenced by |1|. The definitive treatment for this client's underlying condition is |2| because |3|.",
-  selects: [
-    { options: ["effective", "ineffective", "inconclusive"], correct: 0 },
-    { options: ["improved urine output (1200 mL/4 hrs), decreasing BNP, and improved SpO2 to 96%", "worsening crackles, declining blood pressure, and decreasing urine output", "unchanged symptoms and stable BNP levels"], correct: 0 },
-    { options: ["aortic valve replacement (surgical or transcatheter)", "lifelong diuretic therapy alone", "cardiac transplantation"], correct: 0 },
-    { options: ["medical therapy manages symptoms but only valve replacement corrects the mechanical obstruction", "long-term diuretic therapy can reverse the stenotic valve changes and restore normal cardiac function", "cardiomyopathy has progressed beyond what valve replacement can address, requiring transplant evaluation"], correct: 0 }
-  ],
-  scoring: "dyad",
-  rationale: "<strong>N8 Cardiac Lecture — Valvular Disease Definitive Management:</strong> Diuretics improve symptoms by reducing preload and congestion but <strong>do not fix the stenotic valve</strong>. Evidence of effective diuresis: UO 1200 mL/4 hrs (brisk response), BNP trending down (680 → 520), SpO2 improved (93% → 96%). <strong>Aortic valve replacement (AVR) is definitive</strong> — once symptomatic AS develops, survival without surgery is poor (approximately 50% 2-year mortality). Options include <strong>surgical AVR</strong> (SAVR — mechanical or tissue valve, open-heart surgery) or <strong>TAVR</strong> (transcatheter, for high-risk surgical candidates). Medical therapy is a bridge to surgery, not a cure. Cardiac transplant is reserved for end-stage HF without correctable cause."
-});
 
 // ============================================================
 // CASE 2: Post-MI Pericarditis → Tamponade (Q7-Q12)
@@ -4665,34 +4495,7 @@ Q.push({
             rationale: "<strong>Fluid & Electrolytes Lecture — DKA Monitoring & the 2-Bag Protocol:</strong> Glucose is responding well (486→280) but <strong>acidosis lags behind</strong> — pH still 7.26, HCO3 only 12, anion gap still 18. This is the classic DKA trap: <strong>glucose corrects before acidosis</strong>. Stopping insulin now would cause acidosis rebound. The <strong>2-bag protocol</strong> solves this: add dextrose to prevent hypoglycemia while continuing insulin to resolve acidosis. The <strong>K+ drop from 5.6 to 4.1</strong> in 4 hours is the textbook potassium trap — the initial 5.6 was falsely elevated from acidosis shifting K+ out of cells. Now insulin is driving K+ back in, and the true total body deficit is being revealed. Action: <strong>increase KCl in IV to 40 mEq/L</strong> and monitor closely. K+ is never given IV push — always diluted and infused over time."
         });
 
-        // ===== DM FOUNDATIONS =====
-
-        Q.push({
-            id: 'fluid_7', topic: 'fluid', type: "mc",
-            stem: "A nurse is teaching a newly diagnosed patient about Type 1 diabetes mellitus. Which statement by the nurse is MOST accurate?",
-            opts: [
-                "Type 1 DM results from autoimmune destruction of pancreatic beta cells, causing absolute insulin deficiency",
-                "Type 1 DM is caused by insulin resistance at the cellular receptor level",
-                "Type 1 DM accounts for approximately 95% of all diabetes cases",
-                "Type 1 DM can be managed with oral hypoglycemic agents alone"
-            ],
-            correct: 0,
-            rationale: "<strong>Fluid & Electrolytes Lecture — DM Foundations:</strong> <strong>Type 1 DM</strong> = autoimmune beta-cell destruction → absolute insulin deficiency. The body produces NO insulin, requiring exogenous insulin for life. Presents acutely with the 'three Ps' (polyuria, polydipsia, polyphagia) + sudden weight loss + ketoacidosis if untreated. <strong>Type 2</strong> involves insulin resistance + progressive beta-cell dysfunction, accounts for ~95% of cases, and initially may respond to oral agents. Type 1 patients can NEVER use oral agents alone — they need insulin to survive."
-        });
-
-        Q.push({
-            id: 'fluid_8', topic: 'fluid', type: "mc",
-            stem: "Which diagnostic criterion confirms a diabetes mellitus diagnosis?",
-            opts: [
-                "HbA1C ≥6.5% on two separate occasions",
-                "Random blood glucose of 160 mg/dL with polyuria",
-                "Fasting blood glucose of 110 mg/dL",
-                "2-hour OGTT of 180 mg/dL"
-            ],
-            correct: 0,
-            rationale: "<strong>Fluid & Electrolytes Lecture — DM Diagnosis:</strong> Diagnostic criteria (any one, confirmed by repeat testing): <strong>HbA1C ≥6.5%</strong> (reflects 2-3 month average), <strong>fasting glucose ≥126 mg/dL</strong> (fasting ≥8 hours), <strong>random glucose ≥200 mg/dL WITH classic symptoms</strong>, or <strong>2-hour OGTT ≥200 mg/dL</strong>. A random glucose of 160 doesn't meet the ≥200 threshold. Fasting of 110 is 'impaired fasting glucose' (prediabetes range 100-125). OGTT of 180 doesn't meet the ≥200 threshold."
-        });
-
+        
         Q.push({
             id: 'fluid_9', topic: 'fluid', type: "mc",
             stem: "Which insulin is the ONLY type approved for intravenous administration?",
@@ -4706,66 +4509,10 @@ Q.push({
             rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Types:</strong> <strong>Regular insulin</strong> is the ONLY insulin approved for IV use. It has onset 30-60 min (SQ) but works immediately IV. In DKA, the standard preparation is 100 units regular insulin in 100 mL NS (1 unit/mL), so the infusion rate in mL/hr = units/hr. Rapid-acting insulins (lispro, aspart) are for SQ bolus with meals. NPH is intermediate-acting SQ only. Glargine is long-acting SQ only and CANNOT be mixed with other insulins (pH 4)."
         });
 
-        Q.push({
-            id: 'fluid_10', topic: 'fluid', type: "sata",
-            stem: "A nurse is reviewing insulin types with a student. Which statements about insulin are correct? <em>(Select all that apply.)</em>",
-            opts: [
-                { t: "Rapid-acting insulin (lispro, aspart) has onset of 5-15 minutes and should be given immediately before meals", c: true },
-                { t: "Regular insulin has onset of 30-60 minutes and should be given 15-30 minutes before meals", c: true },
-                { t: "Glargine (Lantus) provides a continuous 24-hour basal level with no peak", c: true },
-                { t: "Glargine can be safely mixed with NPH in the same syringe", c: false },
-                { t: "NPH insulin peaks at 4-12 hours, creating a hypoglycemia risk window", c: true },
-                { t: "All insulin vials should be shaken vigorously before use", c: false },
-                { t: "Inhaled insulin (Afrezza) requires pulmonary function testing before initiation", c: true }
-            ],
-            rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Kinetics:</strong> <strong>Rapid-acting</strong> (lispro, aspart, glulisine): onset 5-15 min, peak 30-60 min, duration 3-5 hr. Give with meals. <strong>Short-acting (Regular)</strong>: onset 30-60 min, peak 2-3 hr, duration 4-6 hr. Give 15-30 min before meals. <strong>Intermediate (NPH)</strong>: onset 1-1.5 hr, peak 4-12 hr, duration up to 24 hr. The peak window creates hypoglycemia risk — ensure snack availability. <strong>Long-acting (Glargine)</strong>: onset 3-6 hr, NO peak ('peakless'), duration 24 hr. <strong>Cannot mix glargine</strong> with any other insulin (pH 4 — mixing destroys the slow-release mechanism). Only NPH is cloudy; shake none of them vigorously. <strong>Inhaled insulin (Afrezza)</strong>: requires baseline and periodic PFTs — contraindicated in chronic lung disease."
-        });
-
-        Q.push({
-            id: 'fluid_11', topic: 'fluid', type: "sata",
-            stem: "Before administering insulin to a hospitalized patient, the nurse should perform which safety checks? <em>(Select all that apply.)</em>",
-            opts: [
-                { t: "Verify the blood glucose level (check BG before giving insulin)", c: true },
-                { t: "Confirm the patient has food available — meal tray arriving or snack at bedside", c: true },
-                { t: "Verify the correct insulin type, dose, and route against the order", c: true },
-                { t: "Have another nurse independently verify the insulin dose (high-alert medication)", c: true },
-                { t: "Draw up insulin using a tuberculin syringe for more precise measurement", c: false },
-                { t: "Administer insulin intramuscularly for faster absorption", c: false }
-            ],
-            rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Safety:</strong> Insulin is a <strong>high-alert medication</strong>. Critical safety checks: <strong>1) Check BG</strong> — never give insulin blindly. <strong>2) Ensure food availability</strong> — giving insulin without a meal = iatrogenic hypoglycemia (a leading cause of hospital harm). <strong>3) Verify order</strong> — right insulin, right dose, right route. <strong>4) Independent double-check</strong> — two-nurse verification per most hospital policies. Use <strong>insulin syringes</strong> (calibrated in units), not tuberculin syringes. Insulin is given <strong>subcutaneously</strong> (rotate sites: abdomen fastest absorption, then arms, thighs, buttocks). IM injection causes unpredictable absorption and is not standard practice."
-        });
-
-        Q.push({
-            id: 'fluid_12', topic: 'fluid', type: "matrix",
-            stem: "For each insulin characteristic, indicate whether it describes Rapid-Acting (Lispro), Intermediate-Acting (NPH), or Long-Acting (Glargine) insulin.",
-            rows: [
-                "Onset 5-15 minutes, give immediately before meals",
-                "Appears cloudy — roll gently, never shake",
-                "Peakless — provides continuous 24-hour basal coverage",
-                "Peak 4-12 hours — hypoglycemia risk during this window",
-                "Cannot be mixed with any other insulin (pH 4)",
-                "Onset 1-1.5 hours, duration up to 24 hours"
-            ],
-            cols: ["Rapid-Acting (Lispro)", "Intermediate (NPH)", "Long-Acting (Glargine)"],
-            correct: [0, 1, 2, 1, 2, 1],
-            scoring: "perRow",
-            rationale: "<strong>Fluid & Electrolytes Lecture — Insulin Kinetics Matching:</strong> <strong>Rapid-acting (Lispro)</strong>: onset 5-15 min, peak 30-60 min, duration 3-5 hr. Give immediately with meals. <strong>NPH</strong>: onset 1-1.5 hr, peak 4-12 hr, duration up to 24 hr. Only cloudy insulin. The broad peak window (4-12 hr) means hypoglycemia can strike at unpredictable times — ensure snacks. <strong>Glargine</strong>: onset 3-6 hr, no peak ('peakless'), duration 24 hr. Cannot mix (acidic pH destroys the crystal structure). Given once daily at the same time."
-        });
-
-        Q.push({
-            id: 'fluid_13', topic: 'fluid', type: "ordered",
-            stem: "A nurse is preparing to mix regular and NPH insulin in one syringe. Place the steps in the correct order.",
-            items: [
-                "Roll the NPH vial gently to resuspend (never shake)",
-                "Inject air into the NPH vial equal to the NPH dose (do NOT withdraw insulin yet)",
-                "Inject air into the regular insulin vial and withdraw the regular (clear) insulin dose",
-                "Insert the needle into the NPH vial and withdraw the NPH (cloudy) insulin dose",
-                "Verify the total volume in the syringe equals both doses combined"
-            ],
-            scoring: "plusMinus",
-            rationale: "<strong>Fluid & Electrolytes Lecture — Mixing Insulin ('Clear Before Cloudy'):</strong> The mnemonic is <strong>'clear before cloudy'</strong>: draw up regular (clear) before NPH (cloudy). But the air injection sequence matters: <strong>1) Roll NPH</strong> to resuspend. <strong>2) Inject air into NPH first</strong> (but don't withdraw yet — avoids contaminating regular with NPH particles). <strong>3) Inject air into regular and withdraw the dose</strong>. <strong>4) NOW go back to NPH and withdraw</strong>. <strong>5) Verify total</strong>. The reason: if you contaminate the regular vial with NPH particles, you've ruined the entire multi-dose vial. Remember: glargine CANNOT be mixed (pH 4 destroys the slow-release mechanism)."
-        });
-
+        
+        
+        
+        
         Q.push({
             id: 'fluid_14', topic: 'fluid', type: "fillin",
             stem: "A patient weighing 72 kg is in DKA. The provider orders a continuous insulin drip at 0.1 units/kg/hr. The standard preparation is 100 units in 100 mL NS. The nurse should set the IV pump to:<br><br>Rate = ___",
@@ -4773,62 +4520,10 @@ Q.push({
             rationale: "<strong>Fluid & Electrolytes Lecture — DKA Insulin Drip Calculation:</strong> Dose = 0.1 units/kg/hr × 72 kg = <strong>7.2 units/hr</strong>. With the standard preparation of 100 units/100 mL (= 1 unit/mL), the rate in mL/hr equals the dose in units/hr. So the pump rate = <strong>7.2 mL/hr</strong>. This is the standard DKA insulin infusion rate. Remember: flush the entire IV tubing with the insulin solution before connecting to the patient — insulin adheres to plastic tubing, and without flushing, the patient won't receive the full dose initially."
         });
 
-        // ===== ORAL AGENTS =====
-
-        Q.push({
-            id: 'fluid_15', topic: 'fluid', type: "mc",
-            stem: "A nurse is caring for a patient on metformin who is scheduled for a CT scan with IV contrast dye. The priority nursing action is to:",
-            opts: [
-                "Hold metformin 48 hours before and after the contrast procedure",
-                "Administer metformin with extra fluids before the procedure",
-                "Request a different oral hypoglycemic for the day of the procedure",
-                "Continue metformin as scheduled — contrast does not interact with metformin"
-            ],
-            correct: 0,
-            rationale: "<strong>Fluid & Electrolytes Lecture — Metformin Safety:</strong> Metformin must be <strong>held 48 hours before AND after</strong> contrast dye administration. The concern: contrast dye is nephrotoxic and can temporarily reduce renal function. If metformin is present during reduced renal function, it cannot be cleared → accumulates → <strong>fatal lactic acidosis</strong>. Metformin is also contraindicated in renal impairment (always monitor BUN/creatinine). Other metformin pearls: GI side effects (take with food), no hypoglycemia as monotherapy, B12 deficiency with long-term use."
-        });
-
-        Q.push({
-            id: 'fluid_16', topic: 'fluid', type: "mc",
-            stem: "Which class of oral hypoglycemics works by stimulating pancreatic beta cells to secrete more insulin and carries a significant risk of hypoglycemia?",
-            opts: [
-                "Sulfonylureas (glipizide, glyburide)",
-                "Biguanides (metformin)",
-                "SGLT2 inhibitors (canagliflozin)",
-                "DPP-4 inhibitors (sitagliptin)"
-            ],
-            correct: 0,
-            rationale: "<strong>Fluid & Electrolytes Lecture — Oral Hypoglycemics:</strong> <strong>Sulfonylureas</strong> stimulate beta cells to secrete insulin regardless of blood glucose level → significant <strong>hypoglycemia risk</strong>. Contraindicated in sulfa allergy patients. Beta-blockers mask hypoglycemia symptoms — dangerous combination. <strong>Metformin</strong> reduces hepatic glucose production — low hypoglycemia risk. <strong>SGLT2 inhibitors</strong> cause glycosuria (glucose in urine) — low hypoglycemia risk but UTI/yeast infection risk. <strong>DPP-4 inhibitors</strong> increase incretins — low hypoglycemia risk, weight-neutral."
-        });
-
-        Q.push({
-            id: 'fluid_17', topic: 'fluid', type: "matrix",
-            stem: "For each oral hypoglycemic agent, indicate its PRIMARY mechanism of action.",
-            rows: [
-                "Metformin",
-                "Glipizide (sulfonylurea)",
-                "Acarbose (alpha-glucosidase inhibitor)",
-                "Canagliflozin (SGLT2 inhibitor)",
-                "Pioglitazone (thiazolidinedione)"
-            ],
-            cols: ["Decreases Hepatic Glucose Production", "Stimulates Beta Cell Insulin Secretion", "Delays Carbohydrate Absorption", "Prevents Renal Glucose Reabsorption", "Sensitizes Peripheral Tissue to Insulin"],
-            correct: [0, 1, 2, 3, 4],
-            scoring: "perRow",
-            rationale: "<strong>Fluid & Electrolytes Lecture — Oral Hypoglycemic Mechanisms:</strong> <strong>Metformin</strong> = decreases hepatic glucose production (also improves insulin sensitivity). <strong>Sulfonylureas (glipizide)</strong> = stimulate beta cells to secrete insulin (HIGH hypoglycemia risk). <strong>Alpha-glucosidase inhibitors (acarbose)</strong> = delay carb absorption in the GI tract (take with first bite). <strong>SGLT2 inhibitors (canagliflozin)</strong> = prevent kidneys from reabsorbing glucose → glycosuria. <strong>Thiazolidinediones (pioglitazone)</strong> = sensitize peripheral tissues to insulin. Each class targets a different pathophysiologic mechanism — combination therapy attacks hyperglycemia from multiple angles."
-        });
-
-        Q.push({
-            id: 'fluid_18', topic: 'fluid', type: "cloze",
-            stem: "Metformin's most dangerous adverse effect is |0|, which is why it must be |1|. Sulfonylureas are contraindicated in patients with |2|.",
-            selects: [
-                { options: ["lactic acidosis", "hypoglycemia", "hepatic failure"], correct: 0 },
-                { options: ["held 48 hours before and after IV contrast dye and contraindicated in renal/hepatic impairment", "taken only on an empty stomach to prevent drug interaction", "discontinued after 6 months regardless of glycemic control"], correct: 0 },
-                { options: ["sulfa allergy — and beta-blockers mask hypoglycemia symptoms in patients on sulfonylureas", "penicillin allergy — cross-reactivity occurs", "shellfish allergy — shared iodine pathway"], correct: 0 }
-            ],
-            scoring: "dyad",
-            rationale: "<strong>Fluid & Electrolytes Lecture — Metformin & Sulfonylurea Safety:</strong> Metformin's feared complication is <strong>lactic acidosis</strong> — occurs when metformin accumulates in the setting of renal impairment, hepatic dysfunction, or contrast-induced nephropathy. Always monitor BUN/Cr. Hold 48h around contrast. Sulfonylureas contain a sulfa moiety → <strong>contraindicated in sulfa allergy</strong>. Additionally, <strong>beta-blockers mask hypoglycemia symptoms</strong> (tachycardia, tremor, diaphoresis) in patients on sulfonylureas — the patient may not realize they're hypoglycemic until confusion or seizure occurs."
-        });
-
+        
+        
+        
+        
         // ===== HYPOGLYCEMIA =====
 
 
