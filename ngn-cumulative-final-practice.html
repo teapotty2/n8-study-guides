@@ -6152,7 +6152,453 @@ Q.push({
   rationale: '<strong>Subarachnoid Hemorrhage (SAH):</strong> "Worst headache of my life" + sudden onset = <strong>thunderclap headache</strong> = SAH until proven otherwise. CT confirms subarachnoid blood. Etiology: ruptured berry aneurysm (most common), AVM, trauma. This is a neurosurgical emergency — rebleeding from the unsecured aneurysm in the first 24 hours has extremely high mortality. Priority: <strong>immediate neurosurgery notification</strong> for emergent aneurysm securing (endovascular coiling or surgical clipping). Nursing: strict BP control (avoid hypertension — increases rebleeding risk; avoid hypotension — vasospasm risk), seizure precautions, bed rest with HOB 30°, pain management (avoid opioids that cloud assessment), frequent neuro checks. Anticoagulation is absolutely contraindicated — there is active intracranial hemorrhage.'
 });
 
+// ── CARDIAC: PACEMAKER / ADVANCED (card_66 – card_72) ──
+Q.push({
+  id: 'card_66', topic: 'cardiac', type: 'mc', cjmm: 'Recognize',
+  stem: 'A patient with a permanent pacemaker has a rhythm strip showing pacemaker spikes followed by NO QRS complexes. The nurse recognizes this as:',
+  opts: [
+    {t:'Failure to sense — the pacemaker cannot detect native beats',c:false},
+    {t:'Failure to capture — the pacemaker fires but fails to depolarize the myocardium',c:true},
+    {t:'Normal pacemaker function — occasional spikes without capture are expected',c:false},
+    {t:'Battery depletion — the pacemaker has stopped functioning entirely',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Pacemaker Failure to Capture:</strong> Capture = the pacemaker spike successfully depolarizes the myocardium, producing a QRS. <strong>Failure to capture = spike present, QRS absent</strong>. Causes: lead displacement/fracture, elevated pacing threshold (hyperkalemia, acidosis, fibrosis at lead tip), battery depletion. Fix: <strong>increase the milliamps (output/voltage)</strong> to deliver a stronger stimulus. Assess hemodynamic status — intrinsic rhythm may still provide some output. Transcutaneous pacing may be needed if symptomatic. Compare with failure to sense (pacemaker fires randomly regardless of native beats).'
+});
 
+Q.push({
+  id: 'card_67', topic: 'cardiac', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with a demand pacemaker set at 60 bpm has pacemaker spikes occurring within native QRS complexes and on T waves. The nurse\'s priority concern is:',
+  opts: [
+    {t:'Failure to capture — spikes are not generating QRS complexes',c:false},
+    {t:'Failure to sense — pacemaker cannot detect native beats; spike on T wave risks R-on-T → VF',c:true},
+    {t:'Oversensing — the pacemaker is inhibited by artifact',c:false},
+    {t:'Normal competitive pacing — two rhythms coexisting safely',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Pacemaker Failure to Sense:</strong> A demand pacemaker fires ONLY when native rate drops below the set rate. <strong>Failure to sense</strong> = pacemaker cannot "see" native beats → fires regardless → spikes land on QRS complexes or T waves. A spike on the T wave (vulnerable period) can trigger <strong>R-on-T → ventricular fibrillation</strong>. This is immediately dangerous. Fix: <strong>increase sensitivity (decrease mV threshold)</strong> so the pacemaker detects native beats. Check for lead displacement or electromagnetic interference. Emergency: place magnet over pacemaker to convert to asynchronous (fixed-rate) mode temporarily.'
+});
+
+Q.push({
+  id: 'card_68', topic: 'cardiac', type: 'mc', cjmm: 'Generate',
+  stem: 'A patient with BP 218/128 mmHg develops confusion and slurred speech. The provider orders IV labetalol for hypertensive emergency. The target for MAP reduction in the FIRST hour is:',
+  opts: [
+    {t:'Normalize to <120/80 mmHg within 30 minutes',c:false},
+    {t:'Reduce MAP by no more than 25% in the first hour',c:true},
+    {t:'Reduce systolic by 50 mmHg per hour until normalized',c:false},
+    {t:'Reduce diastolic to <90 mmHg as rapidly as possible',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Hypertensive Emergency — 25% MAP Rule:</strong> Hypertensive emergency = severely elevated BP WITH end-organ damage (AMS, stroke symptoms, AKI, acute HF, dissection). The safety principle: <strong>reduce MAP by no more than 25% in the first hour</strong>. Organs adapted to high pressure suffer ischemic injury if pressure drops too fast (cerebral autoregulation fails — watershed infarcts). After 25% reduction, titrate toward ~160/100 over the next 24–48 hours. IV agents: labetalol, nicardipine, clevidipine. Hypertensive urgency (no end-organ damage) = oral agents, gradual reduction over 24–48 hours.'
+});
+
+Q.push({
+  id: 'card_69', topic: 'cardiac', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each cardiomyopathy type to its most distinguishing characteristic.',
+  rows: [
+    'Dilated cardiomyopathy',
+    'Hypertrophic cardiomyopathy (HCM)',
+    'Restrictive cardiomyopathy'
+  ],
+  cols: ['Most common; ventricle dilates, ↓EF; causes: alcohol, viral, idiopathic; treat with standard HF therapy', 'AVOID digoxin and nitrates; dynamic outflow obstruction worsens with Valsalva/dehydration; risk of sudden cardiac death in athletes', 'Stiff non-compliant walls; impaired diastolic filling; caused by amyloidosis/sarcoidosis; normal EF but ↓CO'],
+  correct: [0, 1, 2],
+  scoring: 'perRow',
+  rationale: '<strong>Cardiomyopathy Types:</strong> <strong>Dilated</strong>: ventricle dilates and weakens (↓EF, systolic dysfunction). Causes: alcohol, viral myocarditis, postpartum, idiopathic. Treat: ACE-I, beta-blocker, diuretics, ICD if EF <35%. <strong>HCM</strong>: septal hypertrophy creates dynamic outflow obstruction. Worsens with anything reducing preload (Valsalva, dehydration, nitroglycerin) or decreasing afterload. <strong>AVOID digoxin</strong> (increases contractility → worsens obstruction) and <strong>nitrates</strong> (reduces preload → worsens obstruction). Treat with beta-blockers, CCBs. Cause of sudden cardiac death in young athletes. <strong>Restrictive</strong>: stiff ventricles impair filling; causes include amyloidosis, sarcoidosis, hemochromatosis. Treatment is supportive.'
+});
+
+Q.push({
+  id: 'card_70', topic: 'cardiac', type: 'mc', cjmm: 'Recognize',
+  stem: 'A patient with IV drug use history has fever, new murmur, and splinter hemorrhages under fingernails. The nurse suspects infective endocarditis. Which finding is MOST specific to this diagnosis?',
+  opts: [
+    {t:'Friction rub heard best leaning forward',c:false},
+    {t:'Osler nodes (painful fingertip nodules) AND Janeway lesions (painless palmar macules)',c:true},
+    {t:'Kussmaul\'s sign — JVD increasing with inspiration',c:false},
+    {t:'S3 gallop with bibasilar crackles',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Infective Endocarditis — Classic Signs:</strong> <strong>Osler nodes</strong>: <em>painful</em> nodules on fingertips/toes (immune complex deposition). <strong>Janeway lesions</strong>: <em>painless</em> hemorrhagic macules on palms/soles (septic microemboli). Together, nearly pathognomonic. Other findings: Roth spots (retinal hemorrhages), splinter hemorrhages, new murmur, positive blood cultures. Most common organism in IV drug users: <em>Staphylococcus aureus</em> (right-sided, tricuspid valve). Treatment: prolonged IV antibiotics 4–6 weeks. Friction rub = pericarditis. Kussmaul\'s = constrictive pericarditis. S3 = heart failure.'
+});
+
+Q.push({
+  id: 'card_71', topic: 'cardiac', type: 'mc', cjmm: 'Recognize',
+  stem: 'A patient is post-op day 2 following CABG. The nurse notes a new irregularly irregular rhythm at 116 bpm. The nurse should:',
+  opts: [
+    {t:'Continue routine monitoring — this is expected to resolve spontaneously within hours',c:false},
+    {t:'Recognize post-op atrial fibrillation, which peaks day 2–3 post-CABG, and notify the provider for treatment',c:true},
+    {t:'Administer NS bolus — tachycardia indicates volume depletion',c:false},
+    {t:'Prepare for emergent cardioversion — Afib post-CABG always requires immediate conversion',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Post-CABG Atrial Fibrillation:</strong> Afib is the <strong>most common complication after CABG</strong>, occurring in 25–40% of patients. It peaks on post-op <strong>day 2–3</strong> from surgical inflammation, pericardial irritation, and sympathetic activation. Notify provider for rate control (beta-blockers, CCBs) and anticoagulation consideration. Amiodarone is often used prophylactically in high-risk patients. Emergent cardioversion only if hemodynamically unstable. The saphenous vein is most commonly harvested; internal mammary artery is preferred for LAD grafting (superior long-term patency).'
+});
+
+Q.push({
+  id: 'card_72', topic: 'cardiac', type: 'mc', cjmm: 'Evaluate',
+  stem: 'A patient newly prescribed sublingual nitroglycerin (NTG) for angina states: "If the pain goes away after one tablet, I don\'t need to call my doctor." The nurse\'s best response is:',
+  opts: [
+    {t:'"That\'s correct — one tablet resolving pain means it was mild angina."',c:false},
+    {t:'"If chest pain is new, severe, or doesn\'t respond to the first dose, call 911 immediately — do not wait for all 3 doses."',c:true},
+    {t:'"Take all 3 tablets at once for fastest relief."',c:false},
+    {t:'"Store extra tablets in your bathroom medicine cabinet for easy access."',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Nitroglycerin Patient Education:</strong> Protocol: 1 tablet SL → wait 5 min → repeat if no relief → up to 3 doses. If pain is NEW or SEVERE: <strong>call 911 after the 1st dose</strong> — do not wait for 3 doses to fail. Storage: original amber glass bottle, <strong>not</strong> the bathroom (heat/humidity degrade NTG rapidly). Keep at cool, dark location. NTG expires ~3–6 months after opening. Side effects: headache, flushing, hypotension — sit or lie down when taking. Contraindicated with PDE-5 inhibitors (sildenafil) — severe hypotension. Always carry NTG.'
+});
+
+// ── EMERGENCY: ADDITIONAL HIGH-YIELD (em_92 – em_98) ──
+Q.push({
+  id: 'em_92', topic: 'emergency', type: 'sata', cjmm: 'Recognize',
+  stem: 'A patient with septic shock develops oozing from IV sites and hematuria. Labs: platelets 38,000/μL, PT prolonged, aPTT prolonged, fibrinogen 80 mg/dL, D-dimer markedly elevated. Select ALL findings consistent with DIC.',
+  opts: [
+    {t:'Thrombocytopenia (platelets <100,000)',c:true},
+    {t:'Prolonged PT AND aPTT simultaneously',c:true},
+    {t:'Markedly elevated D-dimer',c:true},
+    {t:'Decreased fibrinogen (<150 mg/dL)',c:true},
+    {t:'Elevated hemoglobin',c:false},
+    {t:'Clinical bleeding from multiple sites simultaneously',c:true}
+  ],
+  scoring: 'plusMinus',
+  rationale: '<strong>DIC — Labs and Clinical Features:</strong> DIC = simultaneous pathologic clotting AND bleeding. Widespread microvascular clotting consumes all factors and platelets, causing paradoxical bleeding. Lab pattern: <strong>↑PT, ↑aPTT</strong> (consumed factors), <strong>↓platelets</strong>, <strong>↓fibrinogen</strong> (normal 200–400 mg/dL; <150 = significant depletion), <strong>↑D-dimer</strong> (most sensitive — fibrin breakdown products). Clinical: bleeding from IV sites, mucous membranes, AND organ ischemia from microvascular thrombi. Triggers: sepsis, massive transfusion, obstetric emergencies, malignancy, trauma. Treatment: treat underlying cause + <strong>FFP</strong> (coagulation factors) + <strong>cryoprecipitate</strong> (fibrinogen) + platelets.'
+});
+
+Q.push({
+  id: 'em_93', topic: 'emergency', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each biological agent to its characteristic presentation and isolation requirement.',
+  rows: [
+    'Anthrax (Bacillus anthracis)',
+    'Botulism (Clostridium botulinum)',
+    'Smallpox (Variola major)',
+    'Ebola virus disease'
+  ],
+  cols: [
+    'Standard precautions; painless black eschar (cutaneous) OR mediastinal widening + flu → respiratory failure (inhalational); ciprofloxacin 60 days',
+    'Standard precautions; DESCENDING flaccid paralysis; diplopia; NO fever; antitoxin + respiratory support; not person-to-person',
+    'Airborne + Contact precautions; vesicular rash centrifugal (face/extremities), ALL lesions same stage; vaccinia vaccine post-exposure',
+    'Droplet + Contact precautions; hemorrhagic fever; bleeding from mucous membranes; full PPE critical'
+  ],
+  correct: [0, 1, 2, 3],
+  scoring: 'perRow',
+  rationale: '<strong>Bioterrorism Agents — Key Differentiators:</strong> <strong>Anthrax</strong>: not contagious person-to-person; cutaneous = painless eschar; inhalational = "woolsorter\'s disease," mediastinal widening, near-universal fatality without treatment; Rx ciprofloxacin/doxycycline 60 days. <strong>Botulism</strong>: toxin-mediated, not contagious; <em>descending</em> cranial nerve → trunk → extremities paralysis (opposite of GBS); no fever; antitoxin if obtained early. <strong>Smallpox</strong>: highly contagious airborne; rash is centrifugal (dense on face/extremities) with ALL lesions in the same stage (contrast chickenpox = multiple stages, centripetal). <strong>Ebola</strong>: hemorrhagic fever; strict droplet + contact; PPE donning/doffing protocols critical for staff protection.'
+});
+
+Q.push({
+  id: 'em_94', topic: 'emergency', type: 'mc', cjmm: 'Generate',
+  stem: 'A gunshot wound patient\'s clothing must be cut away. To preserve forensic evidence, the nurse should:',
+  opts: [
+    {t:'Cut directly through bullet holes for fastest access; place all clothing in one plastic bag',c:false},
+    {t:'Cut AROUND bullet holes; place wet/bloody clothing in a plastic bag',c:false},
+    {t:'Cut AROUND bullet holes; hang wet clothing to dry or place in a paper bag — never plastic',c:true},
+    {t:'Discard clothing — it is a biohazard with no forensic value once blood-contaminated',c:false}
+  ],
+  correct: 2,
+  scoring: 'exact',
+  rationale: '<strong>Forensic Evidence Preservation — Gunshot Wounds:</strong> Two absolute rules: (1) <strong>Cut AROUND bullet holes</strong> — the hole pattern preserves ballistic evidence (entrance vs exit, gunpowder stippling, range of fire). Cutting through destroys irreplaceable data. (2) <strong>Never plastic bags for wet/bloody clothing</strong> — plastic traps moisture, promoting mold and bacterial growth that degrades DNA and trace evidence. Wet clothing: hang to air-dry OR use a <strong>paper bag</strong> (allows moisture to escape). Each garment in a separate labeled bag. Document chain of custody. Clinical care always takes priority — but preserve evidence without compromising care.'
+});
+
+Q.push({
+  id: 'em_95', topic: 'emergency', type: 'mc', cjmm: 'Generate',
+  stem: 'The family of a patient in cardiac arrest asks to be present during resuscitation. The nurse\'s best response is:',
+  opts: [
+    {t:'Decline — family presence increases staff stress and decreases code performance',c:false},
+    {t:'Offer family presence with a dedicated support staff member to accompany them',c:true},
+    {t:'Ask the family to wait until resuscitation is complete',c:false},
+    {t:'Allow presence only if resuscitation is expected to be brief',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Family Presence During Resuscitation:</strong> Evidence supports <strong>offering family presence during CPR</strong>. Benefits: lower rates of PTSD, complicated grief, and anxiety in families who witnessed resuscitation; they see the effort made; may accept death more readily. A <strong>dedicated support person</strong> (chaplain, social worker, designated RN) must accompany the family to answer questions and intervene if needed. Staff performance is not significantly impaired. Prepare the family before entry: explain what they will see (compressions, medications, defibrillation). If the patient survives: clean the patient and remove excess equipment before family entry.'
+});
+
+Q.push({
+  id: 'em_96', topic: 'emergency', type: 'mc', cjmm: 'Generate',
+  stem: 'IO access is established in an adult cardiac arrest patient when IV cannot be obtained. Which statement about IO access is TRUE?',
+  opts: [
+    {t:'IO can only be used for fluids — medications must wait for IV access',c:false},
+    {t:'IO can deliver all resuscitation medications, blood products, and fluids with near-identical onset to IV',c:true},
+    {t:'IO medications have significantly delayed onset compared to IV',c:false},
+    {t:'IO access is appropriate only in pediatric patients',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Intraosseous (IO) Access:</strong> IO provides a non-collapsible vascular route via the bone marrow cavity. <strong>All resuscitation medications and fluids</strong> can be given IO — ACLS drugs (epinephrine, amiodarone, atropine), blood products, crystalloids. Pharmacokinetics: <strong>onset nearly identical to IV</strong> (marrow sinusoids drain directly into systemic circulation). Common sites: proximal tibia (2–3 cm below tibial tuberosity), humeral head, sternum. Device: EZ-IO drill gun. Use a pressure bag (>300 mmHg) to overcome marrow resistance for fluids. Replace with IV access as soon as established. Complications: infection (osteomyelitis), extravasation → compartment syndrome.'
+});
+
+Q.push({
+  id: 'em_97', topic: 'emergency', type: 'mc', cjmm: 'Generate',
+  stem: 'Before allowing the family to view a recently deceased patient, the nurse should FIRST:',
+  opts: [
+    {t:'Leave all lines and equipment in place until the family has left',c:false},
+    {t:'Remove non-essential tubes/lines, clean the patient, and straighten the room',c:true},
+    {t:'Bring the family in immediately — delays increase their grief',c:false},
+    {t:'Wrap the body completely in a shroud before the family enters',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Post-Mortem Care Before Family Viewing:</strong> Before family enters: (1) <strong>Clean the patient</strong> — wash away blood, secretions. (2) <strong>Remove non-essential tubes and lines</strong> — IV catheters, NG tube, Foley (unless required by medical examiner). ETT may remain if autopsy is required. (3) Straighten the room — remove sharps and soiled supplies. (4) Position naturally, drape with a clean sheet. (5) Dim lights. (6) <strong>Prepare the family</strong> — tell them what to expect (skin color, temperature, remaining equipment). Assign support person. Allow adequate private time. Respect cultural and religious practices around body care.'
+});
+
+Q.push({
+  id: 'em_98', topic: 'emergency', type: 'matrix', cjmm: 'Generate',
+  stem: 'Match each medication or toxin to its correct reversal agent.',
+  rows: [
+    'Warfarin (severe/active bleeding)',
+    'Unfractionated heparin (UFH) overdose',
+    'Dabigatran (Pradaxa) overdose',
+    'Benzodiazepine overdose',
+    'Digoxin life-threatening toxicity',
+    'Beta-blocker overdose'
+  ],
+  cols: [
+    'Vitamin K + Fresh Frozen Plasma (or 4-factor PCC)',
+    'Protamine sulfate (1 mg per 100 units heparin in last 2 hrs)',
+    'Idarucizumab (Praxbind) — monoclonal antibody',
+    'Flumazenil — caution in chronic benzo users (seizure risk)',
+    'Digibind (digoxin immune Fab fragments)',
+    'Glucagon — bypasses beta-receptor via adenylyl cyclase'
+  ],
+  correct: [0, 1, 2, 3, 4, 5],
+  scoring: 'perRow',
+  rationale: '<strong>Reversal Agents — High Yield:</strong> <strong>Warfarin</strong>: Vit K for non-urgent; FFP or 4-Factor PCC (Kcentra) for immediate reversal. <strong>Heparin</strong>: protamine sulfate. <strong>Dabigatran</strong>: idarucizumab. Rivaroxaban/apixaban → andexanet alfa. <strong>Benzodiazepines</strong>: flumazenil — CAUTION in chronic users (can precipitate seizures); short half-life, may need redosing. <strong>Digoxin</strong>: Digibind. Also: Opioids → naloxone; APAP → N-acetylcysteine; tPA → tranexamic acid (TXA); magnesium → calcium gluconate; CCBs → calcium gluconate; cyanide → hydroxocobalamin; CO → 100% O₂; methotrexate → leucovorin; nerve agents → atropine + pralidoxime.'
+});
+
+
+
+// ── NEURO / COGNITION: NEW TOPICS (neuro_56 – neuro_65) ──
+Q.push({
+  id: 'neuro_56', topic: 'neuro', type: 'matrix', cjmm: 'Analyze',
+  stem: 'For each characteristic, indicate whether it applies to Diabetes Insipidus (DI) or SIADH.',
+  rows: [
+    'ADH level is absent or deficient',
+    'Urine output is massive and dilute (SG <1.005)',
+    'Serum sodium is LOW (hyponatremia)',
+    'Urine osmolality is inappropriately HIGH',
+    'First-line treatment: fluid restriction',
+    'First-line treatment: desmopressin (DDAVP)'
+  ],
+  cols: ['Diabetes Insipidus (DI)', 'SIADH'],
+  correct: [0, 0, 1, 1, 1, 0],
+  scoring: 'perRow',
+  rationale: '<strong>DI vs SIADH — Opposite Disorders:</strong> <strong>DI</strong>: ADH absent/deficient → kidneys cannot concentrate urine → massive output of dilute urine (5–20 L/day) → serum dehydrates → <em>hyper</em>natremia, ↑serum osmolality, ↓urine osmolality. Causes: pituitary surgery, head trauma, brain tumors. Treat: <strong>desmopressin (DDAVP)</strong> + hypotonic fluid replacement. <strong>SIADH</strong>: excess ADH → kidneys retain water → dilutional <em>hypo</em>natremia → urine is inappropriately concentrated (↑urine osmolality despite low serum Na). Causes: TBI, lung cancer (ectopic ADH), SSRIs, carbamazepine. Treat: <strong>fluid restriction</strong> (600–800 mL/day); hypertonic saline (3% NaCl) for severe symptomatic hyponatremia (<120 mEq/L with symptoms). Correct Na slowly — no faster than 8–10 mEq/L per 24 hours (prevent osmotic demyelination syndrome).'
+});
+
+Q.push({
+  id: 'neuro_57', topic: 'neuro', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with massive TBI shows no response to stimuli, no spontaneous breathing, and absent all brainstem reflexes. Brain death is being declared. Brain death differs from persistent vegetative state (PVS) in that:',
+  opts: [
+    {t:'Both brain death and PVS involve absent brainstem reflexes',c:false},
+    {t:'Brain death requires coma + apnea + absent ALL brainstem reflexes; PVS preserves brainstem function (sleep-wake cycles, spontaneous breathing)',c:true},
+    {t:'PVS is more severe — patients cannot be removed from a ventilator',c:false},
+    {t:'Brain death can be declared without an apnea test if the clinical picture is clear',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Brain Death vs PVS:</strong> <strong>Brain death</strong>: complete, irreversible cessation of ALL brain and brainstem function. Criteria: (1) coma — no response to any stimuli; (2) <strong>apnea</strong> — no respiratory drive confirmed by formal apnea test (remove vent, allow PCO₂ to rise >60 mmHg, no respiratory effort); (3) <strong>absent ALL brainstem reflexes</strong> — no pupillary, corneal, oculocephalic, oculovestibular, gag, or cough reflexes. Two physicians must confirm; <strong>apnea test is mandatory</strong>. Legally = death. <strong>PVS</strong>: cortical function is lost (no awareness, no purposeful response) but the <strong>brainstem is intact</strong> → sleep-wake cycles present, spontaneous breathing, preserved primitive reflexes. PVS patients breathe independently and do NOT meet brain death criteria.'
+});
+
+Q.push({
+  id: 'neuro_58', topic: 'neuro', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each spinal cord injury level to its highest expected functional outcome.',
+  rows: [
+    'C1–C3',
+    'C4',
+    'C5–C6',
+    'T1–T6',
+    'L1–L4'
+  ],
+  cols: [
+    'Ventilator-dependent; no voluntary movement below the neck',
+    'Diaphragm marginally intact; power wheelchair with chin/breath control; vent-dependent acutely',
+    'Some arm/hand function (wrist extension at C6); manual wheelchair; may drive adapted vehicle',
+    'Full hand/arm function; independent manual wheelchair; paraplegia',
+    'Ambulatory with bracing/assistive devices; some bowel/bladder control possible'
+  ],
+  correct: [0, 1, 2, 3, 4],
+  scoring: 'perRow',
+  rationale: '<strong>SCI Functional Outcomes by Level:</strong> Level = highest intact segment. <strong>C1–C3</strong>: above phrenic nerve origin (C3–C5) → full vent dependence; communicate by eye movements. <strong>C4</strong>: phrenic nerve marginally intact; vent-dependent acutely, may partially wean; chin-drive power wheelchair. <strong>C5–C6</strong>: deltoid/biceps (C5), wrist extension and tenodesis grasp (C6); can self-feed, self-transfer with assist, manual wheelchair with loop rims, may drive with hand controls. <strong>T1–T6</strong>: full arm/hand function; paraplegia; fully independent manual wheelchair; respiratory compromise at high thoracic levels. <strong>L1–L4</strong>: lumbar-sacral level; hip flexors and knee extensors present; community ambulation with bracing; bowel/bladder often partially intact at lower levels.'
+});
+
+Q.push({
+  id: 'neuro_59', topic: 'neuro', type: 'mc', cjmm: 'Generate',
+  stem: 'A patient with ascending weakness starting in the lower extremities over 3 days is diagnosed with Guillain-Barré syndrome (GBS). The nurse\'s PRIORITY ongoing assessment is:',
+  opts: [
+    {t:'Deep tendon reflexes — areflexia worsening indicates disease progression',c:false},
+    {t:'Respiratory muscle strength (forced vital capacity) — GBS can ascend to cause fatal respiratory failure',c:true},
+    {t:'Blood glucose — autonomic dysfunction causes hyperglycemia in GBS',c:false},
+    {t:'Sensory deficits — sensory loss predicts worse outcomes in GBS',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>GBS — Priority: Respiratory Failure Risk:</strong> GBS is peripheral demyelination causing ascending flaccid paralysis. Life-threatening complication: paralysis reaches the diaphragm → <strong>respiratory failure</strong>. Monitor forced vital capacity (FVC) every 2–4 hours during acute progression. Intubate when FVC <20 mL/kg, NIF <−25 cmH₂O, or rapid decline. Treatment: <strong>IVIG</strong> or <strong>plasmapheresis</strong> — equally effective; shorten course. <strong>NO steroids</strong> — worsen outcomes in GBS (key distractor). GBS: sensation is IMPAIRED (unlike MG where sensation is always intact). Autonomic instability (arrhythmias, BP swings) also requires monitoring. Areflexia is expected but not the priority assessment.'
+});
+
+Q.push({
+  id: 'neuro_60', topic: 'neuro', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with myasthenia gravis (MG) on pyridostigmine develops sudden severe weakness plus increased secretions, lacrimation, and diarrhea. The nurse suspects cholinergic crisis. The PRIORITY intervention is:',
+  opts: [
+    {t:'Increase the pyridostigmine dose — myasthenic crisis needs more acetylcholine',c:false},
+    {t:'Hold pyridostigmine and administer atropine for muscarinic effects; monitor respiratory status',c:true},
+    {t:'Administer the Tensilon (edrophonium) test to confirm the diagnosis',c:false},
+    {t:'Prepare for thymectomy — thymoma is causing the crisis',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Myasthenic vs Cholinergic Crisis — KEY Distinction:</strong> Both cause severe weakness, but treatments are opposite. <strong>Myasthenic crisis</strong>: too little ACh effect (autoantibodies block receptors) → weakness WITHOUT cholinergic signs; triggers: infection, surgery, missed doses; treat with IVIG, plasmapheresis, ↑pyridostigmine. <strong>Cholinergic crisis</strong>: too MUCH acetylcholinesterase inhibitor (pyridostigmine overdose) → ACh accumulates → weakness PLUS SLUDGE (Salivation, Lacrimation, Urination, Defecation, GI distress, Emesis) + miosis, bradycardia. Treatment: <strong>HOLD pyridostigmine</strong> + <strong>atropine</strong> (reverses muscarinic effects). Monitor respiratory status closely — both crises can cause respiratory failure. MG hallmarks: ptosis/diplopia worse at day\'s end (fatigue); sensation is ALWAYS intact.'
+});
+
+Q.push({
+  id: 'neuro_61', topic: 'neuro', type: 'mc', cjmm: 'Recognize',
+  stem: 'A patient with multiple sclerosis reports that symptoms always worsen after a hot shower or exercise but return to baseline when cooled. The nurse explains:',
+  opts: [
+    {t:'Disease progression — new demyelinating lesions are forming with each heat exposure',c:false},
+    {t:'Uhthoff\'s phenomenon — heat temporarily worsens conduction in demyelinated nerve fibers; this is reversible, not progression',c:true},
+    {t:'Autonomic dysfunction — MS affects sweat glands causing heat intolerance',c:false},
+    {t:'Medication side effect — interferon-beta is heat-activated',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Uhthoff\'s Phenomenon (MS):</strong> Heat (hot shower, fever, exercise) temporarily worsens neurologic symptoms in MS patients. Demyelinated fibers conduct slowly at baseline; slight temperature increase blocks conduction entirely. <strong>Fully reversible when cooled — does NOT indicate new lesions or disease progression.</strong> Nursing: lukewarm showers, avoid hot environments, cooling vests during exercise. MS facts: relapsing-remitting most common; MRI shows periventricular white matter plaques; optic neuritis (painful vision loss) is a common first symptom; Lhermitte\'s sign (electric shock with neck flexion); bladder dysfunction common. Disease-modifying therapy: interferon-beta, glatiramer. Acute relapses: IV corticosteroids.'
+});
+
+Q.push({
+  id: 'neuro_62', topic: 'neuro', type: 'mc', cjmm: 'Generate',
+  stem: 'A patient presents with unilateral pulsating headache preceded by visual aura, nausea, and photophobia. The provider diagnoses migraine. The MOST appropriate abortive treatment is:',
+  opts: [
+    {t:'Acetaminophen — safest first-line for all headaches',c:false},
+    {t:'Sumatriptan (triptan) — 5-HT₁ agonist; first-line abortive for moderate-to-severe migraine',c:true},
+    {t:'Ibuprofen — NSAIDs preferred for migraine with aura',c:false},
+    {t:'Propranolol — first-line to abort the acute attack',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Migraine Abortive Treatment — Triptans:</strong> Triptans (sumatriptan, rizatriptan) are <strong>first-line abortive therapy for moderate-to-severe migraine</strong>. Mechanism: 5-HT₁B/D agonists → constrict dilated cranial vessels + inhibit trigeminal release of inflammatory peptides. Give early in the attack. Contraindications: cardiovascular disease, hemiplegic/basilar migraine. Common triggers: chocolate, red wine, aged cheese, hormonal changes, stress, sleep disruption. Aura = visual disturbance (fortification spectra, scotoma) lasting <60 min before headache — indicates cortical spreading depression. <strong>Preventive</strong> medications (for frequent attacks): propranolol, topiramate, amitriptyline, CGRP antagonists. Antiemetics (metoclopramide, prochlorperazine) are useful adjuncts for nausea.'
+});
+
+Q.push({
+  id: 'neuro_63', topic: 'neuro', type: 'fillin', cjmm: 'Analyze',
+  stem: 'A patient\'s blood pressure is 126/84 mmHg. Using MAP = (SBP + 2×DBP) ÷ 3, calculate the mean arterial pressure. Enter a whole number.',
+  answer: 98,
+  tolerance: 0,
+  unit: 'mmHg',
+  rationale: '<strong>MAP Calculation:</strong> MAP = (SBP + 2×DBP) ÷ 3 = (126 + 2×84) ÷ 3 = (126 + 168) ÷ 3 = 294 ÷ 3 = <strong>98 mmHg</strong>. Normal MAP: 70–100 mmHg. Target MAP ≥65 mmHg for adequate organ perfusion. Cerebral perfusion pressure (CPP) = MAP − ICP; target CPP 60–70 mmHg in TBI; CPP <50 mmHg = irreversible brain damage. Diastole is weighted ×2 because the heart spends ~2/3 of the cardiac cycle in diastole. MAP drives perfusion to all organs — kidneys need MAP ≥65 for adequate GFR.'
+});
+
+Q.push({
+  id: 'neuro_64', topic: 'neuro', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with SIADH has serum sodium of 118 mEq/L and is confused. Hypertonic saline (3% NaCl) is ordered. The nurse understands it must be given slowly because:',
+  opts: [
+    {t:'Rapid correction risks acute hypertension from sodium loading',c:false},
+    {t:'Correcting too fast causes osmotic demyelination syndrome — limit rise to 8–10 mEq/L per 24 hours',c:true},
+    {t:'Hypertonic saline causes peripheral vein sclerosis only in elderly patients',c:false},
+    {t:'The goal is full normalization of sodium to 140 mEq/L within 24 hours',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Hypertonic Saline — Correction Rate:</strong> Most dangerous complication of rapid sodium correction in chronic hyponatremia: <strong>osmotic demyelination syndrome (ODS)</strong>, formerly central pontine myelinolysis. Brain cells adapt to chronic low Na by losing osmoles; rapid Na increase creates an osmotic gradient that dehydrates brain cells → irreversible myelin damage → locked-in syndrome, quadriplegia. Limit: <strong>≤8–10 mEq/L per 24 hours</strong> (≤12 mEq/L in lower-risk patients). Goal: resolve symptoms (confusion, seizures), not normalize sodium. Check Na every 2–4 hours. Hypertonic saline must be given via <strong>central line</strong> — it is hyperosmolar and causes severe vein sclerosis peripherally. Never fully correct in 24 hours.'
+});
+
+Q.push({
+  id: 'neuro_65', topic: 'neuro', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each neurodegenerative disease to its most distinguishing characteristic.',
+  rows: [
+    'Parkinson\'s disease',
+    'Huntington\'s disease',
+    'ALS (Amyotrophic Lateral Sclerosis)'
+  ],
+  cols: [
+    'Resting pill-rolling tremor; bradykinesia; cogwheel rigidity; dopamine deficit; treat with levodopa/carbidopa; AVOID antipsychotics',
+    'Autosomal dominant CAG repeat; choreiform (dance-like) involuntary movements; psychiatric changes precede motor; no disease-modifying treatment',
+    'Upper AND lower motor neuron degeneration; weakness but sensation and cognition INTACT until very late; fatal from respiratory failure; riluzole slows progression'
+  ],
+  correct: [0, 1, 2],
+  scoring: 'perRow',
+  rationale: '<strong>Parkinson\'s vs Huntington\'s vs ALS:</strong> <strong>Parkinson\'s</strong>: loss of dopaminergic neurons in substantia nigra → TRAP = Tremor (resting, pill-rolling), Rigidity (cogwheel), Akinesia/bradykinesia, Postural instability. Treat: levodopa/carbidopa (replace dopamine). AVOID antipsychotics (block dopamine → worsen). <strong>Huntington\'s</strong>: autosomal dominant CAG repeat on chromosome 4; choreiform movements; <em>psychiatric symptoms first</em> (depression, personality changes, psychosis); relentlessly progressive; no disease-modifying treatment; death 15–20 years after onset. <strong>ALS</strong>: UMN + LMN degeneration; <em>sensation and cognition intact</em> — hallmark feature; progressive weakness → respiratory failure = cause of death; riluzole extends survival ~3 months; advance directives and multidisciplinary care critical. 10% familial (SOD1 mutation most common).'
+});
+
+// ── OXYGENATION: NEW TOPICS (oxy_32 – oxy_34) ──
+Q.push({
+  id: 'oxy_32', topic: 'oxy', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with pneumonia has PaO₂ 52 mmHg. Despite 100% FiO₂ via non-rebreather, PaO₂ only rises to 58 mmHg. This poor response to supplemental oxygen is characteristic of:',
+  opts: [
+    {t:'Dead space — ventilated alveoli not perfused; responds well to supplemental O₂',c:false},
+    {t:'True shunt — blood bypasses ventilated alveoli; cannot be oxygenated regardless of FiO₂',c:true},
+    {t:'Diffusion impairment — alveolar membrane too thick; responds to O₂',c:false},
+    {t:'Hypoventilation — responds readily to supplemental oxygen',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>V/Q Mismatch — Shunt vs Dead Space:</strong> <strong>True shunt</strong> (V/Q = 0): blood flows through completely unventilated, fluid-filled alveoli (pneumonia, ARDS, pulmonary edema). Since blood never contacts ventilated alveoli, <strong>increasing FiO₂ has minimal effect</strong> — shunted blood cannot pick up oxygen. Hallmark: failure to respond to 100% O₂. Treatment: PEEP (recruits alveoli) + treat underlying cause. <strong>Dead space</strong> (V/Q = ∞): ventilated alveoli not perfused (PE) → responds to O₂ (some alveoli still perfused). <strong>Diffusion impairment</strong> (pulmonary fibrosis, early ARDS): responds to O₂ at rest. <strong>Hypoventilation</strong>: responds to O₂ or increased RR. Key test point: the shunt equation — only shunt fails 100% O₂.'
+});
+
+Q.push({
+  id: 'oxy_33', topic: 'oxy', type: 'mc', cjmm: 'Recognize',
+  stem: 'A patient with long-standing COPD develops peripheral edema, JVD, and hepatomegaly. Pulmonary artery pressure is 48 mmHg. The nurse recognizes:',
+  opts: [
+    {t:'Left-sided heart failure causing backward failure into pulmonary circulation',c:false},
+    {t:'Cor pulmonale — right heart failure secondary to pulmonary hypertension from chronic hypoxic vasoconstriction',c:true},
+    {t:'Cardiac tamponade — COPD causes pericardial effusion',c:false},
+    {t:'Superior vena cava syndrome from COPD-related lung mass',c:false}
+  ],
+  correct: 1,
+  scoring: 'exact',
+  rationale: '<strong>Cor Pulmonale / Pulmonary Hypertension:</strong> Chronic hypoxia (COPD, interstitial lung disease, sleep apnea) → persistent pulmonary vasoconstriction → pulmonary arterial hypertension → ↑RV afterload → RV hypertrophy/failure = <strong>cor pulmonale</strong>. Signs of RV failure: JVD, peripheral edema, hepatomegaly, ascites. Pulmonary HTN: mean PAP >25 mmHg. Treatment: (1) treat underlying cause; (2) supplemental O₂ (reverses hypoxic vasoconstriction); (3) targeted vasodilators — <strong>sildenafil</strong> (PDE-5 inhibitor), <strong>bosentan</strong> (endothelin receptor antagonist), prostacyclins (epoprostenol for severe cases); (4) diuretics for edema. Avoid systemic vasodilators that drop systemic more than pulmonary pressure. Prognosis is poor without targeted therapy.'
+});
+
+Q.push({
+  id: 'oxy_34', topic: 'oxy', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each sputum characteristic to its most likely clinical significance.',
+  rows: [
+    'Clear or white sputum',
+    'Yellow or green (purulent) sputum',
+    'Rust-colored sputum',
+    'Pink, frothy sputum'
+  ],
+  cols: [
+    'Normal or viral bronchitis; no antibiotic indication',
+    'Bacterial infection — neutrophils and bacteria breakdown products; antibiotic consideration',
+    'Classic for Streptococcus pneumoniae pneumonia — hemoglobin breakdown products',
+    'Pulmonary edema — plasma foaming in airways; cardiac emergency'
+  ],
+  correct: [0, 1, 2, 3],
+  scoring: 'perRow',
+  rationale: '<strong>Sputum Characteristics:</strong> <strong>Clear/white</strong>: normal or viral illness — no antibiotic indication. <strong>Yellow/green</strong>: purulent = neutrophils + bacterial breakdown; suggests bacterial infection — correlate with clinical picture (fever, leukocytosis, consolidation) before prescribing antibiotics. <strong>Rust-colored</strong>: classic for <em>Streptococcus pneumoniae</em> (pneumococcal pneumonia) — hemoglobin breakdown + fibrin-rich exudate. Also seen in early TB (blood-streaked). <strong>Pink frothy</strong>: plasma + surfactant foaming in airways — indicates severe acute pulmonary edema (left heart failure) or ARDS; emergency. Additional: hemoptysis (frank blood) — TB, lung cancer, PE with infarction; black/carbonaceous — inhalation injury; document amount, consistency, color, and change from baseline.'
+});
+
+// ── FLUIDS / ELECTROLYTES: NEW TOPICS (fluid_19 – fluid_20) ──
+Q.push({
+  id: 'fluid_19', topic: 'fluid', type: 'mc', cjmm: 'Analyze',
+  stem: 'A patient with DKA has: Na 136, Cl 98, HCO₃ 10. The nurse calculates the anion gap. Which result and interpretation is CORRECT?',
+  opts: [
+    {t:'Anion gap = 28; elevated — high anion gap metabolic acidosis consistent with DKA ketoacids',c:true},
+    {t:'Anion gap = 38; normal — elevated glucose accounts for the gap',c:false},
+    {t:'Anion gap = 8; normal — DKA does not cause an anion gap elevation',c:false},
+    {t:'Anion gap cannot be calculated without a potassium level',c:false}
+  ],
+  correct: 0,
+  scoring: 'exact',
+  rationale: '<strong>Anion Gap = Na − (Cl + HCO₃) = 136 − (98 + 10) = 136 − 108 = 28 mEq/L</strong>. Normal: 8–12 mEq/L. This is a <strong>high anion gap metabolic acidosis (HAGMA)</strong>. Mnemonic for causes: <strong>MUDPILES</strong> — Methanol, Uremia, DKA/starvation ketosis, Propylene glycol, Isoniazid/Iron, Lactic acidosis (most common cause overall), Ethylene glycol, Salicylates. In DKA: ketoacids (acetoacetate, β-hydroxybutyrate) are unmeasured anions widening the gap. <strong>Normal anion gap (hyperchloremic) metabolic acidosis</strong> causes: diarrhea (HCO₃ loss), renal tubular acidosis, early renal failure. The anion gap identifies what is consuming bicarbonate — unmeasured acids not visible on a basic metabolic panel.'
+});
+
+Q.push({
+  id: 'fluid_20', topic: 'fluid', type: 'matrix', cjmm: 'Analyze',
+  stem: 'Match each phenomenon to its 3 AM blood glucose pattern and treatment approach.',
+  rows: [
+    'Dawn phenomenon',
+    'Somogyi effect (rebound hyperglycemia)'
+  ],
+  cols: [
+    '3 AM glucose NORMAL or HIGH; natural growth hormone/cortisol surge causes insulin resistance at dawn; FIX: increase evening insulin or adjust timing',
+    '3 AM glucose LOW (nocturnal hypoglycemia); counter-regulatory hormones cause rebound morning hyperglycemia; FIX: DECREASE evening insulin'
+  ],
+  correct: [0, 1],
+  scoring: 'perRow',
+  rationale: '<strong>Dawn Phenomenon vs Somogyi Effect:</strong> Both cause morning hyperglycemia, but for opposite reasons — and treatments are OPPOSITE. <strong>Dawn phenomenon</strong>: physiologic hormonal surge (GH, cortisol) in early morning hours → insulin resistance → rising glucose. The 3 AM glucose is normal or already elevated. Fix: increase insulin or shift timing. <strong>Somogyi effect</strong>: excessive evening insulin → nocturnal hypoglycemia at 3 AM → counter-regulatory hormones (glucagon, epinephrine, cortisol) kick in → rebound morning hyperglycemia. The 3 AM glucose is <em>low</em>. Fix: <strong>decrease</strong> evening insulin. Key clinical tool: <strong>check 3 AM blood glucose to differentiate them</strong>. Getting this wrong and giving more insulin to a Somogyi patient worsens the hypoglycemia — classic high-stakes NCLEX/NGN distractor.'
+});
 
         // ── STORAGE KEY ───────────────────────────────────────────────────
         const STORAGE_KEY = 'ngn_cumulative_v1';
