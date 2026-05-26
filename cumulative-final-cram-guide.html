@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N8 Cumulative Final — High-Yield Cram Guide</title>
+<style>
+  :root {
+    --emergency: #b91c1c;
+    --cardiac: #1d4ed8;
+    --cognition: #7c3aed;
+    --oxygenation: #0891b2;
+    --fluids: #15803d;
+    --mixed: #92400e;
+    --text: #111827;
+    --bg: #ffffff;
+    --light: #f9fafb;
+    --border: #e5e7eb;
+    --warn-bg: #fef2f2;
+    --warn-border: #fca5a5;
+    --tip-bg: #eff6ff;
+    --tip-border: #93c5fd;
+    --pearl-bg: #f5f3ff;
+    --pearl-border: #c4b5fd;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; color: var(--text); background: var(--bg); }
+
+  /* PRINT */
+  @media print {
+    .no-print { display: none; }
+    body { font-size: 11px; }
+    section { page-break-inside: avoid; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+  }
+
+  /* LAYOUT */
+  .page { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+  /* HEADER */
+  .master-header { background: #111827; color: white; padding: 1.5rem 2rem; margin-bottom: 1.5rem; border-radius: 8px; }
+  .master-header h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .master-header .meta { font-size: 0.85rem; opacity: 0.8; }
+  .weight-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .weight-tag { padding: 0.2rem 0.7rem; border-radius: 99px; font-size: 0.78rem; font-weight: 700; }
+  .w-emergency { background: var(--emergency); color: white; }
+  .w-cardiac { background: var(--cardiac); color: white; }
+  .w-cognition { background: var(--cognition); color: white; }
+  .w-oxygenation { background: var(--oxygenation); color: white; }
+  .w-fluids { background: var(--fluids); color: white; }
+  .w-mixed { background: var(--mixed); color: white; }
+
+  /* SECTION HEADERS */
+  h2 { font-size: 1.25rem; padding: 0.5rem 1rem; border-radius: 6px; margin: 1.5rem 0 0.8rem; color: white; }
+  h2.emergency { background: var(--emergency); }
+  h2.cardiac { background: var(--cardiac); }
+  h2.cognition { background: var(--cognition); }
+  h2.oxygenation { background: var(--oxygenation); }
+  h2.fluids { background: var(--fluids); }
+  h2.integration { background: #374151; }
+  h2.meds { background: #92400e; }
+  h2.checklist { background: #065f46; }
+
+  h3 { font-size: 1rem; margin: 1rem 0 0.4rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.2rem; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* CARD */
+  .card { background: var(--light); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem; }
+  .card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.4rem; }
+
+  /* ALERTS */
+  .warn { background: var(--warn-bg); border-left: 4px solid var(--emergency); padding: 0.6rem 0.8rem; margin: 0.5rem 0; border-radius: 0 4px 4px 0; }
+  .tip { background: var(--tip-bg); border-left: 4px solid var(--cardiac); padding: 0.6rem 0.8rem; margin: 0.5rem 0; border-radius: 0 4px 4px 0; }
+  .pearl { background: var(--pearl-bg); border-left: 4px solid var(--cognition); padding: 0.6rem 0.8rem; margin: 0.5rem 0; border-radius: 0 4px 4px 0; }
+  .warn strong, .tip strong, .pearl strong { display: block; margin-bottom: 0.2rem; }
+
+  /* LISTS */
+  ul, ol { padding-left: 1.2rem; margin: 0.3rem 0; }
+  li { margin-bottom: 0.15rem; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 0.5rem 0 1rem; }
+  th { background: #374151; color: white; padding: 0.4rem 0.6rem; text-align: left; }
+  td { padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--light); }
+
+  /* CHECKLIST */
+  .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; }
+  .check-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.3rem; background: var(--light); border-radius: 4px; font-size: 0.83rem; }
+  .check-item input { margin-top: 0.2rem; flex-shrink: 0; }
+  .check-item.high { border-left: 3px solid var(--emergency); }
+  .check-item.med { border-left: 3px solid var(--cardiac); }
+  .check-item.low { border-left: 3px solid var(--fluids); }
+
+  /* BADGE */
+  .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px; vertical-align: middle; }
+  .badge-red { background: #fee2e2; color: var(--emergency); }
+  .badge-blue { background: #dbeafe; color: var(--cardiac); }
+  .badge-purple { background: #ede9fe; color: var(--cognition); }
+  .badge-teal { background: #cffafe; color: #0e7490; }
+
+  /* NEVER box */
+  .never { background: #fff1f2; border: 2px solid var(--emergency); border-radius: 6px; padding: 0.6rem 0.8rem; margin: 0.5rem 0; }
+  .never .never-title { font-weight: 700; color: var(--emergency); font-size: 0.85rem; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 2px solid var(--border); margin: 1rem 0; }
+
+  b { color: #111; }
+  .mono { font-family: monospace; background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- MASTER HEADER -->
+<div class="master-header">
+  <h1>N8 Cumulative Final — High-Yield Cram Guide</h1>
+  <div class="meta">100 questions · NGN-style · In-person · Spring 2026 · For studying with a classmate</div>
+  <div class="weight-bar">
+    <span class="weight-tag w-emergency">Emergency/Burns 40%</span>
+    <span class="weight-tag w-cardiac">Cardiac 25%</span>
+    <span class="weight-tag w-cognition">Cognition/Neuro 20%</span>
+    <span class="weight-tag w-oxygenation">Oxygenation 15%</span>
+    <span class="weight-tag w-fluids">Fluids/Lytes 5%</span>
+    <span class="weight-tag w-mixed">Mixed 5%</span>
+  </div>
+</div>
+
+<!-- PRIORITY CHECKLIST -->
+<h2 class="checklist">Priority Study Checklist — Tackle In Order</h2>
+<div class="checklist-grid">
+  <div class="check-item high"><input type="checkbox"><span><b>Burns: Fluid formula</b> (2 vs 4 mL, timer from injury, LR, UO targets)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Burns: Depth classification</b> (insensate 3rd degree! degrees 1-4)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Burns: Topical agents</b> (Silvadene vs Sulfamylon vs Silver nitrate)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Burns: Phases + priority nursing actions per phase</b></span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Disaster triage (NATO)</b> vs ED triage — the distinction is a guaranteed question</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Primary survey ABCDE</b> + airway escalation hierarchy</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Heat stroke vs heat exhaustion</b> (dry vs wet skin; temp targets)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Blast injury 4 phases</b> (Primary = air wave → air-filled organs)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>PPE levels A-D</b> (SCBA A vs B; Level C = hospital standard)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Anthrax</b> (NOT person-to-person = standard precautions; no rhinorrhea)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>ECG arrhythmia recognition</b> + treatments (VF, VT, Afib, blocks)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>CO = HR × SV</b>; preload/afterload/contractility + meds</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Left vs Right HF symptoms</b> (lungs vs body)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Shock types</b> (mechanism + treatment matrix)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>ACS</b> (STEMI vs NSTEMI; MONA; 90-min door-to-balloon)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Electrolyte ECG changes</b> (hyper/hypoK, Ca effects)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>ICP: Cushing's triad, CPP formula, nursing interventions</b></span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Stroke</b> (ischemic vs hemorrhagic; tPA window; BeFAST)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Broca's vs Wernicke's aphasia</b></span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>GCS scoring</b> (E4 V5 M6; decorticate vs decerebrate)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Neurogenic shock</b> (bradycardia + hypotension + WARM skin = no sympath)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Autonomic dysreflexia</b> (sit up, find/remove stimulus)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Seizure nursing actions</b> + status epilepticus</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Meningitis</b> (bacterial vs viral CSF; Kernig/Brudzinski)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>ABG interpretation</b> (ROME; normal values)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>COPD hypoxic drive</b> (target SpO2 88-92%; Venturi mask)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>PE signs</b> (sudden dyspnea, pleuritic pain, Virchow's triad)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Tension pneumothorax</b> (tracheal deviation → needle decompression)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>DKA vs HHS</b> (key differences + treatment order: fluids first)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Hyperkalemia treatment ladder</b> (calcium gluconate FIRST)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Cross-unit connections</b> (burns → shock; stroke → Afib; SCI → neurogenic shock)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Key medications</b> (Sulfamylon, adenosine, mannitol, digoxin, tPA)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Pacemaker malfunction</b> (failure to sense vs failure to capture — prof said most missed this)</span></div>
+  <div class="check-item high"><input type="checkbox"><span><b>Reversal agents</b> — know EVERY one (Digibind, Protamine, Flumazenil, Narcan, NAC, etc.)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>DI vs SIADH</b> (opposite ADH disorders; opposite urine/serum patterns)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Brain death criteria</b> (coma + apnea + absent brainstem reflexes)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>SCI level of injury</b> (C4=vent dependent; T6=autonomic dysreflexia)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>GBS / MS / MG</b> (autoimmune trio — key symptoms + treatments)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Anion gap</b> (Na − (Cl + HCO3); normal 8-12; MUDPILES if elevated)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Hypertensive crisis</b> (no more than 25% reduction in first hour)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>TTM</b> (targeted temp management — who qualifies)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>Sepsis 6-hr bundle</b> (lactate → cultures → abx → 30 mL/kg → vasopressors)</span></div>
+  <div class="check-item med"><input type="checkbox"><span><b>DIC</b> (clot + bleed simultaneously; in burns, crush, shock)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Bioweapons matching</b> (anthrax, botulism, Ebola, smallpox — there is a matching category)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>V/Q mismatch types</b> (dead space vs shunt vs silent unit)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Family support / death</b> (clean room before family views; allow family during code)</span></div>
+  <div class="check-item low"><input type="checkbox"><span><b>Bonus: Parkinson's vs Huntington's vs ALS</b> (3-4 bonus questions)</span></div>
+</div>
+
+<hr>
+
+<!-- SECTION 1: EMERGENCY/BURNS -->
+<h2 class="emergency">UNIT 1: Emergency, Burns &amp; Disaster (40%)</h2>
+
+<h3>Burns — Depth Classification</h3>
+<table>
+  <tr><th>Degree</th><th>Layers</th><th>Appearance</th><th>Pain?</th><th>Treatment</th></tr>
+  <tr><td><b>1st — Superficial</b></td><td>Epidermis only</td><td>Red, dry, blanches</td><td>Yes</td><td>Cool compresses; NO topical antimicrobials</td></tr>
+  <tr><td><b>2nd — Partial Thickness</b></td><td>Epidermis + partial dermis</td><td>Blistered, weeping, mottled red</td><td>Yes — very sensitive</td><td>2–3 weeks; may need grafting</td></tr>
+  <tr><td><b>3rd — Full Thickness</b></td><td>Epidermis + full dermis + nerve fibers</td><td>Dry, pale/white/charred, leathery</td><td><b>NO — INSENSATE</b></td><td>Grafting required; scarring</td></tr>
+  <tr><td><b>4th</b></td><td>Fat, fascia, muscle, bone</td><td>Charred</td><td>No; shock, myoglobinuria</td><td>Amputation likely</td></tr>
+</table>
+<div class="warn"><strong>EXAM TRAP:</strong> 3rd-degree burns are INSENSATE — no pain is a <em>finding</em>, not reassurance. Never tell the patient "it's not that bad because it doesn't hurt." That means full-thickness nerve destruction.</div>
+
+<h3>TBSA Estimation</h3>
+<div class="grid-3">
+  <div class="card"><h4>Rule of Nines</h4><ul><li>Head: 9%</li><li>Each arm: 9%</li><li>Anterior trunk: 18%</li><li>Posterior trunk: 18%</li><li>Each leg: 18%</li><li>Perineum: 1%</li></ul></div>
+  <div class="card"><h4>Lund &amp; Browder</h4><ul><li>Most precise</li><li>Adjusts head/leg % for age</li><li>Reassess within 72h</li></ul></div>
+  <div class="card"><h4>Palmar Method</h4><ul><li>Patient's own hand (with fingers) = 1% TBSA</li><li>Best for scattered/irregular burns</li></ul></div>
+</div>
+
+<h3>Fluid Resuscitation</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Formula</h4>
+    <p><b>Thermal/Chemical:</b> <span class="mono">2 mL × kg × %TBSA</span></p>
+    <p><b>Electrical:</b> <span class="mono">4 mL × kg × %TBSA</span></p>
+    <p><b>Fluid:</b> Lactated Ringer's ONLY (closest pH/osmolality to plasma)</p>
+    <p style="margin-top:0.4rem"><b>Timing:</b> ½ in first 8h, ½ over next 16h</p>
+  </div>
+  <div class="card">
+    <h4>Urine Output Targets (Resuscitation Adequacy)</h4>
+    <p><b>Thermal/Chemical:</b> 0.5–1 mL/kg/hr</p>
+    <p><b>Electrical:</b> 75–100 mL/hr (until urine clears — red urine = myoglobinuria)</p>
+    <p style="margin-top:0.4rem">UO is the <b>gold standard</b> for resuscitation adequacy. BP and HR alone are NOT reliable in burns.</p>
+  </div>
+</div>
+<div class="warn"><strong>EXAM TRAP #1:</strong> The clock starts at <b>time of injury — NOT ED arrival.</b> If burned at 10 AM and arrives at noon, you are already 2 hours into the first 8-hour window.</div>
+<div class="never"><div class="never-title">NEVER in Burns:</div><ul><li>NEVER apply ice (worsens damage, hypothermia)</li><li>NEVER use NS as primary fluid (causes hyperchloremic metabolic acidosis)</li><li>NEVER add KCl to burn IVF (hyperkalemia already present from cell lysis)</li><li>NEVER use wet-to-dry dressings (tears new granulation tissue)</li></ul></div>
+
+<h3>ABA Burn Center Referral Criteria</h3>
+<div class="grid-2">
+  <div class="card">
+    <ul>
+      <li>Partial thickness ≥10% TBSA</li>
+      <li>Burns of face, hands, feet, genitalia, perineum, major joints</li>
+      <li>Third-degree burns (any size)</li>
+      <li>Electrical or lightning burns</li>
+    </ul>
+  </div>
+  <div class="card">
+    <ul>
+      <li>Chemical burns, inhalation injury</li>
+      <li>Preexisting medical disorders</li>
+      <li>Concomitant trauma</li>
+      <li>Children in non-pediatric facilities</li>
+      <li>Special social/emotional/rehab needs</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Topical Antimicrobial Agents</h3>
+<table>
+  <tr><th>Agent</th><th>Penetrates Eschar?</th><th>Key Notes</th></tr>
+  <tr><td><b>Silver sulfadiazine 1% (Silvadene)</b></td><td>NO</td><td>Most common first-line; broad spectrum; forms pseudoeschar</td></tr>
+  <tr><td><b>Mafenide acetate 5% (Sulfamylon)</b></td><td><b>YES — ONLY ONE</b></td><td>Carbonic anhydrase inhibitor → metabolic acidosis; painful on application</td></tr>
+  <tr><td><b>Silver nitrate 0.5%</b></td><td>NO</td><td>Hypotonic → leaches Na+ and K+ from wound; stains everything black</td></tr>
+</table>
+<div class="tip"><strong>Exam Focus:</strong> Sulfamylon (mafenide acetate) is the ONLY topical that penetrates eschar. This is a standalone test question — know it cold.</div>
+
+<h3>Skin Grafting</h3>
+<div class="grid-3">
+  <div class="card"><h4>Autograft (Gold Standard)</h4><ul><li>Patient's own skin; no rejection</li><li>Split-thickness; sheets or meshed</li><li>First dressing change: 3–5 days post-op</li><li>Graft loss: infection, bleeding under graft, shearing</li></ul></div>
+  <div class="card"><h4>Homograft (Allograft)</h4><ul><li>Cadaver skin; temporary</li><li>WILL be rejected</li><li>Purulent exudate → <b>notify provider</b></li><li>Do NOT independently debride</li></ul></div>
+  <div class="card"><h4>Xenograft (Pigskin)</h4><ul><li>Temporary</li><li>Separating = <b>trim away — EXPECTED</b>, not an emergency</li></ul></div>
+</div>
+
+<h3>Burn Phases of Care</h3>
+<table>
+  <tr><th>Phase</th><th>Timing</th><th>Priority Nursing Actions</th></tr>
+  <tr><td><b>Emergent/Resuscitative</b></td><td>Injury → fluid resuscitation complete</td><td>ABCDE; prevent shock &amp; respiratory distress; fluid resuscitation; detect other injuries; wound assessment; Foley; NG if &gt;20-25% TBSA; IV opioids ONLY; ECG for electrical; tetanus</td></tr>
+  <tr><td><b>Acute/Intermediate</b></td><td>48-72h → near wound closure</td><td>Wound care &amp; closure; <b>infection prevention (highest risk)</b>; nutrition (enteral preferred, carbs #1 energy source); pain management (premedicate before ALL wound care); early mobility</td></tr>
+  <tr><td><b>Rehabilitation</b></td><td>Wound closure → optimal adjustment</td><td>Pressure garments <b>24h/day</b>; prevent contractures (PT/OT, ROM); PTSD screening (45% of survivors); body image counseling</td></tr>
+</table>
+
+<h3>Burn Systemic Effects (Burns &gt;20% TBSA)</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Immediate Effects</h4>
+    <ul>
+      <li><b>Cardiovascular:</b> Immediate ↓CO → burn shock (hypovolemic); peak capillary leak 6-8h; ↑Hct (hemoconcentration)</li>
+      <li><b>Electrolytes:</b> Hyperkalemia (cell lysis) + Hyponatremia (Na+ lost in edema)</li>
+      <li><b>Pulmonary:</b> Upper airway edema takes <b>UP TO 48H</b> to develop (not immediate!)</li>
+      <li><b>CO poisoning:</b> SpO2 is UNRELIABLE; treat with 100% O2 until carboxyhemoglobin &lt;5%</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Complications to Know</h4>
+    <ul>
+      <li><b>Curling's ulcer:</b> Gastric/duodenal erosion from ischemia (stress ulcer); "coffee-ground" emesis</li>
+      <li><b>Paralytic ileus:</b> &gt;20-25% TBSA → NG decompression</li>
+      <li><b>Compartment syndrome:</b> Circumferential burns → escharotomy/fasciotomy</li>
+      <li><b>AKI:</b> Hypovolemia + myoglobin in tubules → red urine</li>
+      <li><b>Zones:</b> Coagulation (irreversible) → Stasis (<b>nursing saves this zone</b>) → Hyperemia (spontaneous recovery)</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+<h3>Emergency Nursing — ESI Triage</h3>
+<table>
+  <tr><th>Level</th><th>Category</th><th>Reassess</th><th>Definition</th></tr>
+  <tr><td><b>1</b></td><td>Resuscitation</td><td>Continuous</td><td>Immediate threat to life</td></tr>
+  <tr><td><b>2</b></td><td>Emergent</td><td>q15 min</td><td>High-risk; confused/lethargic; severe pain</td></tr>
+  <tr><td><b>3</b></td><td>Urgent</td><td>q30 min</td><td>Stable but needs multiple resources</td></tr>
+  <tr><td><b>4</b></td><td>Less urgent</td><td>q60 min</td><td>Stable; needs one resource</td></tr>
+  <tr><td><b>5</b></td><td>Non-urgent</td><td>q120 min</td><td>Stable; no resources needed</td></tr>
+</table>
+<div class="warn"><strong>ED vs DISASTER Triage — This WILL be on your exam:</strong><br>
+<b>ED Triage:</b> Most critically ill get the most resources — regardless of survival probability.<br>
+<b>Disaster Triage:</b> Greatest good for the greatest number — likelihood of survival drives allocation. A conscious, talking patient burned &gt;60% TBSA = BLACK tag.</div>
+
+<h3>Primary Survey (ABCDE)</h3>
+<div class="grid-2">
+  <div class="card">
+    <table>
+      <tr><th>Letter</th><th>Focus</th><th>Action</th></tr>
+      <tr><td><b>A</b></td><td>Airway</td><td>Patent airway; protect C-spine</td></tr>
+      <tr><td><b>B</b></td><td>Breathing</td><td>Ventilation; bilateral breath sounds; O2</td></tr>
+      <tr><td><b>C</b></td><td>Circulation</td><td>Control hemorrhage; prevent shock; peripheral pulses; prevent hypothermia</td></tr>
+      <tr><td><b>D</b></td><td>Disability</td><td>GCS + AVPU</td></tr>
+      <tr><td><b>E</b></td><td>Exposure</td><td>Undress completely; assess all wounds</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Airway Management — Escalation Hierarchy</h4>
+    <ol>
+      <li>Head-tilt/chin-lift; jaw-thrust (C-spine protection)</li>
+      <li>OPA — unconscious, spontaneous breathing; measure lip to ear</li>
+      <li>NPA — <b>NOT with facial trauma or basal skull fracture</b></li>
+      <li>Endotracheal intubation (ETT)</li>
+      <li>King Tube / LMA — field airway</li>
+      <li>Cricothyroidotomy — maxillofacial trauma, C-spine injury, laryngeal edema</li>
+    </ol>
+    <p style="margin-top:0.3rem"><b>Cyanosis and LOC = LATE signs</b> — do not wait for these to intervene.</p>
+  </div>
+</div>
+
+<h3>Environmental Emergencies</h3>
+<table>
+  <tr><th>Emergency</th><th>Key Findings</th><th>Priority Interventions</th></tr>
+  <tr><td><b>Heat Stroke</b></td><td><b>HOT DRY SKIN</b> (anhidrosis — sweat mechanism fails); Temp ≥40.6°C (105°F); CNS dysfunction; risk: seizures</td><td>Cool to 39.2°C FAST; <b>STOP cooling at 38°C/100.4°F</b>; ice to neck/axilla/groin; sheet under cooling blanket (prevents skin burns); core temp via bladder/rectal/esophageal probe; NS or LR; 100% O2; <b>Thorazine (chlorpromazine)</b> to suppress shivering</td></tr>
+  <tr><td><b>Heat Exhaustion</b></td><td>Wet/pale skin; normal or mildly elevated temp; weakness, N/V; no CNS dysfunction</td><td>Rest; cool environment; oral hydration if conscious</td></tr>
+  <tr><td><b>Frostbite</b></td><td>Pallor, hard, no pain</td><td>Rapid rewarming 37-40°C circulating bath; <b>NO massage</b>; no weight bearing if feet affected; avoid tobacco/alcohol/caffeine (vasoconstrictors)</td></tr>
+  <tr><td><b>Hypothermia</b></td><td>Core temp ≤35°C; bradycardia, ↓LOC</td><td>Active core rewarming: warm IVF, warm humidified O2, warm peritoneal lavage; <b>Hypothermia takes precedence over frostbite</b></td></tr>
+</table>
+
+<h3>Key ED Situations</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Hemorrhage Management</h4>
+    <ul>
+      <li>Two large-bore IVs (uninjured extremity if possible)</li>
+      <li>LR preferred (NS causes hyperchloremic acidosis)</li>
+      <li>Warm blood products (cold → cardiac arrest/coagulopathy)</li>
+      <li>Direct firm pressure; tourniquet when pressure fails</li>
+      <li>Document tourniquet: label "T" + time applied; leave until OR</li>
+      <li><b>Triad of death:</b> Hypothermia + Acidosis + Coagulopathy</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Special Situations</h4>
+    <ul>
+      <li><b>Evisceration:</b> Sterile moist saline dressing; hold oral fluids; NG; antibiotics</li>
+      <li><b>Rhabdomyolysis:</b> Myalgias + dark (cola) urine + CK &gt;6000 IU/L (CK-MM isoform, not CK-MB); min UOP 30 mL/hr until urine clears; fasciotomy if compartment syndrome; abdominal compartment syndrome measured via Foley catheter device</li>
+      <li><b>Sexual assault:</b> Paper bags (NOT plastic) for evidence; hang wet bloody clothing to dry, then paper bag; water-moistened speculum; cut <b>AROUND</b> bullet holes and stab wounds — NEVER through them; chain of custody</li>
+      <li><b>IO access:</b> Intraosseous good for 24 hrs when no IV possible; O-negative uncrossmatched blood in emergencies; pressure bag for rapid transfusion</li>
+      <li><b>"Turn of death":</b> Keep hemodynamically unstable patients supine — turning can drop BP and cause cardiac arrest</li>
+      <li><b>Alcohol withdrawal:</b> DTs start 48-96h after last drink; CIWA protocol; private quiet room; <b>NO TV (seizure risk)</b></li>
+    </ul>
+  </div>
+</div>
+
+<h3>Poisoning Antidotes</h3>
+<table>
+  <tr><th>Toxin</th><th>Antidote</th><th>Key Notes</th></tr>
+  <tr><td><b>Opioids</b></td><td>Naloxone (Narcan) IV/IM</td><td>Narcan wears off faster than heroin — watch for relapse; never leave unattended</td></tr>
+  <tr><td><b>Acetaminophen</b></td><td>NAC (N-acetylcysteine)</td><td>#1 overdosed drug; do NOT give activated charcoal with NAC</td></tr>
+  <tr><td><b>Nerve agents</b></td><td>Atropine + pralidoxime + benzos</td><td>SLUDGE symptoms (cholinergic excess); decontaminate first</td></tr>
+  <tr><td><b>Cyanide</b></td><td>Hydroxocobalamin (or amyl/sodium nitrite)</td><td>Bright red skin; inhibits aerobic metabolism</td></tr>
+  <tr><td><b>Carbon monoxide</b></td><td>100% O2 (or hyperbaric)</td><td>SpO2 UNRELIABLE; treat until carboxyhemoglobin &lt;5%</td></tr>
+  <tr><td><b>Corrosives</b></td><td>Dilution: milk or water</td><td>NEVER induce vomiting; NEVER gastric lavage</td></tr>
+</table>
+
+<h3>Disaster Triage — NATO / MCI Tags</h3>
+<table>
+  <tr><th>Tag</th><th>Priority</th><th>Criteria</th><th>Examples</th></tr>
+  <tr><td style="color:red"><b>RED</b></td><td>1 — Immediate</td><td>Life-threatening but survivable with <b>minimal intervention</b></td><td>Sucking chest wound, airway obstruction, shock, burns 15-40% TBSA</td></tr>
+  <tr><td style="color:#b45309"><b>YELLOW</b></td><td>2 — Delayed</td><td>Significant injury; can wait hours without threat to life/limb</td><td>Stable abdominal wounds, most CNS/eye injuries</td></tr>
+  <tr><td style="color:#15803d"><b>GREEN</b></td><td>3 — Minimal</td><td>Minor injuries; treatment can wait hours to days</td><td>Upper extremity fractures, minor burns, sprains</td></tr>
+  <tr><td><b>BLACK</b></td><td>4 — Expectant</td><td>Extensive injuries; survival unlikely even with care; comfort only</td><td>Unresponsive + penetrating head wound; 3rd-degree burns &gt;60% TBSA; fixed/dilated pupils; agonal respirations</td></tr>
+</table>
+<div class="pearl"><strong>Red tag ≠ "sickest."</strong> Red = survivable with MINIMAL intervention. Patients needing MAXIMUM resources get Black-tagged in disaster to save multiple Red-tag survivors. A conscious patient burned &gt;60% TBSA = Black.</div>
+
+<h3>CISM | PPE Levels | Blast Injuries</h3>
+<div class="grid-3">
+  <div class="card">
+    <h4>CISM Levels</h4>
+    <table>
+      <tr><th>Level</th><th>Timing</th></tr>
+      <tr><td>Defusing</td><td>Immediately after incident</td></tr>
+      <tr><td>Debriefing</td><td>1–10 days after</td></tr>
+      <tr><td>Follow-up</td><td>When symptoms persist</td></tr>
+    </table>
+    <div class="tip" style="margin-top:0.4rem"><b>Goal = recognize stress reactions</b>, NOT evaluate incident management.</div>
+    <h4 style="margin-top:0.6rem">EOP Phases <span style="color:var(--emergency);font-size:0.75rem">PROF EMPHASIS</span></h4>
+    <table>
+      <tr><th>Phase</th><th>Definition</th></tr>
+      <tr><td>Pre-incident</td><td>Preparation, drills, training</td></tr>
+      <tr><td>Incident response</td><td>Active disaster management</td></tr>
+      <tr><td><b>Demobilization</b></td><td><b>Return to normal daily functioning</b> (NOT drills, NOT restocking)</td></tr>
+      <tr><td><b>Post-incident</b></td><td><b>Critique and debriefing</b> of ALL involved (NOT replacing resources)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>PPE Levels</h4>
+    <table>
+      <tr><th>Level</th><th>Respiratory</th><th>Suit</th></tr>
+      <tr><td><b>A</b></td><td>SCBA</td><td>Vapor-tight (max protection)</td></tr>
+      <tr><td><b>B</b></td><td>SCBA</td><td>NOT vapor-tight</td></tr>
+      <tr><td><b>C</b></td><td>Air-purified respirator</td><td>Coverall — <b>hospital standard</b></td></tr>
+      <tr><td><b>D</b></td><td>None</td><td>Standard uniform</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Blast Injuries — 4 Phases</h4>
+    <table>
+      <tr><th>Phase</th><th>Mechanism</th><th>Injuries</th></tr>
+      <tr><td><b>Primary</b></td><td>Air overpressure wave</td><td>Ears, lungs, GI (air-filled organs)</td></tr>
+      <tr><td><b>Secondary</b></td><td>Shrapnel/debris as projectiles</td><td>Penetrating, fractures</td></tr>
+      <tr><td><b>Tertiary</b></td><td>Body is the projectile (thrown)</td><td>Head injuries, spinal, fractures</td></tr>
+      <tr><td><b>Quaternary</b></td><td>Exacerbations &amp; complications</td><td>COPD/asthma flare, burns, crush</td></tr>
+    </table>
+  </div>
+</div>
+
+<h3>Biological &amp; Chemical Weapons (High-Yield) — There Is a Matching Category</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Bioweapons — Know These for Matching</h4>
+    <table>
+      <tr><th>Agent</th><th>Category</th><th>Key Distinguisher</th><th>Precautions</th></tr>
+      <tr><td><b>Anthrax</b></td><td>A</td><td>Painless black eschar (cutaneous); NO rhinorrhea (inhalation); hemorrhagic mediastinitis on CXR</td><td>Standard ONLY — NOT person-to-person</td></tr>
+      <tr><td><b>Botulism</b></td><td>A</td><td>Descending flaccid paralysis (top → down); diplopia, dysarthria, dysphagia first; NO fever; food-borne or wound</td><td>Standard; antitoxin available</td></tr>
+      <tr><td><b>Smallpox</b></td><td>A</td><td>Rash all in SAME stage (vs chickenpox = mixed stages); centrifugal distribution (face/extremities first); highly contagious</td><td>Airborne + Contact; vaccine within 4 days of exposure</td></tr>
+      <tr><td><b>Ebola (VHF)</b></td><td>A</td><td>Hemorrhagic fever; extreme infectivity; rapid organ failure; bleeding from orifices</td><td>Contact + Droplet + Eye protection; strict PPE</td></tr>
+      <tr><td><b>Plague</b></td><td>A</td><td>Bubonic: painful lymph nodes (buboes); pneumonic: person-to-person via droplets; septicemic: DIC</td><td>Droplet for pneumonic; standard for bubonic</td></tr>
+    </table>
+    <div class="warn" style="margin-top:0.4rem"><b>Mass presentation:</b> If multiple patients arrive with same symptoms simultaneously → suspect bioterrorism → ISOLATE → call public health → seal air ducts, double-bag waste</div>
+  </div>
+  <div class="card">
+    <h4>Nerve Agents / Chemical</h4>
+    <ul>
+      <li><b>Nerve agents (Sarin, VX):</b> SLUDGE — Salivation, Lacrimation, Urination, Defecation, GI, Emesis + bronchospasm</li>
+      <li>Treat: Atropine + pralidoxime + benzos; soap &amp; water decon</li>
+      <li><b>Mustard (vesicant):</b> Blistering; blot (do NOT rub); dimercaprol systemic</li>
+      <li><b>Cyanide (blood agent):</b> Bright red skin → respiratory then cardiac arrest; hydroxocobalamin; soap and water decon</li>
+      <li><b>Radiation:</b> Time + distance + shielding + dosimeter; Contamination = decontaminate; Incorporation = medical management; External irradiation = NOT contagious, not an emergency by itself</li>
+    </ul>
+    <h4 style="margin-top:0.6rem">Sepsis 6-Hour Bundle</h4>
+    <ol>
+      <li>Measure <b>lactate</b> (repeat if &gt;2 mmol/L)</li>
+      <li>Blood cultures ×2 before antibiotics</li>
+      <li>Broad-spectrum <b>antibiotics</b> (within 1 hour of recognition)</li>
+      <li><b>30 mL/kg IV crystalloid</b> (NS or LR) if hypotensive or lactate ≥4</li>
+      <li>Vasopressors (NE) ONLY if still hypotensive after fluids</li>
+      <li>Reassess fluid status and tissue perfusion continuously</li>
+    </ol>
+  </div>
+</div>
+
+<h3>Family Support &amp; Death Care <span style="color:var(--emergency);font-size:0.8rem">PROF HINTED DIRECTLY — READ THE SLIDE</span></h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Before Allowing Family to View Deceased</h4>
+    <ul>
+      <li><b>Clean the patient</b> — remove or tuck ET tube, change bloody/soiled linens, wash visible blood</li>
+      <li><b>Clean the room</b> — the last image the family has matters; do not bring family in immediately after a code if the room is in disarray</li>
+      <li>Position patient with dignity; cover appropriately</li>
+      <li>Assign a dedicated nurse to stay with the family</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>During a Code / Grief Communication</h4>
+    <ul>
+      <li><b>Family wanting to watch a code:</b> Allow it — helps them understand that everything possible was done; reduces complicated grief</li>
+      <li>After death: sit down with family, use clear language (not "passed away" if unclear — be direct but compassionate)</li>
+      <li><b>Holistic principle:</b> Patient is a full person — they have family, a life, a job; care does not stop at the clinical problem</li>
+      <li>Chaplain/social work referral; organ donation discussion when appropriate</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 2: CARDIAC -->
+<h2 class="cardiac">UNIT 2: Cardiac Output &amp; Perfusion (25%)</h2>
+
+<h3>Cardiac Output Fundamentals</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>The Master Formula</h4>
+    <p style="font-size:1.1rem; font-weight:700; text-align:center; margin:0.4rem 0">CO = HR × SV &nbsp;|&nbsp; Normal: 4–6 L/min</p>
+    <table>
+      <tr><th>Factor</th><th>When Decreased</th><th>When Increased</th></tr>
+      <tr><td><b>Preload</b> (volume/stretch at end-diastole)</td><td>Hemorrhage, dehydration → fill the tank (fluids)</td><td>Fluid overload, HF → diuretics, fluid restrict</td></tr>
+      <tr><td><b>Afterload</b> (resistance to ejection)</td><td>Vasodilation (sepsis) → vasopressors</td><td>HTN, vasoconstriction → A-B-C-D meds</td></tr>
+      <tr><td><b>Contractility</b> (inotropy)</td><td>HF, hypoxia, acidosis → inotropes</td><td>SNS, dobutamine, digoxin</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>A-B-C-D = Afterload Reduction</h4>
+    <ul>
+      <li><b>A</b> — ACE inhibitors &amp; ARBs (lisinopril, losartan)</li>
+      <li><b>B</b> — Beta-blockers (metoprolol, carvedilol)</li>
+      <li><b>C</b> — Calcium channel blockers (diltiazem, verapamil)</li>
+      <li><b>D</b> — Diuretics + vasodilation (furosemide, nitroglycerin)</li>
+    </ul>
+    <h4 style="margin-top:0.6rem">Positive Inotropes</h4>
+    <p>Dopamine · Dobutamine · Epinephrine · NE · Digoxin · Milrinone</p>
+    <p><b>EF normal: 55-65%; HFrEF: &lt;40%</b></p>
+  </div>
+</div>
+
+<h3>ECG Interpretation — Quick Reference</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Waveforms &amp; Intervals</h4>
+    <table>
+      <tr><th>Component</th><th>Normal</th><th>Abnormal = Suspect</th></tr>
+      <tr><td>P wave</td><td>≤0.11 sec</td><td>Absent = A-fib; inverted = junctional</td></tr>
+      <tr><td>PR interval</td><td>0.12–0.20 sec</td><td>&gt;0.20 = AV block; &lt;0.12 = accessory pathway</td></tr>
+      <tr><td>QRS</td><td>&lt;0.12 sec</td><td>≥0.12 = BBB or ventricular origin</td></tr>
+      <tr><td>ST segment</td><td>Isoelectric (flat)</td><td>Elevation = STEMI; Depression = ischemia</td></tr>
+      <tr><td>T wave</td><td>Upright</td><td>Inverted = ischemia; Peaked = hyperkalemia</td></tr>
+      <tr><td>QT interval</td><td>0.32–0.40 sec</td><td>Prolonged → Torsades de Pointes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Electrolyte ECG Changes</h4>
+    <table>
+      <tr><th>Electrolyte</th><th>ECG Change</th></tr>
+      <tr><td>Hypokalemia</td><td>U waves, flat T, prolonged QT → ventricular dysrhythmias</td></tr>
+      <tr><td>Hyperkalemia</td><td>Peaked T → wide QRS → sine wave → asystole</td></tr>
+      <tr><td>Hypocalcemia</td><td>Prolonged QT → Torsades de Pointes</td></tr>
+      <tr><td>Hypercalcemia</td><td>Short QT → agonal rhythm</td></tr>
+      <tr><td>Hypomagnesemia</td><td>Prolonged QT → Torsades</td></tr>
+    </table>
+    <div class="tip" style="margin-top:0.4rem"><b>Hyperkalemia emergency:</b> Calcium gluconate FIRST (cardioprotective), then insulin+D50, albuterol, kayexalate, dialysis.</div>
+  </div>
+</div>
+
+<h3>Arrhythmia Treatment Matrix</h3>
+<table>
+  <tr><th>Rhythm</th><th>Treatment</th><th>Key Notes</th></tr>
+  <tr><td><b>VF (ventricular fibrillation)</b></td><td>Defibrillate (UNSYNC) → CPR → epi → <b>Amiodarone 300mg IV</b> (1st dose), then <b>150mg</b> (2nd dose); max 450mg total; lidocaine if amiodarone maxed</td><td>No organized rhythm; no pulse; shock immediately</td></tr>
+  <tr><td><b>Pulseless VT</b></td><td>Defibrillate (UNSYNC) → same algorithm as VF</td><td>No pulse = treat as VF</td></tr>
+  <tr><td><b>VT with pulse</b></td><td><b>Synchronized cardioversion</b></td><td>SYNC mode times shock to R wave (avoids T wave → avoids VF)</td></tr>
+  <tr><td><b>A-fib / A-flutter</b></td><td>Rate control (diltiazem, beta-blocker); anticoagulation; cardioversion if &lt;48h</td><td>Loss of atrial kick → ↓CO by 25%; Afib = irregularly irregular</td></tr>
+  <tr><td><b>SVT</b></td><td>Adenosine 6mg rapid IV push (flush fast); carotid sinus massage</td><td>Adenosine has ultra-short half-life — push and flush immediately</td></tr>
+  <tr><td><b>Symptomatic Bradycardia</b></td><td>Atropine 0.5mg IV → transcutaneous pacing</td><td>If hemodynamically unstable; hold if heart block (will worsen)</td></tr>
+  <tr><td><b>1st Degree AV Block</b></td><td>Monitor (usually no treatment)</td><td>PR &gt;0.20; all P waves conducted</td></tr>
+  <tr><td><b>2nd Degree Mobitz I (Wenckebach)</b></td><td>Monitor; treat underlying cause; atropine if symptomatic</td><td>Progressive PR lengthening → dropped QRS → resets; typically benign; regularly irregular</td></tr>
+  <tr><td><b>2nd Degree Mobitz II</b></td><td>Prepare for transcutaneous pacing (high risk of progressing to 3rd degree); do NOT rely on atropine</td><td>Random dropped QRS; no PR prolongation before drop; unpredictable; more dangerous than Wenckebach</td></tr>
+  <tr><td><b>3rd Degree (Complete) Heart Block</b></td><td>Pacemaker (emergency)</td><td>No relationship between P waves and QRS; P and QRS march independently</td></tr>
+</table>
+
+<h3>H's and T's — Reversible Causes of Cardiac Arrest</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>H's</h4>
+    <ul><li>Hypovolemia</li><li>Hypoxia</li><li>Hydrogen ion (acidosis)</li><li>Hypo/Hyperkalemia</li><li>Hypothermia</li></ul>
+  </div>
+  <div class="card">
+    <h4>T's</h4>
+    <ul><li>Tension pneumothorax</li><li>Tamponade (cardiac)</li><li>Toxins</li><li>Thrombosis — PE</li><li>Thrombosis — coronary (MI)</li></ul>
+  </div>
+</div>
+
+<h3>ACS: Angina vs NSTEMI vs STEMI</h3>
+<table>
+  <tr><th></th><th>Unstable Angina</th><th>NSTEMI</th><th>STEMI</th></tr>
+  <tr><td><b>Occlusion</b></td><td>Partial</td><td>Partial</td><td>Complete</td></tr>
+  <tr><td><b>Troponin</b></td><td>Normal</td><td>Elevated</td><td>Elevated</td></tr>
+  <tr><td><b>ST changes</b></td><td>No elevation</td><td>Depression or no change</td><td>Elevation ≥2 contiguous leads</td></tr>
+  <tr><td><b>Treatment</b></td><td>MONA + antiplatelet + heparin</td><td>MONA + PCI within 24-72h</td><td>PCI &lt;90 min (door-to-balloon); tPA if no PCI available</td></tr>
+</table>
+<div class="card" style="margin-top:0.5rem">
+  <h4>MONA — Initial ACS Management</h4>
+  <p><b>M</b>orphine (pain &amp; anxiety; use cautiously — may mask symptoms) · <b>O</b>2 (if SpO2 &lt;94%) · <b>N</b>itroglycerin (hold if SBP &lt;90 mmHg or right ventricular MI) · <b>A</b>spirin (325mg chewed)</p>
+  <p style="margin-top:0.3rem">Plus: Heparin (anticoagulation) · Beta-blocker · ACE inhibitor (within 24h for STEMI)</p>
+</div>
+
+<h3>Heart Failure</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Left HF → Pulmonary Congestion (backward into lungs)</h4>
+    <ul>
+      <li>Dyspnea on exertion, orthopnea, PND</li>
+      <li>Crackles (fine, basilar)</li>
+      <li>S3 gallop (ventricular volume overload)</li>
+      <li>Pink frothy sputum (acute pulmonary edema)</li>
+      <li>Fatigue, ↓exercise tolerance</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Right HF → Systemic Congestion (backward into body)</h4>
+    <ul>
+      <li>JVD (jugular venous distension)</li>
+      <li>Dependent pitting edema (ankles, feet)</li>
+      <li>Hepatomegaly, ascites</li>
+      <li>Weight gain (fluid retention)</li>
+      <li>Most common cause = Left HF</li>
+    </ul>
+  </div>
+</div>
+<div class="card" style="margin-top:0.5rem">
+  <h4>HF Treatment</h4>
+  <p>ACE inhibitors/ARBs (↓afterload) · Beta-blockers (↓HR, ↓remodeling) · Furosemide (↓preload/fluid) · Spironolactone · Digoxin (↑contractility + ↓HR; narrow TI; K+ affects toxicity)</p>
+  <p style="margin-top:0.3rem"><b>Position:</b> HOB elevated (high-Fowler's for acute); daily weight (report &gt;2 lb/day gain)</p>
+</div>
+
+<h3>Shock Types Matrix</h3>
+<table>
+  <tr><th>Type</th><th>CO</th><th>Preload</th><th>SVR</th><th>Cause</th><th>Treatment</th></tr>
+  <tr><td><b>Hypovolemic</b></td><td>↓</td><td>↓</td><td>↑</td><td>Hemorrhage, burns, dehydration</td><td>Fluids, blood products, control source</td></tr>
+  <tr><td><b>Cardiogenic</b></td><td>↓</td><td>↑</td><td>↑</td><td>MI, HF, cardiomyopathy</td><td>Dobutamine (inotrope); diuretics; IABP</td></tr>
+  <tr><td><b>Distributive — Septic</b></td><td>↑ (early) / ↓ (late)</td><td>↓</td><td>↓</td><td>Infection → systemic inflammation</td><td>Fluids + antibiotics + vasopressors (NE)</td></tr>
+  <tr><td><b>Distributive — Neurogenic</b></td><td>↓</td><td>↓</td><td>↓</td><td>SCI (loss of sympathetic tone)</td><td>NE (Levophed); atropine for bradycardia; fluids</td></tr>
+  <tr><td><b>Distributive — Anaphylactic</b></td><td>↓</td><td>↓</td><td>↓</td><td>Allergen → massive vasodilation</td><td>Epi IM FIRST → diphenhydramine → methylprednisolone; airway</td></tr>
+  <tr><td><b>Obstructive</b></td><td>↓</td><td>↑ (RV)</td><td>↑</td><td>PE, tamponade, tension pneumo</td><td>Treat the cause (pericardiocentesis, needle decompression, anticoagulation)</td></tr>
+</table>
+<div class="pearl"><b>Neurogenic shock distinguisher:</b> Bradycardia + hypotension + WARM DRY skin. All other shock types → tachycardia + cool/clammy skin (except early septic shock).</div>
+
+<h3>Cardiac Tamponade</h3>
+<p><b>Beck's Triad:</b> Hypotension + JVD + Muffled heart sounds · <b>Pulsus paradoxus</b> (&gt;10 mmHg drop in SBP during inspiration) · <b>Treatment:</b> Pericardiocentesis</p>
+
+<h3>Heart Sounds Quick Reference</h3>
+<table>
+  <tr><th>Sound</th><th>Timing</th><th>Meaning</th><th>Memory</th></tr>
+  <tr><td><b>S1</b></td><td>Start of systole</td><td>Normal — AV valves close</td><td>"lub"</td></tr>
+  <tr><td><b>S2</b></td><td>Start of diastole</td><td>Normal — semilunar valves close</td><td>"dub"</td></tr>
+  <tr><td><b>S3</b></td><td>Early diastole (after S2)</td><td><b>PATHOLOGIC</b> — fluid overload, HF</td><td>"Ken-TUC-ky" — think fluid</td></tr>
+  <tr><td><b>S4</b></td><td>Late diastole (before S1)</td><td><b>PATHOLOGIC</b> — stiff ventricle (HTN, ischemia)</td><td>"TEN-nes-see" — think stiff</td></tr>
+</table>
+
+<h3>Pacemaker Malfunction <span style="color:var(--emergency);font-size:0.8rem">PROF SAID MOST STUDENTS MISSED THIS ON EXAM 1</span></h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Failure to Capture</h4>
+    <p>Pacing spike fires but <b>NO QRS follows</b> — myocardium does not respond to the signal</p>
+    <p><b>ECG:</b> Spike present, no depolarization after it</p>
+    <p><b>Causes:</b> Battery depletion, dislodged/fractured lead, increased pacing threshold, fibrosis at lead tip</p>
+    <p><b>Fix:</b> Increase milliamps (amplitude/output); check lead position; replace battery</p>
+  </div>
+  <div class="card">
+    <h4>Failure to Sense</h4>
+    <p>Pacemaker does <b>NOT detect the patient's own heartbeat</b> → fires inappropriately (competes with intrinsic rhythm)</p>
+    <p><b>ECG:</b> Pacing spikes appear where they shouldn't (on top of or near intrinsic beats) — can land on T wave → VF risk</p>
+    <p><b>Causes:</b> Battery depletion, dislodged lead, electromagnetic interference, sensitivity set too low</p>
+    <p><b>Fix:</b> Increase sensitivity; reposition lead; check for EMI sources</p>
+    <div class="tip" style="margin-top:0.4rem"><b>Memory:</b> Capture = contraction. Sense = sensing. Failure to capture → spike but no beat. Failure to sense → pacemaker is "blind" to what the heart is already doing.</div>
+  </div>
+</div>
+
+<h3>TTM | Hypertensive Crisis | Cardiomyopathy | Infectious Heart | CABG</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Targeted Temperature Management (TTM)</h4>
+    <ul>
+      <li><b>What:</b> Controlled cooling to 32–36°C (89.6–96.8°F) after cardiac arrest</li>
+      <li><b>Who (candidates):</b> Adults with ROSC (return of spontaneous circulation) after cardiac arrest — especially VF/pulseless VT; remains comatose after ROSC</li>
+      <li><b>Duration:</b> 24 hours, then controlled rewarming</li>
+      <li><b>Goal:</b> Reduce neurologic injury from ischemia/reperfusion</li>
+      <li>Monitor temp continuously; prevent shivering (worsens outcome)</li>
+    </ul>
+    <h4 style="margin-top:0.6rem">Hypertensive Crisis</h4>
+    <ul>
+      <li><b>Hypertensive urgency:</b> Severe HTN, NO end-organ damage → oral meds, lower over hours/days</li>
+      <li><b>Hypertensive emergency:</b> Severe HTN + end-organ damage (stroke, MI, renal failure, papilledema) → IV meds, ICU</li>
+      <li><b>Rule:</b> Reduce MAP by no more than <b>25% in the first hour</b> — too rapid → ischemia (brain, heart, kidneys)</li>
+      <li>IV agents: Nitroprusside, labetalol, nicardipine</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Cardiomyopathy</h4>
+    <table>
+      <tr><th>Type</th><th>Key Feature</th><th>Treatment</th></tr>
+      <tr><td><b>Dilated (most common)</b></td><td>Enlarged, weak ventricle; systolic dysfunction; ↓EF; often idiopathic, alcohol, viral</td><td>Same as HF: ACE/ARBs, beta-blockers, diuretics, digoxin; ICD if EF &lt;35%</td></tr>
+      <tr><td><b>Hypertrophic</b></td><td>Thickened septum → outflow obstruction; sudden cardiac death risk in young athletes; S4 gallop</td><td>Beta-blockers, CCBs; AVOID digoxin, nitrates, diuretics (worsen obstruction)</td></tr>
+      <tr><td><b>Restrictive</b></td><td>Stiff, non-compliant ventricle; impaired filling; diastolic dysfunction</td><td>Symptom management; treat underlying cause (amyloid, sarcoid)</td></tr>
+    </table>
+    <h4 style="margin-top:0.6rem">Infectious Heart Disease</h4>
+    <table>
+      <tr><th>Condition</th><th>Key Features</th><th>Treatment</th></tr>
+      <tr><td><b>Endocarditis</b></td><td>IV drug users, prosthetic valves, dental procedures; Osler nodes (painful, fingers), Janeway lesions (painless, palms/soles), Roth spots (retina); fever + new murmur</td><td>Long-course IV antibiotics (4-6 weeks); valve surgery if severe</td></tr>
+      <tr><td><b>Pericarditis</b></td><td>Sharp pleuritic chest pain; worse lying flat, <b>better leaning forward</b>; pericardial friction rub; ST elevation in all leads (saddle-shaped)</td><td>NSAIDs; colchicine; restrict activity; pericardiocentesis if effusion</td></tr>
+      <tr><td><b>Myocarditis</b></td><td>Viral (most common); chest pain, dyspnea, arrhythmias; ↑troponin; may mimic MI</td><td>Supportive; treat HF if develops; avoid exercise during acute phase</td></tr>
+    </table>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <h4>CABG &amp; Valvular Disease</h4>
+    <ul>
+      <li><b>CABG grafts:</b> Greater saphenous vein (leg, most common) and lesser saphenous vein; also internal mammary artery (longer patency)</li>
+      <li><b>Most common post-CABG complication: Atrial fibrillation</b> (peaks 2-3 days post-op)</li>
+      <li><b>Aortic stenosis:</b> Most common valvular disease in elderly; systolic murmur at 2nd RICS radiating to carotid; angina, syncope, dyspnea = bad triad → surgery</li>
+      <li><b>Mitral regurgitation:</b> Blood backflows into atria; LA/LV enlarge; systolic murmur at apex radiating to axilla</li>
+      <li>Valve replacement: Mechanical (lifelong warfarin) vs. Bioprosthetic (no long-term anticoagulation, less durable)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Nitroglycerin Patient Education <span style="color:var(--emergency);font-size:0.75rem">PROF EMPHASIS</span></h4>
+    <ul>
+      <li><b>Carry NTG at all times</b> (must be accessible immediately)</li>
+      <li>Sit or lie down before taking (causes hypotension → fall risk)</li>
+      <li>1 tablet SL → wait 5 min → if pain persists, 2nd tablet → wait 5 min → if persists, 3rd tablet → call 911</li>
+      <li><b>Call 911 after 1st tablet if chest pain is new/severe</b> (don't wait for 3 doses)</li>
+      <li>Oxygen reduces cardiac workload and decreases anginal pain</li>
+      <li>Store in dark glass bottle, away from heat/light; replace every 6 months</li>
+      <li>Hold if SBP &lt;90 mmHg or if patient took PDE5 inhibitor (sildenafil) within 24-48h → severe hypotension</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 3: COGNITION -->
+<h2 class="cognition">UNIT 3: Cognition &amp; Neurological Disorders (20%)</h2>
+
+<h3>Glasgow Coma Scale (GCS)</h3>
+<div class="grid-3">
+  <div class="card">
+    <h4>Eye Opening (E)</h4>
+    <ul><li>4 — Spontaneous</li><li>3 — To voice</li><li>2 — To pain</li><li>1 — None</li></ul>
+  </div>
+  <div class="card">
+    <h4>Verbal (V)</h4>
+    <ul><li>5 — Oriented</li><li>4 — Confused</li><li>3 — Words</li><li>2 — Sounds</li><li>1 — None</li></ul>
+  </div>
+  <div class="card">
+    <h4>Motor (M)</h4>
+    <ul><li>6 — Obeys commands</li><li>5 — Localizes pain</li><li>4 — Withdraws</li><li>3 — Decorticate (flexion)</li><li>2 — Decerebrate (extension)</li><li>1 — Flaccid (worst)</li></ul>
+  </div>
+</div>
+<p><b>Normal = 15 (E4 V5 M6) · Coma = &lt;8 · Severe TBI = ≤8</b></p>
+<div class="tip"><b>Posturing:</b> Decorticate = De-<em>Cortex</em> (cortical/subcortical lesion; arms flex toward core = "curl in"). Decerebrate = De-<em>Cerebrate</em> (brainstem level; ALL extremities extend rigid). Flaccid = worst prognosis (no motor path intact). Severity: Decorticate → Decerebrate → Flaccid.</div>
+
+<h3>Increased ICP</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Key Values &amp; Formulas</h4>
+    <p><b>Normal ICP:</b> 0–15 mmHg</p>
+    <p><b>MAP = (SBP + 2×DBP) ÷ 3</b> — calculate this first, then CPP</p>
+    <p><b>CPP = MAP − ICP</b> (normal 60–100 mmHg; &lt;50 = irreversible damage; &lt;60 = ischemia)</p>
+    <p><b>Monro-Kellie Hypothesis:</b> Brain + Blood + CSF = constant. If one ↑, others must ↓ (or ICP rises)</p>
+    <p style="margin-top:0.4rem"><b>Cushing's Triad = LATE / HERNIATION IMMINENT:</b></p>
+    <ul><li>Hypertension (widened pulse pressure)</li><li>Bradycardia</li><li>Irregular respirations</li></ul>
+  </div>
+  <div class="card">
+    <h4>ICP Nursing Interventions</h4>
+    <ul>
+      <li>HOB 30°, head/neck neutral (no rotation/flexion)</li>
+      <li>Avoid Valsalva (no straining, coughing — give stool softeners)</li>
+      <li>No clustering of care (rest between activities)</li>
+      <li>Quiet, dimly lit environment (minimize stimulation)</li>
+      <li>Avoid suctioning &gt;10 seconds</li>
+      <li>CT scan FIRST before LP (rule out increased ICP → herniation risk)</li>
+    </ul>
+    <h4 style="margin-top:0.4rem">Medical Management</h4>
+    <ul>
+      <li><b>Mannitol</b> (osmotic diuretic; watch for dehydration)</li>
+      <li><b>Hypertonic saline</b> (3% NaCl for herniation)</li>
+      <li><b>Hyperventilation</b> (transient; ↓PaCO2 → vasoconstriction)</li>
+      <li><b>Dexamethasone</b> (vasogenic edema from tumors)</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Stroke</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Ischemic Stroke (87%)</h4>
+    <ul>
+      <li>Thrombus or embolus; Afib is #1 embolic source</li>
+      <li>CT scan first (rule out hemorrhage)</li>
+      <li><b>tPA window: 3–4.5 hours from symptom onset</b></li>
+      <li>tPA contraindications: hemorrhagic stroke, recent surgery, anticoagulation, BP &gt;185/110</li>
+      <li>During tPA: monitor BP q15min, no anticoagulants × 24h</li>
+      <li>Goal: BP &lt;180/105 during/after tPA</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Hemorrhagic Stroke (13%)</h4>
+    <ul>
+      <li>Rupture: aneurysm or AVM</li>
+      <li><b>tPA is CONTRAINDICATED</b></li>
+      <li>Subarachnoid (SAH): "worst headache of life"</li>
+      <li><b>Nimodipine</b> (calcium channel blocker) for SAH → prevents vasospasm</li>
+      <li>Control BP; ICP management; possible surgical clipping/coiling</li>
+    </ul>
+  </div>
+</div>
+<div class="card" style="margin-top:0.5rem">
+  <h4>BeFAST + Aphasia Types</h4>
+  <p><b>B</b>alance · <b>E</b>yes · <b>F</b>ace droop · <b>A</b>rm drift · <b>S</b>peech · <b>T</b>ime (call 911)</p>
+  <table style="margin-top:0.4rem">
+    <tr><th>Aphasia</th><th>Location</th><th>Can Speak?</th><th>Understands?</th><th>Tip</th></tr>
+    <tr><td><b>Broca's (Expressive)</b></td><td>Left frontal</td><td>No (non-fluent)</td><td>Yes</td><td>"Broken speech"; right-sided paralysis often accompanies</td></tr>
+    <tr><td><b>Wernicke's (Receptive)</b></td><td>Left temporal</td><td>Yes (fluent but nonsense)</td><td>No</td><td>"Word salad"; patient often unaware of deficit</td></tr>
+  </table>
+</div>
+
+<h3>TBI — Hematoma Types</h3>
+<table>
+  <tr><th>Type</th><th>Vessel</th><th>Classic Presentation</th><th>Key Fact</th></tr>
+  <tr><td><b>Epidural</b></td><td>Arterial (middle meningeal)</td><td><b>Lucid interval</b> → rapid deterioration</td><td>Between skull &amp; dura; arterial = fast expanding</td></tr>
+  <tr><td><b>Subdural</b></td><td>Venous (bridging veins)</td><td>Gradual deterioration; may be chronic</td><td>Elderly/alcoholics at risk (brain atrophy stretches bridging veins)</td></tr>
+  <tr><td><b>Subarachnoid</b></td><td>Aneurysm rupture</td><td>"Worst headache of life"; meningismus</td><td>Nimodipine for vasospasm; blood in subarachnoid space</td></tr>
+</table>
+
+<h3>Seizures</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Nursing During a Seizure</h4>
+    <ul>
+      <li><b>Protect airway</b> (turn lateral); suction as needed</li>
+      <li><b>Do NOT restrain</b> movements</li>
+      <li><b>Nothing in the mouth</b> (no tongue blade, no fingers)</li>
+      <li>Time the seizure (duration matters)</li>
+      <li>HOB flat → lateral position post-ictal</li>
+      <li>Padded bed rails; quiet environment</li>
+      <li>Post-ictal: confusion, exhaustion, amnesia — normal</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Status Epilepticus</h4>
+    <ul>
+      <li>Seizure &gt;5 minutes OR no recovery between seizures</li>
+      <li><b>Emergency → benzodiazepines FIRST</b> (lorazepam IV or diazepam)</li>
+      <li>If benzos fail: fosphenytoin or levetiracetam IV</li>
+      <li>If refractory: propofol or phenobarbital drip</li>
+      <li>Risk: prolonged hypoxia → brain injury</li>
+    </ul>
+    <h4 style="margin-top:0.4rem">Seizure Types</h4>
+    <ul>
+      <li><b>Tonic-clonic (grand mal):</b> LOC + tonic phase → clonic jerking</li>
+      <li><b>Absence (petit mal):</b> Brief staring; no LOC; common in children</li>
+      <li><b>Simple partial:</b> No LOC; focal; may spread (Jacksonian march)</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Spinal Cord Injury (SCI)</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Neurogenic Shock vs Spinal Shock</h4>
+    <table>
+      <tr><th></th><th>Neurogenic Shock</th><th>Spinal Shock</th></tr>
+      <tr><td><b>What</b></td><td>Loss of sympathetic tone → vasodilation</td><td>Temporary loss of all reflexes below lesion</td></tr>
+      <tr><td><b>Signs</b></td><td>Bradycardia + ↓BP + <b>WARM DRY SKIN</b></td><td>Flaccid paralysis; areflexia</td></tr>
+      <tr><td><b>Treatment</b></td><td>NE (Levophed); atropine; IVF</td><td>Resolves over days to weeks; maintain BP/O2; methylprednisolone no longer standard (removed from ATLS — do not recommend unless facility-specific protocol)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Autonomic Dysreflexia (T6 and above)</h4>
+    <div class="warn"><b>Emergency!</b> Exaggerated sympathetic response to noxious stimuli below lesion (full bladder most common, fecal impaction, pain)</div>
+    <p><b>Signs:</b> Severe headache, hypertension (↑↑BP), flushing above lesion, bradycardia, diaphoresis</p>
+    <p><b>Priority actions:</b></p>
+    <ol>
+      <li><b>Sit patient upright</b> (orthostatic drop helps lower BP)</li>
+      <li>Find and remove the stimulus (check bladder first — kinked Foley?)</li>
+      <li>Notify provider; antihypertensives if BP remains elevated</li>
+    </ol>
+  </div>
+</div>
+
+<h3>Meningitis &amp; Lumbar Puncture</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>CSF: Bacterial vs Viral</h4>
+    <table>
+      <tr><th>Parameter</th><th>Bacterial</th><th>Viral</th></tr>
+      <tr><td>Appearance</td><td>Cloudy/purulent</td><td>Clear</td></tr>
+      <tr><td>WBC</td><td>↑↑ Neutrophils</td><td>↑ Lymphocytes</td></tr>
+      <tr><td>Glucose</td><td>↓↓ (bacteria consume it)</td><td>Normal</td></tr>
+      <tr><td>Protein</td><td>↑↑</td><td>Normal/mildly ↑</td></tr>
+    </table>
+    <p style="margin-top:0.3rem"><b>Signs:</b> Nuchal rigidity · Brudzinski's (flex neck → knees flex) · Kernig's (extend knee from hip flexion → pain/resistance) · Photophobia · Headache</p>
+    <p><b>Isolation:</b> Droplet precautions for bacterial (N. meningitidis)</p>
+  </div>
+  <div class="card">
+    <h4>Lumbar Puncture</h4>
+    <ul>
+      <li><b>CT scan FIRST</b> (rule out ↑ICP → herniation risk)</li>
+      <li>Have patient void before procedure</li>
+      <li>Position: fetal (knees to chest) or sitting forward</li>
+      <li><b>Post-LP headache:</b> worsens upright, improves lying flat; increase oral fluids; analgesics</li>
+      <li>Monitor neuro status; check puncture site for CSF leak</li>
+    </ul>
+    <h4 style="margin-top:0.4rem">Neurotransmitters (Prof Emphasized)</h4>
+    <table>
+      <tr><th>NT</th><th>Clinical Significance</th></tr>
+      <tr><td>Dopamine ↓</td><td>Parkinson's (levodopa treatment)</td></tr>
+      <tr><td>ACh ↓</td><td>Myasthenia Gravis (anticholinesterase: pyridostigmine)</td></tr>
+      <tr><td>GABA ↓</td><td>Seizures (benzos/barbiturates enhance GABA)</td></tr>
+      <tr><td>Serotonin ↓</td><td>Depression (SSRIs)</td></tr>
+      <tr><td>NE</td><td>Sympathetic tone; levophed = NE for neurogenic shock</td></tr>
+    </table>
+  </div>
+</div>
+
+<h3>DI vs SIADH</h3>
+<div class="tip"><b>Both involve ADH — one has too much, one has too little. The labs are mirror images.</b></div>
+<table>
+  <tr><th></th><th>Diabetes Insipidus (DI)</th><th>SIADH</th></tr>
+  <tr><td><b>ADH level</b></td><td>↓ ADH (or kidneys don't respond)</td><td>↑ ADH (too much secreted)</td></tr>
+  <tr><td><b>Urine output</b></td><td>↑↑ (massive polyuria; dilute urine)</td><td>↓ (oliguria; concentrated urine)</td></tr>
+  <tr><td><b>Urine osmolality</b></td><td>↓ (very dilute)</td><td>↑ (very concentrated)</td></tr>
+  <tr><td><b>Serum sodium</b></td><td>↑ Hypernatremia</td><td>↓ Hyponatremia</td></tr>
+  <tr><td><b>Serum osmolality</b></td><td>↑</td><td>↓</td></tr>
+  <tr><td><b>Causes</b></td><td>TBI (posterior pituitary damage), neurosurgery, meningitis</td><td>TBI, mechanical ventilation, medications, lung cancer (ectopic ADH)</td></tr>
+  <tr><td><b>Symptoms</b></td><td>Extreme thirst, dilute urine, dehydration, hypernatremia symptoms</td><td>Nausea, headache, confusion, seizures from cerebral edema</td></tr>
+  <tr><td><b>Treatment</b></td><td>Desmopressin (DDAVP = synthetic ADH); fluid replacement</td><td>Fluid restriction; hypertonic saline (3% NaCl) if severe; correct slowly</td></tr>
+</table>
+
+<h3>Brain Death</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Criteria (all three must be present)</h4>
+    <ul>
+      <li><b>Coma</b> — unresponsive to all stimuli; no purposeful movement</li>
+      <li><b>Apnea</b> — no spontaneous breathing (confirmed by apnea test)</li>
+      <li><b>Absent brainstem reflexes</b> — no pupillary, corneal, oculocephalic, or gag reflex</li>
+    </ul>
+    <p style="margin-top:0.4rem"><b>Fixed, dilated pupils = most grave sign</b> — indicates complete brainstem failure</p>
+    <p>Requires two physician declarations; may use confirmatory EEG or cerebral blood flow study</p>
+  </div>
+  <div class="card">
+    <h4>Brain Death vs Persistent Vegetative State</h4>
+    <table>
+      <tr><th></th><th>Brain Death</th><th>Persistent Vegetative State</th></tr>
+      <tr><td>Brainstem</td><td>Non-functional</td><td>Intact</td></tr>
+      <tr><td>Sleep-wake cycles</td><td>Absent</td><td>Present</td></tr>
+      <tr><td>Spontaneous breathing</td><td>None</td><td>Present</td></tr>
+      <tr><td>Legal status</td><td>Death</td><td>Alive</td></tr>
+    </table>
+    <div class="warn" style="margin-top:0.4rem"><b>Nursing role:</b> Maintain organ perfusion for potential donation; support family; organ donation discussion when appropriate per facility protocol</div>
+  </div>
+</div>
+
+<h3>SCI Level of Injury — Functional Outcomes</h3>
+<table>
+  <tr><th>Level</th><th>Function Lost</th><th>Key Clinical Implication</th></tr>
+  <tr><td><b>C1–C3</b></td><td>All voluntary movement; breathing</td><td>Vent-dependent; total care; death without immediate intervention</td></tr>
+  <tr><td><b>C4</b></td><td>Diaphragm partially affected</td><td>Often vent-dependent; some head/neck movement</td></tr>
+  <tr><td><b>C5–C6</b></td><td>Partial arm movement; no hand</td><td>Some independence possible; can operate power wheelchair; C6 can feed self</td></tr>
+  <tr><td><b>C7–C8</b></td><td>Triceps; some hand function</td><td>Can push manual wheelchair; more independence with ADLs</td></tr>
+  <tr><td><b>T1–T6</b></td><td>Loss below chest; intercostals affected</td><td><b>Autonomic dysreflexia risk (T6 and above)</b>; can breathe independently; T4 can eat/transfer/sit</td></tr>
+  <tr><td><b>T7–T12</b></td><td>Loss below abdomen</td><td>Full respiratory function; can walk with bracing; no autonomic dysreflexia risk below T6</td></tr>
+  <tr><td><b>L1–L5</b></td><td>Variable lower extremity loss</td><td>Can often ambulate with assistive devices</td></tr>
+  <tr><td><b>S1–S5</b></td><td>Bowel/bladder/sexual function</td><td>S5 can walk; bladder/bowel management needed; neurogenic bladder</td></tr>
+</table>
+
+<h3>Migraine | GBS | MS | MG</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Migraine</h4>
+    <ul>
+      <li>Throbbing, unilateral headache; photophobia, phonophobia, N/V</li>
+      <li><b>Triggers:</b> Chocolate, aged cheese, red wine, stress, hormonal changes, bright lights, sleep changes</li>
+      <li><b>Medication of choice:</b> Triptans (sumatriptan) — serotonin agonists; cause cerebral vasoconstriction</li>
+      <li>Abortive: NSAIDs, triptans, ergotamines; dark/quiet room</li>
+      <li>Preventive: beta-blockers, valproate, topiramate, amitriptyline</li>
+    </ul>
+    <h4 style="margin-top:0.5rem">Guillain-Barré Syndrome (GBS)</h4>
+    <ul>
+      <li><b>Mechanism:</b> Post-infectious autoimmune demyelination of peripheral nerves (PNS)</li>
+      <li><b>Classic pattern:</b> Ascending symmetric weakness — starts in feet, moves up; areflexia</li>
+      <li><b>Life threat:</b> Respiratory failure when reaches diaphragm — monitor forced vital capacity</li>
+      <li><b>Treatment:</b> IVIG or plasmapheresis; supportive; NO steroids (worsen)</li>
+      <li>Preceding infection: Campylobacter jejuni most common; also flu-like illness</li>
+      <li>Sensation: pain + paresthesia early; then weakness dominates</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Multiple Sclerosis (MS)</h4>
+    <ul>
+      <li><b>Mechanism:</b> Autoimmune demyelination of CNS (brain + spinal cord)</li>
+      <li><b>Classic pattern:</b> Relapsing-remitting; episodes separated in time and location</li>
+      <li>Symptoms: optic neuritis (vision loss), diplopia, fatigue, spasticity, bladder dysfunction, cognitive changes</li>
+      <li><b>Uhthoff's phenomenon:</b> Symptoms worsen with heat (hot shower, fever) — avoid heat</li>
+      <li><b>Treatment:</b> Interferon-beta, glatiramer acetate (Copaxone); steroids for acute flares; symptom management</li>
+      <li>MRI: periventricular white matter plaques (lesions)</li>
+    </ul>
+    <h4 style="margin-top:0.5rem">Myasthenia Gravis (MG)</h4>
+    <ul>
+      <li><b>Mechanism:</b> Autoantibodies block ACh receptors at NMJ → muscle weakness</li>
+      <li><b>Pattern:</b> Weakness worsens with activity, improves with rest; ocular muscles first (ptosis, diplopia)</li>
+      <li><b>Life threat:</b> Myasthenic crisis — respiratory failure; Cholinergic crisis (too much pyridostigmine) — also respiratory failure; distinguish with Tensilon test</li>
+      <li><b>Treatment:</b> Pyridostigmine (Mestinon — anticholinesterase); IVIG; plasmapheresis for crisis; thymectomy</li>
+      <li><b>Sensation is INTACT</b> — pure motor disorder; this distinguishes from GBS</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<!-- SECTION 4: OXYGENATION -->
+<h2 class="oxygenation">UNIT 4: Oxygenation &amp; Gas Exchange (15%)</h2>
+
+<h3>V/Q Mismatch — Three Types</h3>
+<table>
+  <tr><th>Type</th><th>Ventilation</th><th>Perfusion</th><th>Cause</th><th>Clinical Example</th></tr>
+  <tr><td><b>Dead Space</b></td><td>Present (V↑)</td><td>Absent (Q=0)</td><td>No blood to pick up O2</td><td>PE (clot blocks perfusion); lung area ventilated but not perfused → wasted ventilation</td></tr>
+  <tr><td><b>Shunt</b></td><td>Absent (V=0)</td><td>Present (Q↑)</td><td>No air to oxygenate blood</td><td>Pneumonia, atelectasis, ARDS; blood perfuses but isn't oxygenated → doesn't respond well to supplemental O2</td></tr>
+  <tr><td><b>Silent Unit</b></td><td>Absent</td><td>Absent</td><td>Neither ventilation nor perfusion</td><td>Severe pneumothorax, severe ARDS; complete collapse of lung unit</td></tr>
+</table>
+<div class="tip"><b>Key test distinguisher:</b> Shunt does NOT improve with supplemental O2 (blood bypasses alveoli entirely). Dead space DOES improve with O2 (alveoli are open, just underperfused). Classic shunt = pneumonia/atelectasis; classic dead space = PE.</div>
+
+<h3>Sputum Characteristics</h3>
+<table>
+  <tr><th>Appearance</th><th>Significance</th></tr>
+  <tr><td>Clear/white</td><td>Normal, viral infection, mild COPD</td></tr>
+  <tr><td>Yellow/green</td><td>Bacterial infection (PMNs); purulent</td></tr>
+  <tr><td>Rust-colored</td><td>Pneumococcal pneumonia</td></tr>
+  <tr><td>Pink, frothy</td><td>Pulmonary edema (left HF) — blood tinged from capillary leak</td></tr>
+  <tr><td>Thick, viscous</td><td>Cystic fibrosis, chronic bronchitis, dehydration</td></tr>
+  <tr><td>Blood-streaked (hemoptysis)</td><td>TB, PE, lung cancer, bronchiectasis — always investigate</td></tr>
+  <tr><td>Black/dark</td><td>Coal miners (anthracosis); heavy smokers</td></tr>
+</table>
+
+<h3>Pulmonary Hypertension (Brief)</h3>
+<div class="card">
+  <ul>
+    <li>Elevated pulmonary arterial pressure (&gt;25 mmHg at rest) → right ventricular strain → <b>cor pulmonale</b> (right HF from lung disease)</li>
+    <li>Causes: COPD, PE, sleep apnea, left HF, idiopathic</li>
+    <li>Signs: dyspnea on exertion, fatigue, syncope, right HF signs (JVD, peripheral edema, hepatomegaly)</li>
+    <li>ECG: right axis deviation, right ventricular hypertrophy</li>
+    <li>Treatment: supplemental O2, diuretics, pulmonary vasodilators (sildenafil, bosentan); treat underlying cause</li>
+    <li><b>Cor pulmonale = right-sided HF caused by pulmonary disease</b> — not the same as left HF causing right HF</li>
+  </ul>
+</div>
+
+<h3>ABG Interpretation</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Normal Values</h4>
+    <table>
+      <tr><th>Value</th><th>Normal Range</th></tr>
+      <tr><td>pH</td><td>7.35–7.45</td></tr>
+      <tr><td>PaCO2</td><td>35–45 mmHg</td></tr>
+      <tr><td>HCO3</td><td>22–26 mEq/L</td></tr>
+      <tr><td>PaO2</td><td>80–100 mmHg</td></tr>
+      <tr><td>SaO2</td><td>95–98%</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>ROME Method</h4>
+    <p><b>R</b>espiratory <b>O</b>pposite: ↑CO2 = acidosis; ↓CO2 = alkalosis</p>
+    <p><b>M</b>etabolic <b>E</b>qual: ↑HCO3 = alkalosis; ↓HCO3 = acidosis</p>
+    <table style="margin-top:0.4rem">
+      <tr><th>Disorder</th><th>pH</th><th>PaCO2</th><th>HCO3</th></tr>
+      <tr><td>Resp. Acidosis</td><td>↓</td><td>↑</td><td>Normal (or ↑ compensated)</td></tr>
+      <tr><td>Resp. Alkalosis</td><td>↑</td><td>↓</td><td>Normal (or ↓ compensated)</td></tr>
+      <tr><td>Met. Acidosis</td><td>↓</td><td>Normal (or ↓ compensated)</td><td>↓</td></tr>
+      <tr><td>Met. Alkalosis</td><td>↑</td><td>Normal (or ↑ compensated)</td><td>↑</td></tr>
+    </table>
+  </div>
+</div>
+
+<h3>O2 Delivery Devices</h3>
+<table>
+  <tr><th>Device</th><th>Flow Rate</th><th>FiO2</th><th>Notes</th></tr>
+  <tr><td>Nasal Cannula</td><td>1–6 LPM</td><td>24–44%</td><td>Comfortable; flow &gt;4 LPM dries mucosa; mouth breathing reduces effectiveness</td></tr>
+  <tr><td>Simple Face Mask</td><td>5–10 LPM</td><td>35–50%</td><td>Minimum 5 LPM (prevent CO2 rebreathing)</td></tr>
+  <tr><td>Non-Rebreather (NRB)</td><td>10–15 LPM</td><td>60–90%</td><td>Highest FiO2 without intubation; reservoir bag must stay inflated</td></tr>
+  <tr><td>Venturi Mask</td><td>Varies</td><td>Precise (24–50%)</td><td>Best for COPD patients — precise FiO2 control</td></tr>
+  <tr><td>BiPAP/CPAP</td><td>—</td><td>Variable</td><td>Non-invasive positive pressure; good for acute pulmonary edema, COPD exacerbation</td></tr>
+</table>
+
+<h3>Key Respiratory Conditions</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>COPD</h4>
+    <ul>
+      <li><b>Emphysema:</b> barrel chest, pursed-lip breathing, ↑TLC/RV (air trapping), pink puffer</li>
+      <li><b>Chronic bronchitis:</b> productive cough &gt;3mo × 2 years; blue bloater</li>
+      <li><b>Hypoxic drive:</b> Chronic CO2 retainers desensitize central chemoreceptors → breathe on low O2</li>
+      <li><b>Target SpO2: 88–92%</b> for COPD (high-flow O2 suppresses respiratory drive)</li>
+      <li>Use Venturi mask for precise FiO2</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Pulmonary Embolism (PE)</h4>
+    <ul>
+      <li><b>Virchow's Triad:</b> Stasis + Hypercoagulability + Endothelial injury</li>
+      <li><b>Signs:</b> Sudden dyspnea, pleuritic chest pain, tachycardia, hypoxia, hemoptysis</li>
+      <li><b>Massive PE:</b> Obstructive shock → right heart strain (S1Q3T3 on ECG)</li>
+      <li>D-dimer elevated; CT pulmonary angiography (gold standard)</li>
+      <li><b>Treatment:</b> Anticoagulation (heparin → warfarin); tPA for massive PE; embolectomy</li>
+    </ul>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="card">
+    <h4>Tension Pneumothorax</h4>
+    <ul>
+      <li><b>Signs:</b> Absent/decreased breath sounds (affected side), tracheal deviation AWAY from affected side, ↑HR, ↓BP, JVD, cyanosis</li>
+      <li><b>Obstructive shock mechanism</b> (compressed SVC, ↓venous return)</li>
+      <li><b>Priority:</b> Needle decompression — 2nd ICS, midclavicular line, immediately</li>
+      <li>Then chest tube insertion</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>ARDS</h4>
+    <ul>
+      <li>Acute onset; bilateral infiltrates on CXR; not cardiac in origin</li>
+      <li><b>P/F ratio &lt;300</b> (PaO2/FiO2)</li>
+      <li>Profound refractory hypoxemia despite O2</li>
+      <li><b>Nursing:</b> Prone positioning; low tidal volumes (6 mL/kg); PEEP; fluid restriction</li>
+      <li>Often follows: sepsis, trauma, pneumonia, burns, aspiration</li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>Asthma</h4>
+    <ul>
+      <li>Reversible bronchoconstriction; expiratory wheezing; accessory muscle use</li>
+      <li><b>Acute attack:</b> SABA (albuterol) first → ipratropium → corticosteroids (IV methylprednisolone)</li>
+      <li><b>Status asthmaticus:</b> Life-threatening; IV Mg sulfate; may require intubation</li>
+      <li>Peak flow monitoring: &lt;50% personal best = severe; &lt;25% = life-threatening</li>
+      <li>Pursed-lip breathing prolongs expiration and prevents air trapping</li>
+      <li><b>Silent chest</b> (no wheeze) in severe asthma = ominous — no air moving</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Pneumonia</h4>
+    <ul>
+      <li><b>CAP</b> (community-acquired) vs <b>HAP</b> (&gt;48h post-admission) vs <b>VAP</b> (ventilator-associated)</li>
+      <li>Signs: fever, productive cough, crackles/consolidation, ↑WBC, infiltrate on CXR</li>
+      <li>Priority nursing: HOB 30-45°, oral hygiene, encourage deep breathing/coughing, adequate hydration</li>
+      <li>VAP prevention: ABCDEF bundle, oral care with chlorhexidine, subglottic suctioning</li>
+      <li>Aspiration pneumonia: right lower lobe most common (due to anatomy when upright); left when supine</li>
+      <li>High-risk: elderly, immunocompromised, post-op, immobile</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Chest Tubes — Monitoring</h3>
+<table>
+  <tr><th>Observation</th><th>Meaning</th><th>Action</th></tr>
+  <tr><td>Tidaling in water seal (rises with inspiration)</td><td>Normal — tube patent, lung not yet fully expanded</td><td>Continue monitoring</td></tr>
+  <tr><td>No tidaling</td><td>Lung re-expanded OR tube kinked/clogged</td><td>Assess for kinks; check breath sounds</td></tr>
+  <tr><td>Continuous bubbling in water seal</td><td>Air leak (lung or system)</td><td>Check all connections; notify provider</td></tr>
+  <tr><td>Gentle bubbling in suction chamber</td><td>Normal — working correctly</td><td>No action needed</td></tr>
+  <tr><td>No bubbling in suction chamber</td><td>May not be suctioning</td><td>Check suction source</td></tr>
+</table>
+
+<hr>
+
+<!-- SECTION 5: FLUIDS -->
+<h2 class="fluids">UNIT 5: Fluids, Electrolytes &amp; Diabetes (5% — Know These Specifics)</h2>
+
+<h3>DKA vs HHS</h3>
+<table>
+  <tr><th></th><th>DKA</th><th>HHS</th></tr>
+  <tr><td><b>Type</b></td><td>Type 1 (or Type 2 in crisis)</td><td>Type 2</td></tr>
+  <tr><td><b>Blood glucose</b></td><td>&gt;250 mg/dL (moderate)</td><td>&gt;600 mg/dL (extreme)</td></tr>
+  <tr><td><b>Ketones</b></td><td>YES (Kussmaul respirations, fruity breath)</td><td>Minimal/absent</td></tr>
+  <tr><td><b>pH</b></td><td>&lt;7.3 (metabolic acidosis)</td><td>Near normal</td></tr>
+  <tr><td><b>Dehydration</b></td><td>Moderate</td><td>Severe</td></tr>
+  <tr><td><b>LOC</b></td><td>Variable</td><td>Often severe (coma)</td></tr>
+  <tr><td><b>Treatment order</b></td><td colspan="2">1. IV Fluids (NS first) → 2. Insulin (regular IV drip for DKA) → 3. K+ replacement (K+ drops when insulin drives it into cells)</td></tr>
+</table>
+
+<h3>Electrolyte Emergencies</h3>
+<table>
+  <tr><th>Imbalance</th><th>Key Signs</th><th>Treatment Priority</th></tr>
+  <tr><td><b>Hyperkalemia</b></td><td>Peaked T waves → wide QRS → asystole; muscle weakness</td><td>1. Calcium gluconate (cardioprotective) 2. Insulin + D50 3. Albuterol 4. Kayexalate 5. Dialysis</td></tr>
+  <tr><td><b>Hypokalemia</b></td><td>U waves, muscle weakness, ↓DTRs, dysrhythmias</td><td>Oral replacement preferred; IV K+ max 10-20 mEq/hr (never faster); NEVER IV push; always diluted</td></tr>
+  <tr><td><b>Hyponatremia</b></td><td>Cerebral edema: headache, seizures, ↓LOC; SIADH</td><td>Fluid restriction; hypertonic saline if severe (correct slowly — central pontine myelinolysis risk)</td></tr>
+  <tr><td><b>Hypernatremia</b></td><td>Brain shrinkage: agitation, confusion, seizures</td><td>Free water replacement (oral or D5W IV); correct slowly</td></tr>
+</table>
+<h3>Anion Gap <span style="color:var(--emergency);font-size:0.8rem">MATH ON EXAM</span></h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>Formula</h4>
+    <p style="font-size:1.1rem;font-weight:700;text-align:center;margin:0.4rem 0">AG = Na⁺ − (Cl⁻ + HCO₃⁻) &nbsp;|&nbsp; Normal: 8–12 mEq/L</p>
+    <p><b>Elevated anion gap (&gt;12)</b> = unmeasured anions present = metabolic acidosis with a cause</p>
+    <p style="margin-top:0.4rem"><b>MUDPILES</b> (causes of elevated AG metabolic acidosis):</p>
+    <ul>
+      <li><b>M</b>ethanol</li><li><b>U</b>remia (renal failure)</li><li><b>D</b>KA / Diabetic ketoacidosis</li>
+      <li><b>P</b>ropylene glycol / <b>P</b>araldehyde</li><li><b>I</b>soniazid / <b>I</b>ron</li>
+      <li><b>L</b>actic acidosis (shock, sepsis, rhabdo)</li><li><b>E</b>thylene glycol</li><li><b>S</b>alicylates (aspirin OD)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Dawn Phenomenon vs Somogyi Effect</h4>
+    <table>
+      <tr><th></th><th>Dawn Phenomenon</th><th>Somogyi Effect</th></tr>
+      <tr><td><b>Cause</b></td><td>Nocturnal growth hormone surge → insulin resistance at dawn</td><td>Overnight hypoglycemia → rebound hyperglycemia (counter-regulatory hormones)</td></tr>
+      <tr><td><b>3 AM glucose</b></td><td>Normal</td><td>LOW (hypoglycemia)</td></tr>
+      <tr><td><b>Morning glucose</b></td><td>High</td><td>High (rebound)</td></tr>
+      <tr><td><b>Fix</b></td><td>Move NPH to bedtime (instead of dinner)</td><td><b>Decrease</b> evening insulin or add bedtime snack</td></tr>
+    </table>
+    <div class="warn" style="margin-top:0.4rem"><b>Somogyi trap:</b> Morning hyperglycemia looks like "not enough insulin" — increasing insulin makes it WORSE. Diagnose with 3 AM glucose check.</div>
+  </div>
+</div>
+
+<h3>DIC — Disseminated Intravascular Coagulopathy</h3>
+<div class="card">
+  <div class="grid-2">
+    <div>
+      <h4>What It Is</h4>
+      <p>Systemic activation of coagulation → simultaneous <b>clotting AND bleeding</b>. Clotting factors are consumed faster than they're made → paradoxical hemorrhage despite initial thrombosis.</p>
+      <p style="margin-top:0.3rem"><b>Triggers:</b> Major burns, crush injury, sepsis, trauma, obstetric emergencies (abruptio placentae), transfusion reactions, malignancy</p>
+    </div>
+    <div>
+      <h4>Signs &amp; Treatment</h4>
+      <ul>
+        <li>Bleeding from IV sites, mucous membranes, surgical wounds + simultaneous thrombosis</li>
+        <li>Labs: ↑PT, ↑aPTT, ↓fibrinogen, ↓platelets, ↑D-dimer, ↑FDPs</li>
+        <li>Treat the <b>underlying cause</b> first</li>
+        <li>Replace clotting factors: FFP, cryoprecipitate (fibrinogen), platelets</li>
+        <li>Heparin controversial — used only in thrombosis-dominant DIC</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="warn"><b>Rule of 15 for Hypoglycemia:</b> 15g fast-acting carbs → wait 15 min → recheck. If &lt;70, repeat. Unconscious: D50 IV or glucagon IM. If beta-blockers are masking symptoms, the patient may skip adrenergic warning signs — go straight to altered LOC.</div>
+
+<hr>
+
+<!-- REVERSAL AGENTS -->
+<h2 class="meds">Reversal Agents — Know EVERY One <span style="font-size:0.85rem;font-weight:400">(Prof: "Must know all")</span></h2>
+<table>
+  <tr><th>Drug / Toxin</th><th>Reversal Agent</th><th>Key Notes</th></tr>
+  <tr><td><b>Opioids</b></td><td>Naloxone (Narcan) IV/IM/IN</td><td>Shorter half-life than opioids → watch for re-sedation; never leave unattended</td></tr>
+  <tr><td><b>Acetaminophen</b></td><td>NAC (N-acetylcysteine)</td><td>#1 OD seen in ED; do NOT give activated charcoal concurrently with NAC</td></tr>
+  <tr><td><b>Digoxin</b></td><td>Digibind (digoxin immune Fab)</td><td>Check K+ first; toxicity = N/V, halos, bradycardia; hypokalemia potentiates toxicity</td></tr>
+  <tr><td><b>Heparin (UFH)</b></td><td>Protamine sulfate</td><td>1 mg protamine per 100 units heparin; monitor aPTT</td></tr>
+  <tr><td><b>Warfarin</b></td><td>Vitamin K (slow); FFP (rapid)</td><td>Vitamin K = hours; FFP = immediate for active bleeding</td></tr>
+  <tr><td><b>Dabigatran (Pradaxa)</b></td><td>Idarucizumab (Praxbind)</td><td>Direct thrombin inhibitor; specific reversal agent</td></tr>
+  <tr><td><b>Rivaroxaban / Apixaban</b></td><td>Andexanet alfa (Andexxa)</td><td>Factor Xa inhibitors; also consider 4-factor PCC if unavailable</td></tr>
+  <tr><td><b>Benzodiazepines</b></td><td>Flumazenil (Romazicon)</td><td>Short-acting; may cause seizures in benzo-dependent patients; use cautiously</td></tr>
+  <tr><td><b>Beta-blockers</b></td><td>Glucagon IV</td><td>Restores inotropy and chronotropy; high-dose insulin + dextrose also used</td></tr>
+  <tr><td><b>Calcium channel blockers</b></td><td>Calcium gluconate or calcium chloride IV</td><td>Also: high-dose insulin + dextrose therapy for severe toxicity</td></tr>
+  <tr><td><b>Magnesium (OD)</b></td><td>Calcium gluconate IV</td><td>Physiologic antagonist; also used for hypermagnesemia from Mg drips</td></tr>
+  <tr><td><b>tPA / Thrombolytics</b></td><td>Tranexamic acid (TXA); aminocaproic acid; FFP</td><td>Stop infusion immediately; replace clotting factors</td></tr>
+  <tr><td><b>Insulin overdose (hypoglycemia)</b></td><td>D50 IV (conscious: oral glucose); Glucagon IM (no IV access)</td><td>Rule of 15 for mild; D50 IV for unconscious</td></tr>
+  <tr><td><b>Nerve agents / Organophosphates</b></td><td>Atropine + Pralidoxime (2-PAM)</td><td>Atropine for SLUDGE symptoms; pralidoxime reactivates cholinesterase; benzos for seizures</td></tr>
+  <tr><td><b>Cyanide</b></td><td>Hydroxocobalamin (preferred); amyl nitrite + sodium nitrite + sodium thiosulfate</td><td>Inhibits aerobic metabolism; bright red skin; cardiac arrest risk</td></tr>
+  <tr><td><b>Carbon monoxide</b></td><td>100% O2 (NRB); Hyperbaric O2 if available</td><td>SpO2 UNRELIABLE; treat until carboxyhemoglobin &lt;5%</td></tr>
+  <tr><td><b>Methotrexate</b></td><td>Leucovorin (folinic acid)</td><td>"Leucovorin rescue"</td></tr>
+  <tr><td><b>Heparin-induced thrombocytopenia (HIT)</b></td><td>Stop heparin; start argatroban or fondaparinux</td><td>Never give platelets — paradoxically worsens thrombosis</td></tr>
+</table>
+
+<!-- BONUS QUESTIONS -->
+<h2 class="meds">Bonus Questions (3–4 pts) — Parkinson's vs Huntington's vs ALS</h2>
+<table>
+  <tr><th></th><th>Parkinson's Disease</th><th>Huntington's Disease</th><th>ALS (Lou Gehrig's)</th></tr>
+  <tr><td><b>Mechanism</b></td><td>↓Dopamine (substantia nigra degeneration)</td><td>Autosomal dominant; CAG repeat expansion; caudate nucleus atrophy</td></tr>
+  <tr><td><b>Movement</b></td><td>Tremor at rest ("pill rolling"), rigidity, bradykinesia, shuffling gait, masked facies</td><td>Chorea (involuntary, dance-like, writhing movements); opposite of Parkinson's</td><td>Progressive muscle weakness; fasciculations; no involuntary movements</td></tr>
+  <tr><td><b>Cognition</b></td><td>Preserved early; dementia late</td><td>Dementia, psychiatric symptoms (depression, psychosis) early and prominent</td><td>Intact until very late — "mind trapped in a failing body"</td></tr>
+  <tr><td><b>Onset</b></td><td>Older adults (&gt;60)</td><td>30–50s; genetic, no cure</td><td>Middle age; rapidly progressive</td></tr>
+  <tr><td><b>Respiratory</b></td><td>Late complication</td><td>Late complication</td><td><b>Cause of death = respiratory failure</b>; BiPAP/vent; advance directives critical</td></tr>
+  <tr><td><b>Treatment</b></td><td>Levodopa/Carbidopa (dopamine precursor); MAO-B inhibitors; DBS</td><td>Tetrabenazine (reduce chorea); antipsychotics; no disease-modifying treatment</td><td>Riluzole (slows progression); supportive; BiPAP for respiratory support</td></tr>
+  <tr><td><b>Nursing priority</b></td><td>Fall prevention; give levodopa ON TIME (never skip a dose); aspiration precautions</td><td>Safety; psychiatric support; advance directive planning</td><td>Respiratory monitoring; advance directives; communication augmentation; emotional support</td></tr>
+</table>
+
+<!-- CROSS-UNIT INTEGRATION TABLE -->
+<h2 class="integration">Cross-Unit Integration Table — How Everything Connects</h2>
+<p style="margin-bottom:0.8rem; color:#6b7280; font-size:0.85rem">These connections appear in NGN-style cluster questions. Recognizing the bridge concepts is key to picking the right answer when a question spans multiple topics.</p>
+<table>
+  <tr>
+    <th style="width:15%">Clinical Scenario</th>
+    <th><span class="badge badge-red">Emergency</span></th>
+    <th><span class="badge badge-blue">Cardiac</span></th>
+    <th><span class="badge badge-teal">Oxygenation</span></th>
+    <th><span class="badge badge-purple">Cognition</span></th>
+    <th>Fluids/Lytes</th>
+  </tr>
+  <tr>
+    <td><b>Burns</b></td>
+    <td>Primary unit; phases of care; wound management</td>
+    <td>Hypovolemic shock; ↑HR + ↓CO → compensatory response</td>
+    <td>CO poisoning → SpO2 unreliable; inhalation injury; upper airway edema up to 48h</td>
+    <td>↓LOC from CO poisoning or hyponatremia; delirium in acute phase</td>
+    <td>Hyperkalemia (cell lysis); hyponatremia; LR fluids; UO as resuscitation marker</td>
+  </tr>
+  <tr>
+    <td><b>Shock (all types)</b></td>
+    <td>ABCDE; hemorrhage control; ED resuscitation</td>
+    <td>↓CO + compensatory tachycardia + vasoconstriction; different SVR by type</td>
+    <td>Hypoxemia → ↑RR → respiratory compensation; ARDS can follow septic shock</td>
+    <td>↓Cerebral perfusion → confusion → coma; CPP = MAP − ICP</td>
+    <td>Fluid shifts; lactic acidosis; electrolyte abnormalities; UO monitoring</td>
+  </tr>
+  <tr>
+    <td><b>Trauma / Multiple Injury</b></td>
+    <td>Primary/secondary survey; triad of death; C-spine</td>
+    <td>Cardiac tamponade (Beck's triad); tension pneumo as obstructive shock</td>
+    <td>Tension pneumo (tracheal deviation, absent breath sounds); hemothorax; rib fractures → splinting → atelectasis</td>
+    <td>TBI types (epidural = lucid interval; subdural = chronic); C-spine SCI → neurogenic shock</td>
+    <td>Massive hemorrhage → hypovolemia; metabolic acidosis; coagulopathy</td>
+  </tr>
+  <tr>
+    <td><b>Stroke</b></td>
+    <td>Emergency rapid response; BeFAST; NIH Stroke Scale; time is brain</td>
+    <td>Afib = #1 source of cardioembolic stroke; ACS can cause thrombus</td>
+    <td>Maintain oxygenation; hypoxia worsens ischemia; O2 if SpO2 &lt;94%</td>
+    <td>Core cognition unit; Broca's/Wernicke's; tPA ischemic only; nimodipine for SAH</td>
+    <td>Glucose control critical (hypo AND hyperglycemia worsen stroke outcomes)</td>
+  </tr>
+  <tr>
+    <td><b>Sepsis</b></td>
+    <td>Source identification; antibiotics; fluid resuscitation</td>
+    <td>Distributive shock: ↑HR + ↓SVR + ↓BP; vasopressors (NE) when fluids fail</td>
+    <td>Pneumonia common source; may progress to ARDS; hypoxemia</td>
+    <td>↓LOC, delirium (often first sign in elderly); glucose dysregulation</td>
+    <td>30 mL/kg IV crystalloid within 3h; lactic acidosis; AKI from poor perfusion</td>
+  </tr>
+  <tr>
+    <td><b>Increased ICP</b></td>
+    <td>Emergency response; C-spine protection in trauma; transport</td>
+    <td>Cushing's triad: ↑BP + ↓HR + irregular respirations (late, emergency)</td>
+    <td>Controlled hyperventilation (↓PaCO2 → cerebral vasoconstriction → ↓ICP) — transient measure</td>
+    <td>Core cognition unit; Monro-Kellie; CPP; herniation patterns; mannitol</td>
+    <td>Hypertonic saline (osmotic shift); mannitol (osmotic diuresis); serum osmolarity monitoring</td>
+  </tr>
+  <tr>
+    <td><b>Pulmonary Embolism</b></td>
+    <td>Emergency diagnosis; anticoagulation; tPA for massive</td>
+    <td>Obstructive shock; right heart strain; S1Q3T3 on ECG; ↓CO</td>
+    <td>V/Q mismatch → hypoxemia; sudden dyspnea; pleuritic pain</td>
+    <td>Anxiety, restlessness, syncope; ↓LOC from ↓CO</td>
+    <td>DVT as source (Virchow's triad); anticoagulation cascade</td>
+  </tr>
+  <tr>
+    <td><b>Neurogenic Shock (SCI)</b></td>
+    <td>Scene care; C-spine immobilization; ABCDE</td>
+    <td>Bradycardia + hypotension (unlike all other shock) → NE + atropine</td>
+    <td>Respiratory failure if SCI ≥C4 (diaphragm paralysis) → mechanical ventilation</td>
+    <td>Core cognition unit; spinal shock vs neurogenic shock; autonomic dysreflexia T6+</td>
+    <td>IV fluids + vasopressors; urinary retention is common trigger for autonomic dysreflexia</td>
+  </tr>
+  <tr>
+    <td><b>Respiratory Failure / ARDS</b></td>
+    <td>Can follow burns, trauma, sepsis</td>
+    <td>Right heart strain from pulmonary HTN; ↓CO in severe hypoxemia</td>
+    <td>Core oxygenation unit; P/F &lt;300; prone positioning; low tidal volumes</td>
+    <td>Hypoxia → ↓LOC, confusion, agitation; sedation management on vent</td>
+    <td>Metabolic acidosis from hypoxia; fluid balance critical (avoid worsening edema)</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- KEY MEDICATIONS -->
+<h2 class="meds">High-Yield Medications Quick Reference</h2>
+
+<div class="grid-3">
+  <div class="card">
+    <h4>Emergency / Burns <span class="badge badge-red">40%</span></h4>
+    <table>
+      <tr><th>Drug</th><th>Use / Key Fact</th></tr>
+      <tr><td>Silvadene (silver sulfadiazine)</td><td>Burn topical; first-line; no eschar penetration</td></tr>
+      <tr><td>Sulfamylon (mafenide acetate)</td><td>ONLY topical that penetrates eschar; causes metabolic acidosis</td></tr>
+      <tr><td>Silver nitrate</td><td>Leaches Na+/K+; stains everything black</td></tr>
+      <tr><td>Naloxone (Narcan)</td><td>Opioid reversal; watch for relapse (short half-life)</td></tr>
+      <tr><td>NAC</td><td>Acetaminophen OD; don't give activated charcoal concurrently</td></tr>
+      <tr><td>Atropine + pralidoxime</td><td>Nerve agents (SLUDGE)</td></tr>
+      <tr><td>Hydroxocobalamin</td><td>Cyanide poisoning</td></tr>
+      <tr><td>Epinephrine IM</td><td>Anaphylaxis — FIRST intervention</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Cardiac <span class="badge badge-blue">25%</span></h4>
+    <table>
+      <tr><th>Drug</th><th>Use / Key Fact</th></tr>
+      <tr><td>Furosemide (Lasix)</td><td>Loop diuretic; HF, pulmonary edema; ↓preload</td></tr>
+      <tr><td>Digoxin</td><td>↑contractility + ↓HR; narrow TI; K+ depletion = toxicity risk; N/V/visual changes (halos), bradycardia, arrhythmias = toxicity; check K+ and apical pulse (full minute) before giving; reversal = <b>Digibind (digoxin immune Fab)</b></td></tr>
+      <tr><td>Dobutamine</td><td>Positive inotrope; cardiogenic shock (↑CO without ↑HR as much)</td></tr>
+      <tr><td>Norepinephrine (Levophed)</td><td>Vasopressor; septic/neurogenic shock; also positive inotrope</td></tr>
+      <tr><td>Amiodarone</td><td>Broad antiarrhythmic (VF, VT, Afib); thyroid/pulmonary/liver toxicity</td></tr>
+      <tr><td>Adenosine</td><td>SVT; 6mg rapid IV push + immediate flush; ultra-short half-life</td></tr>
+      <tr><td>Atropine</td><td>Symptomatic bradycardia; blocks vagal (ACh) effect on SA/AV nodes</td></tr>
+      <tr><td>Nitroglycerin</td><td>Vasodilation; angina; HOLD if SBP &lt;90 or right ventricular MI</td></tr>
+      <tr><td>Aspirin</td><td>Antiplatelet; 325mg chewed for ACS</td></tr>
+      <tr><td>tPA (alteplase)</td><td>Thrombolytic; STEMI (if no PCI); ischemic stroke (&lt;3-4.5h); CONTRAINDICATED in hemorrhagic stroke</td></tr>
+      <tr><td>Heparin</td><td>Anticoagulation; ACS, PE, Afib; monitor aPTT</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Cognition &amp; Oxygenation <span class="badge badge-purple">20%</span> <span class="badge badge-teal">15%</span></h4>
+    <table>
+      <tr><th>Drug</th><th>Use / Key Fact</th></tr>
+      <tr><td>Mannitol</td><td>Osmotic diuretic; ↓ICP; monitor serum osmolarity</td></tr>
+      <tr><td>Lorazepam / Diazepam</td><td>Status epilepticus (FIRST LINE); also alcohol withdrawal</td></tr>
+      <tr><td>Fosphenytoin / Levetiracetam</td><td>Seizure prophylaxis / status epilepticus second-line</td></tr>
+      <tr><td>Nimodipine</td><td>Subarachnoid hemorrhage; CCB prevents vasospasm; does NOT treat HTN; <b>ORAL ONLY — NEVER IV</b> (IV = severe hypotension, cardiac arrest); wrong route = wrong answer</td></tr>
+      <tr><td>Pyridostigmine</td><td>Myasthenia Gravis; anticholinesterase → more ACh at NMJ</td></tr>
+      <tr><td>Levodopa/Carbidopa</td><td>Parkinson's; dopamine precursor (dopamine can't cross BBB)</td></tr>
+      <tr><td>Dexamethasone</td><td>Vasogenic cerebral edema (tumor); NOT for traumatic ICP</td></tr>
+      <tr><td>Albuterol (SABA)</td><td>Acute bronchodilation; asthma/COPD; also treats hyperkalemia</td></tr>
+      <tr><td>Methylprednisolone</td><td>Asthma exacerbation; status asthmaticus; IV form</td></tr>
+      <tr><td>Magnesium sulfate</td><td>Status asthmaticus; eclampsia; also antidysrhythmic (Torsades)</td></tr>
+    </table>
+    <h4 style="margin-top:0.6rem">Fluids <span class="badge" style="background:#dcfce7;color:#166534">5%</span></h4>
+    <table>
+      <tr><th>Drug</th><th>Use / Key Fact</th></tr>
+      <tr><td>Calcium gluconate</td><td>Hyperkalemia — give FIRST (cardioprotective)</td></tr>
+      <tr><td>D50 IV</td><td>Severe/unconscious hypoglycemia</td></tr>
+      <tr><td>Glucagon IM</td><td>Hypoglycemia when no IV access</td></tr>
+      <tr><td>Regular insulin IV</td><td>DKA; also drives K+ into cells (hyperkalemia)</td></tr>
+      <tr><td>Metformin</td><td>Hold 48h before/after contrast (lactic acidosis risk)</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- FINAL TIPS -->
+<div style="background:#1e293b; color:white; padding:1.2rem 1.5rem; border-radius:8px; margin-top:1rem;">
+  <h3 style="color:white; border:none; margin-bottom:0.6rem;">Last-Minute Exam Strategy</h3>
+  <div class="grid-2">
+    <div>
+      <p style="font-weight:700; color:#fbbf24; margin-bottom:0.3rem">NGN Question Strategy</p>
+      <ul style="font-size:0.85rem; line-height:1.8;">
+        <li>Read the clinical scenario FULLY before looking at options</li>
+        <li>Identify the phase of care (emergent vs. acute vs. rehab)</li>
+        <li>Look for what's happening RIGHT NOW vs. what might happen</li>
+        <li>Priority = ABCs → Safety → Teaching (in that order)</li>
+        <li>If two answers both seem right, choose the one that's FIRST or MOST IMMEDIATE</li>
+        <li>Watch for "all that apply" — every option must independently be correct</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-weight:700; color:#fbbf24; margin-bottom:0.3rem">High-Yield Distractor Traps</p>
+      <ul style="font-size:0.85rem; line-height:1.8;">
+        <li>3rd-degree burn = no pain → this is WORSE, not reassuring</li>
+        <li>Burn fluid timer = from INJURY, not ED arrival</li>
+        <li>ED triage ≠ disaster triage — they operate on opposite philosophies</li>
+        <li>Neurogenic shock = bradycardia (not tachycardia) + warm skin</li>
+        <li>tPA is ONLY for ischemic stroke — never hemorrhagic</li>
+        <li>Adenosine must be pushed FAST and flushed immediately</li>
+        <li>Digoxin toxicity risk increases when K+ is low</li>
+        <li>COPD O2 target = 88-92%, not 95-100%</li>
+        <li>Post-LP headache → improve lying flat (not sitting up)</li>
+        <li>Alcohol withdrawal DTs → quiet room, NO TV, CIWA protocol</li>
+        <li>Nimodipine = oral ONLY — IV = cardiac arrest (wrong route = wrong answer)</li>
+        <li>Failure to capture = spike but no QRS; failure to sense = pacemaker is "blind" to intrinsic beats</li>
+        <li>Hypertensive crisis → reduce MAP no more than 25% in first hour</li>
+        <li>GBS = ascending weakness, sensation affected, peripheral (no steroids); MG = sensation INTACT, worsens with activity</li>
+        <li>DI = too little ADH → polyuria + hypernatremia; SIADH = too much ADH → oliguria + hyponatremia</li>
+        <li>Somogyi = reduce insulin (morning high is FROM overnight low, not lack of insulin)</li>
+        <li>Botulism = descending paralysis (top-down); GBS = ascending (bottom-up)</li>
+        <li>Same symptoms in multiple patients arriving = suspect bioterrorism → isolate</li>
+        <li>Cut AROUND bullet holes — never through them (forensic integrity)</li>
+        <li>Shunt does NOT respond to supplemental O2; dead space does</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center; color:#9ca3af; font-size:0.75rem; margin-top:1rem;">N8 Cumulative Final Cram Guide — Generated 2026-04-09 · Good luck tomorrow</p>
+
+</div>
+</body>
+</html>
